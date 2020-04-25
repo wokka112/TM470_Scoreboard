@@ -20,7 +20,7 @@ public class MemberActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_board_game);
+        setContentView(R.layout.activity_member);
 
         Member member = (Member) getIntent().getExtras().get("MEMBER");
 
@@ -55,7 +55,7 @@ public class MemberActivity extends AppCompatActivity {
         imageView = findViewById(R.id.memberact_image);
         imageView.setImageResource(member.getImageResourceId());
 
-        editButton = findViewById(R.id.bgact_edit_button);
+        editButton = findViewById(R.id.memberact_edit_button);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +64,7 @@ public class MemberActivity extends AppCompatActivity {
             }
         });
 
-        deleteButton = findViewById(R.id.bgact_delete_button);
+        deleteButton = findViewById(R.id.memberact_delete_button);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
