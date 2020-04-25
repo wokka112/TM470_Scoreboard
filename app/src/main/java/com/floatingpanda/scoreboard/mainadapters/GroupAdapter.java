@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.mainadapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.system.Group;
 
 import java.util.ArrayList;

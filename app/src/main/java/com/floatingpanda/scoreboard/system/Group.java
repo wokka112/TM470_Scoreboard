@@ -1,7 +1,9 @@
 package com.floatingpanda.scoreboard.system;
 
-//TODO add attributes and methods
+//TODO sort out placeholders and add attributes and methods
 //TODO add constructor for imageresource and one for not
+//TODO add variables to hold members and gamerecords
+//TODO add variables to hold monthlyscores??
 
 import com.floatingpanda.scoreboard.R;
 

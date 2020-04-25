@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/memberact_image"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:id="@+id/memberact_nickname_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/memberact_image"
+        app:layout_constraintTop_toTopOf="@id/memberact_image"
+        android:layout_marginTop="11dp"
+        android:layout_marginLeft="11dp"
+        android:text="Nickname:"/>
+
+    <TextView
+        android:id="@+id/memberact_nickname_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/memberact_nickname_header"
+        app:layout_constraintTop_toTopOf="@id/memberact_nickname_header"
+        android:layout_marginLeft="40dp"/>
+
+    <TextView
+        android:id="@+id/memberact_othername_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_header"
+        app:layout_constraintTop_toBottomOf="@id/memberact_nickname_header"
+        android:layout_marginTop="8dp"
+        android:text="Other Names:" />
+
+    <TextView
+        android:id="@+id/memberact_othername_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_output"
+        app:layout_constraintTop_toTopOf="@id/memberact_othername_header"/>
+
+    <TextView
+        android:id="@+id/memberact_notes_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_image"
+        app:layout_constraintTop_toBottomOf="@id/memberact_image"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="4dp"
+        android:text="Notes:"/>
+
+    <TextView
+        android:id="@+id/memberact_notes_output"
+        android:layout_width="260dp"
+        android:layout_height="80dp"
+        app:layout_constraintLeft_toRightOf="@id/memberact_notes_header"
+        app:layout_constraintTop_toTopOf="@id/memberact_notes_header"
+        android:layout_marginLeft="20dp"/>
+
+    <TextView
+        android:id="@+id/memberact_groups_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_notes_header"
+        app:layout_constraintTop_toBottomOf="@id/memberact_notes_output"
+        android:text="Groups:"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/memberact_groups_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_worst_game_output"
+        app:layout_constraintTop_toTopOf="@id/memberact_groups_header"/>
+
+    <TextView
+        android:id="@+id/memberact_view_groups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_groups_output"
+        app:layout_constraintTop_toTopOf="@id/memberact_groups_output"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="View Groups"/>
+
+    <TextView
+        android:id="@+id/memberact_best_game_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_groups_header"
+        app:layout_constraintTop_toBottomOf="@id/memberact_groups_header"
+        android:layout_marginTop="8dp"
+        android:text="Best Game:"/>
+
+    <TextView
+        android:id="@+id/memberact_best_game_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_worst_game_output"
+        app:layout_constraintTop_toTopOf="@id/memberact_best_game_header"/>
+
+    <TextView
+        android:id="@+id/memberact_worst_game_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_best_game_header"
+        app:layout_constraintTop_toBottomOf="@id/memberact_best_game_header"
+        android:layout_marginTop="8dp"
+        android:text="Worst Game:"/>
+
+    <TextView
+        android:id="@+id/memberact_worst_game_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/memberact_worst_game_header"
+        app:layout_constraintTop_toTopOf="@id/memberact_worst_game_header"
+        android:layout_marginLeft="30dp"/>
+
+    <Button
+        android:id="@+id/memberact_edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/memberact_delete_button"
+        app:layout_constraintTop_toBottomOf="@id/memberact_worst_game_header"
+        android:layout_marginTop="20dp"
+        android:text="Edit"/>
+
+    <Button
+        android:id="@+id/memberact_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/memberact_edit_button"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/memberact_edit_button"
+        android:text="Delete"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

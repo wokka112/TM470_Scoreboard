@@ -8,7 +8,7 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.floatingpanda.scoreboard.GroupAdapter;
+import com.floatingpanda.scoreboard.mainadapters.GroupAdapter;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.system.Group;
 

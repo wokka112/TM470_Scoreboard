@@ -1,14 +1,17 @@
 package com.floatingpanda.scoreboard.mainfragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.floatingpanda.scoreboard.MemberAdapter;
+import com.floatingpanda.scoreboard.MemberActivity;
+import com.floatingpanda.scoreboard.mainadapters.MemberAdapter;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.system.Member;
 
@@ -45,6 +48,17 @@ public class MemberListFragment extends Fragment {
         ListView listView = rootView.findViewById(R.id.list);
 
         listView.setAdapter(memberAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent memberIntent = new Intent(getContext(), MemberActivity.class);
+                //TODO change this to be primary key for member database?
+                memberIntent.putExtra("MEMBER", members.get(position));
+                startActivity(memberIntent);
+            }
+        });
 
         return rootView;
     }
