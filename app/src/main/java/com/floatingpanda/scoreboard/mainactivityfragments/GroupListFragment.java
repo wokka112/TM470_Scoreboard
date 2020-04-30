@@ -1,14 +1,17 @@
-package com.floatingpanda.scoreboard.mainfragments;
+package com.floatingpanda.scoreboard.mainactivityfragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.floatingpanda.scoreboard.mainadapters.GroupAdapter;
+import com.floatingpanda.scoreboard.GroupActivity;
+import com.floatingpanda.scoreboard.mainactivityadapters.GroupAdapter;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.system.Group;
 
@@ -43,7 +46,16 @@ public class GroupListFragment extends Fragment {
 
         listView.setAdapter(groupAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent groupIntent = new Intent(getContext(), GroupActivity.class);
+                //TODO change this to be primary key for member database?
+                startActivity(groupIntent);
+            }
+        });
+
         return rootView;
     }
-
 }

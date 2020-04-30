@@ -11,6 +11,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MemberActivity" />
         <activity android:name=".BoardGameActivity" />
+        <activity android:name=".GroupActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

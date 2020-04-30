@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/records_game_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/records_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_game_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/records_time"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/records_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_date"
+        app:layout_constraintLeft_toRightOf="@id/records_date"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/records_difficulty_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_date"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="36dp"
+        android:text="Difficulty:"/>
+
+    <TextView
+        android:id="@+id/records_difficulty_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/records_difficulty_header"
+        app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
+        android:layout_marginLeft="12dp"/>
+
+    <TextView
+        android:id="@+id/records_player_count_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/records_difficulty_output"
+        app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Players:"/>
+
+    <TextView
+        android:id="@+id/records_player_count_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
+        app:layout_constraintLeft_toRightOf="@id/records_player_count_header"
+        android:layout_marginLeft="12dp"/>
+
+    <TextView
+        android:id="@+id/records_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/records_difficulty_header"
+        app:layout_constraintRight_toLeftOf="@id/records_player_name"
+        android:layout_marginTop="8dp"
+        />
+
+    <TextView
+        android:id="@+id/records_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/records_position"
+        app:layout_constraintTop_toTopOf="@id/records_position"
+        app:layout_constraintRight_toLeftOf="@id/records_score"
+        android:text="Name"/>
+
+    <TextView
+        android:id="@+id/records_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/records_player_name"
+        app:layout_constraintTop_toTopOf="@id/records_position"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Score"/>
+
+    <TextView
+        android:id="@+id/records_first_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_position"
+        app:layout_constraintLeft_toLeftOf="@id/records_position"
+        android:layout_marginTop="8dp"
+        android:text="1st Place"/>
+
+    <TextView
+        android:id="@+id/records_first_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_first_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_player_name"/>
+
+    <TextView
+        android:id="@+id/records_first_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_first_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_score" />
+
+    <TextView
+        android:id="@+id/records_second_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_first_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_position"
+        android:layout_marginTop="8dp"
+        android:text="2nd Place"/>
+
+    <TextView
+        android:id="@+id/records_second_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_second_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_player_name"/>
+
+    <TextView
+        android:id="@+id/records_second_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_second_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_score"/>
+
+    <TextView
+        android:id="@+id/records_third_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_second_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_position"
+        android:layout_marginTop="8dp"
+        android:text="3rd Place"/>
+
+    <TextView
+        android:id="@+id/records_third_player_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_third_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_player_name"/>
+
+    <TextView
+        android:id="@+id/records_third_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_third_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_score"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,9 +5,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.floatingpanda.scoreboard.mainfragments.BoardGameListFragment;
-import com.floatingpanda.scoreboard.mainfragments.GroupListFragment;
-import com.floatingpanda.scoreboard.mainfragments.MemberListFragment;
+import com.floatingpanda.scoreboard.mainactivityfragments.BoardGameListFragment;
+import com.floatingpanda.scoreboard.mainactivityfragments.GroupListFragment;
+import com.floatingpanda.scoreboard.mainactivityfragments.MemberListFragment;
 
 public class MainActivityListAdapter extends FragmentStateAdapter {
 

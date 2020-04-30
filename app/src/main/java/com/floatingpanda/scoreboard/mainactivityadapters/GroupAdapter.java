@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.mainadapters;
+package com.floatingpanda.scoreboard.mainactivityadapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

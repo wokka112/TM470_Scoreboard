@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.mainfragments;
+package com.floatingpanda.scoreboard.mainactivityfragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +11,7 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import com.floatingpanda.scoreboard.BoardGameActivity;
-import com.floatingpanda.scoreboard.MemberActivity;
-import com.floatingpanda.scoreboard.mainadapters.BoardGameAdapter;
+import com.floatingpanda.scoreboard.mainactivityadapters.BoardGameAdapter;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.system.BoardGame;
 

@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.mainadapters;
+package com.floatingpanda.scoreboard.mainactivityadapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,11 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.system.Group;
 import com.floatingpanda.scoreboard.system.Member;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class MemberAdapter extends ArrayAdapter<Member> {
 
