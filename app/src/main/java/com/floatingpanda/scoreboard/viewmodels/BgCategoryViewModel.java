@@ -23,5 +23,22 @@ public class BgCategoryViewModel extends AndroidViewModel {
 
     public LiveData<List<BgCategory>> getAllBgCategories() { return allBgCategories; }
 
-    public void insertBgCategory(BgCategory bgCategory) { bgCategoryRepository.insert(bgCategory); }
+    // Precondition: bgCategory should not exist in database.
+    // Postcondition: new bg category exists in the database.
+    public void addBgCategory(BgCategory bgCategory) { bgCategoryRepository.insert(bgCategory); }
+
+    // Precondition: - originalBgCategory already exists in database.
+    //               - editedBgCategory does not already exist in database.
+    //               - editedBgCategory has different name to originalBgCategory.
+    // Postcondition: - originalBgCategory will be updated in database to have the details of editedBgCategory.
+    //                - edits will cascade, so foreign keys of bgCategory (such as in assigned_categories) will be updated as well.
+    public void editBgCategory(BgCategory originalBgCategory, BgCategory editedBgCategory) {
+        bgCategoryRepository.update(originalBgCategory, editedBgCategory);
+    }
+
+    public boolean bgCategoryExists(BgCategory bgCategory) {
+        return getAllBgCategories().getValue().contains(bgCategory);
+    }
+
+
 }

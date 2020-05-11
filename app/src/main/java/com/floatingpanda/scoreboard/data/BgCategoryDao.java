@@ -15,7 +15,10 @@ public interface BgCategoryDao {
     LiveData<List<BgCategory>> getAll();
 
     @Query("SELECT * FROM bg_categories WHERE category_name LIKE :categoryName")
-    LiveData<BgCategory> findByName(String categoryName);
+    LiveData<BgCategory> findLiveDataByName(String categoryName);
+
+    @Query("SELECT * FROM bg_categories WHERE category_name LIKE :categoryName")
+    BgCategory findNonLiveDataByName(String categoryName);
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     void insertAll(BgCategory... bgCategories);
@@ -25,6 +28,8 @@ public interface BgCategoryDao {
 
     @Query ("DELETE FROM bg_categories")
     void deleteAll();
+
+    void update(BgCategory originalBgCategory, BgCategory editedBgCategory);
 
     @Delete
     void delete(BgCategory BGCategory);

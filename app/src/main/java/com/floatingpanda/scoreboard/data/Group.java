@@ -24,6 +24,12 @@ public class Group {
     @ColumnInfo(name = "img_file_path")
     private String imgFilePath;
 
+    //TODO add in list variables for holding game records and members, make them Ignore
+    //TODO find a way to make it so the list only partially loads as necessary maybe? Load it only,
+    // when going onto a detailed groups activity.
+    //TODO make it so the group details view has records and winner lists that expand when tapped,
+    // rather than leading you to separate activities just to view the record or winner list details.
+
     public Group(String groupName, String notes, String description) {
         this.groupName = groupName;
         this.notes = notes;

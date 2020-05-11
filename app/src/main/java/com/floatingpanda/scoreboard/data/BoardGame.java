@@ -47,6 +47,12 @@ public class BoardGame {
     @Nullable
     private String notes;
 
+    //TODO add imgFileType entity like Member and Group have.
+
+    //TODO add a list of BgCategories and Ignore it. The list will simply be used to hold the assigned categories
+    // but the categories will be stored in a separate table as a many-to-many relationship. This is similar to
+    // the Group which will hold a list of Member objects and GameRecord objects.
+
     public BoardGame(String bgName, int difficulty, int minPlayers, int maxPlayers, String teamType,
                      String gameType, String description, String houseRules, String notes) {
         this.bgName = bgName;

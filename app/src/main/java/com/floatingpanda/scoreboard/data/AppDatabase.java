@@ -77,7 +77,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 member = new Member("Bailey", "Bailey", "Bailey");
                 memberDao.insert(member);
 
-
+                /*
                 BgCategoryDao bgCategoryDao = INSTANCE.bgCategoryDao();
                 bgCategoryDao.deleteAll();
 
@@ -91,6 +91,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 bgCategoryDao.insert(category);
                 category = new BgCategory("Ameritrash");
                 bgCategoryDao.insert(category);
+                */
 
                 GroupDao groupDao = INSTANCE.groupDao();
                 groupDao.deleteAll();

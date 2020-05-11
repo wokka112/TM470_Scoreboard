@@ -16,16 +16,6 @@ import java.util.List;
 
 public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.MemberViewHolder> {
 
-    class MemberViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nicknameItemView, groupsItemView;
-
-        private MemberViewHolder(View itemView) {
-            super(itemView);
-            nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
-            groupsItemView = itemView.findViewById(R.id.rmember_groups_output);
-        }
-    }
-
     private final LayoutInflater inflater;
     private List<Member> members;
 
@@ -58,5 +48,15 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
         if (members != null)
             return members.size();
         else return 0;
+    }
+
+    class MemberViewHolder extends RecyclerView.ViewHolder {
+        private final TextView nicknameItemView, groupsItemView;
+
+        private MemberViewHolder(View itemView) {
+            super(itemView);
+            nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
+            groupsItemView = itemView.findViewById(R.id.rmember_groups_output);
+        }
     }
 }

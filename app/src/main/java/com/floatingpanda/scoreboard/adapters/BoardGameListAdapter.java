@@ -18,22 +18,12 @@ import java.util.List;
 
 public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdapter.BoardGameViewHolder> {
 
-    class BoardGameViewHolder extends RecyclerView.ViewHolder {
-        private final TextView bgNameItemView, difficultyItemView, playersItemView, categoriesItemView;
-
-        private BoardGameViewHolder(View itemView) {
-            super(itemView);
-            bgNameItemView = itemView.findViewById(R.id.bg_name);
-            difficultyItemView = itemView.findViewById(R.id.bg_difficulty_output);
-            playersItemView = itemView.findViewById(R.id.bg_players_output);
-            categoriesItemView = itemView.findViewById(R.id.bg_categories_output);
-        }
-    }
-
     private final LayoutInflater inflater;
     private List<BoardGamesAndBgCategories> bgsAndBgCategories;
 
-    public BoardGameListAdapter(Context context) { inflater = LayoutInflater.from(context); }
+    public BoardGameListAdapter(Context context) {
+        inflater = LayoutInflater.from(context);
+    }
 
     @Override
     public BoardGameViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -41,10 +31,14 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
         return new BoardGameViewHolder(itemView);
     }
 
+    //TODO add a list of bgcategories to Board Game which can then be populated from the viewmodel,
+    // then a list of board games can be passed to the view and through to the adapter, where they
+    // are simply made visible, rather than taking apart the data from the viewmodel in this adapter.
+    //TODO add a function in BoardGame that gives the list of categories as a String for the adapter
+    // to show.
     @Override
     public void onBindViewHolder(BoardGameViewHolder holder, int position) {
         if (bgsAndBgCategories != null) {
-            Log.w("BoardGameListAdapt.java", "Position: " + position);
             BoardGamesAndBgCategories current = bgsAndBgCategories.get(position);
 
             BoardGame boardGame = current.getBoardGame();
@@ -75,5 +69,17 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
         if (bgsAndBgCategories != null)
             return bgsAndBgCategories.size();
         else return 0;
+    }
+
+    class BoardGameViewHolder extends RecyclerView.ViewHolder {
+        private final TextView bgNameItemView, difficultyItemView, playersItemView, categoriesItemView;
+
+        private BoardGameViewHolder(View itemView) {
+            super(itemView);
+            bgNameItemView = itemView.findViewById(R.id.bg_name);
+            difficultyItemView = itemView.findViewById(R.id.bg_difficulty_output);
+            playersItemView = itemView.findViewById(R.id.bg_players_output);
+            categoriesItemView = itemView.findViewById(R.id.bg_categories_output);
+        }
     }
 }

@@ -15,21 +15,12 @@ import java.util.List;
 
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.GroupViewHolder> {
 
-    class GroupViewHolder extends RecyclerView.ViewHolder {
-        private final TextView groupNameItemView, membersItemView, recordsItemView;
-
-        private GroupViewHolder(View itemView) {
-            super(itemView);
-            groupNameItemView = itemView.findViewById(R.id.group_name_output);
-            membersItemView = itemView.findViewById(R.id.group_members_output);
-            recordsItemView = itemView.findViewById(R.id.group_records_output);
-        }
-    }
-
     private final LayoutInflater inflater;
     private List<Group> groups;
 
-    public GroupListAdapter(Context context) { inflater = LayoutInflater.from(context); }
+    public GroupListAdapter(Context context) {
+        inflater = LayoutInflater.from(context);
+    }
 
     @Override
     public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -59,5 +50,16 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
         if (groups != null)
             return groups.size();
         else return 0;
+    }
+
+    class GroupViewHolder extends RecyclerView.ViewHolder {
+        private final TextView groupNameItemView, membersItemView, recordsItemView;
+
+        private GroupViewHolder(View itemView) {
+            super(itemView);
+            groupNameItemView = itemView.findViewById(R.id.group_name_output);
+            membersItemView = itemView.findViewById(R.id.group_members_output);
+            recordsItemView = itemView.findViewById(R.id.group_records_output);
+        }
     }
 }
