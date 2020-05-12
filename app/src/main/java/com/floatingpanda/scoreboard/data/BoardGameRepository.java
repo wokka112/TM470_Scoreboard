@@ -51,7 +51,7 @@ public class BoardGameRepository {
         String bgName = boardGame.getBgName();
         List<AssignedCategories> assignedCategories = new ArrayList<>();
         for (BgCategory category : categories) {
-            assignedCategories.add(new AssignedCategories(bgName, category.getCategoryName()));
+            assignedCategories.add(new AssignedCategories(bgName, category.getId()));
         }
     }
 

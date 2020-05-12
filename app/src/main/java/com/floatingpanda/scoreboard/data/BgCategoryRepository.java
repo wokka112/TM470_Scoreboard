@@ -21,26 +21,44 @@ public class BgCategoryRepository {
         allBgCategories = bgCategoryDao.getAll();
     }
 
-    public LiveData<List<BgCategory>> getAllBgCategories() {
+    public LiveData<List<BgCategory>> getAll() {
         return allBgCategories;
     }
 
+    // Precondition: bgCategory should not exist in database.
+    // Postcondition: new bg category exists in the database.
     public void insert(BgCategory bgCategory) {
         AppDatabase.getExecutorService().execute(() -> {
             bgCategoryDao.insert(bgCategory);
         });
     }
 
-    public void update(BgCategory originalBgCategory, BgCategory editedBgCategory) {
+    // Precondition: - a BgCategory with editedBgCategory's id (primary key) exists in database.
+    // Postcondition: - the BgCategory in the database will be updated to have the details of editedBgCategory.
+    //                - edits will cascade, so foreign keys of bgCategory (such as in assigned_categories) will be updated as well.
+    public void update(BgCategory editedBgCategory) {
         AppDatabase.getExecutorService().execute(() -> {
-            bgCategoryDao.update(originalBgCategory, editedBgCategory);
+            bgCategoryDao.update(editedBgCategory);
         });
     }
 
+    // Precondition: - bgCategory should exist in the database.
+    // Postconditions: - bgCategory will no longer exist in the database.
+    //                 - assigned_categories tables with bgCategory in will have been deleted.
+    //                 - skill ratings for players for this category will have been deleted.
+    public void delete(BgCategory bgCategory) {
+        AppDatabase.getExecutorService().execute(() -> {
+            bgCategoryDao.delete(bgCategory);
+        });
+    }
+
+    // Postconditions: - if a BgCategory with bgCategory's name exists in the database, returns true.
+    //                 - if no BgCategory with bgCategory's name exists in the database, returns false.
     public boolean contains(BgCategory bgCategory) {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
+                //TODO remove log warnings once done with tests.
                 Log.w("BgCatRepos.java", "Started thread");
                 BgCategory databaseCategory = bgCategoryDao.findNonLiveDataByName(bgCategory.getCategoryName());
                 Log.w("BgCatRepos.java", "Category: " + databaseCategory);

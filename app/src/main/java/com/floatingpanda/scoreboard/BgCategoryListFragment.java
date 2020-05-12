@@ -1,5 +1,8 @@
 package com.floatingpanda.scoreboard;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -43,7 +46,7 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
 
-        final BgCategoryListAdapter adapter = new BgCategoryListAdapter(getActivity());
+        final BgCategoryListAdapter adapter = new BgCategoryListAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -67,24 +70,24 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         return rootView;
     }
 
-    //TODO add an add category fab or other button
+    // Preconditions: - bgCategory does not exist in the database.
+    // Postconditions: - bgCategory is added to the database.
     public void addBgCategory(BgCategory bgCategory) {
         bgCategoryViewModel.addBgCategory(bgCategory);
     }
 
-    //TODO add pre-conditions and post-conditions? Pre-condition: object will be a BgCategory.
-    // postcondition: update() will be called in viewmodel?
+    // Preconditions: - object is a BgCategory
+    // Postconditions: - BgCategory edit view is started to edit object in the database.
     @Override
     public void startEditActivity(Object object) {
         //TODO look into whether this should be application context rather than just context
-        //TODO make category parcelable so I can pass the bgcategory rather than the name???
         BgCategory bgCategory;
 
         if (object.getClass() == BgCategory.class) {
             bgCategory = (BgCategory) object;
 
             Intent intent = new Intent(getContext(), BgCategoryEditActivity.class);
-            intent.putExtra("ORIGINAL_BG_CATEGORY", bgCategory);
+            intent.putExtra("BG_CATEGORY", bgCategory);
             startActivityForResult(intent, EDIT_CATEGORY_REQUEST_CODE);
         } else {
             Log.w("BgCatListFrag.java", "Did not receive category.");
@@ -92,17 +95,48 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         }
     }
 
-    public void editBgCategory(BgCategory originalBgCategory, BgCategory editedBgCategory) {
-        bgCategoryViewModel.editBgCategory(originalBgCategory, editedBgCategory);
+    // Preconditions: - BgCategory with editedBgCategory's id (primary key) exists in the database.
+    // Postconditions: - BgCategory with editedBgCategory's id (primary key) is updated in database
+    //      to have editedBgCategory's details.
+    public void editBgCategory(BgCategory editedBgCategory) {
+        bgCategoryViewModel.editBgCategory(editedBgCategory);
     }
 
+    // Preconditions: - object is a BgCategory.
+    //                - the BgCategory object exists in the database.
+    // Postconditions: - if user hits delete on the delete popup, the BgCategory is removed from the database.
+    //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
     @Override
     public void startDeleteActivity(Object object) {
-        //TODO make a popup window and get a yes or no before deletion
+        BgCategory bgCategory = (BgCategory) object;
+
+        //TODO refactor this popup window into a method and find somewhere better to put it.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Category?")
+                .setMessage("Are you sure you want to delete " + bgCategory.getCategoryName() + "?\n" +
+                        "Skill ratings for this category will be deleted as well.\n" +
+                        "This is irreversible.")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteBgCategory(bgCategory);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .create()
+                .show();
     }
 
+    // Preconditions: - bgCategory exists in the database.
+    // Postconditions: - bgCategory is removed from the database.
+    //                 - assigned_categories with bgCategory in them are removed from the database.
     public void deleteBgCategory(BgCategory bgCategory) {
-
+        bgCategoryViewModel.deleteBgCategory(bgCategory);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -112,30 +146,9 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
             BgCategory newBgCategory = (BgCategory) data.getExtras().get(BgCategoryAddActivity.EXTRA_REPLY);
             addBgCategory(newBgCategory);
         } else if (requestCode == EDIT_CATEGORY_REQUEST_CODE && resultCode == RESULT_OK) {
-            BgCategory originalBgCategory = (BgCategory) data.getExtras().get("ORIGINAL_BG_CATEGORY");
+            //TODO replace the String here with a set value, maybe make a static value somewhere for EXTRA_REPLY.
             BgCategory editedBgCategory = (BgCategory) data.getExtras().get("EDITED_BG_CATEGORY");
+            editBgCategory(editedBgCategory);
         }
     }
-
-    //TODO implement on activity result properly.
-    //TODO for add, simply call insert in viewmodel.
-    //TODO for edit, call edit in viewmodel.
-    //TODO for delete, call delete in viewmodel.
-    /*
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == EDIT_CATEGORY_REQUEST_CODE && resultCode == RESULT_OK) {
-            String nickname = data.getStringExtra(NewMemberActivity.EXTRA_REPLY);
-            String realName = data.getStringExtra(NewMemberActivity.EXTRA_REPLY);
-            String notes = data.getStringExtra(NewMemberActivity.EXTRA_REPLY);
-            Member member = new Member(nickname, realName, notes);
-
-            mMemberViewModel.insert(member);
-        } else {
-            Toast.makeText( getApplicationContext(), "Not saved", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-     */
 }

@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -29,8 +30,9 @@ public interface BgCategoryDao {
     @Query ("DELETE FROM bg_categories")
     void deleteAll();
 
-    void update(BgCategory originalBgCategory, BgCategory editedBgCategory);
+    @Update
+    void update(BgCategory BgCategory);
 
     @Delete
-    void delete(BgCategory BGCategory);
+    void delete(BgCategory BgCategory);
 }

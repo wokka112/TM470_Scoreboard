@@ -1,5 +1,7 @@
 package com.floatingpanda.scoreboard;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -13,10 +15,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 
+//TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for edit)
+// then add up arrow to it.
+//TODO add up arrow to toolbar and finish() activity from there. Then remove cancel button.
+// alternatively, put finish() in onclicklistener for cancel button. Do same for add activity.
+
 public class BgCategoryEditActivity extends AppCompatActivity {
 
     private BgCategoryRepository bgCategoryRepository;
-    private BgCategory originalBgCategory;
     private EditText categoryEditText;
 
     @Override
@@ -24,34 +30,31 @@ public class BgCategoryEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_bg_category);
 
-        originalBgCategory = (BgCategory) getIntent().getExtras().get("BG_CATEGORY");
+        BgCategory bgCategory = (BgCategory) getIntent().getExtras().get("BG_CATEGORY");
+        BgCategory originalBgCategory = new BgCategory(bgCategory.getCategoryName());
+
         bgCategoryRepository = new BgCategoryRepository(getApplication());
 
         categoryEditText = findViewById(R.id.add_category_edittext);
-        categoryEditText.setText(originalBgCategory.getCategoryName());
+        categoryEditText.setText(bgCategory.getCategoryName());
 
         final Button button = findViewById(R.id.add_category_save_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (TextUtils.isEmpty(categoryEditText.getText())) {
-                    //TODO popup a warning on the edittext saying you need to put in a name.
-                    Log.w("BgCatEditAct.java", "POPUP: You must enter a name for the category.");
+                    AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryEditActivity.this);
                     return;
                 }
 
-                String bgCategoryName = categoryEditText.getText().toString();
-                BgCategory bgCategory = new BgCategory(bgCategoryName);
-
+                bgCategory.setCategoryName(categoryEditText.getText().toString());
                 Log.w("BgCatEditAct.java", "Includes category: " + bgCategoryRepository.contains(bgCategory));
-                if ((bgCategoryName.equals(originalBgCategory.getCategoryName()))
+                if ((bgCategory.getCategoryName().equals(originalBgCategory.getCategoryName()))
                         || bgCategoryRepository.contains(bgCategory)) {
-                    //TODO popup a warning on the edittext saying this name already exists.
-                    Log.w("BgCatEditAct.java", "POPUP: You must enter a new, unique name for the category.");
+                    AlertDialogHelper.popupWarning("You must enter a new, unique name for the category.", BgCategoryEditActivity.this);
                     return;
                 }
 
                 Intent replyIntent = new Intent();
-                replyIntent.putExtra("ORIGINAL_BG_CATEGORY", originalBgCategory);
                 replyIntent.putExtra("EDITED_BG_CATEGORY", bgCategory);
                 setResult(RESULT_OK, replyIntent);
                 finish();

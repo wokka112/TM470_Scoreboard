@@ -21,8 +21,9 @@ public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAd
     private List<BgCategory> bgCategories;
     private ActivityAdapterInterface listener;
 
-    public BgCategoryListAdapter(Context context) {
+    public BgCategoryListAdapter(Context context, ActivityAdapterInterface listener) {
         inflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @Override
@@ -72,19 +73,29 @@ public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAd
 
     class BgCategoryViewHolder extends RecyclerView.ViewHolder {
         private final TextView bgCategoryItemView;
-        private final Button bgCategoryEditButton;
+        private final Button bgCategoryEditButton, bgCategoryDeleteButton;
 
         private BgCategoryViewHolder(View itemView) {
             super(itemView);
             bgCategoryItemView = itemView.findViewById(R.id.category_text);
             bgCategoryEditButton = itemView.findViewById(R.id.category_edit_button);
+            bgCategoryDeleteButton = itemView.findViewById(R.id.category_delete_button);
 
             bgCategoryEditButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     BgCategory bgCategory = bgCategories.get(position);
-                    listener.editEntity(bgCategory);
+                    listener.startEditActivity(bgCategory);
+                }
+            });
+
+            bgCategoryDeleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    BgCategory bgCategory = bgCategories.get(position);
+                    listener.startDeleteActivity(bgCategory);
                 }
             });
         }

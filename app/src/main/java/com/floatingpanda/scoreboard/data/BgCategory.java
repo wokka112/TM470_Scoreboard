@@ -8,24 +8,35 @@ import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "bg_categories")
+@Entity(tableName = "bg_categories", indices = {@Index(value = "category_name",
+        unique = true)})
 public class BgCategory implements Parcelable {
-    @PrimaryKey
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "category_id")
+    @NonNull
+    private int id;
+
     @ColumnInfo(name = "category_name")
     @NonNull
     public String categoryName;
 
     public BgCategory(String categoryName) {
+        this.id = 0;
         this.categoryName = categoryName;
     }
 
     @Ignore
     public BgCategory(Parcel source) {
+        this.id = source.readInt();
         this.categoryName = source.readString();
     }
 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
     public String getCategoryName() { return categoryName; }
     public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 
@@ -36,6 +47,7 @@ public class BgCategory implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(categoryName);
     }
 

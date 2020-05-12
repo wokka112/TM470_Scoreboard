@@ -18,7 +18,7 @@ public class BgCategoryViewModel extends AndroidViewModel {
     public BgCategoryViewModel(Application application) {
         super(application);
         bgCategoryRepository = new BgCategoryRepository(application);
-        allBgCategories = bgCategoryRepository.getAllBgCategories();
+        allBgCategories = bgCategoryRepository.getAll();
     }
 
     public LiveData<List<BgCategory>> getAllBgCategories() { return allBgCategories; }
@@ -27,18 +27,18 @@ public class BgCategoryViewModel extends AndroidViewModel {
     // Postcondition: new bg category exists in the database.
     public void addBgCategory(BgCategory bgCategory) { bgCategoryRepository.insert(bgCategory); }
 
-    // Precondition: - originalBgCategory already exists in database.
-    //               - editedBgCategory does not already exist in database.
-    //               - editedBgCategory has different name to originalBgCategory.
-    // Postcondition: - originalBgCategory will be updated in database to have the details of editedBgCategory.
+    // Precondition: - a BgCategory with editedBgCategory's id (primary key) exists in database.
+    // Postcondition: - the BgCategory in the database will be updated to have the details of editedBgCategory.
     //                - edits will cascade, so foreign keys of bgCategory (such as in assigned_categories) will be updated as well.
-    public void editBgCategory(BgCategory originalBgCategory, BgCategory editedBgCategory) {
-        bgCategoryRepository.update(originalBgCategory, editedBgCategory);
+    public void editBgCategory(BgCategory editedBgCategory) {
+        bgCategoryRepository.update(editedBgCategory);
     }
 
-    public boolean bgCategoryExists(BgCategory bgCategory) {
-        return getAllBgCategories().getValue().contains(bgCategory);
+    // Precondition: - bgCategory should exist in the database.
+    // Postconditions: - bgCategory will no longer exist in the database.
+    //                 - assigned_categories tables with bgCategory in will have been deleted.
+    //                 - skill ratings for players for this category will have been deleted.
+    public void deleteBgCategory(BgCategory bgCategory) {
+        bgCategoryRepository.delete(bgCategory);
     }
-
-
 }

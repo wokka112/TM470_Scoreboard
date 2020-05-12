@@ -10,7 +10,7 @@ public class BoardGamesAndBgCategories {
     @Embedded public BoardGame boardGame;
     @Relation(
             parentColumn = "bg_name",
-            entityColumn = "category_name",
+            entityColumn = "category_id",
             associateBy = @Junction(AssignedCategories.class)
     )
     public List<BgCategory> bgCategories;

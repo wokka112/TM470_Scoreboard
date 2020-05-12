@@ -15,6 +15,11 @@ import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 
 import java.util.List;
 
+//TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for add)
+// then edit up arrow to it.
+//TODO add up arrow to toolbar and finish() activity from there. Then remove cancel button.
+// alternatively, put finish() in onclicklistener for cancel button. Do same for edit activity.
+
 public class BgCategoryAddActivity extends AppCompatActivity {
 
     //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??

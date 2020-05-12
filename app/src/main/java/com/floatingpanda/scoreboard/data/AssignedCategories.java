@@ -4,23 +4,23 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
-@Entity(tableName = "assigned_categories", primaryKeys = {"bg_name", "category_name"})
+@Entity(tableName = "assigned_categories", primaryKeys = {"bg_name", "category_id"})
 public class AssignedCategories {
     @NonNull
     @ColumnInfo(name = "bg_name")
     public String bgName;
 
     @NonNull
-    @ColumnInfo(name = "category_name")
-    public String categoryName;
+    @ColumnInfo(name = "category_id")
+    public int categoryId;
 
-    public AssignedCategories(String bgName, String categoryName) {
+    public AssignedCategories(String bgName, int categoryId) {
         this.bgName = bgName;
-        this.categoryName = categoryName;
+        this.categoryId = categoryId;
     }
 
     public String getBgName() { return this.bgName; }
     public void setBgName(String bgName) { this.bgName = bgName; }
-    public String getCategoryName() { return this.categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public int getCategoryName() { return this.categoryId; }
+    public void setCategoryName(int id) { this.categoryId = id; }
 }

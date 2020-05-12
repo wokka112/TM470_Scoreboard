@@ -14,8 +14,11 @@ public interface AssignedCategoriesDao {
     @Query("SELECT * FROM assigned_categories")
     LiveData<List<AssignedCategories>> getAll();
 
+    /*
     @Query("SELECT * FROM assigned_categories WHERE bg_name LIKE :bgName")
     LiveData<BgCategory> findByName(String bgName);
+
+     */
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(AssignedCategories... assignedCategories);

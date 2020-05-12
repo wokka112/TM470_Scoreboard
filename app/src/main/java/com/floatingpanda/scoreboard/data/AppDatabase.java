@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategories.class, BgCategory.class, BoardGame.class, Group.class, Member.class}, version = 4, exportSchema = false)
+@Database(entities = {AssignedCategories.class, BgCategory.class, BoardGame.class, Group.class, Member.class}, version = 6, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MemberDao memberDao();
@@ -117,12 +117,16 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 BgCategory strategy = new BgCategory("Strategy");
                 boardGameCategoryDao.insert(strategy);
+                strategy = boardGameCategoryDao.findNonLiveDataByName(strategy.getCategoryName());
                 BgCategory skill = new BgCategory("Skill");
                 boardGameCategoryDao.insert(skill);
+                skill = boardGameCategoryDao.findNonLiveDataByName(skill.getCategoryName());
                 BgCategory luck = new BgCategory("Luck");
                 boardGameCategoryDao.insert(luck);
+                luck = boardGameCategoryDao.findNonLiveDataByName(luck.getCategoryName());
                 BgCategory gambling = new BgCategory("Gambling");
                 boardGameCategoryDao.insert(gambling);
+                luck = boardGameCategoryDao.findNonLiveDataByName(luck.getCategoryName());
 
                 BoardGame bg = new BoardGame("Medieval", 3, 1, 8, "N/A",
                         "N/A", "N/A", "N/A", "N/A");
@@ -138,20 +142,20 @@ public abstract class AppDatabase extends RoomDatabase {
                 List<AssignedCategories> acs = new ArrayList<>();
 
                 bgDao.insert(bg);
-                acs.add(new AssignedCategories(bg.getBgName(), strategy.getCategoryName()));
-                acs.add(new AssignedCategories(bg.getBgName(), luck.getCategoryName()));
+                acs.add(new AssignedCategories(bg.getBgName(), strategy.getId()));
+                acs.add(new AssignedCategories(bg.getBgName(), luck.getId()));
                 acDao.insertAll(acs.toArray(new AssignedCategories[acs.size()]));
 
                 Log.w("Database.java", "Inserted bg");
 
                 bgDao.insert(bg1);
-                acs.add(new AssignedCategories(bg1.getBgName(), gambling.getCategoryName()));
+                acs.add(new AssignedCategories(bg1.getBgName(), gambling.getId()));
                 acDao.insert(acs.get(0));
                 Log.w("Database.java", "Inserted bg1");
 
-                acs.add(new AssignedCategories(bg2.getBgName(), gambling.getCategoryName()));
-                acs.add(new AssignedCategories(bg3.getBgName(), strategy.getCategoryName()));
-                acs.add(new AssignedCategories(bg4.getBgName(), luck.getCategoryName()));
+                acs.add(new AssignedCategories(bg2.getBgName(), gambling.getId()));
+                acs.add(new AssignedCategories(bg3.getBgName(), strategy.getId()));
+                acs.add(new AssignedCategories(bg4.getBgName(), luck.getId()));
 
                 bgDao.insert(bg2);
                 Log.w("Database.java", "Inserted bg2");
