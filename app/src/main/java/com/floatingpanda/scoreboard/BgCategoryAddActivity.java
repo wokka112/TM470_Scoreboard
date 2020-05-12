@@ -38,9 +38,10 @@ public class BgCategoryAddActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.add_category_save_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                //TODO remove popup warnings and instead direct people to the edit text in error and
+                // inform them what they need to do to fix it?
                 if (TextUtils.isEmpty(categoryEditText.getText())) {
-                    //TODO popup a warning on the edittext saying you need to put in a name.
-                    Log.w("BgCatAddAct.java", "POPUP: You must enter a name for the new category.");
+                    AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryAddActivity.this);
                     return;
                 }
 
@@ -50,9 +51,8 @@ public class BgCategoryAddActivity extends AppCompatActivity {
 
                 Log.w("BgCatAddAct.java", "Includes category: " + bgCategoryRepository.contains(bgCategory));
                 if (bgCategoryRepository.contains(bgCategory)) {
-                    //TODO popup a warning on the edittext saying this name already exists.
-                    Log.w("BgCatAddAct.java", "POPUP: This category already exists. You must enter a " +
-                            "unique category name.");
+                    AlertDialogHelper.popupWarning("A category with that name already exists. " +
+                            "You must enter a unique category name.", BgCategoryAddActivity.this);
                     return;
                 }
 

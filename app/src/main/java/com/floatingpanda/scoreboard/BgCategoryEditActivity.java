@@ -41,6 +41,8 @@ public class BgCategoryEditActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.add_category_save_button);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                //TODO remove popup warnings and instead direct people to the edittext in error and
+                // inform them what they need to do to fix it?
                 if (TextUtils.isEmpty(categoryEditText.getText())) {
                     AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryEditActivity.this);
                     return;
