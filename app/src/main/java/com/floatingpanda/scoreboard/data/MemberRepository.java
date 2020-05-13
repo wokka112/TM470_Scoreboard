@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Database;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -25,8 +24,17 @@ public class MemberRepository {
         return allMembers;
     }
 
+    //TODO get rid of using nickname to getlivemember? Observing this is problematic because nicknames can change,
+    // in which case you can no longer find the member in the database using this.
+    // Fails if nickname changes while this is being observed.
+    // Could change this so that you get a non live member instead. That is a useful thing.
     public LiveData<Member> getLiveMember(String nickname) {
-        return memberDao.findLivedataByNickname(nickname);
+        return memberDao.findLiveDataByNickname(nickname);
+    }
+
+    // Hinges on id not changing. Primary keys should be immutable, hence the id.
+    public LiveData<Member> getLiveMember(int id) {
+        return memberDao.findLiveDataById(id);
     }
 
     public void insert(Member member) {
@@ -38,6 +46,12 @@ public class MemberRepository {
     public void update(Member member) {
         AppDatabase.getExecutorService().execute(() -> {
             memberDao.update(member);
+        });
+    }
+
+    public void delete(Member member) {
+        AppDatabase.getExecutorService().execute(() -> {
+            memberDao.delete(member);
         });
     }
 

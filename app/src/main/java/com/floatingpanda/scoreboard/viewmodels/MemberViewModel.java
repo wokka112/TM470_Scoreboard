@@ -23,11 +23,13 @@ public class MemberViewModel extends AndroidViewModel {
 
     public LiveData<List<Member>> getAllMembers() { return allMembers; }
 
-    //TODO implement method to get a livedata member that I can then use in the member activity.
+    //Hinges on primary key not changing while this is observed.
     public LiveData<Member> getLiveDataMember(Member member) {
-        return memberRepository.getLiveMember(member.getNickname());
+        return memberRepository.getLiveMember(member.getId());
     }
 
+    //TODO remove?
+    //Hinges on nickname not changing while this is observed.
     public LiveData<Member> getLiveDataMember(String nickname) {
         return memberRepository.getLiveMember(nickname);
     }
@@ -35,4 +37,6 @@ public class MemberViewModel extends AndroidViewModel {
     public void addMember(Member member) { memberRepository.insert(member); }
 
     public void editMember(Member member) { memberRepository.update(member); }
+
+    public void deleteMember(Member member) { memberRepository.delete(member); }
 }

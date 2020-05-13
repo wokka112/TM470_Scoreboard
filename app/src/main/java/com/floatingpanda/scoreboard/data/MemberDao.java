@@ -15,8 +15,11 @@ public interface MemberDao {
     @Query("SELECT * FROM members")
     LiveData<List<Member>> getAll();
 
+    @Query("SELECT * FROM members WHERE member_id LIKE :id")
+    LiveData<Member> findLiveDataById(int id);
+
     @Query("SELECT * FROM members WHERE nickname LIKE :nickname")
-    LiveData<Member> findLivedataByNickname(String nickname);
+    LiveData<Member> findLiveDataByNickname(String nickname);
 
     @Query("SELECT * FROM members WHERE nickname LIKE :nickname")
     Member findNonLiveDataByNickname(String nickname);
