@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/memberadd_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher_foreground"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="12dp" />
+
+    <Button
+        android:id="@+id/memberadd_button_browse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_img"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/memberadd_button_camera"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_folder_open_black_24dp"/>
+
+    <Button
+        android:id="@+id/memberadd_button_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/memberadd_button_browse"
+        app:layout_constraintLeft_toRightOf="@id/memberadd_button_browse"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/ic_photo_camera_black_24dp"/>
+
+    <TextView
+        android:id="@+id/memberadd_nickname_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_button_browse"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Nickname:"
+        android:visibility="gone"/>
+
+    <EditText
+        android:id="@+id/memberadd_nickname_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_button_browse"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:hint="Nickname"/>
+
+    <TextView
+        android:id="@+id/memberadd_realname_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
+        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_textview"
+        android:text="Real Name:"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/memberadd_realname_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
+        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_edittext"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Real Name (Optional)"/>
+
+    <TextView
+        android:id="@+id/memberadd_notes_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_realname_edittext"
+        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_textview"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/memberadd_notes_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_realname_edittext"
+        app:layout_constraintLeft_toLeftOf="@id/memberadd_realname_edittext"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:hint="Notes (Optional)"/>
+
+    <Button
+        android:id="@+id/memberadd_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_notes_edittext"
+        android:layout_marginTop="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/memberadd_button_cancel"
+        android:text="Save"/>
+
+    <Button
+        android:id="@+id/memberadd_button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/memberadd_button_save"
+        app:layout_constraintRight_toLeftOf="@id/memberadd_button_save"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="Cancel"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

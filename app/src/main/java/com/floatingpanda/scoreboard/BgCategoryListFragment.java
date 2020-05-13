@@ -62,12 +62,16 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent addBgCategoryIntent = new Intent(getContext(), BgCategoryAddActivity.class);
-                startActivityForResult(addBgCategoryIntent, ADD_CATEGORY_REQUEST_CODE);
+                startAddActivity();
             }
         });
 
         return rootView;
+    }
+
+    public void startAddActivity() {
+        Intent addBgCategoryIntent = new Intent(getContext(), BgCategoryAddActivity.class);
+        startActivityForResult(addBgCategoryIntent, ADD_CATEGORY_REQUEST_CODE);
     }
 
     // Preconditions: - bgCategory does not exist in the database.

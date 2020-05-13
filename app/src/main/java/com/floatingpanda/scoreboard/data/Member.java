@@ -1,15 +1,24 @@
 package com.floatingpanda.scoreboard.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "members")
-public class Member {
-    @PrimaryKey
+@Entity(tableName = "members", indices = {@Index(value = "nickname",
+        unique = true)})
+public class Member implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = "member_id")
+    private int id;
+
     @NonNull
     @ColumnInfo(name = "nickname")
     private String nickname;
@@ -26,6 +35,7 @@ public class Member {
     private String imgFilePath;
 
     public Member(@NonNull String nickname, String realName, String notes) {
+        this.id = 0;
         this.nickname = nickname;
         this.realName = realName;
         this.notes = notes;
@@ -33,12 +43,24 @@ public class Member {
 
     @Ignore
     public Member(@NonNull String nickname, String realName, String notes, String imgFilePath) {
+        this.id = 0;
         this.nickname = nickname;
         this.realName = realName;
         this.notes = notes;
         this.imgFilePath = imgFilePath;
     }
 
+    @Ignore
+    public Member(Parcel source) {
+        this.id = source.readInt();
+        this.nickname = source.readString();
+        this.realName = source.readString();
+        this.notes = source.readString();
+        this.imgFilePath = source.readString();
+    }
+
+    public int getId() { return this.id; }
+    public void setId(int id) { this.id = id; }
     public String getNickname() { return this.nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
     public String getRealName() { return this.realName; }
@@ -47,4 +69,43 @@ public class Member {
     public void setNotes(String notes) { this.notes = notes; }
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(nickname);
+        dest.writeString(realName);
+        dest.writeString(notes);
+        dest.writeString(imgFilePath);
+    }
+
+    public static final Creator<Member> CREATOR = new Creator<Member>() {
+        @Override
+        public Member[] newArray(int size) {
+            return new Member[size];
+        }
+
+        @Override
+        public Member createFromParcel(Parcel source) {
+            return new Member(source);
+        }
+    };
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Member other = (Member) obj;
+
+        return (other.getNickname().equals(this.getNickname())
+                && other.getRealName().equals(this.getRealName())
+                && other.getNotes().equals(this.getNotes()));
+    }
 }

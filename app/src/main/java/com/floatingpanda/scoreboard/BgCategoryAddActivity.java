@@ -45,9 +45,9 @@ public class BgCategoryAddActivity extends AppCompatActivity {
                     return;
                 }
 
+                //TODO change bgcategoryrepository contains method to simply take a string bgcategoryname.
                 String bgCategoryName = categoryEditText.getText().toString();
                 BgCategory bgCategory = new BgCategory(bgCategoryName);
-
 
                 Log.w("BgCatAddAct.java", "Includes category: " + bgCategoryRepository.contains(bgCategory));
                 if (bgCategoryRepository.contains(bgCategory)) {

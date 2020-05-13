@@ -23,5 +23,16 @@ public class MemberViewModel extends AndroidViewModel {
 
     public LiveData<List<Member>> getAllMembers() { return allMembers; }
 
-    public void insertMember(Member member) { memberRepository.insert(member); }
+    //TODO implement method to get a livedata member that I can then use in the member activity.
+    public LiveData<Member> getLiveDataMember(Member member) {
+        return memberRepository.getLiveMember(member.getNickname());
+    }
+
+    public LiveData<Member> getLiveDataMember(String nickname) {
+        return memberRepository.getLiveMember(nickname);
+    }
+
+    public void addMember(Member member) { memberRepository.insert(member); }
+
+    public void editMember(Member member) { memberRepository.update(member); }
 }

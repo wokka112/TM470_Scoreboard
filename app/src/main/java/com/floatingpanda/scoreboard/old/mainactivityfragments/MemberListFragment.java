@@ -10,7 +10,7 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import com.floatingpanda.scoreboard.old.MemberActivity;
+import com.floatingpanda.scoreboard.MemberActivity;
 import com.floatingpanda.scoreboard.old.mainactivityadapters.MemberAdapter;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.old.system.Member;

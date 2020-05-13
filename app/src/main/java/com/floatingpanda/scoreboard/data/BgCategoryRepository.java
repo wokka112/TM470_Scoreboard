@@ -54,6 +54,7 @@ public class BgCategoryRepository {
 
     // Postconditions: - if a BgCategory with bgCategory's name exists in the database, returns true.
     //                 - if no BgCategory with bgCategory's name exists in the database, returns false.
+    //TODO change bgcategoryrepository contains method to simply take a string bgcategoryname.
     public boolean contains(BgCategory bgCategory) {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override

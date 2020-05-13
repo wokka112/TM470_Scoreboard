@@ -1,5 +1,6 @@
 package com.floatingpanda.scoreboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.adapters.MemberListAdapter;
 import com.floatingpanda.scoreboard.data.Member;
+import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-public class MemberListFragment extends Fragment {
+import static android.app.Activity.RESULT_OK;
+
+//TODO 1. Make a MemberActivity to display the details of a single member. DONE
+//TODO 2. Link clicking a member in the list to displaying the MemberActivity. DONE
+//TODO 3. Add the add functionality to the MemberList
+//TODO 4. Add the edit functionality to the MemberActivity.
+//TODO 5. Add the delete functionality to the MemberActivity.
+
+public class MemberListFragment extends Fragment implements DetailAdapterInterface {
+
+    private final int ADD_MEMBER_REQUEST_CODE = 1;
 
     private MemberViewModel memberViewModel;
 
@@ -32,7 +45,9 @@ public class MemberListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recyclerview_test, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
-        final MemberListAdapter adapter = new MemberListAdapter(getActivity());
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
+
+        final MemberListAdapter adapter = new MemberListAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -45,7 +60,42 @@ public class MemberListFragment extends Fragment {
             }
         });
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAddActivity();
+            }
+        });
+
         return rootView;
+    }
+
+    @Override
+    public void viewDetails(Object object) {
+        Member member = (Member) object;
+
+        Intent detailsIntent = new Intent(getContext(), MemberActivity.class);
+        detailsIntent.putExtra("MEMBER", member);
+        startActivity(detailsIntent);
+    }
+
+    public void startAddActivity() {
+        Intent addMemberIntent = new Intent(getContext(), MemberAddActivity.class);
+        startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
+    }
+
+    public void addMember(Member newMember) {
+        memberViewModel.addMember(newMember);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_MEMBER_REQUEST_CODE && resultCode == RESULT_OK) {
+            Member newMember = (Member) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
+            addMember(newMember);
+        }
     }
 }
 
