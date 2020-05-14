@@ -26,6 +26,7 @@ public class MemberAddActivity extends AppCompatActivity {
     private MemberRepository memberRepository;
 
     //TODO remove cancelButton and replace with an up arrow?
+    //TODO implement image taking/picking and filepath saving functionality
     private EditText nicknameEditText, realNameEditText, notesEditText;
     private Button browseButton, cameraButton, cancelButton, saveButton;
 

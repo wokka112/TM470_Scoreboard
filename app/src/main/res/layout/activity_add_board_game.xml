@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp">
+
+        <Button
+            android:id="@+id/bgadd_button_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_folder_open_black_24dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/bgadd_button_camera"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_img" />
+
+        <Button
+            android:id="@+id/bgadd_button_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_photo_camera_black_24dp"
+            app:layout_constraintLeft_toRightOf="@id/bgadd_button_browse"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bgadd_button_browse" />
+
+        <Button
+            android:id="@+id/bgadd_button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save"
+            app:layout_constraintLeft_toRightOf="@id/bgadd_button_cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_house_rules_edittext" />
+
+        <Button
+            android:id="@+id/bgadd_button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/bgadd_button_save"
+            app:layout_constraintTop_toTopOf="@id/bgadd_button_save" />
+
+        <EditText
+            android:id="@+id/bgadd_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:hint="Game Name"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_button_browse" />
+
+        <EditText
+            android:id="@+id/bgadd_difficulty_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Difficulty (1 - 5)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_name_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_name_edittext" />
+
+        <EditText
+            android:id="@+id/bgadd_min_players_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Minimum players (Optional)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_difficulty_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_difficulty_edittext" />
+
+        <EditText
+            android:id="@+id/bgadd_max_players_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Maximum players (Optional)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_min_players_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_min_players_edittext" />
+
+        <EditText
+            android:id="@+id/bgadd_description_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Description (Optional)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_max_players_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_team_options_radiogroup" />
+
+        <EditText
+            android:id="@+id/bgadd_notes_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Notes (Optional)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_description_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_description_edittext" />
+
+        <EditText
+            android:id="@+id/bgadd_house_rules_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="House rules (Optional)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_notes_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_notes_edittext" />
+
+        <ImageView
+            android:id="@+id/bgadd_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_launcher_foreground"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/bgadd_play_modes_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_header">
+
+            <CheckBox
+                android:id="@+id/bgadd_checkbox_competitive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Competitive"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_header" />
+
+            <CheckBox
+                android:id="@+id/bgadd_checkbox_cooperative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cooperative"
+                app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_competitive"
+                app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive" />
+
+            <CheckBox
+                android:id="@+id/bgadd_checkbox_solitaire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Solitaire"
+                app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_cooperative"
+                app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive" />
+
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/bgadd_team_options_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_team_options_header">
+
+            <RadioButton
+                android:id="@+id/bgadd_no_teams_radiobutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="No Teams" />
+
+            <RadioButton
+                android:id="@+id/bgadd_teams_allowed_radiobutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Teams Allowed" />
+
+            <RadioButton
+                android:id="@+id/bgadd_teams_only_radiobutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Teams Only" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/bgadd_name_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Nickname:"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_button_browse" />
+
+        <!--
+        <CheckBox
+            android:id="@+id/bgadd_checkbox_competitive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_header"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:text="Competitive"/>
+
+        <CheckBox
+            android:id="@+id/bgadd_checkbox_cooperative"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_competitive"
+            app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive"
+            android:layout_marginLeft="8dp"
+            android:text="Cooperative"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_cooperative"
+            app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive"
+            android:layout_marginLeft="8dp"
+            android:text="Solitaire"/>
+            -->
+
+        <TextView
+            android:id="@+id/bgadd_difficulty_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Real Name:"
+            android:visibility="gone"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_name_textview"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_name_edittext" />
+
+        <TextView
+            android:id="@+id/bgadd_min_players_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_difficulty_textview"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_difficulty_edittext" />
+
+        <TextView
+            android:id="@+id/bgadd_categories_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Categories Placeholder"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_max_players_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_max_players_edittext" />
+
+        <TextView
+            android:id="@+id/bgadd_play_modes_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Play Modes (Pick as many as are viable.)"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_placeholder"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_categories_placeholder" />
+
+        <TextView
+            android:id="@+id/bgadd_team_options_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:text="Team Options"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_placeholder"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_container"
+            app:layout_goneMarginTop="8dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

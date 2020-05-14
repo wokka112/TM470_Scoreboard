@@ -70,6 +70,9 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
         return rootView;
     }
 
+    // Preconditions: - object is an object of the Member class.
+    //                - the Member object exists in the database.
+    // Postconditions: - The MemberActivity is started to view the details of object.
     @Override
     public void viewDetails(Object object) {
         Member member = (Member) object;
@@ -79,11 +82,14 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
         startActivity(detailsIntent);
     }
 
+    // Postconditions: - The Member add activity is started.
     public void startAddActivity() {
         Intent addMemberIntent = new Intent(getContext(), MemberAddActivity.class);
         startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
     }
 
+    // Preconditions: - newMember does not exist in the database.
+    // Postconditions: - newMember is added to the database.
     public void addMember(Member newMember) {
         memberViewModel.addMember(newMember);
     }

@@ -7,14 +7,19 @@ import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import com.floatingpanda.scoreboard.typeconverters.PlayModeTypeConverter;
+import com.floatingpanda.scoreboard.typeconverters.TeamOptionTypeConverter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategories.class, BgCategory.class, BoardGame.class, Group.class, Member.class}, version = 8, exportSchema = false)
+@Database(entities = {AssignedCategories.class, BgCategory.class, BoardGame.class, Group.class, Member.class}, version = 13, exportSchema = false)
+@TypeConverters({PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MemberDao memberDao();
@@ -126,44 +131,85 @@ public abstract class AppDatabase extends RoomDatabase {
                 luck = boardGameCategoryDao.findNonLiveDataByName(luck.getCategoryName());
                 BgCategory gambling = new BgCategory("Gambling");
                 boardGameCategoryDao.insert(gambling);
-                luck = boardGameCategoryDao.findNonLiveDataByName(luck.getCategoryName());
+                gambling = boardGameCategoryDao.findNonLiveDataByName(gambling.getCategoryName());
 
-                BoardGame bg = new BoardGame("Medieval", 3, 1, 8, "N/A",
-                        "N/A", "N/A", "N/A", "N/A");
-                BoardGame bg1 = new BoardGame("Monopoly", 3, 1, 8, "N/A",
-                        "N/A", "N/A", "N/A", "N/A");
-                BoardGame bg2 = new BoardGame("Go", 3, 1, 8, "N/A",
-                        "N/A", "N/A", "N/A", "N/A");
-                BoardGame bg3 = new BoardGame("Game of Life", 3, 1, 8, "N/A",
-                        "N/A", "N/A", "N/A", "N/A");
-                BoardGame bg4 = new BoardGame("Dawn of Madness", 3, 1, 8, "N/A",
-                        "N/A", "N/A", "N/A", "N/A");
+                BoardGame.PlayMode playMode = BoardGame.PlayMode.COMPETITIVE;
+                BoardGame.TeamOption teamOption = BoardGame.TeamOption.NO_TEAMS;
+                Log.w("AppDatabase.java", "Playmode: " + playMode.toString());
+                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
+                BoardGame bg = new BoardGame("Medieval", 3, 1, 8, teamOption,
+                        playMode, "N/A", "N/A", "N/A", "N/A");
+                Log.w("AppDatabase.java", "bg Playmode: " + bg.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+
+                playMode = BoardGame.PlayMode.COOPERATIVE;
+                teamOption = BoardGame.TeamOption.TEAMS_ONLY;
+                Log.w("AppDatabase.java", "Playmode: " + playMode.toString());
+                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
+                BoardGame bg1 = new BoardGame("Monopoly", 3, 1, 8, teamOption,
+                        playMode, "N/A", "N/A", "N/A", "N/A");
+                Log.w("AppDatabase.java", "bg1 Playmode: " + bg1.getPlayModesString() + ", Team Options: " + bg1.getTeamOptionsString());
+
+                playMode = BoardGame.PlayMode.SOLITAIRE;
+                teamOption = BoardGame.TeamOption.TEAMS_OR_SOLOS;
+                Log.w("AppDatabase.java", "Playmode: " + playMode.toString());
+                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
+                BoardGame bg2 = new BoardGame("Go", 3, 1, 8, teamOption,
+                        playMode, "N/A", "N/A", "N/A", "N/A");
+                Log.w("AppDatabase.java", "bg2 Playmode: " + bg2.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+
+                playMode = BoardGame.PlayMode.COMPETITIVE_OR_COOPERATIVE;
+                teamOption = BoardGame.TeamOption.NO_TEAMS;
+                Log.w("AppDatabase.java", "Playmode: " + playMode.toString());
+                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
+                BoardGame bg3 = new BoardGame("Game of Life", 3, 1, 8, teamOption,
+                        playMode, "N/A", "N/A", "N/A", "N/A");
+                Log.w("AppDatabase.java", "bg3 Playmode: " + bg3.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+
+                playMode = BoardGame.PlayMode.COMPETITIVE_OR_SOLITAIRE;
+                Log.w("AppDatabase.java", "Playmode: " + playMode.toString());
+                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
+                BoardGame bg4 = new BoardGame("Dawn of Madness", 3, 1, 8, teamOption,
+                        playMode, "N/A", "N/A", "N/A", "N/A");
+                Log.w("AppDatabase.java", "bg4 Playmode: " + bg4.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+
+                playMode = BoardGame.PlayMode.COMPETITIVE_OR_COOPERATIVE_OR_SOLITAIRE;
+                Log.w("AppDatabase.java", "Playmode: " + playMode.toString());
+                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
+                BoardGame bg5 = new BoardGame("No Category Bg", 3, 1, 8, teamOption,
+                        playMode, "N/A", "N/A", "N/A", "N/A");
+                Log.w("AppDatabase.java", "bg5 Playmode: " + bg5.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
 
                 List<AssignedCategories> acs = new ArrayList<>();
 
                 bgDao.insert(bg);
-                acs.add(new AssignedCategories(bg.getBgName(), strategy.getId()));
-                acs.add(new AssignedCategories(bg.getBgName(), luck.getId()));
+                bg = bgDao.findNonLiveDataByName(bg.getBgName());
+                acs.add(new AssignedCategories(bg.getId(), strategy.getId()));
+                acs.add(new AssignedCategories(bg.getId(), luck.getId()));
                 acDao.insertAll(acs.toArray(new AssignedCategories[acs.size()]));
 
                 Log.w("Database.java", "Inserted bg");
 
                 bgDao.insert(bg1);
-                acs.add(new AssignedCategories(bg1.getBgName(), gambling.getId()));
+                bg1 = bgDao.findNonLiveDataByName(bg1.getBgName());
+                acs.add(new AssignedCategories(bg1.getId(), gambling.getId()));
                 acDao.insert(acs.get(0));
                 Log.w("Database.java", "Inserted bg1");
 
-                acs.add(new AssignedCategories(bg2.getBgName(), gambling.getId()));
-                acs.add(new AssignedCategories(bg3.getBgName(), strategy.getId()));
-                acs.add(new AssignedCategories(bg4.getBgName(), luck.getId()));
-
                 bgDao.insert(bg2);
+                bg2 = bgDao.findNonLiveDataByName(bg2.getBgName());
+                acs.add(new AssignedCategories(bg2.getId(), gambling.getId()));
                 Log.w("Database.java", "Inserted bg2");
                 bgDao.insert(bg3);
+                bg3 = bgDao.findNonLiveDataByName(bg3.getBgName());
+                acs.add(new AssignedCategories(bg3.getId(), strategy.getId()));
                 Log.w("Database.java", "Inserted bg3");
                 bgDao.insert(bg4);
+                bg4 = bgDao.findNonLiveDataByName(bg4.getBgName());
+                acs.add(new AssignedCategories(bg4.getId(), luck.getId()));
                 Log.w("Database.java", "Inserted bg4");
                 acDao.insertAll(acs.toArray(new AssignedCategories[acs.size()]));
+
+                bgDao.insert(bg5);
             });
         }
     };

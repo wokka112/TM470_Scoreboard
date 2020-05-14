@@ -13,6 +13,7 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
+import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
 
@@ -20,9 +21,11 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
 
     private final LayoutInflater inflater;
     private List<BoardGamesAndBgCategories> bgsAndBgCategories;
+    private DetailAdapterInterface listener;
 
-    public BoardGameListAdapter(Context context) {
+    public BoardGameListAdapter(Context context, DetailAdapterInterface listener) {
         inflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @Override
@@ -31,11 +34,6 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
         return new BoardGameViewHolder(itemView);
     }
 
-    //TODO add a list of bgcategories to Board Game which can then be populated from the viewmodel,
-    // then a list of board games can be passed to the view and through to the adapter, where they
-    // are simply made visible, rather than taking apart the data from the viewmodel in this adapter.
-    //TODO add a function in BoardGame that gives the list of categories as a String for the adapter
-    // to show.
     @Override
     public void onBindViewHolder(BoardGameViewHolder holder, int position) {
         if (bgsAndBgCategories != null) {
@@ -46,13 +44,19 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
             holder.difficultyItemView.setText(Integer.toString(boardGame.getDifficulty()));
             holder.playersItemView.setText(boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers());
 
-            List<BgCategory> categories = current.getBgCategories();
+            List<BgCategory> categories = boardGame.getBgCategories();
             StringBuilder sb = new StringBuilder();
             sb.append("");
-            for (int i = 0; i < categories.size(); i++) {
-                sb.append(categories.get(i).getCategoryName());
+            for(BgCategory bgCategory : categories) {
+                sb.append(bgCategory.getCategoryName());
+                //TODO sort out so the extra , doesn't appear at the end of the list of categories.
                 sb.append(", ");
             }
+
+            if (sb.toString().equals("")) {
+                sb.append("None");
+            }
+
             holder.categoriesItemView.setText(sb.toString());
         } else {
             holder.bgNameItemView.setText("No board game");
@@ -80,6 +84,15 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
             difficultyItemView = itemView.findViewById(R.id.bg_difficulty_output);
             playersItemView = itemView.findViewById(R.id.bg_players_output);
             categoriesItemView = itemView.findViewById(R.id.bg_categories_output);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    BoardGame boardGame = bgsAndBgCategories.get(position).getBoardGame();
+                    listener.viewDetails(boardGame);
+                }
+            });
         }
     }
 }

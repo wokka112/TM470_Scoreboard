@@ -69,6 +69,7 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         return rootView;
     }
 
+    // Postconditions: - the BgCategory add activity is started.
     public void startAddActivity() {
         Intent addBgCategoryIntent = new Intent(getContext(), BgCategoryAddActivity.class);
         startActivityForResult(addBgCategoryIntent, ADD_CATEGORY_REQUEST_CODE);
@@ -81,7 +82,7 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     }
 
     // Preconditions: - object is a BgCategory
-    // Postconditions: - BgCategory edit view is started to edit object in the database.
+    // Postconditions: - BgCategory edit activity is started to edit object in the database.
     @Override
     public void startEditActivity(Object object) {
         //TODO look into whether this should be application context rather than just context
@@ -108,7 +109,9 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
 
     // Preconditions: - object is a BgCategory.
     //                - the BgCategory object exists in the database.
-    // Postconditions: - if user hits delete on the delete popup, the BgCategory is removed from the database.
+    // Postconditions: - A popup is displayed warning the user of what deleting the bgcategory will result in
+    //                    and offering the user the options to delete the bgcategory or cancel the deletion.
+    //                 - if user hits delete on the delete popup, the BgCategory is removed from the database.
     //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
     @Override
     public void startDeleteActivity(Object object) {

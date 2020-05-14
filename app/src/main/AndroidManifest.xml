@@ -14,7 +14,8 @@
         <activity android:name=".MemberAddActivity" />
         <activity android:name=".MemberEditActivity" />
         <activity android:name=".MemberActivity" />
-        <activity android:name=".old.BoardGameActivity" />
+        <activity android:name=".BoardGameAddActivity" />
+        <activity android:name=".BoardGameActivity" />
         <activity android:name=".old.GroupActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

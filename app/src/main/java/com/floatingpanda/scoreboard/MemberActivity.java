@@ -9,18 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
-
-import java.util.List;
 
 //TODO remove testing log warnings.
 
@@ -66,7 +62,7 @@ public class MemberActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable final Member liveMember) {
                 Log.w("MemberActivity.java", "Got liveMember: " + liveMember);
-                setDetails(liveMember);
+                setViews(liveMember);
             }
         });
 
@@ -89,8 +85,19 @@ public class MemberActivity extends AppCompatActivity {
         });
     }
 
-    private void setDetails(Member member) {
+    // Postconditions: - The text and imageviews in this member activity are updated to match the member
+    //                    passed as a parameter.
+    /**
+     * Sets the views in the MemberActivity to the details of the Member passed in as the parameter member.
+     *
+     * If member is null, does nothing.
+     * @param member a member drawn from the database
+     */
+    private void setViews(Member member) {
         if (member == null) {
+            //TODO remove log?
+            Log.w("MemberActivity.java", "In setViews() method. member is null. This is okay if a " +
+                    "result of the delete method.");
             //TODO remove setting nickname to deleted before exiting?
             nicknameTextView.setText("Deleted");
             return;
@@ -116,18 +123,26 @@ public class MemberActivity extends AppCompatActivity {
         this.member = member;
     }
 
-    //TODO change to Object and make an interface?
+    // Preconditions: - member exists in database.
+    // Postconditions: - Member edit activity is started to edit object in the database.
     private void startEditActivity(Member member) {
         Intent intent = new Intent(MemberActivity.this, MemberEditActivity.class);
         intent.putExtra("MEMBER", member);
         startActivityForResult(intent, EDIT_MEMBER_REQUEST_CODE);
     }
 
+    // Preconditions: - A Member with a primary key id matching the member parameter's id exists in the database.
+    // Postconditions: - The matching Member in the database is updated to be the same as the member passed to
+    //                    this method.
     private void editMember(Member member) {
         memberViewModel.editMember(member);
     }
 
-    //TODO change to Object and make an interface??
+    // Preconditions: - member exists in the database.
+    // Postconditions: - A popup is displayed warning the user of what deleting the member will result in
+    //                      and offering the user the options to delete the member or cancel the deletion.
+    //                 - if user hits delete on the delete popup, the Member is removed from the database.
+    //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
     private void startDeleteActivity(Member member) {
         //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(MemberActivity.this);
@@ -152,11 +167,20 @@ public class MemberActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Precondition: - member should exist in the database.
+    // Postconditions: - member will no longer exist in the database.
+    //                 - group_members tables with bgCategory in will have been deleted.
+    //                 - category_skill_rating, group_category_skill_rating and board_game_skill_rating
+    //                    tables for this member will have been deleted.
+    //                 - monthly_scores, quarterly_scores and yearly_scores tables for this member will
+    //                    have been deleted.
+    //                 - game_records which this member is registered on will have the member turned into an
+    //                    anonymous member (i.e. the record will no longer have a foreign key linking to the
+    //                    member's table in the members tables).
     private void deleteMember(Member member) {
         memberViewModel.deleteMember(member);
         finish();
     }
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

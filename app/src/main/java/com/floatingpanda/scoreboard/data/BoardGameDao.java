@@ -18,6 +18,13 @@ public interface BoardGameDao {
     @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
     LiveData<BoardGame> findByName(String bgName);
 
+    //TODO maybe change this to find by id? Or add that in?
+    @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
+    BoardGame findNonLiveDataByName(String bgName);
+
+    @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
+    BoardGame findNonLiveDataById(int bgId);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(BoardGame... boardGames);
 
@@ -32,5 +39,9 @@ public interface BoardGameDao {
 
     @Transaction
     @Query("SELECT * FROM boardgames")
-    public LiveData<List<BoardGamesAndBgCategories>> getBoardGamesAndBgCategories();
+    public LiveData<List<BoardGamesAndBgCategories>> getAllBoardGamesAndBgCategories();
+
+    @Transaction
+    @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
+    public LiveData<BoardGamesAndBgCategories> findBoardGameAndBgCategoriesById(int bgId);
 }

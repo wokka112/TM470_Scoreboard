@@ -33,22 +33,40 @@ public class MemberRepository {
     }
 
     // Hinges on id not changing. Primary keys should be immutable, hence the id.
+    // Postcondition: - if a member with a member_id of id exists in the database, returns a LiveData version
+    //                   of the member.
+    //                - if a member with a member_id of id does not exist in the database, returns null.
     public LiveData<Member> getLiveMember(int id) {
         return memberDao.findLiveDataById(id);
     }
 
+    // Precondition: member should not exist in database.
+    // Postcondition: new member exists in the database.
     public void insert(Member member) {
         AppDatabase.getExecutorService().execute(() -> {
             memberDao.insert(member);
         });
     }
 
+    // Precondition: - a Member with member's id (primary key) exists in database.
+    // Postcondition: - the Member in the database will be updated to have the details of member.
+    //                - edits will cascade, so foreign keys of member (such as in group_members) will be updated as well.
     public void update(Member member) {
         AppDatabase.getExecutorService().execute(() -> {
             memberDao.update(member);
         });
     }
 
+    // Precondition: - member should exist in the database.
+    // Postconditions: - member will no longer exist in the database.
+    //                 - group_members tables with bgCategory in will have been deleted.
+    //                 - category_skill_rating, group_category_skill_rating and board_game_skill_rating
+    //                    tables for this member will have been deleted.
+    //                 - monthly_scores, quarterly_scores and yearly_scores tables for this member will
+    //                    have been deleted.
+    //                 - game_records which this member is registered on will have the member turned into an
+    //                    anonymous member (i.e. the record will no longer have a foreign key linking to the
+    //                    member's table in the members tables).
     public void delete(Member member) {
         AppDatabase.getExecutorService().execute(() -> {
             memberDao.delete(member);
