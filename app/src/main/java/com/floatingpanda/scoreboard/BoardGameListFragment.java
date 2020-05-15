@@ -80,7 +80,6 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
 
     // Preconditions: - boardGame does not exist in the database.
     // Postconditions: - boardGame is added to the database.
-    //TODO sort out the add board game so it adds assigned categories as well.
     public void addBoardGame(BoardGame boardGame) {
         boardGameViewModel.addBoardGame(boardGame);
     }

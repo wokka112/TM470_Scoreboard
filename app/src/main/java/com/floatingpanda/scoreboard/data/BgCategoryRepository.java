@@ -25,6 +25,8 @@ public class BgCategoryRepository {
         return allBgCategories;
     }
 
+    public List<BgCategory> getAllNonLive() { return bgCategoryDao.getAllNonLive(); }
+
     // Precondition: bgCategory should not exist in database.
     // Postcondition: new bg category exists in the database.
     public void insert(BgCategory bgCategory) {

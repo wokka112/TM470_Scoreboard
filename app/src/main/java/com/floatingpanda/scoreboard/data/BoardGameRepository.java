@@ -91,23 +91,6 @@ public class BoardGameRepository {
         });
     }
 
-    public void insertBgWithCategories(BoardGame boardGame, List<BgCategory> categories) {
-        insertBoardGame(boardGame);
-
-        // If no categories entered, no need to assign them. End early.
-        if (categories.isEmpty()) {
-            return;
-        }
-
-        boardGame = getBoardGame(boardGame.getBgName());
-
-        int bgId = boardGame.getId();
-        List<AssignedCategories> assignedCategories = new ArrayList<>();
-        for (BgCategory category : categories) {
-            assignedCategories.add(new AssignedCategories(bgId, category.getId()));
-        }
-    }
-
     /*
     private LiveData<List<BoardGameWithBGCategories>> allBoardGamesWithCategories;
 

@@ -14,49 +14,55 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameRepository;
+import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
+import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.thomashaertel.widget.MultiSpinner;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.view.View.GONE;
+
+//TODO add in a clear categories button?
+
+//TODO look into if I can get the close chip stuff working with removing the selected elements from the spinner.
+
+//TODO keep searchable spinner comment stuff for when I make the gamerecord creation. It could be useful for
+// finding and adding board games. Same for players.
+
 public class BoardGameAddActivity extends AppCompatActivity {
     //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
-    private final int EDIT_ASSIGNED_CATEGORIES = 1;
+    private BoardGameAddEditViewModel viewModel;
 
-    private List<BgCategory> allBgCategories;
-    private List<BgCategory> selectedBgCategories;
-
-    private BoardGameRepository boardGameRepository;
-    private BgCategoryRepository bgCategoryRepository;
-
-    private TextView categoriesTextView;
     private EditText bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, descriptionEditText,
         notesEditText, houseRulesEditText;
     private CheckBox competitiveCheckBox, cooperativeCheckBox, solitaireCheckBox;
     private RadioGroup teamOptionsRadioGroup;
     private ChipGroup chipGroup;
-
-    SearchableSpinner searchableSpinner;
+    //private SearchableSpinner searchableSpinner;
+    private MultiSpinner multiSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_board_game);
 
-        boardGameRepository = new BoardGameRepository(getApplication());
-        bgCategoryRepository = new BgCategoryRepository(getApplication());
-
-        categoriesTextView = findViewById(R.id.bgadd_categories_output);
+        viewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
 
         bgNameEditText = findViewById(R.id.bgadd_name_edittext);
         difficultyEditText = findViewById(R.id.bgadd_difficulty_edittext);
@@ -74,30 +80,37 @@ public class BoardGameAddActivity extends AppCompatActivity {
 
         chipGroup = findViewById(R.id.bgadd_categories_chip_group);
 
-        searchableSpinner = findViewById(R.id.bgAdd_searchable_spinner);
+        //searchableSpinner = findViewById(R.id.bgAdd_searchable_spinner);
+        multiSpinner = findViewById(R.id.bgadd_multi_spinner);
+        multiSpinner.setAllText("Choose categories");
 
         final Button browseButton, cameraButton, saveButton, cancelButton;
 
-        List<BgCategory> bgCategories = new ArrayList<>();
-        bgCategories.add(new BgCategory("Strategy"));
-        bgCategories.add(new BgCategory("Luck"));
-        bgCategories.add(new BgCategory("Ameritrash"));
-        bgCategories.add(new BgCategory("Ben smells"));
+        viewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
+            @Override
+            public void onChanged(@NonNull final List<BgCategory> bgCategories) {
+                //When list changed, refresh allbgcategories list and then take the selected list from it.
+                Log.w("BoardGameAddAct.java", "Bgcategories: " + bgCategories);
+                viewModel.setAllBgCategoriesNotLive(bgCategories);
+                //setSearchableSpinnerList();
+                setMultiSpinnerList();
+            }
+        });
 
-        setBgCategories(bgCategories);
-        setAllBgCategories(bgCategories);
+        //searchableSpinner.setPositiveButton("Ok");
 
-        setSearchableSpinnerList();
-
+        /*
         searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    return;
+                }
+
                 Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).getClass());
                 Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).toString());
                 //TODO move this?
                 BgCategory bgCategory = (BgCategory) parent.getItemAtPosition(position);
-
-                selectedBgCategories.add(bgCategory);
                 addChip(bgCategory);
             }
 
@@ -106,6 +119,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
 
             }
         });
+        */
 
         browseButton = findViewById(R.id.bgadd_button_browse);
         cameraButton = findViewById(R.id.bgadd_button_camera);
@@ -145,7 +159,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
                 int minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
                 int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
-                List<BgCategory> bgCategories = getBgCategories();
+                List<BgCategory> bgCategories = viewModel.getSelectedBgCategories();
                 BoardGame.PlayMode playMode = getPlayMode();
                 BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
@@ -164,141 +178,76 @@ public class BoardGameAddActivity extends AppCompatActivity {
         });
     }
 
-    //TODO This is adding logic into the presentation layer I fear. I need to look into moving this elsewhere,
-    // but I don't want more viewmodels and stuff. Maybe I should consider the add/edit activities are more than
-    // just views...
-
-    private void setBgCategories(List<BgCategory> bgCategories) {
-        this.selectedBgCategories = new ArrayList<BgCategory>(bgCategories);
-        //TODO remove printBgCategories(), it is for testing purposes.
-        printBgCategories();
-        //categoriesTextView.setText(createCategoriesString(this.bgCategories));
-        setChipGroupChips(bgCategories);
-    }
-
-    private void removeBgCategory(BgCategory bgCategory) {
-        this.selectedBgCategories.remove(bgCategory);
-    }
-
-    private String createCategoriesString(List<BgCategory> categoriesList) {
-        if (categoriesList == null || categoriesList.isEmpty()) {
-            return "None";
-        }
-
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-        sb.append(categoriesList.get(i));
-        i++;
-
-        while (i < categoriesList.size()) {
-            sb.append(", ");
-            sb.append(categoriesList.get(i).getCategoryName());
-            i++;
-        }
-
-        return sb.toString();
-    }
-
-    private List<BgCategory> getBgCategories() {
-        return selectedBgCategories;
-    }
-
-    //TODO remove this method, it is for testing purposes.
-    private void printBgCategories() {
-        Log.w("BoardGameAddAct.java", "Printing categories:");
-        int i = 1;
-        for (BgCategory bgCategory : selectedBgCategories) {
-            Log.w("BoardGameAddAct.java", "BgCategory " + i + ": " + bgCategory.getCategoryName());
-        }
-    }
-
-    private BoardGame.PlayMode getPlayMode() {
-        boolean competitive = competitiveCheckBox.isChecked();
-        boolean cooperative = cooperativeCheckBox.isChecked();
-        boolean solitaire = solitaireCheckBox.isChecked();
-
-        BoardGame.PlayMode playMode = BoardGame.PlayMode.ERROR;
-
-        if (competitive && cooperative && solitaire) {
-            playMode = BoardGame.PlayMode.COMPETITIVE_OR_COOPERATIVE_OR_SOLITAIRE;
-        } else if (cooperative && solitaire) {
-            playMode = BoardGame.PlayMode.COOPERATIVE_OR_SOLITAIRE;
-        } else if (competitive && solitaire) {
-            playMode = BoardGame.PlayMode.COMPETITIVE_OR_SOLITAIRE;
-        } else if (competitive && cooperative) {
-            playMode = BoardGame.PlayMode.COMPETITIVE_OR_COOPERATIVE;
-        } else if (competitive) {
-            playMode = BoardGame.PlayMode.COMPETITIVE;
-        } else if (cooperative) {
-            playMode = BoardGame.PlayMode.COOPERATIVE;
-        } else if (solitaire) {
-            playMode = BoardGame.PlayMode.SOLITAIRE;
-        }
-
-        return playMode;
-    }
-
-    private BoardGame.TeamOption getTeamOption() {
-        int id = teamOptionsRadioGroup.getCheckedRadioButtonId();
-
-        switch(id) {
-            case R.id.bgadd_no_teams_radiobutton:
-                return BoardGame.TeamOption.NO_TEAMS;
-            case R.id.bgadd_teams_allowed_radiobutton:
-                return BoardGame.TeamOption.TEAMS_OR_SOLOS;
-            case R.id.bgadd_teams_only_radiobutton:
-                return BoardGame.TeamOption.TEAMS_OR_SOLOS;
-            default:
-                return BoardGame.TeamOption.ERROR;
-        }
-    }
-
+    // Deals with presentation, may be useful for the edit activity.
     private void setChipGroupChips(List<BgCategory> bgCategories) {
-        chipGroup.removeAllViews();
+        clearChips();
         for (BgCategory bgCategory : bgCategories) {
             addChip(bgCategory);
         }
     }
 
     private void addChip(BgCategory bgCategory) {
-        chipGroup.addView(createChip(bgCategory));
+        chipGroup.addView(viewModel.createChip(multiSpinner, chipGroup, bgCategory));
     }
 
-    private Chip createChip(BgCategory bgCategory) {
-        Chip chip = new Chip(chipGroup.getContext());
-        chip.setText((bgCategory.getCategoryName()));
-        chip.setCloseIconVisible(true);
-
-        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO remove this log message and printbgcategories, they are for testing purposes.
-                Log.w("BoardGameAddAct.java", "Deleting: " + bgCategory.getCategoryName());
-                removeBgCategory(bgCategory);
-                printBgCategories();
-                chipGroup.removeView(chip);
-            }
-        });
-
-        return chip;
+    private void clearChips() {
+        chipGroup.removeAllViews();
+        viewModel.clearSelectedBgCategories();
     }
 
-    private void setAllBgCategories(List<BgCategory> bgCategories) {
-        this.allBgCategories = bgCategories;
+    private void clearSelected() {
+        clearChips();
+        multiSpinner.setSelected(new boolean[viewModel.getAdapter(this).getCount()]);
     }
 
-    private List<BgCategory> getAllBgCategories() {
-        return this.allBgCategories;
+    private void setMultiSpinnerList() {
+        multiSpinner.setAdapter(viewModel.getAdapter(this), false, onSelectedListener);
     }
 
+    /*
     private void setSearchableSpinnerList() {
+        searchableSpinner.setAdapter(viewModel.getSpinnerListAdapter(this));
+    }
+    */
 
-        ArrayAdapter<BgCategory> adapter = new ArrayAdapter<> (
-                this, android.R.layout.simple_spinner_item, getAllBgCategories()
-        );
+    private BoardGame.PlayMode getPlayMode() {
+        boolean competitive = competitiveCheckBox.isChecked();
+        boolean cooperative = cooperativeCheckBox.isChecked();
+        boolean solitaire = solitaireCheckBox.isChecked();
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        searchableSpinner.setAdapter(adapter);
+        return viewModel.getPlayMode(competitive, cooperative, solitaire);
     }
 
+    private BoardGame.TeamOption getTeamOption() {
+        int checkboxId = teamOptionsRadioGroup.getCheckedRadioButtonId();
+
+        return viewModel.getTeamOption(checkboxId);
+    }
+
+    //TODO remove this method, it is for testing purposes.
+    private void printBgCategories(List<BgCategory> bgCategories) {
+        Log.w("BoardGameAddAct.java", "Printing categories:");
+        int i = 1;
+        for (BgCategory bgCategory : bgCategories) {
+            Log.w("BoardGameAddAct.java", "BgCategory " + i + ": " + bgCategory.getCategoryName());
+        }
+    }
+
+    private MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
+        public void onItemsSelected(boolean[] selected) {
+            clearChips();
+            boolean noneSelected = true;
+            for (int i = 0; i < selected.length; i++) {
+                Log.w("BoardGameAddEditVM.Java", "Selected " + i + ":" + selected[i]);
+                if (selected[i] == true) {
+                    BgCategory bgCategory = viewModel.getAdapterItem(i);
+                    addChip(bgCategory);
+                    noneSelected = false;
+                }
+            }
+
+            // Sets text to appear on spinner instead of selected categories appearing on it.
+            multiSpinner.setAllText("Choose categories");
+        }
+    };
 }

@@ -133,6 +133,13 @@ public abstract class AppDatabase extends RoomDatabase {
                 boardGameCategoryDao.insert(gambling);
                 gambling = boardGameCategoryDao.findNonLiveDataByName(gambling.getCategoryName());
 
+                BgCategory test;
+
+                for (int i = 1; i < 101; i++) {
+                    test = new BgCategory("Test" + i);
+                    boardGameCategoryDao.insert(test);
+                }
+
                 BoardGame.PlayMode playMode = BoardGame.PlayMode.COMPETITIVE;
                 BoardGame.TeamOption teamOption = BoardGame.TeamOption.NO_TEAMS;
                 Log.w("AppDatabase.java", "Playmode: " + playMode.toString());

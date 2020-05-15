@@ -15,6 +15,9 @@ public interface BgCategoryDao {
     @Query("SELECT * FROM bg_categories")
     LiveData<List<BgCategory>> getAll();
 
+    @Query("SELECT * FROM bg_categories")
+    List<BgCategory> getAllNonLive();
+
     @Query("SELECT * FROM bg_categories WHERE category_name LIKE :categoryName")
     LiveData<BgCategory> findLiveDataByName(String categoryName);
 
