@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +20,9 @@ import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameRepository;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +31,22 @@ public class BoardGameAddActivity extends AppCompatActivity {
     //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
+    private final int EDIT_ASSIGNED_CATEGORIES = 1;
+
+    private List<BgCategory> allBgCategories;
+    private List<BgCategory> selectedBgCategories;
+
     private BoardGameRepository boardGameRepository;
+    private BgCategoryRepository bgCategoryRepository;
+
+    private TextView categoriesTextView;
     private EditText bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, descriptionEditText,
         notesEditText, houseRulesEditText;
     private CheckBox competitiveCheckBox, cooperativeCheckBox, solitaireCheckBox;
     private RadioGroup teamOptionsRadioGroup;
+    private ChipGroup chipGroup;
+
+    SearchableSpinner searchableSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +54,9 @@ public class BoardGameAddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_board_game);
 
         boardGameRepository = new BoardGameRepository(getApplication());
+        bgCategoryRepository = new BgCategoryRepository(getApplication());
+
+        categoriesTextView = findViewById(R.id.bgadd_categories_output);
 
         bgNameEditText = findViewById(R.id.bgadd_name_edittext);
         difficultyEditText = findViewById(R.id.bgadd_difficulty_edittext);
@@ -52,7 +72,40 @@ public class BoardGameAddActivity extends AppCompatActivity {
 
         teamOptionsRadioGroup = findViewById(R.id.bgadd_team_options_radiogroup);
 
+        chipGroup = findViewById(R.id.bgadd_categories_chip_group);
+
+        searchableSpinner = findViewById(R.id.bgAdd_searchable_spinner);
+
         final Button browseButton, cameraButton, saveButton, cancelButton;
+
+        List<BgCategory> bgCategories = new ArrayList<>();
+        bgCategories.add(new BgCategory("Strategy"));
+        bgCategories.add(new BgCategory("Luck"));
+        bgCategories.add(new BgCategory("Ameritrash"));
+        bgCategories.add(new BgCategory("Ben smells"));
+
+        setBgCategories(bgCategories);
+        setAllBgCategories(bgCategories);
+
+        setSearchableSpinnerList();
+
+        searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).getClass());
+                Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).toString());
+                //TODO move this?
+                BgCategory bgCategory = (BgCategory) parent.getItemAtPosition(position);
+
+                selectedBgCategories.add(bgCategory);
+                addChip(bgCategory);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         browseButton = findViewById(R.id.bgadd_button_browse);
         cameraButton = findViewById(R.id.bgadd_button_camera);
@@ -107,33 +160,56 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 replyIntent.putExtra(EXTRA_REPLY, boardGame);
                 setResult(RESULT_OK, replyIntent);
                 finish();
-
-                /*
-                //TODO remove popup warnings and instead direct people to the edit text in error and
-                // inform them what they need to do to fix it?
-                if (TextUtils.isEmpty(categoryEditText.getText())) {
-                    AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryAddActivity.this);
-                    return;
-                }
-
-                //TODO change bgcategoryrepository contains method to simply take a string bgcategoryname.
-                String bgCategoryName = categoryEditText.getText().toString();
-                BgCategory bgCategory = new BgCategory(bgCategoryName);
-
-                Log.w("BgCatAddAct.java", "Includes category: " + bgCategoryRepository.contains(bgCategory));
-                if (bgCategoryRepository.contains(bgCategory)) {
-                    AlertDialogHelper.popupWarning("A category with that name already exists. " +
-                            "You must enter a unique category name.", BgCategoryAddActivity.this);
-                    return;
-                }
-
-                Intent replyIntent = new Intent();
-                replyIntent.putExtra(EXTRA_REPLY, bgCategory);
-                setResult(RESULT_OK, replyIntent);
-                finish();
-                */
             }
         });
+    }
+
+    //TODO This is adding logic into the presentation layer I fear. I need to look into moving this elsewhere,
+    // but I don't want more viewmodels and stuff. Maybe I should consider the add/edit activities are more than
+    // just views...
+
+    private void setBgCategories(List<BgCategory> bgCategories) {
+        this.selectedBgCategories = new ArrayList<BgCategory>(bgCategories);
+        //TODO remove printBgCategories(), it is for testing purposes.
+        printBgCategories();
+        //categoriesTextView.setText(createCategoriesString(this.bgCategories));
+        setChipGroupChips(bgCategories);
+    }
+
+    private void removeBgCategory(BgCategory bgCategory) {
+        this.selectedBgCategories.remove(bgCategory);
+    }
+
+    private String createCategoriesString(List<BgCategory> categoriesList) {
+        if (categoriesList == null || categoriesList.isEmpty()) {
+            return "None";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+        sb.append(categoriesList.get(i));
+        i++;
+
+        while (i < categoriesList.size()) {
+            sb.append(", ");
+            sb.append(categoriesList.get(i).getCategoryName());
+            i++;
+        }
+
+        return sb.toString();
+    }
+
+    private List<BgCategory> getBgCategories() {
+        return selectedBgCategories;
+    }
+
+    //TODO remove this method, it is for testing purposes.
+    private void printBgCategories() {
+        Log.w("BoardGameAddAct.java", "Printing categories:");
+        int i = 1;
+        for (BgCategory bgCategory : selectedBgCategories) {
+            Log.w("BoardGameAddAct.java", "BgCategory " + i + ": " + bgCategory.getCategoryName());
+        }
     }
 
     private BoardGame.PlayMode getPlayMode() {
@@ -162,11 +238,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
         return playMode;
     }
 
-    private List<BgCategory> getBgCategories() {
-        List<BgCategory> bgCategories = new ArrayList<>();
-        return bgCategories;
-    }
-
     private BoardGame.TeamOption getTeamOption() {
         int id = teamOptionsRadioGroup.getCheckedRadioButtonId();
 
@@ -181,4 +252,53 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 return BoardGame.TeamOption.ERROR;
         }
     }
+
+    private void setChipGroupChips(List<BgCategory> bgCategories) {
+        chipGroup.removeAllViews();
+        for (BgCategory bgCategory : bgCategories) {
+            addChip(bgCategory);
+        }
+    }
+
+    private void addChip(BgCategory bgCategory) {
+        chipGroup.addView(createChip(bgCategory));
+    }
+
+    private Chip createChip(BgCategory bgCategory) {
+        Chip chip = new Chip(chipGroup.getContext());
+        chip.setText((bgCategory.getCategoryName()));
+        chip.setCloseIconVisible(true);
+
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO remove this log message and printbgcategories, they are for testing purposes.
+                Log.w("BoardGameAddAct.java", "Deleting: " + bgCategory.getCategoryName());
+                removeBgCategory(bgCategory);
+                printBgCategories();
+                chipGroup.removeView(chip);
+            }
+        });
+
+        return chip;
+    }
+
+    private void setAllBgCategories(List<BgCategory> bgCategories) {
+        this.allBgCategories = bgCategories;
+    }
+
+    private List<BgCategory> getAllBgCategories() {
+        return this.allBgCategories;
+    }
+
+    private void setSearchableSpinnerList() {
+
+        ArrayAdapter<BgCategory> adapter = new ArrayAdapter<> (
+                this, android.R.layout.simple_spinner_item, getAllBgCategories()
+        );
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        searchableSpinner.setAdapter(adapter);
+    }
+
 }

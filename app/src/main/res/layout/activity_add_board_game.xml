@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -263,25 +264,57 @@
             app:layout_constraintTop_toBottomOf="@id/bgadd_difficulty_edittext" />
 
         <TextView
-            android:id="@+id/bgadd_categories_placeholder"
+            android:id="@+id/bgadd_categories_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:text="Categories Placeholder"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_max_players_edittext"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_max_players_edittext" />
+            app:layout_constraintTop_toBottomOf="@id/bgadd_max_players_edittext"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="Categories"/>
+
+        <TextView
+            android:id="@+id/bgadd_categories_output"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="4dp"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_header"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_categories_header"
+            app:layout_constraintHorizontal_bias="0"
+            tools:text="Strategy, Luck, Ameritrash"
+            android:visibility="gone"/>
+
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            android:id="@+id/bgAdd_searchable_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_max_players_edittext"
+            android:layout_marginRight="12dp"
+            />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/bgadd_categories_chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_categories_header"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_header"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            app:layout_constraintWidth_default="wrap"
+            app:singleSelection="true"/>
 
         <TextView
             android:id="@+id/bgadd_play_modes_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
             android:text="Play Modes (Pick as many as are viable.)"
-            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_placeholder"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_categories_placeholder" />
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_header"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_categories_chip_group" />
 
         <TextView
             android:id="@+id/bgadd_team_options_header"
@@ -290,7 +323,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:text="Team Options"
-            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_placeholder"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_output"
             app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_container"
             app:layout_goneMarginTop="8dp" />
 

@@ -73,4 +73,10 @@ public class BgCategory implements Parcelable {
 
         return other.getCategoryName().equals(this.getCategoryName());
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return this.getCategoryName();
+    }
 }
