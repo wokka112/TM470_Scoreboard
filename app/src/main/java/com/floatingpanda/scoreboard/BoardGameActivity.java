@@ -1,5 +1,8 @@
 package com.floatingpanda.scoreboard;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,14 +16,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.AssignedCategories;
+import com.floatingpanda.scoreboard.data.AssignedCategoriesDao;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardGameActivity extends AppCompatActivity {
+    private final int EDIT_BOARDGAME_REQUEST_CODE = 1;
 
     private BoardGameViewModel boardGameViewModel;
 
@@ -77,8 +85,7 @@ public class BoardGameActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoardGameActivity.this, "Edit pressed",
-                        Toast.LENGTH_SHORT).show();
+                startEditActivity(boardGame);
             }
         });
 
@@ -86,13 +93,16 @@ public class BoardGameActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoardGameActivity.this, "Delete pressed",
-                        Toast.LENGTH_SHORT).show();
+                startDeleteActivity(boardGame);
             }
         });
     }
 
     private void setViews(BoardGamesAndBgCategories bgAndBgCategories) {
+        if (bgAndBgCategories == null) {
+            return;
+        }
+
         boardGame = bgAndBgCategories.getBoardGame();
 
         name.setText(boardGame.getBgName());
@@ -109,6 +119,41 @@ public class BoardGameActivity extends AppCompatActivity {
         descriptionOutput.setText(boardGame.getDescription());
         houseRulesOutput.setText(boardGame.getHouseRules());
         notesOutput.setText(boardGame.getNotes());
+    }
+
+    private void startDeleteActivity(BoardGame boardGame) {
+        //TODO refactor this popup window into a method and find somewhere better to put it.
+        AlertDialog.Builder builder = new AlertDialog.Builder(BoardGameActivity.this);
+        builder.setTitle("Delete Board Game?")
+                .setMessage("Are you sure you want to delete " + boardGame.getBgName() + "?\n" +
+                        "The member will be removed from winner lists, groups and game records, and " +
+                        "their skill ratings will be deleted.\n" +
+                        "This operation is irreversible.")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteBoardGame(boardGame);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteBoardGame(BoardGame boardGame) {
+        this.boardGameViewModel.deleteBoardGame(boardGame);
+        finish();
+    }
+
+    private void startEditActivity(BoardGame boardGame) {
+        Intent editIntent = new Intent(BoardGameActivity.this, BoardGameEditActivity.class);
+        editIntent.putExtra("BOARDGAME", boardGame);
+        startActivityForResult(editIntent, EDIT_BOARDGAME_REQUEST_CODE);
     }
 
     //TODO replace this with a better method for formatting categories.

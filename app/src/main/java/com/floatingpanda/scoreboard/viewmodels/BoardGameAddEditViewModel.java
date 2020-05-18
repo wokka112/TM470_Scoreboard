@@ -143,6 +143,17 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
         return chip;
     }
 
+    public boolean[] getSelected(List<BgCategory> bgCategories) {
+        boolean[] selected = new boolean[adapter.getCount()];
+
+        for (int i = 0; i < bgCategories.size(); i++) {
+            int position = adapter.getPosition(bgCategories.get(i));
+            selected[position] = true;
+        }
+
+        return selected;
+    }
+
     private void setupAdapter(Context context) {
         //TODO select the selected ones to begin with. May need to do in the view...
         List<BgCategory> bgCategories = new ArrayList<BgCategory>(getAllBgCategoriesNotLive());

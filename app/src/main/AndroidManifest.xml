@@ -15,6 +15,7 @@
         <activity android:name=".MemberEditActivity" />
         <activity android:name=".MemberActivity" />
         <activity android:name=".BoardGameAddActivity" />
+        <activity android:name=".BoardGameEditActivity"/>
         <activity android:name=".BoardGameActivity" />
         <activity android:name=".old.GroupActivity" />
         <activity android:name=".MainActivity">

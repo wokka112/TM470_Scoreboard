@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategories.class, BgCategory.class, BoardGame.class, Group.class, Member.class}, version = 13, exportSchema = false)
+@Database(entities = {AssignedCategories.class, BgCategory.class, BoardGame.class, Group.class, Member.class}, version = 14, exportSchema = false)
 @TypeConverters({PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -41,6 +41,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "scoreboard_database")
                             .fallbackToDestructiveMigration()
+                            //.allowMainThreadQueries() // Use for testing purposes
                             .addCallback(sRoomDatabaseCallback)
                             .build();
                 }

@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ public class BoardGameRepository {
     private AssignedCategoriesDao assignedCategoriesDao;
     private BoardGameDao boardGameDao;
     private BgCategoryDao bgCategoryDao;
+    private AssignedCategoriesDao acDao; // Used for testing purposes.
     private LiveData<List<BoardGame>> allBoardGames;
     private LiveData<List<AssignedCategories>> allAssignedCategories;
     private LiveData<List<BoardGamesAndBgCategories>> allBgsAndCategories;
@@ -24,6 +24,7 @@ public class BoardGameRepository {
         assignedCategoriesDao = db.assignedCategoriesDao();
         boardGameDao = db.boardGameDao();
         bgCategoryDao = db.bgCategoryDao();
+        acDao = db.assignedCategoriesDao();
 
         allBoardGames = boardGameDao.getAll();
         allAssignedCategories = assignedCategoriesDao.getAll();
@@ -53,7 +54,7 @@ public class BoardGameRepository {
 
     //TODO change this to just insert?
     //TODO change this to insert board game with categories list drawn from board game categories attribute.
-    public void insertBoardGame(BoardGame boardGame) {
+    private void insertBoardGame(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.insert(boardGame);
         });
@@ -74,7 +75,7 @@ public class BoardGameRepository {
     // Postconditions: - boardGame will exist in database.
     //                 - a set of assigned_categories tables linking boardGame with its categories will exist
     //                    in the table.
-    public void insertBoardGameWithCategories(BoardGame boardGame) {
+    private void insertBoardGameWithCategories(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.insert(boardGame);
 
@@ -88,6 +89,31 @@ public class BoardGameRepository {
             }
 
             assignedCategoriesDao.insertAll(assignedCategories.toArray(new AssignedCategories[assignedCategories.size()]));
+        });
+    }
+
+    //TODO add testing to ensure assigned categories with this bg are deleted.
+    // Need to find how to add appropriate asserts for this really.
+    public void delete(BoardGame boardGame) {
+        AppDatabase.getExecutorService().execute(() -> {
+            //TODO remove log messages once done. They are for testing.
+            List<AssignedCategories> ac = acDao.findByBgId(boardGame.getId());
+
+            for (int i = 0; i < ac.size(); i++) {
+                Log.w("BGRepos.java", "1 Bg: " + boardGame.getId() + ", AC: " + ac.get(i).getCategoryId());
+            }
+
+            boardGameDao.delete(boardGame);
+
+            ac = acDao.findByBgId(boardGame.getId());
+
+            if (ac.isEmpty()) {
+                Log.w("BGRepos.java", "2 Empty");
+            } else {
+                for (int i = 0; i < ac.size(); i++) {
+                    Log.w("BGRepos.java", "2 Bg: " + boardGame.getId() + ", AC: " + ac.get(i).getCategoryId());
+                }
+            }
         });
     }
 

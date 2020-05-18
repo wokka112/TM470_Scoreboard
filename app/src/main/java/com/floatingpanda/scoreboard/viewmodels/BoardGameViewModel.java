@@ -33,4 +33,6 @@ public class BoardGameViewModel extends AndroidViewModel {
     //                 - if boardGame has categories assigned to it that exist in the database, assigned_categories
     //                    tables will be added linking boardGame with this categories.
     public void addBoardGame(BoardGame boardGame) { boardGameRepository.insert(boardGame); }
+
+    public void deleteBoardGame(BoardGame boardGame) { boardGameRepository.delete(boardGame); }
 }

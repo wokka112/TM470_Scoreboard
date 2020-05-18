@@ -14,6 +14,12 @@ public interface AssignedCategoriesDao {
     @Query("SELECT * FROM assigned_categories")
     LiveData<List<AssignedCategories>> getAll();
 
+    @Query("SELECT * FROM assigned_categories WHERE bg_id LIKE :bgId")
+    List<AssignedCategories> findByBgId(int bgId);
+
+    @Query("SELECT * FROM assigned_categories WHERE category_id like :categoryId")
+    List<AssignedCategories> findByCategoryId(int categoryId);
+
     /*
     @Query("SELECT * FROM assigned_categories WHERE bg_name LIKE :bgName")
     LiveData<BgCategory> findByName(String bgName);

@@ -2,59 +2,45 @@ package com.floatingpanda.scoreboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameRepository;
-import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
-import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static android.view.View.GONE;
+//TODO 1. Get board game.
+// 2. Fill details.
+// 3. Update selected categories.
+// 4. Updated spinner's selected list.
 
-//TODO add in a clear categories button?
-
-//TODO look into if I can get the close chip stuff working with removing the selected elements from the spinner.
-
-//TODO keep searchable spinner comment stuff for when I make the gamerecord creation. It could be useful for
-// finding and adding board games. Same for players.
-
-public class BoardGameAddActivity extends AppCompatActivity {
+public class BoardGameEditActivity extends AppCompatActivity {
     //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private BoardGameAddEditViewModel viewModel;
 
     private EditText bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, descriptionEditText,
-        notesEditText, houseRulesEditText;
+            notesEditText, houseRulesEditText;
     private CheckBox competitiveCheckBox, cooperativeCheckBox, solitaireCheckBox;
     private RadioGroup teamOptionsRadioGroup;
+    private RadioButton noTeamsRadioButton, teamsOrSoloRadioButton, teamsOnlyRadioButton;
     private ChipGroup chipGroup;
-    //private SearchableSpinner searchableSpinner;
     private MultiSpinner multiSpinner;
 
     @Override
@@ -78,11 +64,19 @@ public class BoardGameAddActivity extends AppCompatActivity {
 
         teamOptionsRadioGroup = findViewById(R.id.bgadd_team_options_radiogroup);
 
+        noTeamsRadioButton = findViewById(R.id.bgadd_no_teams_radiobutton);
+        teamsOrSoloRadioButton = findViewById(R.id.bgadd_teams_allowed_radiobutton);
+        teamsOnlyRadioButton = findViewById(R.id.bgadd_teams_only_radiobutton);
+
         chipGroup = findViewById(R.id.bgadd_categories_chip_group);
 
-        //searchableSpinner = findViewById(R.id.bgAdd_searchable_spinner);
         multiSpinner = findViewById(R.id.bgadd_multi_spinner);
         multiSpinner.setAllText("Choose categories");
+
+        BoardGame boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");
+        Log.w("BoardGameEditAct.java", "Bg: " + boardGame.getBgName());
+
+        setDetails(boardGame);
 
         final Button browseButton, cameraButton, saveButton, cancelButton;
 
@@ -94,32 +88,11 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 viewModel.setAllBgCategoriesNotLive(bgCategories);
                 //setSearchableSpinnerList();
                 setMultiSpinnerList();
+                multiSpinner.setSelected(viewModel.getSelected(boardGame.getBgCategories()));
             }
         });
 
-        //searchableSpinner.setPositiveButton("Ok");
 
-        /*
-        searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    return;
-                }
-
-                Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).getClass());
-                Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).toString());
-                //TODO move this?
-                BgCategory bgCategory = (BgCategory) parent.getItemAtPosition(position);
-                addChip(bgCategory);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        */
 
         browseButton = findViewById(R.id.bgadd_button_browse);
         cameraButton = findViewById(R.id.bgadd_button_camera);
@@ -129,7 +102,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
         browseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoardGameAddActivity.this, "Browse pressed",
+                Toast.makeText(BoardGameEditActivity.this, "Browse pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -137,7 +110,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoardGameAddActivity.this, "Camera pressed",
+                Toast.makeText(BoardGameEditActivity.this, "Camera pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -145,7 +118,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoardGameAddActivity.this, "Cancel pressed",
+                Toast.makeText(BoardGameEditActivity.this, "Cancel pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -178,6 +151,77 @@ public class BoardGameAddActivity extends AppCompatActivity {
         });
     }
 
+    private void setDetails(BoardGame boardGame) {
+        bgNameEditText.setText(boardGame.getBgName());
+        difficultyEditText.setText(Integer.toString(boardGame.getDifficulty()));
+        minPlayersEditText.setText(Integer.toString(boardGame.getMinPlayers()));
+        maxPlayersEditText.setText(Integer.toString(boardGame.getMaxPlayers()));
+        descriptionEditText.setText(boardGame.getDescription());
+        notesEditText.setText(boardGame.getNotes());
+        houseRulesEditText.setText(boardGame.getHouseRules());
+        setPlayModeCheckBoxes(boardGame.getPlayModes());
+        setTeamOptionsRadioGroup(boardGame.getTeamOptions());
+        setChipGroupChips(boardGame.getBgCategories());
+    }
+
+    private void setPlayModeCheckBoxes(BoardGame.PlayMode playMode) {
+        switch (playMode) {
+            case COMPETITIVE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive");
+                competitiveCheckBox.setChecked(true);
+                break;
+            case COOPERATIVE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Cooperative");
+                cooperativeCheckBox.setChecked(true);
+                break;
+            case SOLITAIRE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Solitaire");
+                solitaireCheckBox.setChecked(true);
+                break;
+            case COMPETITIVE_OR_COOPERATIVE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive or Cooperative");
+                competitiveCheckBox.setChecked(true);
+                cooperativeCheckBox.setChecked(true);
+                break;
+            case COOPERATIVE_OR_SOLITAIRE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Cooperative or Solitaire");
+                cooperativeCheckBox.setChecked(true);
+                solitaireCheckBox.setChecked(true);
+                break;
+            case COMPETITIVE_OR_SOLITAIRE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive or Solitaire");
+                competitiveCheckBox.setChecked(true);
+                solitaireCheckBox.setChecked(true);
+                break;
+            case COMPETITIVE_OR_COOPERATIVE_OR_SOLITAIRE:
+                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive or Cooperative or Solitaire");
+                competitiveCheckBox.setChecked(true);
+                cooperativeCheckBox.setChecked(true);
+                solitaireCheckBox.setChecked(true);
+                break;
+            case ERROR:
+                Log.w("BoardGameEditAct.java", "Play Mode: error");
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void setTeamOptionsRadioGroup(BoardGame.TeamOption teamOption) {
+        switch (teamOption) {
+            case NO_TEAMS:
+                noTeamsRadioButton.setChecked(true);
+            case TEAMS_OR_SOLOS:
+                teamsOrSoloRadioButton.setChecked(true);
+            case TEAMS_ONLY:
+                teamsOnlyRadioButton.setChecked(true);
+            case ERROR:
+                Log.w("BoardGameEditAct.java", "Team option: Error");
+            default:
+                break;
+        }
+    }
+
     // Deals with presentation, may be useful for the edit activity.
     private void setChipGroupChips(List<BgCategory> bgCategories) {
         clearChips();
@@ -203,12 +247,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
     private void setMultiSpinnerList() {
         multiSpinner.setAdapter(viewModel.getAdapter(this), false, onSelectedListener);
     }
-
-    /*
-    private void setSearchableSpinnerList() {
-        searchableSpinner.setAdapter(viewModel.getSpinnerListAdapter(this));
-    }
-    */
 
     private BoardGame.PlayMode getPlayMode() {
         boolean competitive = competitiveCheckBox.isChecked();
@@ -238,7 +276,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
             clearChips();
             boolean noneSelected = true;
             for (int i = 0; i < selected.length; i++) {
-                Log.w("BoardGameAddAct.Java", "Selected " + i + ":" + selected[i]);
+                Log.w("BoardGameEditAct.Java", "Selected " + i + ":" + selected[i]);
                 if (selected[i] == true) {
                     BgCategory bgCategory = viewModel.getAdapterItem(i);
                     addChip(bgCategory);
