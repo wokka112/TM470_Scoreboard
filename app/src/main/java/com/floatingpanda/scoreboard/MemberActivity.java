@@ -46,7 +46,8 @@ public class MemberActivity extends AppCompatActivity {
         //TODO implement groupcount in member and functionality to work it out.
         groupsTextView = findViewById(R.id.memberact_groups_output);
         //TODO add listener to link to a list of groups member is part of.
-        // also change colour to be blue like a hyperlink
+        // also change colour to be blue like a hyperlink (????) Maybe use a button instead. Looks
+        // webby otherwise.
         viewGroupsLink = findViewById(R.id.memberact_view_groups);
         //TODO implement best game in member and functionality to work it out.
         bestGameTextView = findViewById(R.id.memberact_best_game_output);
@@ -88,18 +89,16 @@ public class MemberActivity extends AppCompatActivity {
     // Postconditions: - The text and imageviews in this member activity are updated to match the member
     //                    passed as a parameter.
     /**
-     * Sets the views in the MemberActivity to the details of the Member passed in as the parameter member.
+     * Sets the views in the MemberActivity to the details of member.
      *
      * If member is null, does nothing.
-     * @param member a member drawn from the database
+     * @param member a member
      */
     private void setViews(Member member) {
         if (member == null) {
             //TODO remove log?
             Log.w("MemberActivity.java", "In setViews() method. member is null. This is okay if a " +
                     "result of the delete method.");
-            //TODO remove setting nickname to deleted before exiting?
-            nicknameTextView.setText("Deleted");
             return;
         }
 
@@ -125,6 +124,10 @@ public class MemberActivity extends AppCompatActivity {
 
     // Preconditions: - member exists in database.
     // Postconditions: - Member edit activity is started to edit object in the database.
+    /**
+     * Starts the MemberEditActivity activity to edit member.
+     * @param member a member
+     */
     private void startEditActivity(Member member) {
         Intent intent = new Intent(MemberActivity.this, MemberEditActivity.class);
         intent.putExtra("MEMBER", member);
@@ -134,6 +137,17 @@ public class MemberActivity extends AppCompatActivity {
     // Preconditions: - A Member with a primary key id matching the member parameter's id exists in the database.
     // Postconditions: - The matching Member in the database is updated to be the same as the member passed to
     //                    this method.
+    /**
+     * Updates a Member in the database to match the data of member. A Member with member's id
+     * should already exist in the database for this to work.
+     *
+     * Note that a Member's id should not change, so update will not update Member ids in the
+     * database, only their other details.
+     *
+     * member should have a unique nickname, i.e. no Member should already exist in the
+     * database with the same nickname as member.
+     * @param member a member with a unique nickname
+     */
     private void editMember(Member member) {
         memberViewModel.editMember(member);
     }
@@ -143,6 +157,15 @@ public class MemberActivity extends AppCompatActivity {
     //                      and offering the user the options to delete the member or cancel the deletion.
     //                 - if user hits delete on the delete popup, the Member is removed from the database.
     //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
+    /**
+     * Displays a popup informing the user of what deleting a Member results in and warning them
+     * that it is irreversible. If the user presses the "Delete" button on the popup, then member
+     * will be deleted from the database. If the user presses the "Cancel" button, then the popup
+     * will be dismissed and nothing will happen.
+     *
+     * member should exist in the database.
+     * @param member a member that exists in the database
+     */
     private void startDeleteActivity(Member member) {
         //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(MemberActivity.this);
@@ -177,6 +200,10 @@ public class MemberActivity extends AppCompatActivity {
     //                 - game_records which this member is registered on will have the member turned into an
     //                    anonymous member (i.e. the record will no longer have a foreign key linking to the
     //                    member's table in the members tables).
+    /**
+     * Deletes member from the database.
+     * @param member a member that exists in the database
+     */
     private void deleteMember(Member member) {
         memberViewModel.deleteMember(member);
         finish();

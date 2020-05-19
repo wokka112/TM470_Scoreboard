@@ -11,6 +11,9 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a member of board game groups. The member may belong to zero, one or more groups.
+ */
 @Entity(tableName = "members", indices = {@Index(value = "nickname",
         unique = true)})
 public class Member implements Parcelable {
@@ -96,6 +99,11 @@ public class Member implements Parcelable {
         }
     };
 
+    /**
+     * A member is equal to another member if they have the same nickname and realname.
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
@@ -105,7 +113,6 @@ public class Member implements Parcelable {
         Member other = (Member) obj;
 
         return (other.getNickname().equals(this.getNickname())
-                && other.getRealName().equals(this.getRealName())
-                && other.getNotes().equals(this.getNotes()));
+                && other.getRealName().equals(this.getRealName()));
     }
 }

@@ -28,7 +28,7 @@ public class MemberEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_member);
+        setContentView(R.layout.activity_add_edit_member);
 
         memberRepository = new MemberRepository(getApplication());
 
@@ -38,9 +38,7 @@ public class MemberEditActivity extends AppCompatActivity {
         realNameEditText = findViewById(R.id.memberadd_realname_edittext);
         notesEditText = findViewById(R.id.memberadd_notes_edittext);
 
-        nicknameEditText.setText(member.getNickname());
-        realNameEditText.setText(member.getRealName());
-        notesEditText.setText(member.getNotes());
+        setViews(member);
 
         browseButton = findViewById(R.id.memberadd_button_browse);
         cameraButton = findViewById(R.id.memberadd_button_camera);
@@ -66,8 +64,7 @@ public class MemberEditActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MemberEditActivity.this, "Cancel pressed",
-                        Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -82,7 +79,7 @@ public class MemberEditActivity extends AppCompatActivity {
 
                 String nickname = nicknameEditText.getText().toString();
 
-                if (member.getNickname().equals(nickname)
+                if (nickname.equals(member.getNickname())
                         || memberRepository.contains(nickname)) {
                     AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", MemberEditActivity.this);
                     return;
@@ -104,5 +101,11 @@ public class MemberEditActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void setViews(Member member) {
+        nicknameEditText.setText(member.getNickname());
+        realNameEditText.setText(member.getRealName());
+        notesEditText.setText(member.getNotes());
     }
 }

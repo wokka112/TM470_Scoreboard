@@ -70,22 +70,43 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     }
 
     // Postconditions: - the BgCategory add activity is started.
-    public void startAddActivity() {
+    /**
+     * Starts the BgCategoryAddActivity activity.
+     */
+    private void startAddActivity() {
         Intent addBgCategoryIntent = new Intent(getContext(), BgCategoryAddActivity.class);
         startActivityForResult(addBgCategoryIntent, ADD_CATEGORY_REQUEST_CODE);
     }
 
-    // Preconditions: - bgCategory does not exist in the database.
-    // Postconditions: - bgCategory is added to the database.
-    public void addBgCategory(BgCategory bgCategory) {
+    // Precondition: BgCategory with bgCategory's name or id should not exist in database.
+    // Postcondition: new BgCategory exists in the database.
+    /**
+     * Inserts a new Bgcategory into the database. If the BgCategory already exists in the database,
+     * no new category is inserted.
+     *
+     * bgCategory should have an id of 0 so Room can autogenerate an id for it.
+     *
+     * bgCategory should have a unique category name, i.e. no BgCategory should already exist in the
+     * database with the same name as bgCategory.
+     * @param bgCategory a BgCategory with a unique category name and an id of 0
+     */
+    private void addBgCategory(BgCategory bgCategory) {
         bgCategoryViewModel.addBgCategory(bgCategory);
     }
 
     // Preconditions: - object is a BgCategory
     // Postconditions: - BgCategory edit activity is started to edit object in the database.
+    /**
+     * Starts the BgCategoryEditActivity activity to edit object.
+     *
+     * object should be a BgCategory.
+     *
+     * Part of the ActivityAdapterInterface.
+     * @param object an object of the BgCategory class that exists in the database
+     */
     @Override
     public void startEditActivity(Object object) {
-        //TODO look into whether this should be application context rather than just context
+        //TODO get rid of defensive programming and put assertions in?
         BgCategory bgCategory;
 
         if (object.getClass() == BgCategory.class) {
@@ -95,16 +116,27 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
             intent.putExtra("BG_CATEGORY", bgCategory);
             startActivityForResult(intent, EDIT_CATEGORY_REQUEST_CODE);
         } else {
-            Log.w("BgCatListFrag.java", "Did not receive category.");
+            Log.w("BgCatListFrag.java", "startEditActivity() did not receive BgCategory object.");
             return;
         }
     }
 
-    // Preconditions: - BgCategory with editedBgCategory's id (primary key) exists in the database.
-    // Postconditions: - BgCategory with editedBgCategory's id (primary key) is updated in database
-    //      to have editedBgCategory's details.
-    public void editBgCategory(BgCategory editedBgCategory) {
-        bgCategoryViewModel.editBgCategory(editedBgCategory);
+    // Precondition: - a BgCategory with bgCategory's id (primary key) exists in database.
+    // Postcondition: - the BgCategory in the database will be updated to have the details of bgCategory.
+    //                - edits will cascade, so foreign keys of bgCategory (such as in assigned_categories) will be updated as well.
+    /**
+     * Updates a BgCategory in the database to match the data of bgCategory. A BgCategory with
+     * bgCategory's id should already exist in the database for this to work.
+     *
+     * Note that a BgCategory's id should not change, so update will not update BgCategory ids in
+     * the database, only their category names.
+     *
+     * bgCategory should have a unique category name, i.e. no BgCategory should already exist in the
+     * database with the same name as bgCategory.
+     * @param bgCategory a BgCategory with a unique category name
+     */
+    private void editBgCategory(BgCategory bgCategory) {
+        bgCategoryViewModel.editBgCategory(bgCategory);
     }
 
     // Preconditions: - object is a BgCategory.
@@ -113,6 +145,19 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     //                    and offering the user the options to delete the bgcategory or cancel the deletion.
     //                 - if user hits delete on the delete popup, the BgCategory is removed from the database.
     //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
+    /**
+     * Displays a popup informing the user of what deleting a BgCategory results in and warning them
+     * that it is irreversible. If the user presses the "Delete" button on the popup, then the
+     * BgCategory passed as object will be deleted from the database. If the user presses the
+     * "Cancel" button, then the popup will be dismissed and nothing will happen.
+     *
+     * object should be a BgCategory.
+     *
+     * object should exist in the database.
+     *
+     * Part of the ActivityAdapterInterface.
+     * @param object an object of the BgCategory class that exists in the database
+     */
     @Override
     public void startDeleteActivity(Object object) {
         BgCategory bgCategory = (BgCategory) object;
@@ -142,7 +187,11 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     // Preconditions: - bgCategory exists in the database.
     // Postconditions: - bgCategory is removed from the database.
     //                 - assigned_categories with bgCategory in them are removed from the database.
-    public void deleteBgCategory(BgCategory bgCategory) {
+    /**
+     * Deletes a BgCategory in the database with an id matching the id of bgCategory.
+     * @param bgCategory a bgCategory that exists in the database
+     */
+    private void deleteBgCategory(BgCategory bgCategory) {
         bgCategoryViewModel.deleteBgCategory(bgCategory);
     }
 
@@ -153,8 +202,7 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
             BgCategory newBgCategory = (BgCategory) data.getExtras().get(BgCategoryAddActivity.EXTRA_REPLY);
             addBgCategory(newBgCategory);
         } else if (requestCode == EDIT_CATEGORY_REQUEST_CODE && resultCode == RESULT_OK) {
-            //TODO replace the String here with a set value, maybe make a static value somewhere for EXTRA_REPLY.
-            BgCategory editedBgCategory = (BgCategory) data.getExtras().get("EDITED_BG_CATEGORY");
+            BgCategory editedBgCategory = (BgCategory) data.getExtras().get(BgCategoryEditActivity.EXTRA_REPLY);
             editBgCategory(editedBgCategory);
         }
     }

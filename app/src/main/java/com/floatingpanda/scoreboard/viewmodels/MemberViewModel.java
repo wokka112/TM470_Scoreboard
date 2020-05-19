@@ -25,29 +25,50 @@ public class MemberViewModel extends AndroidViewModel {
         allMembers = memberRepository.getAllMembers();
     }
 
+    /**
+     * @return live data list of all members from the database
+     */
     public LiveData<List<Member>> getAllMembers() { return allMembers; }
 
-    // Hinges on primary key in database for the member being observed not changing while this
-    // method is observed.
     // Postconditions: - if member exists in the database, returns a LiveData object of member.
     //                 - if member doesn't exist in the database, returns null.
+    /**
+     * Returns a live data version of a member from the database if member exists in the database.
+     * If member does not exist in the database, then null is returned.
+     * @return live data member from the database
+     */
     public LiveData<Member> getLiveDataMember(Member member) {
         return memberRepository.getLiveMember(member.getId());
     }
 
-    //TODO remove?
-    //Hinges on nickname not changing while this method is observed.
-    public LiveData<Member> getLiveDataMember(String nickname) {
-        return memberRepository.getLiveMember(nickname);
-    }
-
     // Preconditions: - member does not exist in the database.
     // Postconditions: - member is added to the database.
+    /**
+     * Inserts a new Member into the database. If the Member already exists in the database, no new
+     * member is inserted.
+     *
+     * member should have an id of 0 so Room can autogenerate an id for it.
+     *
+     * member should have a unique nickname, i.e. no MEmber should already exist in the database
+     * with the same nickname as member.
+     * @param member a Member with a unique nickname and an id of 0
+     */
     public void addMember(Member member) { memberRepository.insert(member); }
 
     // Precondition: - a Member with member's id (primary key) exists in database.
     // Postcondition: - the Member in the database will be updated to have the details of member.
     //                - edits will cascade, so foreign keys of member (such as in group_members) will be updated as well.
+    /**
+     * Updates a Member in the database to match the data of member. A Member with member's id
+     * should already exist in the database for this to work.
+     *
+     * Note that a Member's id should not change, so update will not update Member ids in the
+     * database, only their other details.
+     *
+     * member should have a unique nickname, i.e. no Member should already exist in the
+     * database with the same nickname as member.
+     * @param member a member with a unique nickname
+     */
     public void editMember(Member member) { memberRepository.update(member); }
 
     // Precondition: - member should exist in the database.
@@ -60,5 +81,9 @@ public class MemberViewModel extends AndroidViewModel {
     //                 - game_records which this member is registered on will have the member turned into an
     //                    anonymous member (i.e. the record will no longer have a foreign key linking to the
     //                    member's table in the members tables).
+    /**
+     * Deletes member from the database
+     * @param member a Member that exists in the database
+     */
     public void deleteMember(Member member) { memberRepository.delete(member); }
 }

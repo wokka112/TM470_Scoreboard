@@ -12,15 +12,30 @@ import java.util.List;
 
 @Dao
 public interface MemberDao {
+    /**
+     * @return live data list of all members from the database.
+     */
     @Query("SELECT * FROM members")
-    LiveData<List<Member>> getAll();
+    LiveData<List<Member>> getAllLive();
 
+    /**
+     * @param id the database id of a member
+     * @return a live data member from the database
+     */
     @Query("SELECT * FROM members WHERE member_id LIKE :id")
     LiveData<Member> findLiveDataById(int id);
 
+    /**
+     * @param nickname a member's nickname
+     * @return a live data member from the database
+     */
     @Query("SELECT * FROM members WHERE nickname LIKE :nickname")
     LiveData<Member> findLiveDataByNickname(String nickname);
 
+    /**
+     * @param nickname a member's nickname
+     * @return a normal member object (not live data) from the database
+     */
     @Query("SELECT * FROM members WHERE nickname LIKE :nickname")
     Member findNonLiveDataByNickname(String nickname);
 

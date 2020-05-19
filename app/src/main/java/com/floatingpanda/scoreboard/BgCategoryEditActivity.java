@@ -1,7 +1,5 @@
 package com.floatingpanda.scoreboard;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,24 +20,29 @@ import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 
 public class BgCategoryEditActivity extends AppCompatActivity {
 
+    public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
+
     private BgCategoryRepository bgCategoryRepository;
     private EditText categoryEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_bg_category);
+        setContentView(R.layout.activity_add_edit_bg_category);
 
         BgCategory bgCategory = (BgCategory) getIntent().getExtras().get("BG_CATEGORY");
-        BgCategory originalBgCategory = new BgCategory(bgCategory.getCategoryName());
 
         bgCategoryRepository = new BgCategoryRepository(getApplication());
 
         categoryEditText = findViewById(R.id.add_category_edittext);
-        categoryEditText.setText(bgCategory.getCategoryName());
 
-        final Button button = findViewById(R.id.add_category_save_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        setViews(bgCategory);
+
+        final Button saveButton = findViewById(R.id.add_category_save_button);
+        final Button cancelButton = findViewById(R.id.add_category_cancel_button);
+
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
                 //TODO remove popup warnings and instead direct people to the edittext in error and
                 // inform them what they need to do to fix it?
@@ -48,19 +51,32 @@ public class BgCategoryEditActivity extends AppCompatActivity {
                     return;
                 }
 
-                bgCategory.setCategoryName(categoryEditText.getText().toString());
-                Log.w("BgCatEditAct.java", "Includes category: " + bgCategoryRepository.contains(bgCategory));
-                if ((bgCategory.getCategoryName().equals(originalBgCategory.getCategoryName()))
-                        || bgCategoryRepository.contains(bgCategory)) {
+                String categoryName = categoryEditText.getText().toString();
+
+                if (categoryName.equals(bgCategory.getCategoryName())
+                        || bgCategoryRepository.containsCategoryName(categoryName)) {
                     AlertDialogHelper.popupWarning("You must enter a new, unique name for the category.", BgCategoryEditActivity.this);
                     return;
                 }
 
+                bgCategory.setCategoryName(categoryEditText.getText().toString());
+
                 Intent replyIntent = new Intent();
-                replyIntent.putExtra("EDITED_BG_CATEGORY", bgCategory);
+                replyIntent.putExtra(EXTRA_REPLY, bgCategory);
                 setResult(RESULT_OK, replyIntent);
                 finish();
             }
         });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    private void setViews(BgCategory bgCategory) {
+        categoryEditText.setText(bgCategory.getCategoryName());
     }
 }

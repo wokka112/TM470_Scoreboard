@@ -46,7 +46,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_board_game);
+        setContentView(R.layout.activity_add_edit_board_game);
 
         viewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
 
@@ -88,6 +88,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 viewModel.setAllBgCategoriesNotLive(bgCategories);
                 //setSearchableSpinnerList();
                 setMultiSpinnerList();
+                //TODO work out where to put this setselected.
                 multiSpinner.setSelected(viewModel.getSelected(boardGame.getBgCategories()));
             }
         });

@@ -3,7 +3,6 @@ package com.floatingpanda.scoreboard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,8 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.MemberRepository;
 
@@ -33,7 +30,7 @@ public class MemberAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_member);
+        setContentView(R.layout.activity_add_edit_member);
 
         memberRepository = new MemberRepository(getApplication());
 
@@ -65,8 +62,7 @@ public class MemberAddActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MemberAddActivity.this, "Cancel pressed",
-                        Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 

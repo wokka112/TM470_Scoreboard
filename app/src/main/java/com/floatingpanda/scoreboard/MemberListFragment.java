@@ -73,6 +73,14 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
     // Preconditions: - object is an object of the Member class.
     //                - the Member object exists in the database.
     // Postconditions: - The MemberActivity is started to view the details of object.
+    /**
+     * Starts the MemberActivity to view object in more detail.
+     *
+     * object should be an object of the Member class.
+     *
+     * Part of the DetailAdapterInterface.
+     * @param object a Member object
+     */
     @Override
     public void viewDetails(Object object) {
         Member member = (Member) object;
@@ -83,6 +91,9 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
     }
 
     // Postconditions: - The Member add activity is started.
+    /**
+     * Starts the MemberAddActivity activity.
+     */
     public void startAddActivity() {
         Intent addMemberIntent = new Intent(getContext(), MemberAddActivity.class);
         startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
@@ -90,8 +101,18 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
 
     // Preconditions: - newMember does not exist in the database.
     // Postconditions: - newMember is added to the database.
-    public void addMember(Member newMember) {
-        memberViewModel.addMember(newMember);
+    /**
+     * Inserts a new Member into the database. If the Member already exists in the database, no new
+     * member is inserted.
+     *
+     * member should have an id of 0 so Room can autogenerate an id for it.
+     *
+     * member should have a unique nickname, i.e. no MEmber should already exist in the database
+     * with the same nickname as member.
+     * @param member a Member with a unique nickname and an id of 0
+     */
+    public void addMember(Member member) {
+        memberViewModel.addMember(member);
     }
 
     @Override

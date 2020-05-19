@@ -2,39 +2,26 @@ package com.floatingpanda.scoreboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameRepository;
-import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
-import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static android.view.View.GONE;
 
 //TODO add in a clear categories button?
 
@@ -60,7 +47,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_board_game);
+        setContentView(R.layout.activity_add_edit_board_game);
 
         viewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
 

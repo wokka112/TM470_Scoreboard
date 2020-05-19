@@ -17,10 +17,23 @@ public class GroupRepository {
         allGroups = groupDao.getAll();
     }
 
-    public LiveData<List<Group>> getAllGroups() {
+    /**
+     * @return live data list of all groups from the database
+     */
+    public LiveData<List<Group>> getAll() {
         return allGroups;
     }
 
+    /**
+     * Inserts a new Group into the database. If the Group already exists in the database, no new
+     * group is inserted.
+     *
+     * group should have an id of 0 so Room can autogenerate an id for it.
+     *
+     * group should have a unique name, i.e. no Group should already exist in the database
+     * with the same name as group.
+     * @param group a Group with a unique name and an id of 0
+     */
     public void insert(Group group) {
         AppDatabase.getExecutorService().execute(() -> {
             groupDao.insert(group);
