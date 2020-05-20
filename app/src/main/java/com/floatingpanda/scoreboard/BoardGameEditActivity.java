@@ -25,16 +25,11 @@ import com.thomashaertel.widget.MultiSpinner;
 
 import java.util.List;
 
-//TODO 1. Get board game.
-// 2. Fill details.
-// 3. Update selected categories.
-// 4. Updated spinner's selected list.
-
 public class BoardGameEditActivity extends AppCompatActivity {
-    //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
-    public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
+    public static final String EXTRA_REPLY_ORIGINAL_BG = "com.floatingpanda.scoreboard.REPLY_ORIGINAL_BG";
+    public static final String EXTRA_REPLY_EDITED_BG = "com.floatingpanda.scoreboard.REPLY_EDITED_BG";
 
-    private BoardGameAddEditViewModel viewModel;
+    private BoardGameAddEditViewModel boardGameAddEditViewModel;
 
     private EditText bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, descriptionEditText,
             notesEditText, houseRulesEditText;
@@ -49,7 +44,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_board_game);
 
-        viewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
+        boardGameAddEditViewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
 
         bgNameEditText = findViewById(R.id.bgadd_name_edittext);
         difficultyEditText = findViewById(R.id.bgadd_difficulty_edittext);
@@ -75,26 +70,20 @@ public class BoardGameEditActivity extends AppCompatActivity {
         multiSpinner.setAllText("Choose categories");
 
         BoardGame boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");
-        Log.w("BoardGameEditAct.java", "Bg: " + boardGame.getBgName());
 
         setDetails(boardGame);
 
         final Button browseButton, cameraButton, saveButton, cancelButton;
 
-        viewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
+        boardGameAddEditViewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
             @Override
             public void onChanged(@NonNull final List<BgCategory> bgCategories) {
-                //When list changed, refresh allbgcategories list and then take the selected list from it.
-                Log.w("BoardGameAddAct.java", "Bgcategories: " + bgCategories);
-                viewModel.setAllBgCategoriesNotLive(bgCategories);
-                //setSearchableSpinnerList();
-                setMultiSpinnerList();
+                boardGameAddEditViewModel.setAllBgCategoriesNotLive(bgCategories);
+                setupMultiSpinnerList();
                 //TODO work out where to put this setselected.
-                multiSpinner.setSelected(viewModel.getSelected(boardGame.getBgCategories()));
+                multiSpinner.setSelected(boardGameAddEditViewModel.getSelected(boardGame.getBgCategories()));
             }
         });
-
-
 
         browseButton = findViewById(R.id.bgadd_button_browse);
         cameraButton = findViewById(R.id.bgadd_button_camera);
@@ -120,8 +109,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BoardGameEditActivity.this, "Cancel pressed",
-                        Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -134,25 +122,36 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
                 int minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
                 int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
-                List<BgCategory> bgCategories = viewModel.getSelectedBgCategories();
-                List<PlayMode.PlayModeEnum> playModes = getPlayModes();
                 BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 String houseRules = houseRulesEditText.getText().toString();
                 String imgFilePath = "TBA";
+                List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
+                List<PlayMode.PlayModeEnum> playModes = getPlayModes();
 
-                BoardGame boardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
+                //TODO look into a different way of doing this? Maybe use a constructor that takes an
+                // id rather than setting the id.
+                BoardGame editedBoardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
                         description, notes, houseRules, imgFilePath, bgCategories, playModes);
+                editedBoardGame.setId(boardGame.getId());
+
+                Log.w("BoardGameEditAct.java", "Original Bg: " + boardGame.getId() + ", " + boardGame.getBgName());
+                Log.w("BoardGameEditAct.java", "Edited Bg: " + editedBoardGame.getId() + ", " + editedBoardGame.getBgName());
 
                 Intent replyIntent = new Intent();
-                replyIntent.putExtra(EXTRA_REPLY, boardGame);
+                replyIntent.putExtra(EXTRA_REPLY_ORIGINAL_BG, boardGame);
+                replyIntent.putExtra(EXTRA_REPLY_EDITED_BG, editedBoardGame);
                 setResult(RESULT_OK, replyIntent);
                 finish();
             }
         });
     }
 
+    /**
+     * Sets the views to the details from boardGame.
+     * @param boardGame a BoardGame
+     */
     private void setDetails(BoardGame boardGame) {
         bgNameEditText.setText(boardGame.getBgName());
         difficultyEditText.setText(Integer.toString(boardGame.getDifficulty()));
@@ -166,6 +165,10 @@ public class BoardGameEditActivity extends AppCompatActivity {
         setChipGroupChips(boardGame.getBgCategories());
     }
 
+    /**
+     * Sets the checkboxes to reflect the play modes that the board game supports.
+     * @param playModes a list of PlayModeEnum's that represents the play modes the board game supports
+     */
     private void setPlayModeCheckBoxes(List<PlayMode.PlayModeEnum> playModes) {
         if (playModes.contains(PlayMode.PlayModeEnum.COMPETITIVE)) {
             competitiveCheckBox.setChecked(true);
@@ -180,22 +183,35 @@ public class BoardGameEditActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets one of the radio buttons in the radiogroup on to reflect the team options that the board
+     * game supports.
+     * @param teamOption a TeamOption enum that represents the team options for the board game
+     */
     private void setTeamOptionsRadioGroup(BoardGame.TeamOption teamOption) {
         switch (teamOption) {
             case NO_TEAMS:
                 noTeamsRadioButton.setChecked(true);
+                break;
             case TEAMS_OR_SOLOS:
                 teamsOrSoloRadioButton.setChecked(true);
+                break;
             case TEAMS_ONLY:
                 teamsOnlyRadioButton.setChecked(true);
+                break;
             case ERROR:
                 Log.w("BoardGameEditAct.java", "Team option: Error");
+                break;
             default:
                 break;
         }
     }
 
-    // Deals with presentation, may be useful for the edit activity.
+    /**
+     * Sets the chips in the chip group to represent the categories passed as bgCategories. Also
+     * adds these categories to the list of selected categories for the board game.
+     * @param bgCategories a list of board game categories
+     */
     private void setChipGroupChips(List<BgCategory> bgCategories) {
         clearChips();
         for (BgCategory bgCategory : bgCategories) {
@@ -203,57 +219,67 @@ public class BoardGameEditActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Adds a chip to the chip group to represent the category passed as bgCategory. Also sets the
+     * category passed as bgCategory to be a selected category for the board game.
+     * @param bgCategory a board game category
+     */
     private void addChip(BgCategory bgCategory) {
-        chipGroup.addView(viewModel.createChip(multiSpinner, chipGroup, bgCategory));
+        chipGroup.addView(boardGameAddEditViewModel.createChip(multiSpinner, chipGroup, bgCategory));
     }
 
+    /**
+     * Clears the chips from the chip group and removes all the selected board game categories.
+     */
     private void clearChips() {
         chipGroup.removeAllViews();
-        viewModel.clearSelectedBgCategories();
+        boardGameAddEditViewModel.clearSelectedBgCategories();
     }
 
-    private void clearSelected() {
-        clearChips();
-        multiSpinner.setSelected(new boolean[viewModel.getAdapter(this).getCount()]);
+    /**
+     * Sets up the multispinner list to hold all the board game categories in the app.
+     */
+    private void setupMultiSpinnerList() {
+        multiSpinner.setAdapter(boardGameAddEditViewModel.getAdapter(this), false, onSelectedListener);
     }
 
-    private void setMultiSpinnerList() {
-        multiSpinner.setAdapter(viewModel.getAdapter(this), false, onSelectedListener);
-    }
-
+    /**
+     * Returns a list of PlayModeEnum enums to represent the play mode checkboxes that are checked
+     * in the activity.
+     * @return a list of PlayModeEnum representing the checked play mode checkboxes
+     */
     private List<PlayMode.PlayModeEnum> getPlayModes() {
         boolean competitive = competitiveCheckBox.isChecked();
         boolean cooperative = cooperativeCheckBox.isChecked();
         boolean solitaire = solitaireCheckBox.isChecked();
 
-        return viewModel.getPlayModes(competitive, cooperative, solitaire);
+        return boardGameAddEditViewModel.getPlayModes(competitive, cooperative, solitaire);
     }
 
+    /**
+     * Returns a TeamOption enum to represent the team option radio button that is checked in the
+     * activity.
+     * @return a TeamOption enum representing the checked radio group radio button
+     */
     private BoardGame.TeamOption getTeamOption() {
         int checkboxId = teamOptionsRadioGroup.getCheckedRadioButtonId();
 
-        return viewModel.getTeamOption(checkboxId);
+        return boardGameAddEditViewModel.getTeamOption(checkboxId);
     }
 
-    //TODO remove this method, it is for testing purposes.
-    private void printBgCategories(List<BgCategory> bgCategories) {
-        Log.w("BoardGameAddAct.java", "Printing categories:");
-        int i = 1;
-        for (BgCategory bgCategory : bgCategories) {
-            Log.w("BoardGameAddAct.java", "BgCategory " + i + ": " + bgCategory.getCategoryName());
-        }
-    }
-
+    /**
+     * Listener for the multispinner. When items are selected from the multispinner and ok is
+     * clicked on the spinner, the chips are cleared from the view and new chips are added to it to
+     * represent the selected categories.
+     */
     private MultiSpinner.MultiSpinnerListener onSelectedListener = new MultiSpinner.MultiSpinnerListener() {
         public void onItemsSelected(boolean[] selected) {
             clearChips();
-            boolean noneSelected = true;
             for (int i = 0; i < selected.length; i++) {
                 Log.w("BoardGameEditAct.Java", "Selected " + i + ":" + selected[i]);
                 if (selected[i] == true) {
-                    BgCategory bgCategory = viewModel.getAdapterItem(i);
+                    BgCategory bgCategory = boardGameAddEditViewModel.getAdapterItem(i);
                     addChip(bgCategory);
-                    noneSelected = false;
                 }
             }
 

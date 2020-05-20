@@ -19,6 +19,7 @@ import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
+import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 
 import java.util.List;
@@ -60,22 +61,9 @@ public class BoardGameActivity extends AppCompatActivity {
         boardGameViewModel.getLiveDataBoardGameAndCategoriesAndPlayModes(boardGame).observe(BoardGameActivity.this, new Observer<BgAndBgCategoriesAndPlayModes>() {
             @Override
             public void onChanged(@Nullable final BgAndBgCategoriesAndPlayModes bgAndBgCategoriesAndPlayModes) {
-                Log.w("MemberActivity.java", "Got liveMember: " + bgAndBgCategoriesAndPlayModes);
                 setViews(bgAndBgCategoriesAndPlayModes);
             }
         });
-
-        /*
-        Log.w("BoardGameActivity.java", "Using bg: " + boardGame.getBgName());
-        boardGameViewModel.getLiveDataBoardGameAndCategories(boardGame).observe(BoardGameActivity.this, new Observer<BoardGamesAndBgCategories>() {
-            @Override
-            public void onChanged(@Nullable final BoardGamesAndBgCategories bgAndBgCategories) {
-                Log.w("MemberActivity.java", "Got liveMember: " + bgAndBgCategories);
-                setViews(bgAndBgCategories);
-            }
-        });
-
-         */
 
         editButton = findViewById(R.id.bgact_edit_button);
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +82,14 @@ public class BoardGameActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Helper method that sets up the views on the page - sets the text, checkboxes, radio buttons,
+     * and chips up to represent the board game passed to the activity.
+     * @param bgAndBgCategoriesAndPlayModes a board game, its categories and its playmodes
+     */
     private void setViews(BgAndBgCategoriesAndPlayModes bgAndBgCategoriesAndPlayModes) {
+        // Catches if the object has been deleted to stop app from crashing before finish() is
+        // called.
         if (bgAndBgCategoriesAndPlayModes == null) {
             return;
         }
@@ -107,9 +102,7 @@ public class BoardGameActivity extends AppCompatActivity {
         String players = boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers();
         playersOutput.setText(players);
 
-        String categories = createCategoriesString(boardGame.getBgCategories());
-        categoriesOutput.setText(categories);
-
+        categoriesOutput.setText(boardGame.getBgCategoriesString());
         playModesOutput.setText(boardGame.getPlayModesString());
         teamsOutput.setText(boardGame.getTeamOptionsString());
         descriptionOutput.setText(boardGame.getDescription());
@@ -117,6 +110,17 @@ public class BoardGameActivity extends AppCompatActivity {
         notesOutput.setText(boardGame.getNotes());
     }
 
+    // Preconditions: boardGame exists in database.
+    // Postconditions: boardGame is removed from database.
+    /**
+     * Displays a popup informing the user of what deleting a Board Game results in and warning them
+     * that it is irreversible. If the user presses the "Delete" button on the popup, then boardGame
+     * will be deleted from the database. If the user presses the "Cancel" button, then the popup
+     * will be dismissed and nothing will happen.
+     *
+     * boardGame should exist in the database.
+     * @param boardGame a BoardGame that exists in the database
+     */
     private void startDeleteActivity(BoardGame boardGame) {
         //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(BoardGameActivity.this);
@@ -141,43 +145,43 @@ public class BoardGameActivity extends AppCompatActivity {
                 .show();
     }
 
+    // Preconditions: boardGame should exist in database.
+    // Postconditions: boardGame will not longer exist in database.
+    /**
+     * Deletes boardGame from database and finishes activity.
+     * @param boardGame a BoardGame that exists in the database
+     */
     private void deleteBoardGame(BoardGame boardGame) {
         this.boardGameViewModel.deleteBoardGame(boardGame);
         finish();
     }
 
+    /**
+     * Starts the BoardGameEditActivity for boardGame.
+     * @param boardGame a boardGame
+     */
     private void startEditActivity(BoardGame boardGame) {
         Intent editIntent = new Intent(BoardGameActivity.this, BoardGameEditActivity.class);
         editIntent.putExtra("BOARDGAME", boardGame);
         startActivityForResult(editIntent, EDIT_BOARDGAME_REQUEST_CODE);
     }
 
-    //TODO replace this with a better method for formatting categories.
-    // Maybe put a "categoriesListToString" method in Boardgame or something that would return a
-    // formatted string.
-    // Also work out what I'm going to do with categories. Do I show them all? Do I show only 2 of
-    // them and then put an "expand" text at the end that you can tap to show the rest?
-    private String createCategoriesString(List<BgCategory> categoriesList) {
-        if (categoriesList == null || categoriesList.isEmpty()) {
-            return "None yet";
-        }
+    //TODO create editBoardGame method and onactivityresult method.
 
-        StringBuilder sb = new StringBuilder();
-        int i = 0;
-
-        while (i < 2 && i < categoriesList.size()) {
-            sb.append(categoriesList.get(i).getCategoryName());
-            sb.append(", ");
-            i++;
-        }
-
-        if (categoriesList.size() > 2) {
-            int categoriesLeft = categoriesList.size() - 2;
-            sb.append(" and " + categoriesLeft + " more");
-        }
-
-        return sb.toString();
+    private void editBoardGame(BoardGame originalBoardGame, BoardGame editedBoardGame) {
+        boardGameViewModel.editBoardGame(originalBoardGame, editedBoardGame);
     }
 
-    //TODO create methods for formatting game types and teams lists.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == EDIT_BOARDGAME_REQUEST_CODE && resultCode == RESULT_OK) {
+            BoardGame originalBoardGame = (BoardGame) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_ORIGINAL_BG);
+            BoardGame editedBoardGame = (BoardGame) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_EDITED_BG);
+            Log.w("BoardGameAct.java","Original Bg: " + originalBoardGame.getId() + ", " + originalBoardGame.getBgName());
+            Log.w("BoardGameAct.java","Edited Bg: " + editedBoardGame.getId() + ", " + editedBoardGame.getBgName());
+            editBoardGame(originalBoardGame, editedBoardGame);
+        }
+    }
 }

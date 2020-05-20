@@ -59,17 +59,11 @@ public class BoardGame implements Parcelable {
     @Nullable
     private String imgFilePath;
 
-    //TODO add a list of BgCategories and Ignore it. The list will simply be used to hold the assigned categories
-    // but the categories will be stored in a separate table as a many-to-many relationship. This is similar to
-    // the Group which will hold a list of Member objects and GameRecord objects.
     @Ignore
     private List<BgCategory> bgCategories;
 
     @Ignore
     private List<PlayMode.PlayModeEnum> playModes;
-
-    //TODO add constructor with id? Is it needed? Not sure... You can set id via a setter, and I want people to
-    // autogenerate rather than set their own.
 
     @Ignore
     public BoardGame(String bgName, int difficulty, int minPlayers, int maxPlayers, BoardGame.TeamOption teamOptions,
@@ -90,6 +84,9 @@ public class BoardGame implements Parcelable {
         this.playModes = playModes;
     }
 
+    /**
+     * The default builder. Creates a BoardGame with empty BgCategory and PlayMode lists.
+     */
     public BoardGame(String bgName, int difficulty, int minPlayers, int maxPlayers, BoardGame.TeamOption teamOptions, String description, String houseRules, String notes, String imgFilePath) {
         this(bgName, difficulty, minPlayers, maxPlayers, teamOptions, description, houseRules, notes,
                 imgFilePath, new ArrayList<BgCategory>(), new ArrayList<PlayMode.PlayModeEnum>());
@@ -130,6 +127,7 @@ public class BoardGame implements Parcelable {
     public void setBgName(String bgName) { this.bgName = bgName; }
 
     public int getDifficulty() { return this.difficulty; }
+    //Precondition: difficulty is between 1 - 5 (inclusive).
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
 
     public int getMinPlayers() { return this.minPlayers; }
@@ -153,36 +151,107 @@ public class BoardGame implements Parcelable {
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
 
-    //TODO remove bgCategories getter?
     public List<BgCategory> getBgCategories() { return new ArrayList<>(bgCategories); }
     public void setBgCategories(List<BgCategory> bgCategories) { this.bgCategories = bgCategories; }
 
     public List<PlayMode.PlayModeEnum> getPlayModes() { return new ArrayList<>(playModes); }
     public void setPlayModes(List<PlayMode.PlayModeEnum> playModes) { this.playModes = playModes; }
 
-    //TODO add guard like for addPlayMode?
-    public void addBgCategory(BgCategory bgCategory) { this.bgCategories.add(bgCategory); }
+    /**
+     * Adds a category to the list of board game categories.
+     *
+     * If the list already contains the category, nothing happens.
+     * @param bgCategory a BgCategory to add to the list
+     */
+    public void addBgCategory(BgCategory bgCategory) {
+        if (!bgCategories.contains(bgCategory)) {
+            this.bgCategories.add(bgCategory);
+        }
+    }
 
+    /**
+     * Gets the category at a specific index from the list of categories.
+     * @param index the index of the desired category
+     * @return a BgCategory for the category at the index
+     */
     public BgCategory getBgCategory(int index) {
         return this.bgCategories.get(index);
     }
 
+    /**
+     * Removes a category from the list of board game categories.
+     * @param bgCategory a board game category
+     */
     public void removeBgCategory(BgCategory bgCategory) {
         this.bgCategories.remove(bgCategory);
     }
 
+    /**
+     * Adds a play mode to the list of board game play modes.
+     *
+     * If the list already contains the play mode, does nothing.
+     * @param playMode the play mode to be added.
+     */
     public void addPlayMode(PlayMode.PlayModeEnum playMode) {
         if (!playModes.contains(playMode)) {
             playModes.add(playMode);
         }
     }
 
+    /**
+     * Gets the play mode at a specific index from the list of board game play modes.
+     * @param index the index of the wanted play mode
+     * @return a PlayMode
+     */
     public PlayMode.PlayModeEnum getPlayMode (int index) { return this.playModes.get(index); }
 
+    /**
+     * Removes a play mode from the list of board game play modes.
+     * @param playMode a PlayMode
+     */
     public void removePlayMode(PlayMode.PlayModeEnum playMode) { this.playModes.remove(playMode); }
 
+    /**
+     * Returns a string of the categories that the board game fits into. Each category is separated
+     * by a comma.
+     *
+     * If the board game has no categories set, returns "No categories set"
+     * @return A string of the categories the board game fills.
+     */
+    public String getBgCategoriesString() {
+        if (bgCategories.isEmpty()) {
+            return "No categories set";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(bgCategories.get(0).getCategoryName());
+
+        for (int i = 1; i < bgCategories.size(); i++) {
+            sb.append(", ");
+            sb.append(bgCategories.get(i).getCategoryName());
+        }
+
+        return sb.toString();
+    }
+
     //TODO maybe change this to return a list of strings? Then I could do formatting if I wanted somewhere else.
-    // This is probably a worthwhile idea.
+    /**
+     * Builds a string to represent the potential play modes that the board game can be played in.
+     * String is built up based on the PlayModeEnum's that are set for the board game, a substring
+     * being appended for each enum.
+     *
+     * COMPETITIVE: appends "Competitive"
+     * COOPERATIVE: appends "Cooperative"
+     * SOLITAIRE: appends "Solitaire"
+     *
+     * Competitive always comes first, followed by cooperative, then solitaire. If a play mode comes
+     * after another one (i.e. a board game is set for both competitive and solitaire) then a comma
+     * is appended before the playmode.
+     *
+     * If no play modes are set, returns "No play modes assigned. This is an error. Please report."
+     *
+     * @return a String representing the potential play modes set for the board game
+     */
     public String getPlayModesString() {
         if (playModes.isEmpty()) {
             return "No play modes assigned. This is an error. Please report.";
@@ -212,15 +281,27 @@ public class BoardGame implements Parcelable {
     }
 
     //TODO update to return a list of strings?
+    /**
+     * Returns a String representing the team options for the game based on the BoardGame's
+     * TeamOption enum.
+     *
+     * NO_TEAMS: returns "No teams."
+     * TEAMS_ONLY: returns "Teams only."
+     * TEAMS_OR_SOLOS: returns "Teams, solo players, or a mix of teams and solo players allowed"
+     * ERROR: returns "There's been an error somewhere. Please report this."
+     * default: returns "No team options set. (This is a bug. Please report.)"
+     *
+     * @return a String representing the team options set for the board game
+     */
     public String getTeamOptionsString() {
         String teamOptionsString;
 
         switch (this.teamOptions) {
             case NO_TEAMS:
-                teamOptionsString = "No teams";
+                teamOptionsString = "No teams.";
                 break;
             case TEAMS_ONLY:
-                teamOptionsString = "Teams only";
+                teamOptionsString = "Teams only.";
                 break;
             case TEAMS_OR_SOLOS:
                 teamOptionsString = "Teams, solo players, or a mix of teams and solo players allowed.";
@@ -271,7 +352,7 @@ public class BoardGame implements Parcelable {
     //TODO add in a TEAMS_ONLY_OR_NO_TEAMS_ONLY and a TEAMS_OR_SOLOS to represent only teams/only solos, decide at start and then play,
     // or teams, solos or a mix of teams and solos?? Or should I just leave it as is and people can monitor it themselves.
 
-    // The team options that a game can be played in - solo, team, or either.
+    // The team options that a game can be played in - solo, team, or either / a mix.
     public enum TeamOption {
         ERROR,
         NO_TEAMS,

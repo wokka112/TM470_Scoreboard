@@ -25,12 +25,6 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-//TODO 1. Create a boardgame detail view
-//TODO 2. Link boardgame detail view to this view.
-//TODO 3. Create add boardgame functionality.
-//TODO 4. Create edit boardgame functionality in boardgame detail view.
-//TODO 5. Create delete boardgame functionality in boardgame detail view.
-
 public class BoardGameListFragment extends Fragment implements DetailAdapterInterface {
 
     private final int ADD_BOARD_GAME_REQUEST_CODE = 1;
@@ -80,6 +74,17 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
 
     // Preconditions: - boardGame does not exist in the database.
     // Postconditions: - boardGame is added to the database.
+    /**
+     * Inserts a new BoardGame into the database. If the BoardGame already exists in the database, no new
+     * board game is inserted.
+     *
+     * boardGame should have an id of 0 so Room can autogenerate an id for it.
+     *
+     * boardGame should have a unique name, i.e. no Board Game should already exist in the database
+     * with the same name as boardGame. boardGame should also have a list of PlayMode.PlayModeEnum with
+     * at least one PlayModeEnum of COMPETITIVE, COOPERATIVE or SOLITAIRE.
+     * @param boardGame a Board Game with a unique name, an id of 0 and at least one PlayModeEnum
+     */
     public void addBoardGame(BoardGame boardGame) {
         boardGameViewModel.addBoardGame(boardGame);
     }
@@ -87,6 +92,14 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
     // Preconditions: - object is an object of the Member class.
     //                - the Member object exists in the database.
     // Postconditions: - The MemberActivity is started to view the details of object.
+    /**
+     * Starts the BoardGameActivity to view object in more detail.
+     *
+     * object should be an object of the BoardGame class.
+     *
+     * Part of the DetailAdapterInterface.
+     * @param object a BoardGame object
+     */
     @Override
     public void viewDetails(Object object) {
         BoardGame boardGame = (BoardGame) object;

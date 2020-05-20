@@ -109,7 +109,7 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
             case R.id.bgadd_teams_allowed_radiobutton:
                 return BoardGame.TeamOption.TEAMS_OR_SOLOS;
             case R.id.bgadd_teams_only_radiobutton:
-                return BoardGame.TeamOption.TEAMS_OR_SOLOS;
+                return BoardGame.TeamOption.TEAMS_ONLY;
             default:
                 return BoardGame.TeamOption.ERROR;
         }
@@ -135,6 +135,7 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
             }
         });
 
+        //TODO move out of here into the views or somewhere else?
         addSelectedBgCategory(bgCategory);
 
         return chip;

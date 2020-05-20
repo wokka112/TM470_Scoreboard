@@ -79,10 +79,21 @@ public class BoardGameRepository {
         });
     }
 
-    public void insertAssignedCategories(List<AssignedCategories> assignedCategories) {
-        AppDatabase.getExecutorService().execute(() -> {
-            assignedCategoriesDao.insertAll(assignedCategories.toArray(new AssignedCategories[assignedCategories.size()]));
-        });
+    private void insertPlayModes(String bgName, List<PlayMode.PlayModeEnum> playModes) {
+        for (PlayMode.PlayModeEnum playModeEnum : playModes) {
+            playModeDao.insert(new PlayMode(bgName, playModeEnum));
+        }
+    }
+
+    private void insertAssignedCategories(int bgId, List<BgCategory> bgCategories) {
+        List<AssignedCategories> assignedCategories = new ArrayList<>();
+        for (BgCategory bgCategory : bgCategories) {
+            //if boardGame holds categories then they must have ids, or else this won't work.
+            Log.w("BoardGameRepo.java", "bgCategory id: " + bgCategory.getId());
+            assignedCategories.add(new AssignedCategories(bgId, bgCategory.getId()));
+        }
+
+        assignedCategoriesDao.insertAll(assignedCategories.toArray(new AssignedCategories[assignedCategories.size()]));
     }
 
     //TODO create an insertAssignedCategories(BoardGame boardGame) method?
@@ -98,23 +109,55 @@ public class BoardGameRepository {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.insert(boardGame);
 
-            List<PlayMode.PlayModeEnum> list = boardGame.getPlayModes();
-
-            for (PlayMode.PlayModeEnum playModeEnum : list) {
-                playModeDao.insert(new PlayMode(boardGame.getBgName(), playModeEnum));
-            }
-
-            //TODO move this code into a private helper method?
-            int bgId = getBoardGame(boardGame.getBgName()).getId();
-            List<AssignedCategories> assignedCategories = new ArrayList<>();
-            for (BgCategory bgCategory : boardGame.getBgCategories()) {
-                //if boardGame holds categories then they must have ids, or else this won't work.
-                Log.w("BoardGameRepo.java", "bgCategory id: " + bgCategory.getId());
-                assignedCategories.add(new AssignedCategories(bgId, bgCategory.getId()));
-            }
-
-            assignedCategoriesDao.insertAll(assignedCategories.toArray(new AssignedCategories[assignedCategories.size()]));
+            insertPlayModes(boardGame.getBgName(), boardGame.getPlayModes());
+            insertAssignedCategories(boardGame.getId(), boardGame.getBgCategories());
         });
+    }
+
+    public void update(BoardGame originalBoardGame, BoardGame editedBoardGame) {
+        Log.w("BoardGameRepo.java","Original Bg: " + originalBoardGame.getId() + ", " + originalBoardGame.getBgName());
+        Log.w("BoardGameRepo.java","Edited Bg: " + editedBoardGame.getId() + ", " + editedBoardGame.getBgName());
+        AppDatabase.getExecutorService().execute(() -> {
+            boardGameDao.update(editedBoardGame);
+
+            List<PlayMode> playModesToDelete = getPlayModesToDelete(editedBoardGame.getBgName(), originalBoardGame.getPlayModes(),
+                    editedBoardGame.getPlayModes());
+            List<AssignedCategories> assignedCategoriesToDelete = getAssignedCategoriesToDelete(editedBoardGame.getId(),
+                    originalBoardGame.getBgCategories(), editedBoardGame.getBgCategories());
+
+            deletePlayModes(playModesToDelete);
+            deleteAssignedCategories(assignedCategoriesToDelete);
+
+            insertPlayModes(editedBoardGame.getBgName(), editedBoardGame.getPlayModes());
+            insertAssignedCategories(editedBoardGame.getId(), editedBoardGame.getBgCategories());
+        });
+    }
+
+    private List<PlayMode> getPlayModesToDelete(String bgName, List<PlayMode.PlayModeEnum> originalPlayModes, List<PlayMode.PlayModeEnum> editedPlayModes) {
+        List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>(originalPlayModes);
+        playModeEnums.removeAll(editedPlayModes);
+
+        List<PlayMode> playModesToDelete = new ArrayList<>();
+
+        for (PlayMode.PlayModeEnum playModeEnum : playModeEnums) {
+            playModesToDelete.add(new PlayMode(bgName, playModeEnum));
+        }
+
+        return playModesToDelete;
+    }
+
+    private List<AssignedCategories> getAssignedCategoriesToDelete(int bgId, List<BgCategory> originalBgCategories, List<BgCategory> editedBgCategories) {
+        // Compare and delete ones in original but not in edited
+        List<BgCategory> bgCategories = new ArrayList<>(originalBgCategories);
+        originalBgCategories.removeAll(editedBgCategories);
+
+        List<AssignedCategories> assignedCategoriesToDelete = new ArrayList<>();
+
+        for (BgCategory bgCategory : bgCategories) {
+            assignedCategoriesToDelete.add(new AssignedCategories(bgId, bgCategory.getId()));
+        }
+
+        return assignedCategoriesToDelete;
     }
 
     //TODO add testing to ensure assigned categories with this bg are deleted.
@@ -140,5 +183,17 @@ public class BoardGameRepository {
                 }
             }
         });
+    }
+
+    private void deletePlayModes(List<PlayMode> playModes) {
+        for (PlayMode playMode : playModes) {
+            playModeDao.delete(playMode);
+        }
+    }
+
+    public void deleteAssignedCategories(List<AssignedCategories> assignedCategories) {
+        for (AssignedCategories acs : assignedCategories) {
+            assignedCategoriesDao.delete(acs);
+        }
     }
 }
