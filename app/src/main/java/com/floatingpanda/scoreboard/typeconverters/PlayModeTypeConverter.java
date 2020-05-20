@@ -2,16 +2,16 @@ package com.floatingpanda.scoreboard.typeconverters;
 
 import androidx.room.TypeConverter;
 
-import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.PlayMode;
 
 public class PlayModeTypeConverter {
     @TypeConverter
-    public static BoardGame.PlayMode toPlayMode(String name) {
-        return BoardGame.PlayMode.valueOf(name);
+    public static PlayMode.PlayModeEnum toPlayMode(String name) {
+        return PlayMode.PlayModeEnum.valueOf(name);
     }
 
     @TypeConverter
-    public static String fromPlayMode(BoardGame.PlayMode playMode) {
+    public static String fromPlayMode(PlayMode.PlayModeEnum playMode) {
         return playMode.name();
     }
 }

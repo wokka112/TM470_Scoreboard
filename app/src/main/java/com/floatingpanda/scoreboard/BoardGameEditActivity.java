@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
@@ -134,7 +135,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 int minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
                 int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
                 List<BgCategory> bgCategories = viewModel.getSelectedBgCategories();
-                BoardGame.PlayMode playMode = getPlayMode();
+                List<PlayMode.PlayModeEnum> playModes = getPlayModes();
                 BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
@@ -142,7 +143,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 String imgFilePath = "TBA";
 
                 BoardGame boardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
-                        playMode, description, notes, houseRules, imgFilePath, bgCategories);
+                        description, notes, houseRules, imgFilePath, bgCategories, playModes);
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, boardGame);
@@ -165,46 +166,17 @@ public class BoardGameEditActivity extends AppCompatActivity {
         setChipGroupChips(boardGame.getBgCategories());
     }
 
-    private void setPlayModeCheckBoxes(BoardGame.PlayMode playMode) {
-        switch (playMode) {
-            case COMPETITIVE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive");
-                competitiveCheckBox.setChecked(true);
-                break;
-            case COOPERATIVE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Cooperative");
-                cooperativeCheckBox.setChecked(true);
-                break;
-            case SOLITAIRE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Solitaire");
-                solitaireCheckBox.setChecked(true);
-                break;
-            case COMPETITIVE_OR_COOPERATIVE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive or Cooperative");
-                competitiveCheckBox.setChecked(true);
-                cooperativeCheckBox.setChecked(true);
-                break;
-            case COOPERATIVE_OR_SOLITAIRE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Cooperative or Solitaire");
-                cooperativeCheckBox.setChecked(true);
-                solitaireCheckBox.setChecked(true);
-                break;
-            case COMPETITIVE_OR_SOLITAIRE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive or Solitaire");
-                competitiveCheckBox.setChecked(true);
-                solitaireCheckBox.setChecked(true);
-                break;
-            case COMPETITIVE_OR_COOPERATIVE_OR_SOLITAIRE:
-                Log.w("BoardGameEditAct.java", "PlayModeCheckBoxes: Competitive or Cooperative or Solitaire");
-                competitiveCheckBox.setChecked(true);
-                cooperativeCheckBox.setChecked(true);
-                solitaireCheckBox.setChecked(true);
-                break;
-            case ERROR:
-                Log.w("BoardGameEditAct.java", "Play Mode: error");
-                break;
-            default:
-                break;
+    private void setPlayModeCheckBoxes(List<PlayMode.PlayModeEnum> playModes) {
+        if (playModes.contains(PlayMode.PlayModeEnum.COMPETITIVE)) {
+            competitiveCheckBox.setChecked(true);
+        }
+
+        if (playModes.contains(PlayMode.PlayModeEnum.COOPERATIVE)) {
+            cooperativeCheckBox.setChecked(true);
+        }
+
+        if (playModes.contains(PlayMode.PlayModeEnum.SOLITAIRE)) {
+            solitaireCheckBox.setChecked(true);
         }
     }
 
@@ -249,12 +221,12 @@ public class BoardGameEditActivity extends AppCompatActivity {
         multiSpinner.setAdapter(viewModel.getAdapter(this), false, onSelectedListener);
     }
 
-    private BoardGame.PlayMode getPlayMode() {
+    private List<PlayMode.PlayModeEnum> getPlayModes() {
         boolean competitive = competitiveCheckBox.isChecked();
         boolean cooperative = cooperativeCheckBox.isChecked();
         boolean solitaire = solitaireCheckBox.isChecked();
 
-        return viewModel.getPlayMode(competitive, cooperative, solitaire);
+        return viewModel.getPlayModes(competitive, cooperative, solitaire);
     }
 
     private BoardGame.TeamOption getTeamOption() {

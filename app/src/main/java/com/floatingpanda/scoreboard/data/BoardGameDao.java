@@ -44,4 +44,12 @@ public interface BoardGameDao {
     @Transaction
     @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
     public LiveData<BoardGamesAndBgCategories> findBoardGameAndBgCategoriesById(int bgId);
+
+    @Transaction
+    @Query("SELECT * FROM boardgames")
+    public LiveData<List<BgAndBgCategoriesAndPlayModes>> getAllBgsAndCategoriesAndPlayModes();
+
+    @Transaction
+    @Query("SELECT * FROM boardgames WHERE bg_id like :bgId")
+    public LiveData<BgAndBgCategoriesAndPlayModes> findBgAndCategoriesAndPlayModesById(int bgId);
 }

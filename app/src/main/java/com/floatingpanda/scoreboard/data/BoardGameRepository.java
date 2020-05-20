@@ -13,10 +13,12 @@ public class BoardGameRepository {
     private AssignedCategoriesDao assignedCategoriesDao;
     private BoardGameDao boardGameDao;
     private BgCategoryDao bgCategoryDao;
+    private PlayModeDao playModeDao;
     private AssignedCategoriesDao acDao; // Used for testing purposes.
     private LiveData<List<BoardGame>> allBoardGames;
     private LiveData<List<AssignedCategories>> allAssignedCategories;
     private LiveData<List<BoardGamesAndBgCategories>> allBgsAndCategories;
+    private LiveData<List<BgAndBgCategoriesAndPlayModes>> allBgsAndCategoriesAndPlayModes;
 
     public BoardGameRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -25,18 +27,24 @@ public class BoardGameRepository {
         boardGameDao = db.boardGameDao();
         bgCategoryDao = db.bgCategoryDao();
         acDao = db.assignedCategoriesDao();
+        playModeDao = db.playModeDao();
 
         allBoardGames = boardGameDao.getAll();
         allAssignedCategories = assignedCategoriesDao.getAll();
         allBgsAndCategories = boardGameDao.getAllBoardGamesAndBgCategories();
+        allBgsAndCategoriesAndPlayModes = boardGameDao.getAllBgsAndCategoriesAndPlayModes();
     }
 
     public LiveData<List<BoardGamesAndBgCategories>> getAllBgsAndCategories() {
         return allBgsAndCategories;
     }
 
+    public LiveData<List<BgAndBgCategoriesAndPlayModes>> getAllBgsAndCategoriesAndPlayModes() {
+        return allBgsAndCategoriesAndPlayModes;
+    }
+
     // Maybe make private and use only inside the repository? Won't work in main thread cause it accesses db.
-    public BoardGame getBoardGame(String bgName) {
+    private BoardGame getBoardGame(String bgName) {
         return boardGameDao.findNonLiveDataByName(bgName);
     }
 
@@ -44,6 +52,11 @@ public class BoardGameRepository {
         return boardGameDao.findBoardGameAndBgCategoriesById(boardGame.getId());
     }
 
+    public LiveData<BgAndBgCategoriesAndPlayModes> getLiveDataBgAndCategoriesAndPlayModes(BoardGame boardGame) {
+        return boardGameDao.findBgAndCategoriesAndPlayModesById(boardGame.getId());
+    }
+
+    //Preconditions: playmodes is not empty.
     public void insert(BoardGame boardGame) {
         if (boardGame.getBgCategories().isEmpty()) {
             insertBoardGame(boardGame);
@@ -57,6 +70,12 @@ public class BoardGameRepository {
     private void insertBoardGame(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.insert(boardGame);
+
+            List<PlayMode.PlayModeEnum> list = boardGame.getPlayModes();
+
+            for (PlayMode.PlayModeEnum playModeEnum : list) {
+                playModeDao.insert(new PlayMode(boardGame.getBgName(), playModeEnum));
+            }
         });
     }
 
@@ -78,6 +97,12 @@ public class BoardGameRepository {
     private void insertBoardGameWithCategories(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.insert(boardGame);
+
+            List<PlayMode.PlayModeEnum> list = boardGame.getPlayModes();
+
+            for (PlayMode.PlayModeEnum playModeEnum : list) {
+                playModeDao.insert(new PlayMode(boardGame.getBgName(), playModeEnum));
+            }
 
             //TODO move this code into a private helper method?
             int bgId = getBoardGame(boardGame.getBgName()).getId();
@@ -116,25 +141,4 @@ public class BoardGameRepository {
             }
         });
     }
-
-    /*
-    private LiveData<List<BoardGameWithBGCategories>> allBoardGamesWithCategories;
-
-    public BoardGameRepository(Application application) {
-        ScoreBoardRoomDatabase db = ScoreBoardRoomDatabase.getDatabase(application);
-        boardGameDao = db.boardGameDao();
-        allBoardGamesWithCategories = boardGameDao.getBoardGamesWithBGCategories();
-    }
-
-    public LiveData<List<BoardGameWithBGCategories>> getAllBoardGamesWithCategories() {
-        return allBoardGamesWithCategories;
-    }
-
-    /*
-    public void insert(Member member) {
-        ScoreBoardRoomDatabase.getExecutorService().execute(() -> {
-            memberDao.insert(member);
-        });
-    }
-     */
 }

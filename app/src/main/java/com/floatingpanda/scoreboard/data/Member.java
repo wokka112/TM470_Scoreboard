@@ -11,6 +11,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+//TODO remove realName from Member. It adds personal data unnecessarily.
+
 /**
  * Represents a member of board game groups. The member may belong to zero, one or more groups.
  */

@@ -9,22 +9,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.AssignedCategories;
-import com.floatingpanda.scoreboard.data.AssignedCategoriesDao;
+import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardGameActivity extends AppCompatActivity {
@@ -61,11 +57,11 @@ public class BoardGameActivity extends AppCompatActivity {
         boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
 
         Log.w("BoardGameActivity.java", "Using bg: " + boardGame.getBgName());
-        boardGameViewModel.getLiveDataBoardGameAndCategories(boardGame).observe(BoardGameActivity.this, new Observer<BoardGamesAndBgCategories>() {
+        boardGameViewModel.getLiveDataBoardGameAndCategoriesAndPlayModes(boardGame).observe(BoardGameActivity.this, new Observer<BgAndBgCategoriesAndPlayModes>() {
             @Override
-            public void onChanged(@Nullable final BoardGamesAndBgCategories bgAndBgCategories) {
-                Log.w("MemberActivity.java", "Got liveMember: " + bgAndBgCategories);
-                setViews(bgAndBgCategories);
+            public void onChanged(@Nullable final BgAndBgCategoriesAndPlayModes bgAndBgCategoriesAndPlayModes) {
+                Log.w("MemberActivity.java", "Got liveMember: " + bgAndBgCategoriesAndPlayModes);
+                setViews(bgAndBgCategoriesAndPlayModes);
             }
         });
 
@@ -98,12 +94,12 @@ public class BoardGameActivity extends AppCompatActivity {
         });
     }
 
-    private void setViews(BoardGamesAndBgCategories bgAndBgCategories) {
-        if (bgAndBgCategories == null) {
+    private void setViews(BgAndBgCategoriesAndPlayModes bgAndBgCategoriesAndPlayModes) {
+        if (bgAndBgCategoriesAndPlayModes == null) {
             return;
         }
 
-        boardGame = bgAndBgCategories.getBoardGame();
+        boardGame = bgAndBgCategoriesAndPlayModes.getBoardGame();
 
         name.setText(boardGame.getBgName());
         difficultyOutput.setText(Integer.toString(boardGame.getDifficulty()));

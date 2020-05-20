@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
@@ -147,7 +148,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 int minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
                 int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
                 List<BgCategory> bgCategories = viewModel.getSelectedBgCategories();
-                BoardGame.PlayMode playMode = getPlayMode();
+                List<PlayMode.PlayModeEnum> playModes = getPlayModes();
                 BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
@@ -155,7 +156,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 String imgFilePath = "TBA";
 
                 BoardGame boardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
-                        playMode, description, notes, houseRules, imgFilePath, bgCategories);
+                        description, notes, houseRules, imgFilePath, bgCategories, playModes);
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, boardGame);
@@ -197,12 +198,12 @@ public class BoardGameAddActivity extends AppCompatActivity {
     }
     */
 
-    private BoardGame.PlayMode getPlayMode() {
+    private List<PlayMode.PlayModeEnum> getPlayModes() {
         boolean competitive = competitiveCheckBox.isChecked();
         boolean cooperative = cooperativeCheckBox.isChecked();
         boolean solitaire = solitaireCheckBox.isChecked();
 
-        return viewModel.getPlayMode(competitive, cooperative, solitaire);
+        return viewModel.getPlayModes(competitive, cooperative, solitaire);
     }
 
     private BoardGame.TeamOption getTeamOption() {

@@ -14,6 +14,7 @@ import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameRepository;
+import com.floatingpanda.scoreboard.data.PlayMode;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
@@ -83,26 +84,22 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
         }
     }
 
-    public BoardGame.PlayMode getPlayMode(boolean competitive, boolean cooperative, boolean solitaire) {
-        BoardGame.PlayMode playMode = BoardGame.PlayMode.ERROR;
+    public List<PlayMode.PlayModeEnum> getPlayModes(boolean competitive, boolean cooperative, boolean solitaire) {
+        List<PlayMode.PlayModeEnum> playModes = new ArrayList<>();
 
-        if (competitive && cooperative && solitaire) {
-            playMode = BoardGame.PlayMode.COMPETITIVE_OR_COOPERATIVE_OR_SOLITAIRE;
-        } else if (cooperative && solitaire) {
-            playMode = BoardGame.PlayMode.COOPERATIVE_OR_SOLITAIRE;
-        } else if (competitive && solitaire) {
-            playMode = BoardGame.PlayMode.COMPETITIVE_OR_SOLITAIRE;
-        } else if (competitive && cooperative) {
-            playMode = BoardGame.PlayMode.COMPETITIVE_OR_COOPERATIVE;
-        } else if (competitive) {
-            playMode = BoardGame.PlayMode.COMPETITIVE;
-        } else if (cooperative) {
-            playMode = BoardGame.PlayMode.COOPERATIVE;
-        } else if (solitaire) {
-            playMode = BoardGame.PlayMode.SOLITAIRE;
+        if (competitive) {
+            playModes.add(PlayMode.PlayModeEnum.COMPETITIVE);
         }
 
-        return playMode;
+        if (cooperative) {
+            playModes.add(PlayMode.PlayModeEnum.COOPERATIVE);
+        }
+
+        if (solitaire) {
+            playModes.add(PlayMode.PlayModeEnum.SOLITAIRE);
+        }
+
+        return playModes;
     }
 
     public BoardGame.TeamOption getTeamOption(int checkboxId) {

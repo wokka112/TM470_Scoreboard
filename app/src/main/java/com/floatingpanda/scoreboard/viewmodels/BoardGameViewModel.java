@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameRepository;
 import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
@@ -14,18 +15,18 @@ import java.util.List;
 public class BoardGameViewModel extends AndroidViewModel {
 
     private BoardGameRepository boardGameRepository;
-    private LiveData<List<BoardGamesAndBgCategories>> allBgsAndCategories;
+    private LiveData<List<BgAndBgCategoriesAndPlayModes>> allBgsAndCategoriesAndPlayModes;
 
     public BoardGameViewModel(Application application) {
         super(application);
         boardGameRepository = new BoardGameRepository(application);
-        allBgsAndCategories = boardGameRepository.getAllBgsAndCategories();
+        allBgsAndCategoriesAndPlayModes = boardGameRepository.getAllBgsAndCategoriesAndPlayModes();
     }
 
-    public LiveData<List<BoardGamesAndBgCategories>> getAllBgsAndCategories() { return allBgsAndCategories; }
+    public LiveData<List<BgAndBgCategoriesAndPlayModes>> getAllBgsAndCategoriesAndPlayModes() { return allBgsAndCategoriesAndPlayModes; }
 
-    public LiveData<BoardGamesAndBgCategories> getLiveDataBoardGameAndCategories(BoardGame boardGame) {
-        return boardGameRepository.getLiveDataBoardGameAndCategories(boardGame);
+    public LiveData<BgAndBgCategoriesAndPlayModes> getLiveDataBoardGameAndCategoriesAndPlayModes(BoardGame boardGame) {
+        return boardGameRepository.getLiveDataBgAndCategoriesAndPlayModes(boardGame);
     }
 
     // Preconditions: - boardGame does not exist in the database.

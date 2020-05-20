@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.adapters.BoardGameListAdapter;
+import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
@@ -55,10 +55,10 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
 
         boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
 
-        boardGameViewModel.getAllBgsAndCategories().observe(getViewLifecycleOwner(), new Observer<List<BoardGamesAndBgCategories>>() {
+        boardGameViewModel.getAllBgsAndCategoriesAndPlayModes().observe(getViewLifecycleOwner(), new Observer<List<BgAndBgCategoriesAndPlayModes>>() {
             @Override
-            public void onChanged(@Nullable final List<BoardGamesAndBgCategories> boardGamesAndBgCategories) {
-                adapter.setBgsAndBgCategories(boardGamesAndBgCategories);
+            public void onChanged(@Nullable final List<BgAndBgCategoriesAndPlayModes> bgAndCategoriesAndPlayModes) {
+                adapter.setBgsAndBgCategoriesAndPlayModes(bgAndCategoriesAndPlayModes);
             }
         });
 
