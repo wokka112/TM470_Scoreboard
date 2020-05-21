@@ -7,40 +7,40 @@ import androidx.lifecycle.LiveData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class BoardGameRepository {
 
-    private AssignedCategoriesDao assignedCategoriesDao;
+    private AssignedCategoryDao assignedCategoryDao;
     private BoardGameDao boardGameDao;
     private BgCategoryDao bgCategoryDao;
     private PlayModeDao playModeDao;
-    private AssignedCategoriesDao acDao; // Used for testing purposes.
     private LiveData<List<BoardGame>> allBoardGames;
-    private LiveData<List<AssignedCategories>> allAssignedCategories;
-    private LiveData<List<BoardGamesAndBgCategories>> allBgsAndCategories;
-    private LiveData<List<BgAndBgCategoriesAndPlayModes>> allBgsAndCategoriesAndPlayModes;
+    private LiveData<List<AssignedCategory>> allAssignedCategories;
+    private LiveData<List<BoardGameWithBgCategories>> allBoardGamesWithCategories;
+    private LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> allBoardGamesWithCategoriesAndPlayModes;
 
     public BoardGameRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
 
-        assignedCategoriesDao = db.assignedCategoriesDao();
+        assignedCategoryDao = db.assignedCategoriesDao();
         boardGameDao = db.boardGameDao();
         bgCategoryDao = db.bgCategoryDao();
-        acDao = db.assignedCategoriesDao();
         playModeDao = db.playModeDao();
 
         allBoardGames = boardGameDao.getAll();
-        allAssignedCategories = assignedCategoriesDao.getAll();
-        allBgsAndCategories = boardGameDao.getAllBoardGamesAndBgCategories();
-        allBgsAndCategoriesAndPlayModes = boardGameDao.getAllBgsAndCategoriesAndPlayModes();
+        allAssignedCategories = assignedCategoryDao.getAll();
+        allBoardGamesWithCategories = boardGameDao.getAllBoardGamesAndBgCategories();
+        allBoardGamesWithCategoriesAndPlayModes = boardGameDao.getAllBgsAndCategoriesAndPlayModes();
     }
 
-    public LiveData<List<BoardGamesAndBgCategories>> getAllBgsAndCategories() {
-        return allBgsAndCategories;
+    public LiveData<List<BoardGameWithBgCategories>> getAllBoardGamesWithCategories() {
+        return allBoardGamesWithCategories;
     }
 
-    public LiveData<List<BgAndBgCategoriesAndPlayModes>> getAllBgsAndCategoriesAndPlayModes() {
-        return allBgsAndCategoriesAndPlayModes;
+    public LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> getAllBoardGamesWithCategoriesAndPlayModes() {
+        return allBoardGamesWithCategoriesAndPlayModes;
     }
 
     // Maybe make private and use only inside the repository? Won't work in main thread cause it accesses db.
@@ -48,55 +48,94 @@ public class BoardGameRepository {
         return boardGameDao.findNonLiveDataByName(bgName);
     }
 
-    public LiveData<BoardGamesAndBgCategories> getLiveDataBoardGameAndCategories(BoardGame boardGame) {
+    public LiveData<BoardGameWithBgCategories> getLiveDataBoardGameAndCategories(BoardGame boardGame) {
         return boardGameDao.findBoardGameAndBgCategoriesById(boardGame.getId());
     }
 
-    public LiveData<BgAndBgCategoriesAndPlayModes> getLiveDataBgAndCategoriesAndPlayModes(BoardGame boardGame) {
+    public LiveData<BoardGameWithBgCategoriesAndPlayModes> getLiveDataBgAndCategoriesAndPlayModes(BoardGame boardGame) {
         return boardGameDao.findBgAndCategoriesAndPlayModesById(boardGame.getId());
     }
 
     //Preconditions: playmodes is not empty.
     public void insert(BoardGame boardGame) {
-        if (boardGame.getBgCategories().isEmpty()) {
-            insertBoardGame(boardGame);
-        } else {
-            insertBoardGameWithCategories(boardGame);
-        }
-    }
-
-    //TODO change this to just insert?
-    //TODO change this to insert board game with categories list drawn from board game categories attribute.
-    private void insertBoardGame(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.insert(boardGame);
 
-            List<PlayMode.PlayModeEnum> list = boardGame.getPlayModes();
+            insertPlayModes(boardGame.getBgName(), boardGame.getPlayModes());
 
-            for (PlayMode.PlayModeEnum playModeEnum : list) {
-                playModeDao.insert(new PlayMode(boardGame.getBgName(), playModeEnum));
+            if (!boardGame.getBgCategories().isEmpty()) {
+                insertAssignedCategories(boardGame.getId(), boardGame.getBgCategories());
             }
         });
     }
 
-    private void insertPlayModes(String bgName, List<PlayMode.PlayModeEnum> playModes) {
-        for (PlayMode.PlayModeEnum playModeEnum : playModes) {
-            playModeDao.insert(new PlayMode(bgName, playModeEnum));
+    public void update(BoardGame originalBoardGame, BoardGame editedBoardGame) {
+        AppDatabase.getExecutorService().execute(() -> {
+            boardGameDao.update(editedBoardGame);
+
+            List<PlayMode> playModesToDelete = getPlayModesToDelete(editedBoardGame.getBgName(), originalBoardGame.getPlayModes(),
+                    editedBoardGame.getPlayModes());
+            List<AssignedCategory> assignedCategoriesToDelete = getAssignedCategoriesToDelete(editedBoardGame.getId(),
+                    originalBoardGame.getBgCategories(), editedBoardGame.getBgCategories());
+
+            deletePlayModes(playModesToDelete);
+            deleteAssignedCategories(assignedCategoriesToDelete);
+
+            insertPlayModes(editedBoardGame.getBgName(), editedBoardGame.getPlayModes());
+            insertAssignedCategories(editedBoardGame.getId(), editedBoardGame.getBgCategories());
+        });
+    }
+
+    //TODO add testing to ensure assigned categories with this bg are deleted.
+    // Need to find how to add appropriate asserts for this really.
+    public void delete(BoardGame boardGame) {
+        AppDatabase.getExecutorService().execute(() -> {
+            //TODO remove log messages once done. They are for testing.
+            List<AssignedCategory> assignedCategories = assignedCategoryDao.findByBgId(boardGame.getId());
+
+            for (int i = 0; i < assignedCategories.size(); i++) {
+                Log.w("BGRepos.java", "1 Bg: " + boardGame.getId() + ", AC: " + assignedCategories.get(i).getCategoryId());
+            }
+
+            boardGameDao.delete(boardGame);
+
+            assignedCategories = assignedCategoryDao.findByBgId(boardGame.getId());
+
+            if (assignedCategories.isEmpty()) {
+                Log.w("BGRepos.java", "2 Empty");
+            } else {
+                for (int i = 0; i < assignedCategories.size(); i++) {
+                    Log.w("BGRepos.java", "2 Bg: " + boardGame.getId() + ", AC: " + assignedCategories.get(i).getCategoryId());
+                }
+            }
+        });
+    }
+
+    public boolean contains(String bgName) {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                BoardGame databaseBoardGame = boardGameDao.findNonLiveDataByName(bgName);
+                return databaseBoardGame != null;
+            };
+        });
+
+        try {
+            return (Boolean) future.get();
+        } catch (Exception e) {
+            Log.e("BoardGameRepos.java", "Exception: " + e);
+            return false;
         }
     }
 
-    private void insertAssignedCategories(int bgId, List<BgCategory> bgCategories) {
-        List<AssignedCategories> assignedCategories = new ArrayList<>();
-        for (BgCategory bgCategory : bgCategories) {
-            //if boardGame holds categories then they must have ids, or else this won't work.
-            Log.w("BoardGameRepo.java", "bgCategory id: " + bgCategory.getId());
-            assignedCategories.add(new AssignedCategories(bgId, bgCategory.getId()));
-        }
+    //TODO remove these.
+    private void insertBoardGameWithoutCategories(BoardGame boardGame) {
+        AppDatabase.getExecutorService().execute(() -> {
+            boardGameDao.insert(boardGame);
 
-        assignedCategoriesDao.insertAll(assignedCategories.toArray(new AssignedCategories[assignedCategories.size()]));
+            insertPlayModes(boardGame.getBgName(), boardGame.getPlayModes());
+        });
     }
-
-    //TODO create an insertAssignedCategories(BoardGame boardGame) method?
 
     // Preconditions: - boardGame does not exist in database.
     //                - boardGame has categories assigned to it.
@@ -114,75 +153,48 @@ public class BoardGameRepository {
         });
     }
 
-    public void update(BoardGame originalBoardGame, BoardGame editedBoardGame) {
-        Log.w("BoardGameRepo.java","Original Bg: " + originalBoardGame.getId() + ", " + originalBoardGame.getBgName());
-        Log.w("BoardGameRepo.java","Edited Bg: " + editedBoardGame.getId() + ", " + editedBoardGame.getBgName());
-        AppDatabase.getExecutorService().execute(() -> {
-            boardGameDao.update(editedBoardGame);
-
-            List<PlayMode> playModesToDelete = getPlayModesToDelete(editedBoardGame.getBgName(), originalBoardGame.getPlayModes(),
-                    editedBoardGame.getPlayModes());
-            List<AssignedCategories> assignedCategoriesToDelete = getAssignedCategoriesToDelete(editedBoardGame.getId(),
-                    originalBoardGame.getBgCategories(), editedBoardGame.getBgCategories());
-
-            deletePlayModes(playModesToDelete);
-            deleteAssignedCategories(assignedCategoriesToDelete);
-
-            insertPlayModes(editedBoardGame.getBgName(), editedBoardGame.getPlayModes());
-            insertAssignedCategories(editedBoardGame.getId(), editedBoardGame.getBgCategories());
-        });
+    private void insertPlayModes(String bgName, List<PlayMode.PlayModeEnum> playModes) {
+        for (PlayMode.PlayModeEnum playModeEnum : playModes) {
+            playModeDao.insert(new PlayMode(bgName, playModeEnum));
+        }
     }
 
-    private List<PlayMode> getPlayModesToDelete(String bgName, List<PlayMode.PlayModeEnum> originalPlayModes, List<PlayMode.PlayModeEnum> editedPlayModes) {
+    private void insertAssignedCategories(int bgId, List<BgCategory> bgCategories) {
+        List<AssignedCategory> assignedCategories = new ArrayList<>();
+        for (BgCategory bgCategory : bgCategories) {
+            //if boardGame holds categories then they must have ids, or else this won't work.
+            Log.w("BoardGameRepo.java", "bgCategory id: " + bgCategory.getId());
+            assignedCategories.add(new AssignedCategory(bgId, bgCategory.getId()));
+        }
+
+        assignedCategoryDao.insertAll(assignedCategories.toArray(new AssignedCategory[assignedCategories.size()]));
+    }
+
+    private List<PlayMode> getPlayModesToDelete(String editedBgName, List<PlayMode.PlayModeEnum> originalPlayModes, List<PlayMode.PlayModeEnum> editedPlayModes) {
         List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>(originalPlayModes);
         playModeEnums.removeAll(editedPlayModes);
 
         List<PlayMode> playModesToDelete = new ArrayList<>();
 
         for (PlayMode.PlayModeEnum playModeEnum : playModeEnums) {
-            playModesToDelete.add(new PlayMode(bgName, playModeEnum));
+            playModesToDelete.add(new PlayMode(editedBgName, playModeEnum));
         }
 
         return playModesToDelete;
     }
 
-    private List<AssignedCategories> getAssignedCategoriesToDelete(int bgId, List<BgCategory> originalBgCategories, List<BgCategory> editedBgCategories) {
+    private List<AssignedCategory> getAssignedCategoriesToDelete(int bgId, List<BgCategory> originalBgCategories, List<BgCategory> editedBgCategories) {
         // Compare and delete ones in original but not in edited
         List<BgCategory> bgCategories = new ArrayList<>(originalBgCategories);
         originalBgCategories.removeAll(editedBgCategories);
 
-        List<AssignedCategories> assignedCategoriesToDelete = new ArrayList<>();
+        List<AssignedCategory> assignedCategoriesToDelete = new ArrayList<>();
 
         for (BgCategory bgCategory : bgCategories) {
-            assignedCategoriesToDelete.add(new AssignedCategories(bgId, bgCategory.getId()));
+            assignedCategoriesToDelete.add(new AssignedCategory(bgId, bgCategory.getId()));
         }
 
         return assignedCategoriesToDelete;
-    }
-
-    //TODO add testing to ensure assigned categories with this bg are deleted.
-    // Need to find how to add appropriate asserts for this really.
-    public void delete(BoardGame boardGame) {
-        AppDatabase.getExecutorService().execute(() -> {
-            //TODO remove log messages once done. They are for testing.
-            List<AssignedCategories> ac = acDao.findByBgId(boardGame.getId());
-
-            for (int i = 0; i < ac.size(); i++) {
-                Log.w("BGRepos.java", "1 Bg: " + boardGame.getId() + ", AC: " + ac.get(i).getCategoryId());
-            }
-
-            boardGameDao.delete(boardGame);
-
-            ac = acDao.findByBgId(boardGame.getId());
-
-            if (ac.isEmpty()) {
-                Log.w("BGRepos.java", "2 Empty");
-            } else {
-                for (int i = 0; i < ac.size(); i++) {
-                    Log.w("BGRepos.java", "2 Bg: " + boardGame.getId() + ", AC: " + ac.get(i).getCategoryId());
-                }
-            }
-        });
     }
 
     private void deletePlayModes(List<PlayMode> playModes) {
@@ -191,9 +203,9 @@ public class BoardGameRepository {
         }
     }
 
-    public void deleteAssignedCategories(List<AssignedCategories> assignedCategories) {
-        for (AssignedCategories acs : assignedCategories) {
-            assignedCategoriesDao.delete(acs);
+    private void deleteAssignedCategories(List<AssignedCategory> assignedCategories) {
+        for (AssignedCategory assignedCategory : assignedCategories) {
+            assignedCategoryDao.delete(assignedCategory);
         }
     }
 }

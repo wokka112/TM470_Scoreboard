@@ -10,15 +10,15 @@ import androidx.room.Query;
 import java.util.List;
 
 @Dao
-public interface AssignedCategoriesDao {
+public interface AssignedCategoryDao {
     @Query("SELECT * FROM assigned_categories")
-    LiveData<List<AssignedCategories>> getAll();
+    LiveData<List<AssignedCategory>> getAll();
 
     @Query("SELECT * FROM assigned_categories WHERE bg_id LIKE :bgId")
-    List<AssignedCategories> findByBgId(int bgId);
+    List<AssignedCategory> findByBgId(int bgId);
 
     @Query("SELECT * FROM assigned_categories WHERE category_id like :categoryId")
-    List<AssignedCategories> findByCategoryId(int categoryId);
+    List<AssignedCategory> findByCategoryId(int categoryId);
 
     /*
     @Query("SELECT * FROM assigned_categories WHERE bg_name LIKE :bgName")
@@ -27,14 +27,14 @@ public interface AssignedCategoriesDao {
      */
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertAll(AssignedCategories... assignedCategories);
+    void insertAll(AssignedCategory... assignedCategories);
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
-    void insert(AssignedCategories assignedCategories);
+    void insert(AssignedCategory assignedCategory);
 
     @Query ("DELETE FROM assigned_categories")
     void deleteAll();
 
     @Delete
-    void delete(AssignedCategories assignedCategories);
+    void delete(AssignedCategory assignedCategory);
 }

@@ -39,21 +39,11 @@ public class BgCategoryAddActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                //TODO remove popup warnings and instead direct people to the edit text in error and
-                // inform them what they need to do to fix it?
-                if (TextUtils.isEmpty(categoryEditText.getText())) {
-                    AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryAddActivity.this);
+                if (!areInputsValid()) {
                     return;
                 }
 
                 String categoryName = categoryEditText.getText().toString();
-
-                if (bgCategoryRepository.containsCategoryName(categoryName)) {
-                    AlertDialogHelper.popupWarning("A category with that name already exists. " +
-                            "You must enter a unique category name.", BgCategoryAddActivity.this);
-                    return;
-                }
-
                 BgCategory bgCategory = new BgCategory(categoryName);
 
                 Intent replyIntent = new Intent();
@@ -69,5 +59,24 @@ public class BgCategoryAddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private boolean areInputsValid() {
+        //TODO remove popup warnings and instead direct people to the edit text in error and
+        // inform them what they need to do to fix it?
+        if (TextUtils.isEmpty(categoryEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryAddActivity.this);
+            return false;
+        }
+
+        String categoryName = categoryEditText.getText().toString();
+
+        if (bgCategoryRepository.containsCategoryName(categoryName)) {
+            AlertDialogHelper.popupWarning("A category with that name already exists. " +
+                    "You must enter a unique category name.", BgCategoryAddActivity.this);
+            return false;
+        }
+
+        return true;
     }
 }

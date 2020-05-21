@@ -14,9 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.adapters.BoardGameListAdapter;
-import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,10 +48,10 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
 
         boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
 
-        boardGameViewModel.getAllBgsAndCategoriesAndPlayModes().observe(getViewLifecycleOwner(), new Observer<List<BgAndBgCategoriesAndPlayModes>>() {
+        boardGameViewModel.getAllBoardGamesWithBgCategories().observe(getViewLifecycleOwner(), new Observer<List<BoardGameWithBgCategories>>() {
             @Override
-            public void onChanged(@Nullable final List<BgAndBgCategoriesAndPlayModes> bgAndCategoriesAndPlayModes) {
-                adapter.setBgsAndBgCategoriesAndPlayModes(bgAndCategoriesAndPlayModes);
+            public void onChanged(@Nullable final List<BoardGameWithBgCategories> boardGameWithBgCategories) {
+                adapter.setBoardGamesWithBgCategories(boardGameWithBgCategories);
             }
         });
 
@@ -70,23 +69,6 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
     public void startAddActivity() {
         Intent addBoardGameIntent = new Intent(getContext(), BoardGameAddActivity.class);
         startActivityForResult(addBoardGameIntent, ADD_BOARD_GAME_REQUEST_CODE);
-    }
-
-    // Preconditions: - boardGame does not exist in the database.
-    // Postconditions: - boardGame is added to the database.
-    /**
-     * Inserts a new BoardGame into the database. If the BoardGame already exists in the database, no new
-     * board game is inserted.
-     *
-     * boardGame should have an id of 0 so Room can autogenerate an id for it.
-     *
-     * boardGame should have a unique name, i.e. no Board Game should already exist in the database
-     * with the same name as boardGame. boardGame should also have a list of PlayMode.PlayModeEnum with
-     * at least one PlayModeEnum of COMPETITIVE, COOPERATIVE or SOLITAIRE.
-     * @param boardGame a Board Game with a unique name, an id of 0 and at least one PlayModeEnum
-     */
-    public void addBoardGame(BoardGame boardGame) {
-        boardGameViewModel.addBoardGame(boardGame);
     }
 
     // Preconditions: - object is an object of the Member class.
@@ -115,7 +97,7 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
 
         if (requestCode == ADD_BOARD_GAME_REQUEST_CODE && resultCode == RESULT_OK) {
             BoardGame boardGame = (BoardGame) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
-            addBoardGame(boardGame);
+            boardGameViewModel.addBoardGame(boardGame);
         }
     }
 }

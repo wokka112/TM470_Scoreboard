@@ -120,7 +120,7 @@ public class MemberRepository {
         try {
             return (Boolean) future.get();
         } catch (Exception e) {
-            Log.e("BgCatRepos.java", "Exception: " + e);
+            Log.e("MemberRepos.java", "Exception: " + e);
             return false;
         }
     }

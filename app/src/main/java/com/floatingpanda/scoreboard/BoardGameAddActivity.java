@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -134,8 +135,9 @@ public class BoardGameAddActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
-                //TODO add in warnings for empty or non-unique edittexts.
+                if (!areInputsValid()) {
+                    return;
+                }
 
                 String bgName = bgNameEditText.getText().toString();
                 int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
@@ -161,6 +163,58 @@ public class BoardGameAddActivity extends AppCompatActivity {
     }
 
     /**
+     * Sets up the multispinner list for use.
+     */
+    private void setupMultiSpinnerList() {
+        multiSpinner.setAdapter(boardGameAddEditViewModel.getAdapter(this), false, onSelectedListener);
+    }
+
+    private boolean areInputsValid() {
+        if (TextUtils.isEmpty(bgNameEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
+            return false;
+        }
+
+        if (TextUtils.isEmpty(difficultyEditText.getText().toString())) {
+            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", this);
+            return false;
+        }
+
+        String bgName = bgNameEditText.getText().toString();
+
+        if (boardGameAddEditViewModel.databaseContains(bgName)) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
+            return false;
+        }
+
+        int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
+
+        if (difficulty < 1 || difficulty > 5){
+            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", this);
+            return false;
+        }
+
+        int minPlayers = 1;
+        if (!TextUtils.isEmpty(minPlayersEditText.getText())) {
+            minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
+            if (minPlayers < 0) {
+                AlertDialogHelper.popupWarning("Minimum players must be greater than 0.", this);
+                return false;
+            }
+        }
+
+        if (!TextUtils.isEmpty(maxPlayersEditText.getText())) {
+            int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
+            if (maxPlayers < 0 || maxPlayers < minPlayers) {
+                AlertDialogHelper.popupWarning("Maximum players must be greater than 0 and greater than minimum players.", this);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * Adds a chip representing bgCategory to the view.
      * @param bgCategory a BgCategory
      */
@@ -174,13 +228,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
     private void clearChips() {
         chipGroup.removeAllViews();
         boardGameAddEditViewModel.clearSelectedBgCategories();
-    }
-
-    /**
-     * Sets up the multispinner list for use.
-     */
-    private void setupMultiSpinnerList() {
-        multiSpinner.setAdapter(boardGameAddEditViewModel.getAdapter(this), false, onSelectedListener);
     }
 
     /*

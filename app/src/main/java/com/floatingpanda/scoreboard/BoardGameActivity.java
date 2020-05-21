@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,14 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
-import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
-
-import java.util.List;
 
 public class BoardGameActivity extends AppCompatActivity {
     private final int EDIT_BOARDGAME_REQUEST_CODE = 1;
@@ -31,8 +25,8 @@ public class BoardGameActivity extends AppCompatActivity {
 
     private BoardGame boardGame;
 
-    private TextView name, difficultyOutput, playersOutput, categoriesOutput, playModesOutput, teamsOutput,
-            descriptionOutput, houseRulesOutput, notesOutput;
+    private TextView nameTextView, difficultyTextView, playerCountTextView, categoriesTextView, playModesTextView, teamOptionsTextView,
+            descriptionTextView, houseRulesTextView, notesTextView;
     private ImageView imageView;
 
     @Override
@@ -40,28 +34,28 @@ public class BoardGameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_game);
 
-        name = findViewById(R.id.bgact_name);
-        difficultyOutput = findViewById(R.id.bgact_difficulty_output);
-        playersOutput = findViewById(R.id.bgact_players_output);
-        categoriesOutput = findViewById(R.id.bgact_categories_output);
-        playModesOutput = findViewById(R.id.bgact_play_modes_output);
-        teamsOutput = findViewById(R.id.bgact_team_options_output);
-        descriptionOutput = findViewById(R.id.bgact_description_output);
-        houseRulesOutput = findViewById(R.id.bgact_house_rules_output);
-        notesOutput = findViewById(R.id.bgact_notes_output);
+        nameTextView = findViewById(R.id.bgact_name);
+        difficultyTextView = findViewById(R.id.bgact_difficulty_output);
+        playerCountTextView = findViewById(R.id.bgact_players_output);
+        categoriesTextView = findViewById(R.id.bgact_categories_output);
+        playModesTextView = findViewById(R.id.bgact_play_modes_output);
+        teamOptionsTextView = findViewById(R.id.bgact_team_options_output);
+        descriptionTextView = findViewById(R.id.bgact_description_output);
+        houseRulesTextView = findViewById(R.id.bgact_house_rules_output);
+        notesTextView = findViewById(R.id.bgact_notes_output);
         imageView = findViewById(R.id.bgact_image);
 
         Button editButton, deleteButton;
-
+        //TODO replace this with the bgId and then simply find the boardgamewithcategoriesandplaymode via that??
+        // Or maybe use the bg name?
         boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");
 
         boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
 
-        Log.w("BoardGameActivity.java", "Using bg: " + boardGame.getBgName());
-        boardGameViewModel.getLiveDataBoardGameAndCategoriesAndPlayModes(boardGame).observe(BoardGameActivity.this, new Observer<BgAndBgCategoriesAndPlayModes>() {
+        boardGameViewModel.getBoardGameWithBgCategoriesAndPlayModes(boardGame).observe(BoardGameActivity.this, new Observer<BoardGameWithBgCategoriesAndPlayModes>() {
             @Override
-            public void onChanged(@Nullable final BgAndBgCategoriesAndPlayModes bgAndBgCategoriesAndPlayModes) {
-                setViews(bgAndBgCategoriesAndPlayModes);
+            public void onChanged(@Nullable final BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
+                setViews(boardGameWithBgCategoriesAndPlayModes);
             }
         });
 
@@ -85,29 +79,29 @@ public class BoardGameActivity extends AppCompatActivity {
     /**
      * Helper method that sets up the views on the page - sets the text, checkboxes, radio buttons,
      * and chips up to represent the board game passed to the activity.
-     * @param bgAndBgCategoriesAndPlayModes a board game, its categories and its playmodes
+     * @param boardGameWithBgCategoriesAndPlayModes a board game, its categories and its playmodes
      */
-    private void setViews(BgAndBgCategoriesAndPlayModes bgAndBgCategoriesAndPlayModes) {
+    private void setViews(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         // Catches if the object has been deleted to stop app from crashing before finish() is
         // called.
-        if (bgAndBgCategoriesAndPlayModes == null) {
+        if (boardGameWithBgCategoriesAndPlayModes == null) {
             return;
         }
 
-        boardGame = bgAndBgCategoriesAndPlayModes.getBoardGame();
+        boardGame = boardGameWithBgCategoriesAndPlayModes.getBoardGame();
 
-        name.setText(boardGame.getBgName());
-        difficultyOutput.setText(Integer.toString(boardGame.getDifficulty()));
+        nameTextView.setText(boardGame.getBgName());
+        difficultyTextView.setText(Integer.toString(boardGame.getDifficulty()));
 
         String players = boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers();
-        playersOutput.setText(players);
+        playerCountTextView.setText(players);
 
-        categoriesOutput.setText(boardGame.getBgCategoriesString());
-        playModesOutput.setText(boardGame.getPlayModesString());
-        teamsOutput.setText(boardGame.getTeamOptionsString());
-        descriptionOutput.setText(boardGame.getDescription());
-        houseRulesOutput.setText(boardGame.getHouseRules());
-        notesOutput.setText(boardGame.getNotes());
+        categoriesTextView.setText(boardGame.getBgCategoriesString());
+        playModesTextView.setText(boardGame.getPlayModesString());
+        teamOptionsTextView.setText(boardGame.getTeamOptionsString());
+        descriptionTextView.setText(boardGame.getDescription());
+        houseRulesTextView.setText(boardGame.getHouseRules());
+        notesTextView.setText(boardGame.getNotes());
     }
 
     // Preconditions: boardGame exists in database.
@@ -166,12 +160,6 @@ public class BoardGameActivity extends AppCompatActivity {
         startActivityForResult(editIntent, EDIT_BOARDGAME_REQUEST_CODE);
     }
 
-    //TODO create editBoardGame method and onactivityresult method.
-
-    private void editBoardGame(BoardGame originalBoardGame, BoardGame editedBoardGame) {
-        boardGameViewModel.editBoardGame(originalBoardGame, editedBoardGame);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -179,9 +167,7 @@ public class BoardGameActivity extends AppCompatActivity {
         if (requestCode == EDIT_BOARDGAME_REQUEST_CODE && resultCode == RESULT_OK) {
             BoardGame originalBoardGame = (BoardGame) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_ORIGINAL_BG);
             BoardGame editedBoardGame = (BoardGame) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_EDITED_BG);
-            Log.w("BoardGameAct.java","Original Bg: " + originalBoardGame.getId() + ", " + originalBoardGame.getBgName());
-            Log.w("BoardGameAct.java","Edited Bg: " + editedBoardGame.getId() + ", " + editedBoardGame.getBgName());
-            editBoardGame(originalBoardGame, editedBoardGame);
+            boardGameViewModel.editBoardGame(originalBoardGame, editedBoardGame);
         }
     }
 }

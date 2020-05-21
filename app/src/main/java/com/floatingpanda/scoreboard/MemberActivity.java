@@ -62,7 +62,6 @@ public class MemberActivity extends AppCompatActivity {
         memberViewModel.getLiveDataMember(member).observe(MemberActivity.this, new Observer<Member>() {
             @Override
             public void onChanged(@Nullable final Member liveMember) {
-                Log.w("MemberActivity.java", "Got liveMember: " + liveMember);
                 setViews(liveMember);
             }
         });
@@ -108,15 +107,19 @@ public class MemberActivity extends AppCompatActivity {
         notesTextView.setText(member.getNotes());
 
         //TODO implement groupcount in member and functionality to work it out.
+        //member.getGroupCount();
         groupsTextView.setText("TBA");
 
         //TODO implement best game in member and functionality to work it out.
+        //member.getBestGameName();
         bestGameTextView.setText("TBA");
 
         //TODO implement worst game in member and functionality to work it out.
+        //member.getWorstGameName();
         worstGameTextView.setText("TBA");
 
         //TODO implement imgfilepath and functionality for it all
+        //member.getImage();
         imageView.setImageResource(R.drawable.ic_launcher_foreground);
 
         this.member = member;
@@ -132,24 +135,6 @@ public class MemberActivity extends AppCompatActivity {
         Intent intent = new Intent(MemberActivity.this, MemberEditActivity.class);
         intent.putExtra("MEMBER", member);
         startActivityForResult(intent, EDIT_MEMBER_REQUEST_CODE);
-    }
-
-    // Preconditions: - A Member with a primary key id matching the member parameter's id exists in the database.
-    // Postconditions: - The matching Member in the database is updated to be the same as the member passed to
-    //                    this method.
-    /**
-     * Updates a Member in the database to match the data of member. A Member with member's id
-     * should already exist in the database for this to work.
-     *
-     * Note that a Member's id should not change, so update will not update Member ids in the
-     * database, only their other details.
-     *
-     * member should have a unique nickname, i.e. no Member should already exist in the
-     * database with the same nickname as member.
-     * @param member a member with a unique nickname
-     */
-    private void editMember(Member member) {
-        memberViewModel.editMember(member);
     }
 
     // Preconditions: - member exists in the database.
@@ -215,7 +200,7 @@ public class MemberActivity extends AppCompatActivity {
 
         if (requestCode == EDIT_MEMBER_REQUEST_CODE && resultCode == RESULT_OK) {
             Member editedMember = (Member) data.getExtras().get(MemberEditActivity.EXTRA_REPLY);
-            editMember(editedMember);
+            memberViewModel.editMember(editedMember);
         }
     }
 }

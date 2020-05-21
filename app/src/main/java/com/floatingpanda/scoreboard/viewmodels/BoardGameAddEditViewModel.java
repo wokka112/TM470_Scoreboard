@@ -115,6 +115,10 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
         }
     }
 
+    public boolean databaseContains(String bgName) {
+        return boardGameRepository.contains(bgName);
+    }
+
     public Chip createChip(MultiSpinner multiSpinner, ChipGroup chipGroup, BgCategory bgCategory) {
         Chip chip = new Chip(chipGroup.getContext());
         chip.setText((bgCategory.getCategoryName()));

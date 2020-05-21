@@ -1,15 +1,14 @@
 package com.floatingpanda.scoreboard.data;
 
 import androidx.room.Embedded;
-import androidx.room.Junction;
 import androidx.room.Relation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BgAndBgCategoriesAndPlayModes {
+public class BoardGameWithBgCategoriesAndPlayModes {
     @Embedded
-    public BoardGamesAndBgCategories BgAndBgCategories;
+    public BoardGameWithBgCategories BgAndBgCategories;
     @Relation(
             parentColumn = "bg_name",
             entityColumn = "parent_bg_name"

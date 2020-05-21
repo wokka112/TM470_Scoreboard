@@ -15,7 +15,7 @@ public class BgCategoryRepository {
     private LiveData<List<BgCategory>> allBgCategories;
 
     //Used for testing
-    private AssignedCategoriesDao acsDao;
+    private AssignedCategoryDao assignedCategoryDao;
 
     public BgCategoryRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
@@ -23,7 +23,7 @@ public class BgCategoryRepository {
         allBgCategories = bgCategoryDao.getAllLive();
 
         //Used for testing
-        acsDao = db.assignedCategoriesDao();
+        assignedCategoryDao = db.assignedCategoriesDao();
     }
 
     /**
@@ -80,7 +80,7 @@ public class BgCategoryRepository {
     // Postconditions: - bgCategory will no longer exist in the database.
     //                 - assigned_categories tables with bgCategory in will have been deleted.
     //                 - skill ratings for players for this category will have been deleted.
-    //TODO add assert tests. Maybe need to include bg and bgcategory name, rather than ids.
+    //TODO add assert tests.
     /**
      * Deletes bgCategory from the database.
      * @param bgCategory a BgCategory that exists in the database
@@ -88,21 +88,21 @@ public class BgCategoryRepository {
     public void delete(BgCategory bgCategory) {
         AppDatabase.getExecutorService().execute(() -> {
             //TODO remove logs, they are for testing.
-            List<AssignedCategories> acs = acsDao.findByCategoryId(bgCategory.getId());
+            List<AssignedCategory> assignedCategories = assignedCategoryDao.findByCategoryId(bgCategory.getId());
 
-            for (int i = 0; i < acs.size(); i++) {
-                Log.w("BGCatRepos.java", "1 Bg: " + bgCategory.getId() + ", AC: " + acs.get(i).getBgId());
+            for (int i = 0; i < assignedCategories.size(); i++) {
+                Log.w("BGCatRepos.java", "1 Bg: " + bgCategory.getId() + ", AC: " + assignedCategories.get(i).getBgId());
             }
 
             bgCategoryDao.delete(bgCategory);
 
-            acs = acsDao.findByCategoryId(bgCategory.getId());
+            assignedCategories = assignedCategoryDao.findByCategoryId(bgCategory.getId());
 
-            if (acs.isEmpty()) {
+            if (assignedCategories.isEmpty()) {
                 Log.w("BGCatRepos.java", "2 Empty");
             } else {
-                for (int i = 0; i < acs.size(); i++) {
-                    Log.w("BGCatRepos.java", "2 Category: " + bgCategory.getId() + ", AC: " + acs.get(i).getBgId());
+                for (int i = 0; i < assignedCategories.size(); i++) {
+                    Log.w("BGCatRepos.java", "2 Category: " + bgCategory.getId() + ", AC: " + assignedCategories.get(i).getBgId());
                 }
             }
         });
@@ -121,11 +121,8 @@ public class BgCategoryRepository {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                //TODO remove log warnings once done with tests.
-                Log.w("BgCatRepos.java", "Started thread");
                 // If no category found, returns null.
                 BgCategory databaseCategory = bgCategoryDao.findNonLiveDataByName(categoryName);
-                Log.w("BgCatRepos.java", "Category: " + databaseCategory);
                 return databaseCategory != null;
             };
         });

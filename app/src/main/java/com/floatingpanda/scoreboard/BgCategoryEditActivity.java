@@ -23,6 +23,8 @@ public class BgCategoryEditActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private BgCategoryRepository bgCategoryRepository;
+    private BgCategory bgCategory;
+
     private EditText categoryEditText;
 
     @Override
@@ -30,7 +32,7 @@ public class BgCategoryEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_bg_category);
 
-        BgCategory bgCategory = (BgCategory) getIntent().getExtras().get("BG_CATEGORY");
+        bgCategory = (BgCategory) getIntent().getExtras().get("BG_CATEGORY");
 
         bgCategoryRepository = new BgCategoryRepository(getApplication());
 
@@ -44,22 +46,12 @@ public class BgCategoryEditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO remove popup warnings and instead direct people to the edittext in error and
-                // inform them what they need to do to fix it?
-                if (TextUtils.isEmpty(categoryEditText.getText())) {
-                    AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryEditActivity.this);
+                if (!areInputsValid()) {
                     return;
                 }
 
                 String categoryName = categoryEditText.getText().toString();
-
-                if (categoryName.equals(bgCategory.getCategoryName())
-                        || bgCategoryRepository.containsCategoryName(categoryName)) {
-                    AlertDialogHelper.popupWarning("You must enter a new, unique name for the category.", BgCategoryEditActivity.this);
-                    return;
-                }
-
-                bgCategory.setCategoryName(categoryEditText.getText().toString());
+                bgCategory.setCategoryName(categoryName);
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, bgCategory);
@@ -78,5 +70,24 @@ public class BgCategoryEditActivity extends AppCompatActivity {
 
     private void setViews(BgCategory bgCategory) {
         categoryEditText.setText(bgCategory.getCategoryName());
+    }
+
+    private boolean areInputsValid() {
+        //TODO remove popup warnings and instead direct people to the edit text in error and
+        // inform them what they need to do to fix it?
+        if (TextUtils.isEmpty(categoryEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a name for the category.", this);
+            return false;
+        }
+
+        String categoryName = categoryEditText.getText().toString();
+
+        if (categoryName.equals(bgCategory.getCategoryName())
+                || bgCategoryRepository.containsCategoryName(categoryName)) {
+            AlertDialogHelper.popupWarning("You must enter a new, unique name for the category.", BgCategoryEditActivity.this);
+            return false;
+        }
+
+        return true;
     }
 }

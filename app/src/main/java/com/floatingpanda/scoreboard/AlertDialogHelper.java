@@ -12,7 +12,6 @@ import android.view.View;
  * message passed as a parameter.
  */
 public class AlertDialogHelper {
-
     /**
      * Creates and displays a simple popup dialog warning and an 'okay' button to close the dialog.
      * @param message the message to be displayed in the dialog warning

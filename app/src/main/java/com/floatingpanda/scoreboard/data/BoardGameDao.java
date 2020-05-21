@@ -43,17 +43,17 @@ public interface BoardGameDao {
 
     @Transaction
     @Query("SELECT * FROM boardgames")
-    public LiveData<List<BoardGamesAndBgCategories>> getAllBoardGamesAndBgCategories();
+    public LiveData<List<BoardGameWithBgCategories>> getAllBoardGamesAndBgCategories();
 
     @Transaction
     @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
-    public LiveData<BoardGamesAndBgCategories> findBoardGameAndBgCategoriesById(int bgId);
+    public LiveData<BoardGameWithBgCategories> findBoardGameAndBgCategoriesById(int bgId);
 
     @Transaction
     @Query("SELECT * FROM boardgames")
-    public LiveData<List<BgAndBgCategoriesAndPlayModes>> getAllBgsAndCategoriesAndPlayModes();
+    public LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> getAllBgsAndCategoriesAndPlayModes();
 
     @Transaction
     @Query("SELECT * FROM boardgames WHERE bg_id like :bgId")
-    public LiveData<BgAndBgCategoriesAndPlayModes> findBgAndCategoriesAndPlayModesById(int bgId);
+    public LiveData<BoardGameWithBgCategoriesAndPlayModes> findBgAndCategoriesAndPlayModesById(int bgId);
 }

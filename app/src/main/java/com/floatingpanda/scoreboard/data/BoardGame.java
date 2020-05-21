@@ -211,6 +211,7 @@ public class BoardGame implements Parcelable {
      */
     public void removePlayMode(PlayMode.PlayModeEnum playMode) { this.playModes.remove(playMode); }
 
+    //TODO maybe change this to return a list of strings? Then I could do formatting if I wanted somewhere else.
     /**
      * Returns a string of the categories that the board game fits into. Each category is separated
      * by a comma.
@@ -280,7 +281,6 @@ public class BoardGame implements Parcelable {
         return sb.toString();
     }
 
-    //TODO update to return a list of strings?
     /**
      * Returns a String representing the team options for the game based on the BoardGame's
      * TeamOption enum.

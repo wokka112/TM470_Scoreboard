@@ -78,22 +78,6 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         startActivityForResult(addBgCategoryIntent, ADD_CATEGORY_REQUEST_CODE);
     }
 
-    // Precondition: BgCategory with bgCategory's name or id should not exist in database.
-    // Postcondition: new BgCategory exists in the database.
-    /**
-     * Inserts a new Bgcategory into the database. If the BgCategory already exists in the database,
-     * no new category is inserted.
-     *
-     * bgCategory should have an id of 0 so Room can autogenerate an id for it.
-     *
-     * bgCategory should have a unique category name, i.e. no BgCategory should already exist in the
-     * database with the same name as bgCategory.
-     * @param bgCategory a BgCategory with a unique category name and an id of 0
-     */
-    private void addBgCategory(BgCategory bgCategory) {
-        bgCategoryViewModel.addBgCategory(bgCategory);
-    }
-
     // Preconditions: - object is a BgCategory
     // Postconditions: - BgCategory edit activity is started to edit object in the database.
     /**
@@ -119,24 +103,6 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
             Log.w("BgCatListFrag.java", "startEditActivity() did not receive BgCategory object.");
             return;
         }
-    }
-
-    // Precondition: - a BgCategory with bgCategory's id (primary key) exists in database.
-    // Postcondition: - the BgCategory in the database will be updated to have the details of bgCategory.
-    //                - edits will cascade, so foreign keys of bgCategory (such as in assigned_categories) will be updated as well.
-    /**
-     * Updates a BgCategory in the database to match the data of bgCategory. A BgCategory with
-     * bgCategory's id should already exist in the database for this to work.
-     *
-     * Note that a BgCategory's id should not change, so update will not update BgCategory ids in
-     * the database, only their category names.
-     *
-     * bgCategory should have a unique category name, i.e. no BgCategory should already exist in the
-     * database with the same name as bgCategory.
-     * @param bgCategory a BgCategory with a unique category name
-     */
-    private void editBgCategory(BgCategory bgCategory) {
-        bgCategoryViewModel.editBgCategory(bgCategory);
     }
 
     // Preconditions: - object is a BgCategory.
@@ -171,7 +137,7 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteBgCategory(bgCategory);
+                        bgCategoryViewModel.deleteBgCategory(bgCategory);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -184,26 +150,15 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
                 .show();
     }
 
-    // Preconditions: - bgCategory exists in the database.
-    // Postconditions: - bgCategory is removed from the database.
-    //                 - assigned_categories with bgCategory in them are removed from the database.
-    /**
-     * Deletes a BgCategory in the database with an id matching the id of bgCategory.
-     * @param bgCategory a bgCategory that exists in the database
-     */
-    private void deleteBgCategory(BgCategory bgCategory) {
-        bgCategoryViewModel.deleteBgCategory(bgCategory);
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_CATEGORY_REQUEST_CODE && resultCode == RESULT_OK) {
-            BgCategory newBgCategory = (BgCategory) data.getExtras().get(BgCategoryAddActivity.EXTRA_REPLY);
-            addBgCategory(newBgCategory);
+            BgCategory bgCategory = (BgCategory) data.getExtras().get(BgCategoryAddActivity.EXTRA_REPLY);
+            bgCategoryViewModel.addBgCategory(bgCategory);
         } else if (requestCode == EDIT_CATEGORY_REQUEST_CODE && resultCode == RESULT_OK) {
-            BgCategory editedBgCategory = (BgCategory) data.getExtras().get(BgCategoryEditActivity.EXTRA_REPLY);
-            editBgCategory(editedBgCategory);
+            BgCategory bgCategory = (BgCategory) data.getExtras().get(BgCategoryEditActivity.EXTRA_REPLY);
+            bgCategoryViewModel.editBgCategory(bgCategory);
         }
     }
 }

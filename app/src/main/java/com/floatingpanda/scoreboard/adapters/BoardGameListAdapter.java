@@ -9,10 +9,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.BgAndBgCategoriesAndPlayModes;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGamesAndBgCategories;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.List;
 public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdapter.BoardGameViewHolder> {
 
     private final LayoutInflater inflater;
-    private List<BgAndBgCategoriesAndPlayModes> bgsAndBgCategoriesAndPlayModes;
+    private List<BoardGameWithBgCategories> boardGamesWithBgCategories;
     private DetailAdapterInterface listener;
 
     public BoardGameListAdapter(Context context, DetailAdapterInterface listener) {
@@ -36,8 +35,8 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
 
     @Override
     public void onBindViewHolder(BoardGameViewHolder holder, int position) {
-        if (bgsAndBgCategoriesAndPlayModes != null) {
-            BgAndBgCategoriesAndPlayModes current = bgsAndBgCategoriesAndPlayModes.get(position);
+        if (boardGamesWithBgCategories != null) {
+            BoardGameWithBgCategories current = boardGamesWithBgCategories.get(position);
 
             BoardGame boardGame = current.getBoardGame();
             holder.bgNameItemView.setText(boardGame.getBgName());
@@ -52,15 +51,15 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
         }
     }
 
-    public void setBgsAndBgCategoriesAndPlayModes(List<BgAndBgCategoriesAndPlayModes> bgsAndBgCategoriesAndPlayModes) {
-        this.bgsAndBgCategoriesAndPlayModes = bgsAndBgCategoriesAndPlayModes;
+    public void setBoardGamesWithBgCategories(List<BoardGameWithBgCategories> boardGamesWithBgCategories) {
+        this.boardGamesWithBgCategories = boardGamesWithBgCategories;
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        if (bgsAndBgCategoriesAndPlayModes != null)
-            return bgsAndBgCategoriesAndPlayModes.size();
+        if (boardGamesWithBgCategories != null)
+            return boardGamesWithBgCategories.size();
         else return 0;
     }
 
@@ -78,7 +77,7 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    BoardGame boardGame = bgsAndBgCategoriesAndPlayModes.get(position).getBoardGame();
+                    BoardGame boardGame = boardGamesWithBgCategories.get(position).getBoardGame();
                     listener.viewDetails(boardGame);
                 }
             });

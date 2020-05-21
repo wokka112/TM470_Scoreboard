@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -71,7 +72,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
 
         BoardGame boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");
 
-        setDetails(boardGame);
+        setViews(boardGame);
 
         final Button browseButton, cameraButton, saveButton, cancelButton;
 
@@ -115,8 +116,9 @@ public class BoardGameEditActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-
-                //TODO add in warnings for empty or non-unique edittexts.
+                if(!areInputsValid()) {
+                    return;
+                }
 
                 String bgName = bgNameEditText.getText().toString();
                 int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
@@ -136,9 +138,6 @@ public class BoardGameEditActivity extends AppCompatActivity {
                         description, notes, houseRules, imgFilePath, bgCategories, playModes);
                 editedBoardGame.setId(boardGame.getId());
 
-                Log.w("BoardGameEditAct.java", "Original Bg: " + boardGame.getId() + ", " + boardGame.getBgName());
-                Log.w("BoardGameEditAct.java", "Edited Bg: " + editedBoardGame.getId() + ", " + editedBoardGame.getBgName());
-
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY_ORIGINAL_BG, boardGame);
                 replyIntent.putExtra(EXTRA_REPLY_EDITED_BG, editedBoardGame);
@@ -152,7 +151,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
      * Sets the views to the details from boardGame.
      * @param boardGame a BoardGame
      */
-    private void setDetails(BoardGame boardGame) {
+    private void setViews(BoardGame boardGame) {
         bgNameEditText.setText(boardGame.getBgName());
         difficultyEditText.setText(Integer.toString(boardGame.getDifficulty()));
         minPlayersEditText.setText(Integer.toString(boardGame.getMinPlayers()));
@@ -163,6 +162,51 @@ public class BoardGameEditActivity extends AppCompatActivity {
         setPlayModeCheckBoxes(boardGame.getPlayModes());
         setTeamOptionsRadioGroup(boardGame.getTeamOptions());
         setChipGroupChips(boardGame.getBgCategories());
+    }
+
+    private boolean areInputsValid() {
+        if (TextUtils.isEmpty(bgNameEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
+            return false;
+        }
+
+        if (TextUtils.isEmpty(difficultyEditText.getText().toString())) {
+            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", this);
+            return false;
+        }
+
+        String bgName = bgNameEditText.getText().toString();
+
+        if (boardGameAddEditViewModel.databaseContains(bgName)) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
+            return false;
+        }
+
+        int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
+
+        if (difficulty < 1 || difficulty > 5){
+            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", this);
+            return false;
+        }
+
+        int minPlayers = 1;
+        if (!TextUtils.isEmpty(minPlayersEditText.getText())) {
+            minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
+            if (minPlayers < 0) {
+                AlertDialogHelper.popupWarning("Minimum players must be greater than 0.", this);
+                return false;
+            }
+        }
+
+        if (!TextUtils.isEmpty(maxPlayersEditText.getText())) {
+            int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
+            if (maxPlayers < 0 || maxPlayers < minPlayers) {
+                AlertDialogHelper.popupWarning("Maximum players must be greater than 0 and greater than minimum players.", this);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

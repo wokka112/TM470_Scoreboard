@@ -15,7 +15,7 @@ import androidx.room.ForeignKey;
             parentColumns = "category_id",
             childColumns = "category_id",
             onDelete = ForeignKey.CASCADE)})
-public class AssignedCategories {
+public class AssignedCategory {
     @NonNull
     @ColumnInfo(name = "bg_id")
     public int bgId;
@@ -24,7 +24,7 @@ public class AssignedCategories {
     @ColumnInfo(name = "category_id")
     public int categoryId;
 
-    public AssignedCategories(int bgId, int categoryId) {
+    public AssignedCategory(int bgId, int categoryId) {
         this.bgId = bgId;
         this.categoryId = categoryId;
     }

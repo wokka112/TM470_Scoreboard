@@ -6,12 +6,12 @@ import androidx.room.Relation;
 
 import java.util.List;
 
-public class BoardGamesAndBgCategories {
+public class BoardGameWithBgCategories {
     @Embedded public BoardGame boardGame;
     @Relation(
             parentColumn = "bg_id",
             entityColumn = "category_id",
-            associateBy = @Junction(AssignedCategories.class)
+            associateBy = @Junction(AssignedCategory.class)
     )
     public List<BgCategory> bgCategories;
 

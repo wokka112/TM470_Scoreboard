@@ -99,29 +99,13 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
         startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
     }
 
-    // Preconditions: - newMember does not exist in the database.
-    // Postconditions: - newMember is added to the database.
-    /**
-     * Inserts a new Member into the database. If the Member already exists in the database, no new
-     * member is inserted.
-     *
-     * member should have an id of 0 so Room can autogenerate an id for it.
-     *
-     * member should have a unique nickname, i.e. no MEmber should already exist in the database
-     * with the same nickname as member.
-     * @param member a Member with a unique nickname and an id of 0
-     */
-    public void addMember(Member member) {
-        memberViewModel.addMember(member);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_MEMBER_REQUEST_CODE && resultCode == RESULT_OK) {
-            Member newMember = (Member) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
-            addMember(newMember);
+            Member member = (Member) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
+            memberViewModel.addMember(member);
         }
     }
 }

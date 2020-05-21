@@ -19,6 +19,7 @@ public class MemberEditActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private MemberRepository memberRepository;
+    private Member member;
 
     //TODO add imageview and image setting functionality.
     //TODO remove cancelButton and replace with an up arrow?
@@ -32,7 +33,7 @@ public class MemberEditActivity extends AppCompatActivity {
 
         memberRepository = new MemberRepository(getApplication());
 
-        Member member = (Member) getIntent().getExtras().get("MEMBER");
+        member = (Member) getIntent().getExtras().get("MEMBER");
 
         nicknameEditText = findViewById(R.id.memberadd_nickname_edittext);
         realNameEditText = findViewById(R.id.memberadd_realname_edittext);
@@ -68,32 +69,15 @@ public class MemberEditActivity extends AppCompatActivity {
             }
         });
 
-        //TODO sort out popup messages so they sound better.
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(nicknameEditText.getText())) {
-                    AlertDialogHelper.popupWarning("You must enter a nickname for the member.", MemberEditActivity.this);
-                    return;
-                }
 
-                String nickname = nicknameEditText.getText().toString();
-
-                if (nickname.equals(member.getNickname())
-                        || memberRepository.contains(nickname)) {
-                    AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", MemberEditActivity.this);
-                    return;
-                }
-
-                String realName = realNameEditText.getText().toString();
-                String notes = notesEditText.getText().toString();
+                member.setNickname(nicknameEditText.getText().toString());
+                member.setRealName(realNameEditText.getText().toString());
+                member.setNotes(notesEditText.getText().toString());
                 //TODO implement image taking/picking and filepath saving functionality
-                String imgFilePath = "TBA";
-
-                member.setNickname(nickname);
-                member.setRealName(realName);
-                member.setNotes(notes);
-                member.setImgFilePath(imgFilePath);
+                member.setImgFilePath("TBA");
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, member);
@@ -107,5 +91,24 @@ public class MemberEditActivity extends AppCompatActivity {
         nicknameEditText.setText(member.getNickname());
         realNameEditText.setText(member.getRealName());
         notesEditText.setText(member.getNotes());
+    }
+
+    private boolean areInputsValid() {
+        //TODO sort out popup messages so they sound better.
+        //TODO look into removing popup messages and replace with messages that appear next to highlighted edittext that is wrong
+        if (TextUtils.isEmpty(nicknameEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a nickname for the member.", MemberEditActivity.this);
+            return false;
+        }
+
+        String nickname = nicknameEditText.getText().toString();
+
+        if (nickname.equals(member.getNickname())
+                || memberRepository.contains(nickname)) {
+            AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", MemberEditActivity.this);
+            return false;
+        }
+
+        return true;
     }
 }

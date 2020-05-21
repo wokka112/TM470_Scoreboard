@@ -69,19 +69,11 @@ public class MemberAddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(nicknameEditText.getText())) {
-                    AlertDialogHelper.popupWarning("You must enter a nickname for the member.", MemberAddActivity.this);
+                if (!areInputsValid()) {
                     return;
                 }
 
                 String nickname = nicknameEditText.getText().toString();
-
-                if (memberRepository.contains(nickname)) {
-                    AlertDialogHelper.popupWarning("A member with that nickname already exists. " +
-                            "You must enter a unique nickname.", MemberAddActivity.this);
-                    return;
-                }
-
                 String realName = realNameEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 //TODO implement image taking/picking and filepath saving functionality
@@ -95,5 +87,22 @@ public class MemberAddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private boolean areInputsValid() {
+        if (TextUtils.isEmpty(nicknameEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a nickname for the member.", MemberAddActivity.this);
+            return false;
+        }
+
+        String nickname = nicknameEditText.getText().toString();
+
+        if (memberRepository.contains(nickname)) {
+            AlertDialogHelper.popupWarning("A member with that nickname already exists. " +
+                    "You must enter a unique nickname.", MemberAddActivity.this);
+            return false;
+        }
+
+        return true;
     }
 }
