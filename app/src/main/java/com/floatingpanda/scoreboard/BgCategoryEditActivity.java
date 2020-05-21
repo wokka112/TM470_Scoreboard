@@ -82,9 +82,9 @@ public class BgCategoryEditActivity extends AppCompatActivity {
 
         String categoryName = categoryEditText.getText().toString();
 
-        if (categoryName.equals(bgCategory.getCategoryName())
-                || bgCategoryRepository.containsCategoryName(categoryName)) {
-            AlertDialogHelper.popupWarning("You must enter a new, unique name for the category.", BgCategoryEditActivity.this);
+        if (!categoryName.equals(bgCategory.getCategoryName())
+                && bgCategoryRepository.containsCategoryName(categoryName)) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the category.", BgCategoryEditActivity.this);
             return false;
         }
 

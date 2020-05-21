@@ -72,6 +72,9 @@ public class MemberEditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!areInputsValid()) {
+                    return;
+                }
 
                 member.setNickname(nicknameEditText.getText().toString());
                 member.setRealName(realNameEditText.getText().toString());
@@ -103,9 +106,9 @@ public class MemberEditActivity extends AppCompatActivity {
 
         String nickname = nicknameEditText.getText().toString();
 
-        if (nickname.equals(member.getNickname())
-                || memberRepository.contains(nickname)) {
-            AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", MemberEditActivity.this);
+        if (!nickname.equals(member.getNickname())
+                && memberRepository.contains(nickname)) {
+            AlertDialogHelper.popupWarning("You must enter a unique nickname, or the member's original nickname.", MemberEditActivity.this);
             return false;
         }
 

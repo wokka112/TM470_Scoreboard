@@ -3,7 +3,10 @@ package com.floatingpanda.scoreboard;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -19,9 +22,11 @@ import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //TODO add in a clear categories button?
@@ -41,8 +46,10 @@ public class BoardGameAddActivity extends AppCompatActivity {
     private CheckBox competitiveCheckBox, cooperativeCheckBox, solitaireCheckBox;
     private RadioGroup teamOptionsRadioGroup;
     private ChipGroup chipGroup;
-    //private SearchableSpinner searchableSpinner;
     private MultiSpinner multiSpinner;
+    private ArrayAdapter<BgCategory> adapter;
+
+    //private SearchableSpinner searchableSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,15 +82,15 @@ public class BoardGameAddActivity extends AppCompatActivity {
         boardGameAddEditViewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
             @Override
             public void onChanged(@NonNull final List<BgCategory> bgCategories) {
-                boardGameAddEditViewModel.setAllBgCategoriesNotLive(bgCategories);
-                //setSearchableSpinnerList();
-                setupMultiSpinnerList();
+                adapter = new ArrayAdapter<BgCategory>(BoardGameAddActivity.this, android.R.layout.simple_spinner_item, bgCategories);
+                multiSpinner.setAdapter(adapter, false, onSelectedListener);
             }
         });
 
+        /*
         //searchableSpinner.setPositiveButton("Ok");
 
-        /*
+
         searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -162,13 +169,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Sets up the multispinner list for use.
-     */
-    private void setupMultiSpinnerList() {
-        multiSpinner.setAdapter(boardGameAddEditViewModel.getAdapter(this), false, onSelectedListener);
-    }
-
     private boolean areInputsValid() {
         if (TextUtils.isEmpty(bgNameEditText.getText())) {
             AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
@@ -194,6 +194,11 @@ public class BoardGameAddActivity extends AppCompatActivity {
             return false;
         }
 
+        if (TextUtils.isEmpty(minPlayersEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a minimum number of players for the game.", this);
+            return false;
+        }
+
         int minPlayers = 1;
         if (!TextUtils.isEmpty(minPlayersEditText.getText())) {
             minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
@@ -201,6 +206,11 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 AlertDialogHelper.popupWarning("Minimum players must be greater than 0.", this);
                 return false;
             }
+        }
+
+        if (TextUtils.isEmpty(maxPlayersEditText.getText())) {
+            AlertDialogHelper.popupWarning("You must enter a maximum number of players for the game.", this);
+            return false;
         }
 
         if (!TextUtils.isEmpty(maxPlayersEditText.getText())) {
@@ -219,7 +229,33 @@ public class BoardGameAddActivity extends AppCompatActivity {
      * @param bgCategory a BgCategory
      */
     private void addChip(BgCategory bgCategory) {
-        chipGroup.addView(boardGameAddEditViewModel.createChip(multiSpinner, chipGroup, bgCategory));
+        chipGroup.addView(createChip(bgCategory));
+    }
+
+    private Chip createChip(BgCategory bgCategory) {
+        Chip chip = new Chip(chipGroup.getContext());
+        chip.setText((bgCategory.getCategoryName()));
+        chip.setCloseIconVisible(true);
+
+        chip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boardGameAddEditViewModel.removeSelectedBgCategory(bgCategory);
+                chipGroup.removeView(chip);
+
+                //TODO look into making this better? Feels very clunky and long.
+                int position = adapter.getPosition(bgCategory);
+                boolean[] selected = multiSpinner.getSelected();
+                selected[position] = false;
+
+                multiSpinner.setSelected(selected);
+            }
+        });
+
+        //TODO move out of here into the views or somewhere else?
+        boardGameAddEditViewModel.addSelectedBgCategory(bgCategory);
+
+        return chip;
     }
 
     /**
@@ -229,12 +265,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
         chipGroup.removeAllViews();
         boardGameAddEditViewModel.clearSelectedBgCategories();
     }
-
-    /*
-    private void setSearchableSpinnerList() {
-        searchableSpinner.setAdapter(viewModel.getSpinnerListAdapter(this));
-    }
-    */
 
     /**
      * Gets the list of playmodes the board game can be played in - competitive, cooperative,
@@ -269,7 +299,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
             clearChips();
             for (int i = 0; i < selected.length; i++) {
                 if (selected[i] == true) {
-                    BgCategory bgCategory = boardGameAddEditViewModel.getAdapterItem(i);
+                    BgCategory bgCategory = adapter.getItem(i);
                     addChip(bgCategory);
                 }
             }
@@ -278,4 +308,10 @@ public class BoardGameAddActivity extends AppCompatActivity {
             multiSpinner.setAllText("Choose categories");
         }
     };
+
+     /*
+    private void setSearchableSpinnerList() {
+        searchableSpinner.setAdapter(viewModel.getSpinnerListAdapter(this));
+    }
+    */
 }

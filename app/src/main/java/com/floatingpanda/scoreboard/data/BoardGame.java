@@ -31,14 +31,11 @@ public class BoardGame implements Parcelable {
     private String bgName;
 
     //Difficulty must be between 1 - 5 (inclusive).
-    @NonNull
     private int difficulty;
 
-    @Nullable
     @ColumnInfo(name = "min_players")
     private int minPlayers;
 
-    @Nullable
     @ColumnInfo(name = "max_players")
     private int maxPlayers;
 

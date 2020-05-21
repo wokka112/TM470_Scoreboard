@@ -34,8 +34,6 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
     private List<BgCategory> selectedBgCategories;
     private List<BgCategory> allBgCategoriesNotLive;
     private LiveData<List<BgCategory>> allBgCategoriesLiveData;
-    //SpinnerAdapter adapter;
-    private ArrayAdapter<BgCategory> adapter;
 
     public BoardGameAddEditViewModel(Application application) {
         super(application);
@@ -117,62 +115,6 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
 
     public boolean databaseContains(String bgName) {
         return boardGameRepository.contains(bgName);
-    }
-
-    public Chip createChip(MultiSpinner multiSpinner, ChipGroup chipGroup, BgCategory bgCategory) {
-        Chip chip = new Chip(chipGroup.getContext());
-        chip.setText((bgCategory.getCategoryName()));
-        chip.setCloseIconVisible(true);
-
-        chip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeSelectedBgCategory(bgCategory);
-                chipGroup.removeView(chip);
-
-                //TODO look into making this better? Feels very clunky and long.
-                int position = adapter.getPosition(bgCategory);
-                boolean[] selected = multiSpinner.getSelected();
-                selected[position] = false;
-
-                multiSpinner.setSelected(selected);
-            }
-        });
-
-        //TODO move out of here into the views or somewhere else?
-        addSelectedBgCategory(bgCategory);
-
-        return chip;
-    }
-
-    public boolean[] getSelected(List<BgCategory> bgCategories) {
-        boolean[] selected = new boolean[adapter.getCount()];
-
-        for (int i = 0; i < bgCategories.size(); i++) {
-            int position = adapter.getPosition(bgCategories.get(i));
-            selected[position] = true;
-        }
-
-        return selected;
-    }
-
-    private void setupAdapter(Context context) {
-        //TODO select the selected ones to begin with. May need to do in the view...
-        List<BgCategory> bgCategories = new ArrayList<BgCategory>(getAllBgCategoriesNotLive());
-
-        adapter = new ArrayAdapter<BgCategory>(context, android.R.layout.simple_spinner_item, bgCategories);
-    }
-
-    public ArrayAdapter<BgCategory> getAdapter(Context context) {
-        if (adapter == null) {
-            setupAdapter(context);
-        }
-
-        return adapter;
-    }
-
-    public BgCategory getAdapterItem(int position) {
-        return adapter.getItem(position);
     }
 
     //Stuff for the searchable spinner list. This could be useful for when I'm making the board game
