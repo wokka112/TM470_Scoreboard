@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 15, exportSchema = false)
+@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 18, exportSchema = false)
 @TypeConverters({PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -65,24 +65,17 @@ public abstract class AppDatabase extends RoomDatabase {
                 MemberDao memberDao = INSTANCE.memberDao();
                 memberDao.deleteAll();
 
-                Member member = new Member("Bill", "Bill", "Bill");
+                Member member = new Member("Bill", "Bill");
                 memberDao.insert(member);
-                member = new Member("Frank", "Frank", "Frank");
+                member = new Member("Frank",  "Frank");
                 memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
+                member = new Member("Bailey","Bailey");
                 memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
+                member = new Member("Bailey",  "Bailey");
                 memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
+                member = new Member("Bailey", "Bailey");
                 memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
-                memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
-                memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
-                memberDao.insert(member);
-                member = new Member("Bailey", "Bailey", "Bailey");
-                memberDao.insert(member);
+                member = new Member("Bailey",  "Bailey");
 
                 /*
                 BgCategoryDao bgCategoryDao = INSTANCE.bgCategoryDao();

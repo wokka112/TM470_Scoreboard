@@ -26,6 +26,8 @@ public class GroupViewModel extends AndroidViewModel {
      */
     public LiveData<List<Group>> getAllGroups() { return allGroups; }
 
+    public LiveData<Group> getGroupById(int groupId) { return groupRepository.getGroupById(groupId); }
+
     // Precondition: Group with group's name or id should not exist in database.
     // Postcondition: new Group exists in the database.
     /**

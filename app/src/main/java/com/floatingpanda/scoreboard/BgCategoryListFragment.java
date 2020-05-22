@@ -34,6 +34,12 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
 
     private BgCategoryViewModel bgCategoryViewModel;
 
+    //USED FOR TESTING PURPOSES
+    public BgCategoryViewModel getBgCategoryViewModel() {
+        bgCategoryViewModel = new ViewModelProvider(this).get(BgCategoryViewModel.class);
+        return bgCategoryViewModel;
+    }
+
     public BgCategoryListFragment() {
         // Required empty public constructor
     }

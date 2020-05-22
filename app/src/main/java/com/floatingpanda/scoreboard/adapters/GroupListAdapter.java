@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
 
@@ -17,9 +18,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
 
     private final LayoutInflater inflater;
     private List<Group> groups;
+    private DetailAdapterInterface listener;
 
-    public GroupListAdapter(Context context) {
+    public GroupListAdapter(Context context, DetailAdapterInterface listener) {
         inflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @Override
@@ -60,6 +63,15 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
             groupNameItemView = itemView.findViewById(R.id.group_name_output);
             membersItemView = itemView.findViewById(R.id.group_members_output);
             recordsItemView = itemView.findViewById(R.id.group_records_output);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    Group group = groups.get(position);
+                    listener.viewDetails(group);
+                }
+            });
         }
     }
 }

@@ -13,7 +13,7 @@ public class GroupRepository {
 
     public GroupRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
-        GroupDao groupDao = db.groupDao();
+        groupDao = db.groupDao();
         allGroups = groupDao.getAll();
     }
 
@@ -23,6 +23,8 @@ public class GroupRepository {
     public LiveData<List<Group>> getAll() {
         return allGroups;
     }
+
+    public LiveData<Group> getGroupById(int groupId) { return groupDao.findById(groupId); }
 
     /**
      * Inserts a new Group into the database. If the Group already exists in the database, no new

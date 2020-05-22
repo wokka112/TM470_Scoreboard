@@ -32,22 +32,6 @@
         android:layout_marginLeft="40dp"/>
 
     <TextView
-        android:id="@+id/memberact_othername_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_header"
-        app:layout_constraintTop_toBottomOf="@id/memberact_nickname_header"
-        android:layout_marginTop="8dp"
-        android:text="Other Names:" />
-
-    <TextView
-        android:id="@+id/memberact_othername_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_output"
-        app:layout_constraintTop_toTopOf="@id/memberact_othername_header"/>
-
-    <TextView
         android:id="@+id/memberact_notes_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -9,9 +9,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
+import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 
 //TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for add)
 // then edit up arrow to it.
@@ -22,7 +24,7 @@ public class BgCategoryAddActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
-    private BgCategoryRepository bgCategoryRepository;
+    private BgCategoryViewModel bgCategoryViewModel;
     private EditText categoryEditText;
 
     @Override
@@ -30,7 +32,7 @@ public class BgCategoryAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_bg_category);
 
-        bgCategoryRepository = new BgCategoryRepository(getApplication());
+        bgCategoryViewModel = new ViewModelProvider(this).get(BgCategoryViewModel.class);
 
         categoryEditText = findViewById(R.id.add_category_edittext);
 
@@ -39,11 +41,11 @@ public class BgCategoryAddActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (!areInputsValid()) {
+                String categoryName = categoryEditText.getText().toString();
+                if (!bgCategoryViewModel.addActivityInputsValid(BgCategoryAddActivity.this, categoryName)) {
                     return;
                 }
 
-                String categoryName = categoryEditText.getText().toString();
                 BgCategory bgCategory = new BgCategory(categoryName);
 
                 Intent replyIntent = new Intent();
@@ -59,24 +61,5 @@ public class BgCategoryAddActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private boolean areInputsValid() {
-        //TODO remove popup warnings and instead direct people to the edit text in error and
-        // inform them what they need to do to fix it?
-        if (TextUtils.isEmpty(categoryEditText.getText())) {
-            AlertDialogHelper.popupWarning("You must enter a name for the category.", BgCategoryAddActivity.this);
-            return false;
-        }
-
-        String categoryName = categoryEditText.getText().toString();
-
-        if (bgCategoryRepository.containsCategoryName(categoryName)) {
-            AlertDialogHelper.popupWarning("A category with that name already exists. " +
-                    "You must enter a unique category name.", BgCategoryAddActivity.this);
-            return false;
-        }
-
-        return true;
     }
 }

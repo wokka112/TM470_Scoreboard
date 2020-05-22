@@ -14,6 +14,9 @@ public interface GroupDao {
     @Query("SELECT * FROM groups")
     LiveData<List<Group>> getAll();
 
+    @Query("SELECT * FROM groups WHERE group_id LIKE :groupId")
+    LiveData<Group> findById(int groupId);
+
     @Query("SELECT * FROM groups WHERE group_name LIKE :groupName")
     LiveData<Group> findByName(String groupName);
 

@@ -1,11 +1,15 @@
 package com.floatingpanda.scoreboard.viewmodels;
 
+import android.app.Activity;
 import android.app.Application;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.floatingpanda.scoreboard.AlertDialogHelper;
+import com.floatingpanda.scoreboard.MemberEditActivity;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.MemberRepository;
 
@@ -86,4 +90,25 @@ public class MemberViewModel extends AndroidViewModel {
      * @param member a Member that exists in the database
      */
     public void deleteMember(Member member) { memberRepository.delete(member); }
+
+    public boolean addActivityInputsValid(Activity activity, String nickname) {
+        return editActivityInputsValid(activity, "", nickname);
+    }
+
+    public boolean editActivityInputsValid(Activity activity, String originalNickname, String nickname) {
+        //TODO sort out popup messages so they sound better.
+        //TODO look into removing popup messages and replace with messages that appear next to highlighted edittext that is wrong
+        if (nickname.isEmpty()) {
+            AlertDialogHelper.popupWarning("You must enter a nickname for the member.", activity);
+            return false;
+        }
+
+        if (!nickname.equals(originalNickname)
+                && memberRepository.contains(nickname)) {
+            AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", activity);
+            return false;
+        }
+
+        return true;
+    }
 }

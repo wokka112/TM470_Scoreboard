@@ -1,7 +1,9 @@
 package com.floatingpanda.scoreboard.viewmodels;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -9,6 +11,7 @@ import android.widget.ArrayAdapter;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.floatingpanda.scoreboard.AlertDialogHelper;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
@@ -115,6 +118,63 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
 
     public boolean databaseContains(String bgName) {
         return boardGameRepository.contains(bgName);
+    }
+
+    public boolean addActivityInputsValid(Activity activity, String bgName, String difficultyString, String minPlayersString,
+                                          String maxPlayersString) {
+        return editActivityInputsValid(activity, "", bgName, difficultyString, minPlayersString, maxPlayersString);
+    }
+
+    public boolean editActivityInputsValid(Activity activity, String originalBgName, String bgName, String difficultyString, String minPlayersString,
+                                            String maxPlayersString) {
+        if (bgName.isEmpty()) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", activity);
+            return false;
+        }
+
+        if (!bgName.equals(originalBgName)
+                && boardGameRepository.contains(bgName)) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", activity);
+            return false;
+        }
+
+        if (difficultyString.isEmpty()) {
+            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", activity);
+            return false;
+        }
+
+        int difficulty = Integer.parseInt(difficultyString);
+
+        if (difficulty < 1 || difficulty >5) {
+            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", activity);
+            return false;
+        }
+
+        if (minPlayersString.isEmpty()) {
+            AlertDialogHelper.popupWarning("You must enter a minimum number of players for the game.", activity);
+            return false;
+        }
+
+        int minPlayers = Integer.parseInt(minPlayersString);
+
+        if (minPlayers < 0) {
+            AlertDialogHelper.popupWarning("Minimum players must be greater than 0.", activity);
+            return false;
+        }
+
+        if (maxPlayersString.isEmpty()) {
+            AlertDialogHelper.popupWarning("You must enter a maximum number of players for the game.", activity);
+            return false;
+        }
+
+        int maxPlayers = Integer.parseInt(maxPlayersString);
+
+        if (maxPlayers < minPlayers || maxPlayers < 0) {
+            AlertDialogHelper.popupWarning("Maximum players must be greater than 0 and greater than minimum players.", activity);
+            return false;
+        }
+
+        return true;
     }
 
     //Stuff for the searchable spinner list. This could be useful for when I'm making the board game

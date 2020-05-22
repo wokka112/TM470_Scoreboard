@@ -142,14 +142,19 @@ public class BoardGameAddActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (!areInputsValid()) {
+                String bgName = bgNameEditText.getText().toString();
+                String difficultyString = difficultyEditText.getText().toString();
+                String minPlayersString = minPlayersEditText.getText().toString();
+                String maxPlayersString = maxPlayersEditText.getText().toString();
+
+                if (!boardGameAddEditViewModel.addActivityInputsValid(BoardGameAddActivity.this, bgName, difficultyString,
+                        minPlayersString, maxPlayersString)) {
                     return;
                 }
 
-                String bgName = bgNameEditText.getText().toString();
-                int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
-                int minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
-                int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
+                int difficulty = Integer.parseInt(difficultyString);
+                int minPlayers = Integer.parseInt(minPlayersString);
+                int maxPlayers = Integer.parseInt(maxPlayersString);
                 BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
@@ -167,61 +172,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    private boolean areInputsValid() {
-        if (TextUtils.isEmpty(bgNameEditText.getText())) {
-            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
-            return false;
-        }
-
-        if (TextUtils.isEmpty(difficultyEditText.getText().toString())) {
-            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", this);
-            return false;
-        }
-
-        String bgName = bgNameEditText.getText().toString();
-
-        if (boardGameAddEditViewModel.databaseContains(bgName)) {
-            AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", this);
-            return false;
-        }
-
-        int difficulty = Integer.parseInt(difficultyEditText.getText().toString());
-
-        if (difficulty < 1 || difficulty > 5){
-            AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", this);
-            return false;
-        }
-
-        if (TextUtils.isEmpty(minPlayersEditText.getText())) {
-            AlertDialogHelper.popupWarning("You must enter a minimum number of players for the game.", this);
-            return false;
-        }
-
-        int minPlayers = 1;
-        if (!TextUtils.isEmpty(minPlayersEditText.getText())) {
-            minPlayers = Integer.parseInt(minPlayersEditText.getText().toString());
-            if (minPlayers < 0) {
-                AlertDialogHelper.popupWarning("Minimum players must be greater than 0.", this);
-                return false;
-            }
-        }
-
-        if (TextUtils.isEmpty(maxPlayersEditText.getText())) {
-            AlertDialogHelper.popupWarning("You must enter a maximum number of players for the game.", this);
-            return false;
-        }
-
-        if (!TextUtils.isEmpty(maxPlayersEditText.getText())) {
-            int maxPlayers = Integer.parseInt(maxPlayersEditText.getText().toString());
-            if (maxPlayers < 0 || maxPlayers < minPlayers) {
-                AlertDialogHelper.popupWarning("Maximum players must be greater than 0 and greater than minimum players.", this);
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**

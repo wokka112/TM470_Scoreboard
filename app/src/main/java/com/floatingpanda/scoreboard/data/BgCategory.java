@@ -33,6 +33,12 @@ public class BgCategory implements Parcelable {
     @NonNull
     public String categoryName;
 
+    @Ignore
+    public BgCategory(int id, String categoryName) {
+        this.id = id;
+        this.categoryName = categoryName;
+    }
+
     /**
      * Simple constructor for bg categories that takes a name for the category.
      *
@@ -41,8 +47,13 @@ public class BgCategory implements Parcelable {
      * @param categoryName the name of the category
      */
     public BgCategory(String categoryName) {
-        this.id = 0;
-        this.categoryName = categoryName;
+        this(0, categoryName);
+    }
+
+    @Ignore
+    public BgCategory(BgCategory bgCategory) {
+        this.id = bgCategory.getId();
+        this.categoryName = bgCategory.getCategoryName();
     }
 
     @Ignore

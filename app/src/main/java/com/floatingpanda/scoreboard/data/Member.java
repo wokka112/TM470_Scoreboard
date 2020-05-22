@@ -11,8 +11,6 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-//TODO remove realName from Member. It adds personal data unnecessarily.
-
 /**
  * Represents a member of board game groups. The member may belong to zero, one or more groups.
  */
@@ -29,28 +27,22 @@ public class Member implements Parcelable {
     private String nickname;
 
     @Nullable
-    @ColumnInfo(name = "real_name")
-    private String realName;
-
-    @Nullable
     private String notes;
 
     @Nullable
     @ColumnInfo(name = "img_file_path")
     private String imgFilePath;
 
-    public Member(@NonNull String nickname, String realName, String notes) {
+    public Member(@NonNull String nickname, String notes) {
         this.id = 0;
         this.nickname = nickname;
-        this.realName = realName;
         this.notes = notes;
     }
 
     @Ignore
-    public Member(@NonNull String nickname, String realName, String notes, String imgFilePath) {
+    public Member(@NonNull String nickname, String notes, String imgFilePath) {
         this.id = 0;
         this.nickname = nickname;
-        this.realName = realName;
         this.notes = notes;
         this.imgFilePath = imgFilePath;
     }
@@ -59,7 +51,6 @@ public class Member implements Parcelable {
     public Member(Parcel source) {
         this.id = source.readInt();
         this.nickname = source.readString();
-        this.realName = source.readString();
         this.notes = source.readString();
         this.imgFilePath = source.readString();
     }
@@ -68,8 +59,6 @@ public class Member implements Parcelable {
     public void setId(int id) { this.id = id; }
     public String getNickname() { return this.nickname; }
     public void setNickname(String nickname) { this.nickname = nickname; }
-    public String getRealName() { return this.realName; }
-    public void setRealName(String realName) { this.realName = realName; }
     public String getNotes() { return this.notes; }
     public void setNotes(String notes) { this.notes = notes; }
     public String getImgFilePath() { return this.imgFilePath; }
@@ -84,7 +73,6 @@ public class Member implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeString(nickname);
-        dest.writeString(realName);
         dest.writeString(notes);
         dest.writeString(imgFilePath);
     }
@@ -102,7 +90,7 @@ public class Member implements Parcelable {
     };
 
     /**
-     * A member is equal to another member if they have the same nickname and realname.
+     * A member is equal to another member if they have the same nickname.
      * @param obj
      * @return
      */
@@ -114,7 +102,6 @@ public class Member implements Parcelable {
 
         Member other = (Member) obj;
 
-        return (other.getNickname().equals(this.getNickname())
-                && other.getRealName().equals(this.getRealName()));
+        return (other.getNickname().equals(this.getNickname()));
     }
 }

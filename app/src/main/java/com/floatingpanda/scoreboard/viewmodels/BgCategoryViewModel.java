@@ -1,10 +1,15 @@
 package com.floatingpanda.scoreboard.viewmodels;
 
+import android.app.Activity;
 import android.app.Application;
+import android.text.TextUtils;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.floatingpanda.scoreboard.AlertDialogHelper;
+import com.floatingpanda.scoreboard.BgCategoryAddActivity;
+import com.floatingpanda.scoreboard.BgCategoryEditActivity;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 
@@ -65,4 +70,26 @@ public class BgCategoryViewModel extends AndroidViewModel {
      * @param bgCategory a BgCategory that exists in the database
      */
     public void deleteBgCategory(BgCategory bgCategory) { bgCategoryRepository.delete(bgCategory); }
+
+    public boolean addActivityInputsValid(Activity activity, String categoryName) {
+        return editActivityInputsValid(activity, "", categoryName);
+    }
+
+    public boolean editActivityInputsValid(Activity activity, String originalCategoryName, String categoryName) {
+        //TODO remove popup warnings and instead direct people to the edit text in error and
+        // inform them what they need to do to fix it?
+        if (categoryName.isEmpty()) {
+            AlertDialogHelper.popupWarning("You must enter a name for the category.", activity);
+            return false;
+        }
+
+        // Do not return false if the category name has not been edited.
+        if (!categoryName.equals(originalCategoryName)
+                && bgCategoryRepository.containsCategoryName(categoryName)) {
+            AlertDialogHelper.popupWarning("You must enter a unique name for the category.", activity);
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -1,5 +1,7 @@
 package com.floatingpanda.scoreboard;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +17,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.floatingpanda.scoreboard.adapters.GroupListAdapter;
 import com.floatingpanda.scoreboard.adapters.MemberListAdapter;
 import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 import java.util.List;
 
-public class GroupListFragment extends Fragment {
+//TODO add in add functionality
+
+public class GroupListFragment extends Fragment implements DetailAdapterInterface {
 
     private GroupViewModel groupViewModel;
 
@@ -34,7 +39,7 @@ public class GroupListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.recyclerview_test, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
-        final GroupListAdapter adapter = new GroupListAdapter(getActivity());
+        final GroupListAdapter adapter = new GroupListAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -48,5 +53,14 @@ public class GroupListFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void viewDetails(Object object) {
+        Group group = (Group) object;
+
+        Intent detailsIntent = new Intent(getContext(), GroupActivity.class);
+        detailsIntent.putExtra("GROUP", group);
+        startActivity(detailsIntent);
     }
 }

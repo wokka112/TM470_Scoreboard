@@ -9,21 +9,23 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.MemberRepository;
+import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 public class MemberEditActivity extends AppCompatActivity {
 
     //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
-    private MemberRepository memberRepository;
+    private MemberViewModel memberViewModel;
     private Member member;
 
     //TODO add imageview and image setting functionality.
     //TODO remove cancelButton and replace with an up arrow?
-    private EditText nicknameEditText, realNameEditText, notesEditText;
+    private EditText nicknameEditText, notesEditText;
     private Button browseButton, cameraButton, cancelButton, saveButton;
 
     @Override
@@ -31,14 +33,12 @@ public class MemberEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_member);
 
-        memberRepository = new MemberRepository(getApplication());
-
-        member = (Member) getIntent().getExtras().get("MEMBER");
+        memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
 
         nicknameEditText = findViewById(R.id.memberadd_nickname_edittext);
-        realNameEditText = findViewById(R.id.memberadd_realname_edittext);
         notesEditText = findViewById(R.id.memberadd_notes_edittext);
 
+        member = (Member) getIntent().getExtras().get("MEMBER");
         setViews(member);
 
         browseButton = findViewById(R.id.memberadd_button_browse);
@@ -72,12 +72,13 @@ public class MemberEditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!areInputsValid()) {
+                String nickname = nicknameEditText.getText().toString();
+
+                if(!memberViewModel.editActivityInputsValid(MemberEditActivity.this, member.getNickname(), nickname)) {
                     return;
                 }
 
                 member.setNickname(nicknameEditText.getText().toString());
-                member.setRealName(realNameEditText.getText().toString());
                 member.setNotes(notesEditText.getText().toString());
                 //TODO implement image taking/picking and filepath saving functionality
                 member.setImgFilePath("TBA");
@@ -92,26 +93,6 @@ public class MemberEditActivity extends AppCompatActivity {
 
     private void setViews(Member member) {
         nicknameEditText.setText(member.getNickname());
-        realNameEditText.setText(member.getRealName());
         notesEditText.setText(member.getNotes());
-    }
-
-    private boolean areInputsValid() {
-        //TODO sort out popup messages so they sound better.
-        //TODO look into removing popup messages and replace with messages that appear next to highlighted edittext that is wrong
-        if (TextUtils.isEmpty(nicknameEditText.getText())) {
-            AlertDialogHelper.popupWarning("You must enter a nickname for the member.", MemberEditActivity.this);
-            return false;
-        }
-
-        String nickname = nicknameEditText.getText().toString();
-
-        if (!nickname.equals(member.getNickname())
-                && memberRepository.contains(nickname)) {
-            AlertDialogHelper.popupWarning("You must enter a unique nickname, or the member's original nickname.", MemberEditActivity.this);
-            return false;
-        }
-
-        return true;
     }
 }

@@ -30,7 +30,7 @@ public class MemberActivity extends AppCompatActivity {
     private MemberViewModel memberViewModel;
     private Member member;
 
-    private TextView nicknameTextView, realNameTextView, notesTextView, groupsTextView, viewGroupsLink,
+    private TextView nicknameTextView, notesTextView, groupsTextView, viewGroupsLink,
             bestGameTextView, worstGameTextView;
     private ImageView imageView;
 
@@ -41,7 +41,6 @@ public class MemberActivity extends AppCompatActivity {
         memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
 
         nicknameTextView = findViewById(R.id.memberact_nickname_output);
-        realNameTextView = findViewById(R.id.memberact_othername_output);
         notesTextView = findViewById(R.id.memberact_notes_output);
         //TODO implement groupcount in member and functionality to work it out.
         groupsTextView = findViewById(R.id.memberact_groups_output);
@@ -103,7 +102,6 @@ public class MemberActivity extends AppCompatActivity {
 
         Log.w("MemberActivity.java", "Setting details: " + member);
         nicknameTextView.setText(member.getNickname());
-        realNameTextView.setText(member.getRealName());
         notesTextView.setText(member.getNotes());
 
         //TODO implement groupcount in member and functionality to work it out.

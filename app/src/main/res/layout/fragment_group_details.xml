@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="8dp">
+
+        <Button
+            android:id="@+id/group_fragment_edit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
+            android:text="Edit"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_notes_output" />
+
+        <Button
+            android:id="@+id/group_fragment_delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="Delete"
+            app:layout_constraintRight_toLeftOf="@id/group_fragment_edit_button"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_edit_button" />
+
+        <Button
+            android:id="@+id/group_fragment_reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:text="Reset"
+            app:layout_constraintRight_toLeftOf="@id/group_fragment_delete_button"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_edit_button" />
+
+        <TextView
+            android:id="@+id/group_fragment_name_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="8dp"
+            android:text="Name: "
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/group_fragment_name_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_name_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_date_created_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Date Created:"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_name_header"
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_name_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_date_created_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_date_created_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_games_played_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Games Played:"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_date_created_header"
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_date_created_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_games_played_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toRightOf="@id/group_fragment_games_played_header"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_games_played_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_member_count_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Members:"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_header"
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_games_played_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_member_count_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_member_count_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_description_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Description:"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_member_count_header"
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_member_count_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_description_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_description_header" />
+
+        <TextView
+            android:id="@+id/group_fragment_notes_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Notes:"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_description_header"
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_description_output" />
+
+        <TextView
+            android:id="@+id/group_fragment_notes_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_notes_header" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
