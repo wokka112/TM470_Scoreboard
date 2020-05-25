@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -33,4 +34,16 @@ public class AssignedCategory {
     public void setBgId(int id) { this.bgId = id; }
     public int getCategoryId() { return this.categoryId; }
     public void setCategoryId(int id) { this.categoryId = id; }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        AssignedCategory assignedCategory = (AssignedCategory) obj;
+
+        return (assignedCategory.getBgId() == this.getBgId()
+                && assignedCategory.getCategoryId() == this.getCategoryId());
+    }
 }

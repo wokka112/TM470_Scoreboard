@@ -22,5 +22,6 @@ public class BoardGameWithBgCategories {
 
         return this.boardGame;
     }
+
     public List<BgCategory> getBgCategories() { return this.bgCategories; }
 }

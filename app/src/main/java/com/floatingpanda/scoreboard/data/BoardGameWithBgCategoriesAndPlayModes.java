@@ -10,8 +10,8 @@ public class BoardGameWithBgCategoriesAndPlayModes {
     @Embedded
     public BoardGameWithBgCategories BgAndBgCategories;
     @Relation(
-            parentColumn = "bg_name",
-            entityColumn = "parent_bg_name"
+            parentColumn = "bg_id",
+            entityColumn = "bg_id"
     )
     public List<PlayMode> playModes;
 

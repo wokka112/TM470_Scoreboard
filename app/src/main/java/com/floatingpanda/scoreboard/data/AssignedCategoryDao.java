@@ -14,17 +14,13 @@ public interface AssignedCategoryDao {
     @Query("SELECT * FROM assigned_categories")
     LiveData<List<AssignedCategory>> getAll();
 
+    //Used for testing purposes.
     @Query("SELECT * FROM assigned_categories WHERE bg_id LIKE :bgId")
-    List<AssignedCategory> findByBgId(int bgId);
+    List<AssignedCategory> findNonLiveDataByBgId(int bgId);
 
+    //Used for testing purposes
     @Query("SELECT * FROM assigned_categories WHERE category_id like :categoryId")
-    List<AssignedCategory> findByCategoryId(int categoryId);
-
-    /*
-    @Query("SELECT * FROM assigned_categories WHERE bg_name LIKE :bgName")
-    LiveData<BgCategory> findByName(String bgName);
-
-     */
+    List<AssignedCategory> findNonLiveDataByCategoryId(int categoryId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(AssignedCategory... assignedCategories);

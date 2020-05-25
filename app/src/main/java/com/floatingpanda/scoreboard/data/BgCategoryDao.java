@@ -24,6 +24,9 @@ public interface BgCategoryDao {
     @Query("SELECT * FROM bg_categories")
     List<BgCategory> getAllNonLive();
 
+    @Query("SELECT * FROM bg_categories WHERE category_id LIKE :categoryId")
+    LiveData<BgCategory> findLiveDataById(int categoryId);
+
     /**
      * @param categoryName the name of a category
      * @return live data bg category from database

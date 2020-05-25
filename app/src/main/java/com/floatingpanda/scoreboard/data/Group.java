@@ -38,6 +38,15 @@ public class Group implements Parcelable {
     //TODO make it so the group details view has records and winner lists that expand when tapped,
     // rather than leading you to separate activities just to view the record or winner list details.
 
+    @Ignore
+    public Group(Group group) {
+        this.id = group.getId();
+        this.groupName = group.getGroupName();
+        this.notes = group.getNotes();
+        this.description = group.getDescription();
+        this.imgFilePath = group.getImgFilePath();
+    }
+
     public Group(String groupName, String notes, String description) {
         this.id = 0;
         this.groupName = groupName;
@@ -81,13 +90,25 @@ public class Group implements Parcelable {
 
     //TODO implement proper functionality
     //TODO implement a Date created element in the database for this entity
+    // need to add this in
     public int getDateCreated() {
         return 24021995;
     }
 
-    //TODO implement proper functionality
+    //TODO implement proper functionality. Maybe move this elsewhere?
     public int getMembersCount() {
         return 30;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        Group group = (Group) obj;
+
+        return (group.getGroupName().equals(this.getGroupName()));
     }
 
     @Override

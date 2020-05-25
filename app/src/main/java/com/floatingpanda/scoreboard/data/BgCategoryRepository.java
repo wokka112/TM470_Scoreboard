@@ -23,7 +23,7 @@ public class BgCategoryRepository {
         allBgCategories = bgCategoryDao.getAllLive();
 
         //Used for testing
-        assignedCategoryDao = db.assignedCategoriesDao();
+        assignedCategoryDao = db.assignedCategoryDao();
     }
 
     /**
@@ -88,7 +88,7 @@ public class BgCategoryRepository {
     public void delete(BgCategory bgCategory) {
         AppDatabase.getExecutorService().execute(() -> {
             //TODO remove logs, they are for testing.
-            List<AssignedCategory> assignedCategories = assignedCategoryDao.findByCategoryId(bgCategory.getId());
+            List<AssignedCategory> assignedCategories = assignedCategoryDao.findNonLiveDataByCategoryId(bgCategory.getId());
 
             for (int i = 0; i < assignedCategories.size(); i++) {
                 Log.w("BGCatRepos.java", "1 Bg: " + bgCategory.getId() + ", AC: " + assignedCategories.get(i).getBgId());
@@ -96,7 +96,7 @@ public class BgCategoryRepository {
 
             bgCategoryDao.delete(bgCategory);
 
-            assignedCategories = assignedCategoryDao.findByCategoryId(bgCategory.getId());
+            assignedCategories = assignedCategoryDao.findNonLiveDataByCategoryId(bgCategory.getId());
 
             if (assignedCategories.isEmpty()) {
                 Log.w("BGCatRepos.java", "2 Empty");

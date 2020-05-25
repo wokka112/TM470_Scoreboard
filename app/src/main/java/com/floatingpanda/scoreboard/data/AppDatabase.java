@@ -26,7 +26,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract BgCategoryDao bgCategoryDao();
     public abstract GroupDao groupDao();
     public abstract BoardGameDao boardGameDao();
-    public abstract AssignedCategoryDao assignedCategoriesDao();
+    public abstract AssignedCategoryDao assignedCategoryDao();
     public abstract PlayModeDao playModeDao();
 
     private static volatile AppDatabase INSTANCE;
@@ -112,7 +112,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 groupDao.insert(group);
 
                 BoardGameDao bgDao = INSTANCE.boardGameDao();
-                AssignedCategoryDao acDao = INSTANCE.assignedCategoriesDao();
+                AssignedCategoryDao acDao = INSTANCE.assignedCategoryDao();
                 BgCategoryDao boardGameCategoryDao = INSTANCE.bgCategoryDao();
 
                 BgCategory strategy = new BgCategory("Strategy");
@@ -187,7 +187,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 PlayModeDao playModeDao = INSTANCE.playModeDao();
 
                 bgDao.insert(bg);
-                PlayMode playMode = new PlayMode(bg.getBgName(), bg.getPlayModes().get(0));
+                PlayMode playMode = new PlayMode(bg.getId(), bg.getPlayModes().get(0));
                 playModeDao.insert(playMode);
 
                 bg = bgDao.findNonLiveDataByName(bg.getBgName());
@@ -198,9 +198,9 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.w("Database.java", "Inserted bg");
 
                 bgDao.insert(bg1);
-                playMode = new PlayMode(bg1.getBgName(), bg1.getPlayModes().get(0));
+                playMode = new PlayMode(bg1.getId(), bg1.getPlayModes().get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg1.getBgName(), bg1.getPlayModes().get(1));
+                playMode = new PlayMode(bg1.getId(), bg1.getPlayModes().get(1));
                 playModeDao.insert(playMode);
 
                 bg1 = bgDao.findNonLiveDataByName(bg1.getBgName());
@@ -209,9 +209,9 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.w("Database.java", "Inserted bg1");
 
                 bgDao.insert(bg2);
-                playMode = new PlayMode(bg2.getBgName(), bg2.getPlayModes().get(0));
+                playMode = new PlayMode(bg2.getId(), bg2.getPlayModes().get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg2.getBgName(), bg2.getPlayModes().get(1));
+                playMode = new PlayMode(bg2.getId(), bg2.getPlayModes().get(1));
                 playModeDao.insert(playMode);
 
                 bg2 = bgDao.findNonLiveDataByName(bg2.getBgName());
@@ -219,22 +219,22 @@ public abstract class AppDatabase extends RoomDatabase {
                 Log.w("Database.java", "Inserted bg2");
 
                 bgDao.insert(bg3);
-                playMode = new PlayMode(bg3.getBgName(), bg3.getPlayModes().get(0));
+                playMode = new PlayMode(bg3.getId(), bg3.getPlayModes().get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg3.getBgName(), bg3.getPlayModes().get(1));
+                playMode = new PlayMode(bg3.getId(), bg3.getPlayModes().get(1));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg3.getBgName(), bg3.getPlayModes().get(2));
+                playMode = new PlayMode(bg3.getId(), bg3.getPlayModes().get(2));
                 playModeDao.insert(playMode);
 
                 bg3 = bgDao.findNonLiveDataByName(bg3.getBgName());
                 acs.add(new AssignedCategory(bg3.getId(), strategy.getId()));
                 Log.w("Database.java", "Inserted bg3");
                 bgDao.insert(bg4);
-                playMode = new PlayMode(bg4.getBgName(), bg4.getPlayModes().get(0));
+                playMode = new PlayMode(bg4.getId(), bg4.getPlayModes().get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg4.getBgName(), bg4.getPlayModes().get(1));
+                playMode = new PlayMode(bg4.getId(), bg4.getPlayModes().get(1));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg4.getBgName(), bg4.getPlayModes().get(2));
+                playMode = new PlayMode(bg4.getId(), bg4.getPlayModes().get(2));
                 playModeDao.insert(playMode);
 
                 bg4 = bgDao.findNonLiveDataByName(bg4.getBgName());
@@ -243,11 +243,11 @@ public abstract class AppDatabase extends RoomDatabase {
                 acDao.insertAll(acs.toArray(new AssignedCategory[acs.size()]));
 
                 bgDao.insert(bg5);
-                playMode = new PlayMode(bg5.getBgName(), bg5.getPlayModes().get(0));
+                playMode = new PlayMode(bg5.getId(), bg5.getPlayModes().get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg5.getBgName(), bg5.getPlayModes().get(1));
+                playMode = new PlayMode(bg5.getId(), bg5.getPlayModes().get(1));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg5.getBgName(), bg5.getPlayModes().get(2));
+                playMode = new PlayMode(bg5.getId(), bg5.getPlayModes().get(2));
                 playModeDao.insert(playMode);
             });
         }

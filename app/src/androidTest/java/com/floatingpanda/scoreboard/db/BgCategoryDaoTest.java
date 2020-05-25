@@ -3,6 +3,7 @@ package com.floatingpanda.scoreboard.db;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -57,14 +58,21 @@ public class BgCategoryDaoTest {
     }
 
     @Test
-    public void getBgCategoriesWhenNoBgCategoriesInserted() throws InterruptedException {
+    public void getLiveBgCategoriesWhenNoBgCategoriesInserted() throws InterruptedException {
         List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
 
         assertTrue(bgCategories.isEmpty());
     }
 
     @Test
-    public void getBgCategoriesWhenBgCategoriesInserted() throws InterruptedException {
+    public void getNonLiveBgCategoriesWhenNoBgCategoriesInserted() {
+        List<BgCategory> bgCategories = bgCategoryDao.getAllNonLive();
+
+        assertTrue(bgCategories.isEmpty());
+    }
+
+    @Test
+    public void getLiveBgCategoriesWhenBgCategoriesInserted() throws InterruptedException {
         bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
 
         List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
@@ -74,13 +82,62 @@ public class BgCategoryDaoTest {
     }
 
     @Test
-    public void getBgCategoryByName() throws InterruptedException {
+    public void getNonLiveBgCategoriesWhenBgCategoriesInserted() {
         bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
 
-        BgCategory bgCategory = LiveDataTestUtil.getValue(bgCategoryDao.findLiveDataByName(TestData.BG_CATEGORY_1.getCategoryName()));
+        List<BgCategory> bgCategories = bgCategoryDao.getAllNonLive();
 
-        assertThat(bgCategory.getId(), is(TestData.BG_CATEGORY_1.getId()));
-        assertThat(bgCategory.getCategoryName(), is(TestData.BG_CATEGORY_1.getCategoryName()));
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(TestData.BG_CATEGORIES.size()));
+    }
+
+    @Test
+    public void getLiveBgCategoryWhenSpecificBgCategoryInserted() throws InterruptedException {
+        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+
+        List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
+
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+    }
+
+    @Test
+    public void getNonLiveBgCategoryWhenSpecificBgCategoryInserted() {
+        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+
+        List<BgCategory> bgCategories = bgCategoryDao.getAllNonLive();
+
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+    }
+
+    @Test
+    public void getLiveBgCategoryById() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+
+        BgCategory bgCategory = LiveDataTestUtil.getValue(bgCategoryDao.findLiveDataById(TestData.BG_CATEGORY_1.getId()));
+
+        assertThat(bgCategory, is(TestData.BG_CATEGORY_1));
+    }
+
+    @Test
+    public void getLiveBgCategoryByCategoryName() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+
+        BgCategory bgCategory = LiveDataTestUtil.getValue(bgCategoryDao.findLiveDataByName(TestData.BG_CATEGORY_2.getCategoryName()));
+
+        assertThat(bgCategory, is(TestData.BG_CATEGORY_2));
+    }
+
+    @Test
+    public void getNonLiveBgCategoryByCategoryName() {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+
+        BgCategory bgCategory = bgCategoryDao.findNonLiveDataByName(TestData.BG_CATEGORY_2.getCategoryName());
+
+        assertThat(bgCategory, is(TestData.BG_CATEGORY_2));
     }
 
     @Test
@@ -99,36 +156,53 @@ public class BgCategoryDaoTest {
     }
 
     @Test
-    public void insertAndDeleteSpecificBgCategory() throws InterruptedException {
-        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+    public void insertAllBgCategoriesAndDeleteSpecificBgCategory() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
 
         List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
 
         assertFalse(bgCategories.isEmpty());
-        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.size(), is(TestData.BG_CATEGORIES.size()));
 
-        bgCategoryDao.delete(TestData.BG_CATEGORY_1);
+        BgCategory bgCategory = LiveDataTestUtil.getValue(bgCategoryDao.findLiveDataById(TestData.BG_CATEGORY_2.getId()));
+        assertTrue(bgCategory != null);
+
+        bgCategoryDao.delete(TestData.BG_CATEGORY_2);
 
         bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
 
-        assertTrue(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(TestData.BG_CATEGORIES.size() - 1));
+
+        bgCategory = LiveDataTestUtil.getValue(bgCategoryDao.findLiveDataById(TestData.BG_CATEGORY_2.getId()));
+        assertNull(bgCategory);
     }
 
     @Test
-    public void insertAndUpdateBgCategory() throws InterruptedException {
-        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+    public void insertAllBgCategoriesAndUpdateSpecificBgCategory() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
 
-        BgCategory bgCategory = bgCategoryDao.findNonLiveDataByName(TestData.BG_CATEGORY_1.getCategoryName());
-        assertThat(bgCategory, is(TestData.BG_CATEGORY_1));
+        BgCategory bgCategory = LiveDataTestUtil.getValue(bgCategoryDao.findLiveDataById(TestData.BG_CATEGORY_2.getId()));
+        assertThat(bgCategory, is(TestData.BG_CATEGORY_2));
 
-        bgCategory.setCategoryName("Changed");
+        String newCategoryName = "Changed";
+
+        bgCategory.setCategoryName(newCategoryName);
         bgCategoryDao.update(bgCategory);
 
-        BgCategory noBgCategory = bgCategoryDao.findNonLiveDataByName(TestData.BG_CATEGORY_1.getCategoryName());
-        assertNull(noBgCategory);
+        //Should no longer exist in database, hence should return null.
+        BgCategory oldBgCategory = bgCategoryDao.findNonLiveDataByName(TestData.BG_CATEGORY_2.getCategoryName());
+        assertNull(oldBgCategory);
 
-        BgCategory testBgCategory = bgCategoryDao.findNonLiveDataByName(bgCategory.getCategoryName());
-        assertThat(testBgCategory, is(bgCategory));
-        assertThat(testBgCategory, is(not(TestData.BG_CATEGORY_1)));
+        BgCategory updatedBgCategory = bgCategoryDao.findNonLiveDataByName(bgCategory.getCategoryName());
+        assertThat(updatedBgCategory, is(bgCategory));
+        assertThat(updatedBgCategory, is(not(TestData.BG_CATEGORY_2)));
+
+        assertThat(updatedBgCategory.getId(), is(bgCategory.getId()));
+        assertThat(updatedBgCategory.getCategoryName(), is(bgCategory.getCategoryName()));
+
+        assertThat(updatedBgCategory.getId(), is(TestData.BG_CATEGORY_2.getId()));
+        assertThat(updatedBgCategory.getCategoryName(), is(not(TestData.BG_CATEGORY_2.getCategoryName())));
+
+        assertThat(updatedBgCategory.getCategoryName(), is(newCategoryName));
     }
 }

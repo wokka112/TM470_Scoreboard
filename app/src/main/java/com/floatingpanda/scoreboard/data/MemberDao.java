@@ -18,6 +18,9 @@ public interface MemberDao {
     @Query("SELECT * FROM members")
     LiveData<List<Member>> getAllLive();
 
+    @Query("SELECT * FROM members")
+    List<Member> getAllNonLive();
+
     /**
      * @param id the database id of a member
      * @return a live data member from the database

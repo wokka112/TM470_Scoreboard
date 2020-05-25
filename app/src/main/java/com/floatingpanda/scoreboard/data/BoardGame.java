@@ -63,6 +63,25 @@ public class BoardGame implements Parcelable {
     private List<PlayMode.PlayModeEnum> playModes;
 
     @Ignore
+    public BoardGame(int id, String bgName, int difficulty, int minPlayers, int maxPlayers, BoardGame.TeamOption teamOptions,
+                     String description, String houseRules, String notes, String imgFilePath, List<BgCategory> bgCategories,
+                     List<PlayMode.PlayModeEnum> playModes) {
+        this.id = id;
+        this.bgName = bgName;
+        this.difficulty = difficulty;
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
+        this.teamOptions = teamOptions;
+        this.playModes = playModes;
+        this.description = description;
+        this.houseRules = houseRules;
+        this.notes = notes;
+        this.imgFilePath = imgFilePath;
+        this.bgCategories = bgCategories;
+        this.playModes = playModes;
+    }
+
+    @Ignore
     public BoardGame(String bgName, int difficulty, int minPlayers, int maxPlayers, BoardGame.TeamOption teamOptions,
                      String description, String houseRules, String notes, String imgFilePath,
                      List<BgCategory> bgCategories, List<PlayMode.PlayModeEnum> playModes) {
@@ -125,9 +144,11 @@ public class BoardGame implements Parcelable {
 
     public int getDifficulty() { return this.difficulty; }
     //Precondition: difficulty is between 1 - 5 (inclusive).
+    //TODO add defensive programming? if less than 1 set to 1, if greater than 5 set to 5?
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
 
     public int getMinPlayers() { return this.minPlayers; }
+    //TODO add defensive programming? if less than 0 set to 1?
     public void setMinPlayers(int minPlayers) { this.minPlayers = minPlayers; }
 
     public int getMaxPlayers() { return this.maxPlayers; }
@@ -311,6 +332,18 @@ public class BoardGame implements Parcelable {
         }
 
         return teamOptionsString;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        BoardGame boardGame = (BoardGame) obj;
+
+        return (boardGame.getBgName().equals(this.getBgName())
+                && boardGame.getDifficulty() == this.getDifficulty());
     }
 
     @Override

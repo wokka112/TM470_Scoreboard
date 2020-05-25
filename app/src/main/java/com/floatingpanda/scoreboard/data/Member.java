@@ -33,10 +33,30 @@ public class Member implements Parcelable {
     @ColumnInfo(name = "img_file_path")
     private String imgFilePath;
 
+    //TODO add date created attribute
+
+    @Ignore
+    public Member(int id, String nickname, String notes, String imgFilePath) {
+        this.id = id;
+        this.nickname = nickname;
+        this.notes = notes;
+        this.imgFilePath = imgFilePath;
+    }
+
     public Member(@NonNull String nickname, String notes) {
         this.id = 0;
         this.nickname = nickname;
         this.notes = notes;
+        //TODO sort out imgfilepath default value
+        this.imgFilePath = "TBA";
+    }
+
+    @Ignore
+    public Member(Member member) {
+        this.id = member.getId();
+        this.nickname = member.getNickname();
+        this.notes = member.getNotes();
+        this.imgFilePath = member.getImgFilePath();
     }
 
     @Ignore

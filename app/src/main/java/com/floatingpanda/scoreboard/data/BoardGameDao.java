@@ -14,17 +14,20 @@ import java.util.List;
 @Dao
 public interface BoardGameDao {
     @Query("SELECT * FROM boardgames")
-    LiveData<List<BoardGame>> getAll();
+    LiveData<List<BoardGame>> getAllLive();
+
+    @Query("SELECT * FROM boardgames")
+    List<BoardGame> getAllNonLive();
+
+    @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
+    LiveData<BoardGame> findLiveDataById(int bgId);
 
     @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
-    LiveData<BoardGame> findByName(String bgName);
+    LiveData<BoardGame> findLiveDataByName(String bgName);
 
     //TODO maybe change this to find by id? Or add that in?
     @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
     BoardGame findNonLiveDataByName(String bgName);
-
-    @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
-    BoardGame findNonLiveDataById(int bgId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(BoardGame... boardGames);

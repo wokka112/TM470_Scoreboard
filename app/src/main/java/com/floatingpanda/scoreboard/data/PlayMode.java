@@ -1,35 +1,36 @@
 package com.floatingpanda.scoreboard.data;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "play_modes", primaryKeys = {"parent_bg_name", "play_mode_enum"},
+@Entity(tableName = "play_modes", primaryKeys = {"bg_id", "play_mode_enum"},
         foreignKeys = {@ForeignKey(entity = BoardGame.class,
-                parentColumns = "bg_name",
-                childColumns = "parent_bg_name",
+                parentColumns = "bg_id",
+                childColumns = "bg_id",
                 onDelete = ForeignKey.CASCADE,
                 onUpdate = ForeignKey.CASCADE)})
 public class PlayMode {
 
     @NonNull
-    @ColumnInfo(name = "parent_bg_name")
-    String bgName;
+    @ColumnInfo(name = "bg_id")
+    int bgId;
 
     @NonNull
     @ColumnInfo(name = "play_mode_enum")
     PlayModeEnum playModeEnum;
 
-    public PlayMode(String bgName, PlayModeEnum playModeEnum) {
-        this.bgName = bgName;
+    public PlayMode(int bgId, PlayModeEnum playModeEnum) {
+        this.bgId = bgId;
         this.playModeEnum = playModeEnum;
     }
 
-    public String getBgName() { return this.bgName; }
-    public void setBgName(String bgName) { this.bgName = bgName; }
+    public int getBgId() { return this.bgId; }
+    public void setBgId(int bgId) { this.bgId = bgId; }
 
     public PlayModeEnum getPlayModeEnum() { return playModeEnum; }
 
@@ -39,6 +40,18 @@ public class PlayMode {
         COMPETITIVE,
         COOPERATIVE,
         SOLITAIRE
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        PlayMode playMode = (PlayMode) obj;
+
+        return (playMode.getBgId() == this.getBgId()
+                && playMode.getPlayModeEnum() == this.getPlayModeEnum());
     }
 }
 
