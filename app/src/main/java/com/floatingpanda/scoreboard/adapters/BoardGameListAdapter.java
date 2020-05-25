@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
+import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BoardGame;
@@ -41,12 +42,11 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
             BoardGame boardGame = current.getBoardGame();
             holder.bgNameItemView.setText(boardGame.getBgName());
             holder.difficultyItemView.setText(Integer.toString(boardGame.getDifficulty()));
-
             holder.playersItemView.setText(boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers());
 
             //TODO make it so that only 2 or 3 categories are shown and then + x more where x is the
             // number of categories left.
-            holder.categoriesItemView.setText(boardGame.getBgCategoriesString());
+            holder.categoriesItemView.setText(current.getBgCategoriesString());
         } else {
             holder.bgNameItemView.setText("No board game");
         }

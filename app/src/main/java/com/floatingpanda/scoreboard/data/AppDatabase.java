@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 18, exportSchema = false)
+@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 19, exportSchema = false)
 @TypeConverters({PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -135,120 +135,119 @@ public abstract class AppDatabase extends RoomDatabase {
                     boardGameCategoryDao.insert(test);
                 }
 
-                List<PlayMode.PlayModeEnum> playModes = new ArrayList<>();
-                playModes.add(PlayMode.PlayModeEnum.COMPETITIVE);
+
 
                 BoardGame.TeamOption teamOption = BoardGame.TeamOption.NO_TEAMS;
-                Log.w("AppDatabase.java", "Playmodes: " + playModes.toString());
-                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
                 BoardGame bg = new BoardGame("Medieval", 3, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A", playModes);
-                Log.w("AppDatabase.java", "bg Playmode: " + bg.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
-
-                playModes.add(PlayMode.PlayModeEnum.COOPERATIVE);
+                        "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.TEAMS_ONLY;
-                Log.w("AppDatabase.java", "Playmode: " + playModes.toString());
-                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
                 BoardGame bg1 = new BoardGame("Monopoly", 3, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A", playModes);
-                Log.w("AppDatabase.java", "bg1 Playmode: " + bg1.getPlayModesString() + ", Team Options: " + bg1.getTeamOptionsString());
+                        "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.TEAMS_OR_SOLOS;
-                Log.w("AppDatabase.java", "Playmode: " + playModes.toString());
-                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
                 BoardGame bg2 = new BoardGame("Go", 3, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A", playModes);
-                Log.w("AppDatabase.java", "bg2 Playmode: " + bg2.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+                        "N/A", "N/A", "N/A", "N/A");
 
-                playModes.add(PlayMode.PlayModeEnum.SOLITAIRE);
+                //Add SOLITAIRE
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
-                Log.w("AppDatabase.java", "Playmode: " + playModes.toString());
-                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
                 BoardGame bg3 = new BoardGame("Game of Life", 3, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A", playModes);
-                Log.w("AppDatabase.java", "bg3 Playmode: " + bg3.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+                        "N/A", "N/A", "N/A", "N/A");
 
-                Log.w("AppDatabase.java", "Playmode: " + playModes.toString());
-                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
                 BoardGame bg4 = new BoardGame("Dawn of Madness", 3, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A", playModes);
-                Log.w("AppDatabase.java", "bg4 Playmode: " + bg4.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+                        "N/A", "N/A", "N/A", "N/A");
 
-                Log.w("AppDatabase.java", "Playmode: " + playModes.toString());
-                Log.w("AppDatabase.java", "Team options: " + teamOption.toString());
                 BoardGame bg5 = new BoardGame("No Category Bg", 3, 1, 8, teamOption,
-                         "N/A", "N/A", "N/A", "N/A", playModes);
-                Log.w("AppDatabase.java", "bg5 Playmode: " + bg5.getPlayModesString() + ", Team Options: " + bg.getTeamOptionsString());
+                         "N/A", "N/A", "N/A", "N/A");
 
                 List<AssignedCategory> acs = new ArrayList<>();
 
                 PlayModeDao playModeDao = INSTANCE.playModeDao();
 
+                List<PlayMode.PlayModeEnum> playModes = new ArrayList<>();
+                playModes.add(PlayMode.PlayModeEnum.COMPETITIVE);
+
                 bgDao.insert(bg);
-                PlayMode playMode = new PlayMode(bg.getId(), bg.getPlayModes().get(0));
+                bg = bgDao.findNonLiveDataByName(bg.getBgName());
+
+                PlayMode playMode = new PlayMode(bg.getId(), playModes.get(0));
                 playModeDao.insert(playMode);
 
-                bg = bgDao.findNonLiveDataByName(bg.getBgName());
                 acs.add(new AssignedCategory(bg.getId(), strategy.getId()));
                 acs.add(new AssignedCategory(bg.getId(), luck.getId()));
                 acDao.insertAll(acs.toArray(new AssignedCategory[acs.size()]));
 
                 Log.w("Database.java", "Inserted bg");
 
+                playModes.add(PlayMode.PlayModeEnum.COOPERATIVE);
+
                 bgDao.insert(bg1);
-                playMode = new PlayMode(bg1.getId(), bg1.getPlayModes().get(0));
+                bg1 = bgDao.findNonLiveDataByName(bg1.getBgName());
+
+                playMode = new PlayMode(bg1.getId(), playModes.get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg1.getId(), bg1.getPlayModes().get(1));
+                playMode = new PlayMode(bg1.getId(), playModes.get(1));
                 playModeDao.insert(playMode);
 
-                bg1 = bgDao.findNonLiveDataByName(bg1.getBgName());
                 acs.add(new AssignedCategory(bg1.getId(), gambling.getId()));
                 acDao.insert(acs.get(0));
+
                 Log.w("Database.java", "Inserted bg1");
 
                 bgDao.insert(bg2);
-                playMode = new PlayMode(bg2.getId(), bg2.getPlayModes().get(0));
+                bg2 = bgDao.findNonLiveDataByName(bg2.getBgName());
+
+                playMode = new PlayMode(bg2.getId(), playModes.get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg2.getId(), bg2.getPlayModes().get(1));
+                playMode = new PlayMode(bg2.getId(), playModes.get(1));
                 playModeDao.insert(playMode);
 
-                bg2 = bgDao.findNonLiveDataByName(bg2.getBgName());
                 acs.add(new AssignedCategory(bg2.getId(), gambling.getId()));
                 Log.w("Database.java", "Inserted bg2");
 
+                playModes.add(PlayMode.PlayModeEnum.SOLITAIRE);
+
                 bgDao.insert(bg3);
-                playMode = new PlayMode(bg3.getId(), bg3.getPlayModes().get(0));
+                bg3 = bgDao.findNonLiveDataByName(bg3.getBgName());
+
+                playMode = new PlayMode(bg3.getId(), playModes.get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg3.getId(), bg3.getPlayModes().get(1));
+                playMode = new PlayMode(bg3.getId(), playModes.get(1));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg3.getId(), bg3.getPlayModes().get(2));
+                playMode = new PlayMode(bg3.getId(), playModes.get(2));
                 playModeDao.insert(playMode);
 
-                bg3 = bgDao.findNonLiveDataByName(bg3.getBgName());
+
                 acs.add(new AssignedCategory(bg3.getId(), strategy.getId()));
                 Log.w("Database.java", "Inserted bg3");
+
                 bgDao.insert(bg4);
-                playMode = new PlayMode(bg4.getId(), bg4.getPlayModes().get(0));
+                bg4 = bgDao.findNonLiveDataByName(bg4.getBgName());
+
+                playMode = new PlayMode(bg4.getId(), playModes.get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg4.getId(), bg4.getPlayModes().get(1));
+                playMode = new PlayMode(bg4.getId(), playModes.get(1));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg4.getId(), bg4.getPlayModes().get(2));
+                playMode = new PlayMode(bg4.getId(), playModes.get(2));
                 playModeDao.insert(playMode);
 
-                bg4 = bgDao.findNonLiveDataByName(bg4.getBgName());
                 acs.add(new AssignedCategory(bg4.getId(), luck.getId()));
                 Log.w("Database.java", "Inserted bg4");
+
                 acDao.insertAll(acs.toArray(new AssignedCategory[acs.size()]));
 
                 bgDao.insert(bg5);
-                playMode = new PlayMode(bg5.getId(), bg5.getPlayModes().get(0));
+                bg5 = bgDao.findNonLiveDataByName(bg5.getBgName());
+
+                playMode = new PlayMode(bg5.getId(), playModes.get(0));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg5.getId(), bg5.getPlayModes().get(1));
+                playMode = new PlayMode(bg5.getId(), playModes.get(1));
                 playModeDao.insert(playMode);
-                playMode = new PlayMode(bg5.getId(), bg5.getPlayModes().get(2));
+                playMode = new PlayMode(bg5.getId(), playModes.get(2));
                 playModeDao.insert(playMode);
+
+                Log.w("Database.java", "Inserted bg5");
             });
         }
     };

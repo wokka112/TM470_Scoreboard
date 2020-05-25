@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
 import com.google.android.material.chip.Chip;
@@ -29,11 +31,12 @@ import com.thomashaertel.widget.MultiSpinner;
 import java.util.List;
 
 public class BoardGameEditActivity extends AppCompatActivity {
-    public static final String EXTRA_REPLY_ORIGINAL_BG = "com.floatingpanda.scoreboard.REPLY_ORIGINAL_BG";
-    public static final String EXTRA_REPLY_EDITED_BG = "com.floatingpanda.scoreboard.REPLY_EDITED_BG";
+    public static final String EXTRA_REPLY_ORIGINAL = "com.floatingpanda.scoreboard.REPLY_ORIGINAL";
+    public static final String EXTRA_REPLY_EDITED = "com.floatingpanda.scoreboard.REPLY_EDITED";
 
     private BoardGameAddEditViewModel boardGameAddEditViewModel;
-    private BoardGame boardGame;
+
+    private BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes;
 
     private EditText bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, descriptionEditText,
             notesEditText, houseRulesEditText;
@@ -74,10 +77,10 @@ public class BoardGameEditActivity extends AppCompatActivity {
         multiSpinner = findViewById(R.id.bgadd_multi_spinner);
         multiSpinner.setAllText("Choose categories");
 
-        boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");
-        boardGameAddEditViewModel.setSelectedBgCategories(boardGame.getBgCategories());
+        boardGameWithBgCategoriesAndPlayModes = (BoardGameWithBgCategoriesAndPlayModes) getIntent().getExtras().get("BOARD_GAME_WITH_CATEGORIES_AND_PLAY_MODES");
+        boardGameAddEditViewModel.setSelectedBgCategories(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategories());
 
-        setViews(boardGame);
+        setViews(boardGameWithBgCategoriesAndPlayModes);
 
         final Button browseButton, cameraButton, saveButton, cancelButton;
 
@@ -121,16 +124,18 @@ public class BoardGameEditActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                String originalBgName = boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getBgName();
                 String bgName = bgNameEditText.getText().toString();
                 String difficultyString = difficultyEditText.getText().toString();
                 String minPlayersString = minPlayersEditText.getText().toString();
                 String maxPlayersString = maxPlayersEditText.getText().toString();
 
-                if(!boardGameAddEditViewModel.editActivityInputsValid(BoardGameEditActivity.this, boardGame.getBgName(), bgName,
+                if(!boardGameAddEditViewModel.editActivityInputsValid(BoardGameEditActivity.this, originalBgName, bgName,
                         difficultyString, minPlayersString, maxPlayersString)) {
                     return;
                 }
 
+                int bgId = boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getId();
                 int difficulty = Integer.parseInt(difficultyString);
                 int minPlayers = Integer.parseInt(minPlayersString);
                 int maxPlayers = Integer.parseInt(maxPlayersString);
@@ -140,17 +145,19 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 String houseRules = houseRulesEditText.getText().toString();
                 String imgFilePath = "TBA";
                 List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
-                List<PlayMode.PlayModeEnum> playModes = getPlayModes();
+                List<PlayMode.PlayModeEnum> playModeEnums = getPlayModeEnums();
 
-                //TODO look into a different way of doing this? Maybe use a constructor that takes an
-                // id rather than setting the id.
-                BoardGame editedBoardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
-                        description, notes, houseRules, imgFilePath, bgCategories, playModes);
-                editedBoardGame.setId(boardGame.getId());
+                BoardGame boardGame = new BoardGame(bgId, bgName, difficulty, minPlayers, maxPlayers, teamOption, description,
+                        houseRules, notes, imgFilePath);
+
+                BoardGameWithBgCategories boardGameWithBgCategories = new BoardGameWithBgCategories(boardGame, bgCategories);
+
+                BoardGameWithBgCategoriesAndPlayModes editedboardGameWithBgCategoriesAndPlayModes =
+                        BoardGameWithBgCategoriesAndPlayModes.createUsingPlayModeEnumList(boardGameWithBgCategories, playModeEnums);
 
                 Intent replyIntent = new Intent();
-                replyIntent.putExtra(EXTRA_REPLY_ORIGINAL_BG, boardGame);
-                replyIntent.putExtra(EXTRA_REPLY_EDITED_BG, editedBoardGame);
+                replyIntent.putExtra(EXTRA_REPLY_ORIGINAL, boardGameWithBgCategoriesAndPlayModes);
+                replyIntent.putExtra(EXTRA_REPLY_EDITED, editedboardGameWithBgCategoriesAndPlayModes);
                 setResult(RESULT_OK, replyIntent);
                 finish();
             }
@@ -159,9 +166,11 @@ public class BoardGameEditActivity extends AppCompatActivity {
 
     /**
      * Sets the views to the details from boardGame.
-     * @param boardGame a BoardGame
+     * @param boardGameWithBgCategoriesAndPlayModes a BoardGame with bg categories and play modes
      */
-    private void setViews(BoardGame boardGame) {
+    private void setViews(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
+        BoardGame boardGame = boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame();
+
         bgNameEditText.setText(boardGame.getBgName());
         difficultyEditText.setText(Integer.toString(boardGame.getDifficulty()));
         minPlayersEditText.setText(Integer.toString(boardGame.getMinPlayers()));
@@ -169,9 +178,10 @@ public class BoardGameEditActivity extends AppCompatActivity {
         descriptionEditText.setText(boardGame.getDescription());
         notesEditText.setText(boardGame.getNotes());
         houseRulesEditText.setText(boardGame.getHouseRules());
-        setPlayModeCheckBoxes(boardGame.getPlayModes());
         setTeamOptionsRadioGroup(boardGame.getTeamOptions());
-        setChipGroupChips(boardGame.getBgCategories());
+
+        setPlayModeCheckBoxes(boardGameWithBgCategoriesAndPlayModes.getPlayModeEnums());
+        setChipGroupChips(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategories());
     }
 
     private void setMultiSpinnerSelected(List<BgCategory> selectedBgCategories) {
@@ -293,7 +303,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
      * in the activity.
      * @return a list of PlayModeEnum representing the checked play mode checkboxes
      */
-    private List<PlayMode.PlayModeEnum> getPlayModes() {
+    private List<PlayMode.PlayModeEnum> getPlayModeEnums() {
         boolean competitive = competitiveCheckBox.isChecked();
         boolean cooperative = cooperativeCheckBox.isChecked();
         boolean solitaire = solitaireCheckBox.isChecked();

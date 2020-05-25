@@ -33,13 +33,29 @@ public class BoardGameViewModel extends AndroidViewModel {
         return boardGameRepository.getLiveDataBgAndCategoriesAndPlayModes(boardGame);
     }
 
+    //TODO remove?
+    /*
     // Preconditions: - boardGame does not exist in the database.
     // Postconditions: - boardGame is added to the database.
     //                 - if boardGame has categories assigned to it that exist in the database, assigned_categories
     //                    tables will be added linking boardGame with this categories.
     public void addBoardGame(BoardGame boardGame) { boardGameRepository.insert(boardGame); }
 
-    public void editBoardGame(BoardGame originalBoardGame, BoardGame editedBoardGame) { boardGameRepository.update(originalBoardGame, editedBoardGame); }
+     */
+
+    public void addBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes bgWithBgCategoriesAndPlayModes) {
+        boardGameRepository.insert(bgWithBgCategoriesAndPlayModes);
+    }
+
+    public void editBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes originalBoardGameWithBgCategoriesAndPlayModes,
+                                                          BoardGameWithBgCategoriesAndPlayModes editedBoardGameWithBgCategoriesAndPlayModes) {
+        boardGameRepository.update(originalBoardGameWithBgCategoriesAndPlayModes, editedBoardGameWithBgCategoriesAndPlayModes);
+    }
 
     public void deleteBoardGame(BoardGame boardGame) { boardGameRepository.delete(boardGame); }
+
+    public void deleteBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
+        //Deletes cascade in database, so deleting the board game alone is enough.
+        deleteBoardGame(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame());
+    }
 }

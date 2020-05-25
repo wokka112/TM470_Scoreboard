@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.floatingpanda.scoreboard.adapters.BoardGameListAdapter;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -96,8 +97,9 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_BOARD_GAME_REQUEST_CODE && resultCode == RESULT_OK) {
-            BoardGame boardGame = (BoardGame) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
-            boardGameViewModel.addBoardGame(boardGame);
+            BoardGameWithBgCategoriesAndPlayModes bgWithBgCategoriesAndPlayModes =
+                    (BoardGameWithBgCategoriesAndPlayModes) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
+            boardGameViewModel.addBoardGameWithBgCategoriesAndPlayModes(bgWithBgCategoriesAndPlayModes);
         }
     }
 }

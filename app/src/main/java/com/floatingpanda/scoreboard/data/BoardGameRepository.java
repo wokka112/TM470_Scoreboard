@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,30 +60,38 @@ public class BoardGameRepository {
     //Preconditions: playmodes is not empty.
     public void insert(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
-            boardGameDao.insert(boardGame);
-
-            insertPlayModes(boardGame.getId(), boardGame.getPlayModes());
-
-            if (!boardGame.getBgCategories().isEmpty()) {
-                insertAssignedCategories(boardGame.getId(), boardGame.getBgCategories());
-            }
+            insertBoardGameWithoutBgCategories(boardGame);
         });
     }
 
-    public void update(BoardGame originalBoardGame, BoardGame editedBoardGame) {
+    public void insert(BoardGameWithBgCategories boardGameWithBgCategories) {
         AppDatabase.getExecutorService().execute(() -> {
-            boardGameDao.update(editedBoardGame);
+            insertBoardGameWithBgCategories(boardGameWithBgCategories);
+        });
+    }
 
-            List<PlayMode> playModesToDelete = getPlayModesToDelete(editedBoardGame.getId(), originalBoardGame.getPlayModes(),
-                    editedBoardGame.getPlayModes());
-            List<AssignedCategory> assignedCategoriesToDelete = getAssignedCategoriesToDelete(editedBoardGame.getId(),
-                    originalBoardGame.getBgCategories(), editedBoardGame.getBgCategories());
+    public void insert(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
+        AppDatabase.getExecutorService().execute(() -> {
+            insertBoardGameWithBgCategoriesAndPlayModes(boardGameWithBgCategoriesAndPlayModes);
+        });
+    }
 
+    public void update(BoardGameWithBgCategoriesAndPlayModes originalBoardGameWithBgCategoriesAndPlayModes,
+                       BoardGameWithBgCategoriesAndPlayModes editedBoardGameWithBgCategoriesAndPlayModes) {
+        AppDatabase.getExecutorService().execute(() -> {
+            List<PlayMode> playModesToDelete = getPlayModesToDelete(originalBoardGameWithBgCategoriesAndPlayModes.getPlayModes(),
+                    editedBoardGameWithBgCategoriesAndPlayModes.getPlayModes());
             deletePlayModes(playModesToDelete);
+
+            List<AssignedCategory> assignedCategoriesToDelete = getAssignedCategoriesToDelete(editedBoardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().
+                            getBoardGame().getId(),
+                    originalBoardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategories(),
+                    editedBoardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategories());
             deleteAssignedCategories(assignedCategoriesToDelete);
 
-            insertPlayModes(editedBoardGame.getId(), editedBoardGame.getPlayModes());
-            insertAssignedCategories(editedBoardGame.getId(), editedBoardGame.getBgCategories());
+            insertPlayModes(editedBoardGameWithBgCategoriesAndPlayModes.getPlayModes());
+            insertAssignedCategories(editedBoardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getId(),
+                    editedBoardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategories());
         });
     }
 
@@ -90,24 +99,7 @@ public class BoardGameRepository {
     // Need to find how to add appropriate asserts for this really.
     public void delete(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
-            //TODO remove log messages once done. They are for testing.
-            List<AssignedCategory> assignedCategories = assignedCategoryDao.findNonLiveDataByBgId(boardGame.getId());
-
-            for (int i = 0; i < assignedCategories.size(); i++) {
-                Log.w("BGRepos.java", "1 Bg: " + boardGame.getId() + ", AC: " + assignedCategories.get(i).getCategoryId());
-            }
-
             boardGameDao.delete(boardGame);
-
-            assignedCategories = assignedCategoryDao.findNonLiveDataByBgId(boardGame.getId());
-
-            if (assignedCategories.isEmpty()) {
-                Log.w("BGRepos.java", "2 Empty");
-            } else {
-                for (int i = 0; i < assignedCategories.size(); i++) {
-                    Log.w("BGRepos.java", "2 Bg: " + boardGame.getId() + ", AC: " + assignedCategories.get(i).getCategoryId());
-                }
-            }
         });
     }
 
@@ -128,13 +120,8 @@ public class BoardGameRepository {
         }
     }
 
-    //TODO remove these.
-    private void insertBoardGameWithoutCategories(BoardGame boardGame) {
-        AppDatabase.getExecutorService().execute(() -> {
-            boardGameDao.insert(boardGame);
-
-            insertPlayModes(boardGame.getId(), boardGame.getPlayModes());
-        });
+    private void insertBoardGameWithoutBgCategories(BoardGame boardGame) {
+        boardGameDao.insert(boardGame);
     }
 
     // Preconditions: - boardGame does not exist in database.
@@ -144,19 +131,39 @@ public class BoardGameRepository {
     // Postconditions: - boardGame will exist in database.
     //                 - a set of assigned_categories tables linking boardGame with its categories will exist
     //                    in the table.
-    private void insertBoardGameWithCategories(BoardGame boardGame) {
-        AppDatabase.getExecutorService().execute(() -> {
-            boardGameDao.insert(boardGame);
+    private void insertBoardGameWithBgCategories(BoardGameWithBgCategories boardGameWithBgCategories) {
+        insertBoardGameWithoutBgCategories(boardGameWithBgCategories.getBoardGame());
 
-            insertPlayModes(boardGame.getId(), boardGame.getPlayModes());
-            insertAssignedCategories(boardGame.getId(), boardGame.getBgCategories());
-        });
+        int bgId = getBoardGameId(boardGameWithBgCategories.getBoardGame().getBgName());
+        List<BgCategory> bgCategories = boardGameWithBgCategories.getBgCategories();
+        List<AssignedCategory> assignedCategories = new ArrayList<>();
+        for (BgCategory bgCategory : bgCategories) {
+            assignedCategories.add(new AssignedCategory(bgId, bgCategory.getId()));
+        }
+
+        assignedCategoryDao.insertAll(assignedCategories.toArray(new AssignedCategory[assignedCategories.size()]));
     }
 
-    private void insertPlayModes(int bgId, List<PlayMode.PlayModeEnum> playModes) {
-        for (PlayMode.PlayModeEnum playModeEnum : playModes) {
-            playModeDao.insert(new PlayMode(bgId, playModeEnum));
+    private void insertBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
+        insertBoardGameWithBgCategories(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories());
+
+        int bgId = boardGameDao.findNonLiveDataByName(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getBgName()).getId();
+        List<PlayMode> playModes = boardGameWithBgCategoriesAndPlayModes.getPlayModes();
+
+        for(int i = 0; i < playModes.size(); i++) {
+            playModes.get(i).setBgId(bgId);
         }
+
+        playModeDao.insertAll(playModes.toArray(new PlayMode[playModes.size()]));
+    }
+
+    private int getBoardGameId(String boardGameName) {
+        BoardGame boardGame = boardGameDao.findNonLiveDataByName(boardGameName);
+        return boardGame.getId();
+    }
+
+    private void insertPlayModes(List<PlayMode> playModes) {
+        playModeDao.insertAll(playModes.toArray(new PlayMode[playModes.size()]));
     }
 
     private void insertAssignedCategories(int bgId, List<BgCategory> bgCategories) {
@@ -170,15 +177,9 @@ public class BoardGameRepository {
         assignedCategoryDao.insertAll(assignedCategories.toArray(new AssignedCategory[assignedCategories.size()]));
     }
 
-    private List<PlayMode> getPlayModesToDelete(int editedBgId, List<PlayMode.PlayModeEnum> originalPlayModes, List<PlayMode.PlayModeEnum> editedPlayModes) {
-        List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>(originalPlayModes);
-        playModeEnums.removeAll(editedPlayModes);
-
-        List<PlayMode> playModesToDelete = new ArrayList<>();
-
-        for (PlayMode.PlayModeEnum playModeEnum : playModeEnums) {
-            playModesToDelete.add(new PlayMode(editedBgId, playModeEnum));
-        }
+    private List<PlayMode> getPlayModesToDelete(List<PlayMode> originalPlayModes, List<PlayMode> editedPlayModes) {
+        List<PlayMode> playModesToDelete = new ArrayList<>(originalPlayModes);
+        playModesToDelete.removeAll(editedPlayModes);
 
         return playModesToDelete;
     }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -23,6 +24,7 @@ public class BoardGameActivity extends AppCompatActivity {
 
     private BoardGameViewModel boardGameViewModel;
 
+    private BoardGameWithBgCategoriesAndPlayModes bgWithBgCategoriesAndPlayModes;
     private BoardGame boardGame;
 
     private TextView nameTextView, difficultyTextView, playerCountTextView, categoriesTextView, playModesTextView, teamOptionsTextView,
@@ -55,7 +57,10 @@ public class BoardGameActivity extends AppCompatActivity {
         boardGameViewModel.getBoardGameWithBgCategoriesAndPlayModes(boardGame).observe(BoardGameActivity.this, new Observer<BoardGameWithBgCategoriesAndPlayModes>() {
             @Override
             public void onChanged(@Nullable final BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
-                setViews(boardGameWithBgCategoriesAndPlayModes);
+                bgWithBgCategoriesAndPlayModes = boardGameWithBgCategoriesAndPlayModes;
+                setViews(bgWithBgCategoriesAndPlayModes);
+                //TODO remove observer at this point so it doesn't change again?
+                //Get the live data list, then attach this observer to that list, then call remove observer at this point.
             }
         });
 
@@ -63,7 +68,7 @@ public class BoardGameActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startEditActivity(boardGame);
+                startEditActivity(bgWithBgCategoriesAndPlayModes);
             }
         });
 
@@ -71,7 +76,7 @@ public class BoardGameActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDeleteActivity(boardGame);
+                startDeleteActivity(bgWithBgCategoriesAndPlayModes);
             }
         });
     }
@@ -88,7 +93,8 @@ public class BoardGameActivity extends AppCompatActivity {
             return;
         }
 
-        boardGame = boardGameWithBgCategoriesAndPlayModes.getBoardGame();
+        //TODO see if I can make this simpler. Maybe put these methods (getboardgame and getbgcategoriesstring(). in boardgamewithcategoriesandplaymodes.
+        BoardGame boardGame = bgWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame();
 
         nameTextView.setText(boardGame.getBgName());
         difficultyTextView.setText(Integer.toString(boardGame.getDifficulty()));
@@ -96,8 +102,8 @@ public class BoardGameActivity extends AppCompatActivity {
         String players = boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers();
         playerCountTextView.setText(players);
 
-        categoriesTextView.setText(boardGame.getBgCategoriesString());
-        playModesTextView.setText(boardGame.getPlayModesString());
+        categoriesTextView.setText(bgWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategoriesString());
+        playModesTextView.setText(bgWithBgCategoriesAndPlayModes.getPlayModesString());
         teamOptionsTextView.setText(boardGame.getTeamOptionsString());
         descriptionTextView.setText(boardGame.getDescription());
         houseRulesTextView.setText(boardGame.getHouseRules());
@@ -113,20 +119,19 @@ public class BoardGameActivity extends AppCompatActivity {
      * will be dismissed and nothing will happen.
      *
      * boardGame should exist in the database.
-     * @param boardGame a BoardGame that exists in the database
+     * @param boardGameWithBgCategoriesAndPlayModes a BoardGame with bg categories and play modes that exists in the database
      */
-    private void startDeleteActivity(BoardGame boardGame) {
+    private void startDeleteActivity(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(BoardGameActivity.this);
         builder.setTitle("Delete Board Game?")
-                .setMessage("Are you sure you want to delete " + boardGame.getBgName() + "?\n" +
-                        "The member will be removed from winner lists, groups and game records, and " +
-                        "their skill ratings will be deleted.\n" +
-                        "This operation is irreversible.")
+                .setMessage("Are you sure you want to delete " + boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getBgName() +
+                        "?\nThe member will be removed from winner lists, groups and game records, and " +
+                        "their skill ratings will be deleted.\nThis operation is irreversible.")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteBoardGame(boardGame);
+                        deleteBoardGameWithBgCategoriesAndPlayModes(boardGameWithBgCategoriesAndPlayModes);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -143,20 +148,20 @@ public class BoardGameActivity extends AppCompatActivity {
     // Postconditions: boardGame will not longer exist in database.
     /**
      * Deletes boardGame from database and finishes activity.
-     * @param boardGame a BoardGame that exists in the database
+     * @param boardGameWithBgCategoriesAndPlayModes a BoardGame with categories and play modes which exists in the db.
      */
-    private void deleteBoardGame(BoardGame boardGame) {
-        this.boardGameViewModel.deleteBoardGame(boardGame);
+    private void deleteBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
+        this.boardGameViewModel.deleteBoardGameWithBgCategoriesAndPlayModes(boardGameWithBgCategoriesAndPlayModes);
         finish();
     }
 
     /**
      * Starts the BoardGameEditActivity for boardGame.
-     * @param boardGame a boardGame
+     * @param boardGameWithBgCategoriesAndPlayModes a boardGame with bg categories and play modes
      */
-    private void startEditActivity(BoardGame boardGame) {
+    private void startEditActivity(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         Intent editIntent = new Intent(BoardGameActivity.this, BoardGameEditActivity.class);
-        editIntent.putExtra("BOARDGAME", boardGame);
+        editIntent.putExtra("BOARD_GAME_WITH_CATEGORIES_AND_PLAY_MODES", boardGameWithBgCategoriesAndPlayModes);
         startActivityForResult(editIntent, EDIT_BOARDGAME_REQUEST_CODE);
     }
 
@@ -165,9 +170,13 @@ public class BoardGameActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == EDIT_BOARDGAME_REQUEST_CODE && resultCode == RESULT_OK) {
-            BoardGame originalBoardGame = (BoardGame) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_ORIGINAL_BG);
-            BoardGame editedBoardGame = (BoardGame) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_EDITED_BG);
-            boardGameViewModel.editBoardGame(originalBoardGame, editedBoardGame);
+            BoardGameWithBgCategoriesAndPlayModes originalBoardGameWithBgCategoriesAndPlayModes =
+                    (BoardGameWithBgCategoriesAndPlayModes) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_ORIGINAL);
+
+            BoardGameWithBgCategoriesAndPlayModes editedBoardGameWithBgCategoriesAndPlayModes =
+                    (BoardGameWithBgCategoriesAndPlayModes) data.getExtras().get(BoardGameEditActivity.EXTRA_REPLY_EDITED);
+
+            boardGameViewModel.editBoardGameWithBgCategoriesAndPlayModes(originalBoardGameWithBgCategoriesAndPlayModes, editedBoardGameWithBgCategoriesAndPlayModes);
         }
     }
 }

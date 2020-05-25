@@ -2,10 +2,7 @@ package com.floatingpanda.scoreboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,13 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.thomashaertel.widget.MultiSpinner;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //TODO add in a clear categories button?
@@ -84,6 +82,8 @@ public class BoardGameAddActivity extends AppCompatActivity {
             public void onChanged(@NonNull final List<BgCategory> bgCategories) {
                 adapter = new ArrayAdapter<BgCategory>(BoardGameAddActivity.this, android.R.layout.simple_spinner_item, bgCategories);
                 multiSpinner.setAdapter(adapter, false, onSelectedListener);
+                //TODO setup so a change in categories results in spinner being reset and selected categories edited to remove
+                // removed categories. (Unnecessary cause app has no networking?)
             }
         });
 
@@ -160,14 +160,19 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 String notes = notesEditText.getText().toString();
                 String houseRules = houseRulesEditText.getText().toString();
                 String imgFilePath = "TBA";
-                List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
-                List<PlayMode.PlayModeEnum> playModes = getPlayModes();
 
                 BoardGame boardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
-                        description, notes, houseRules, imgFilePath, bgCategories, playModes);
+                        description, notes, houseRules, imgFilePath);
+
+                List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
+                BoardGameWithBgCategories bgWithBgCategories = new BoardGameWithBgCategories(boardGame, bgCategories);
+
+                List<PlayMode.PlayModeEnum> PlayModeEnums = getPlayModeEnums();
+                BoardGameWithBgCategoriesAndPlayModes bgWithBgCategoriesAndPlayModes =
+                        BoardGameWithBgCategoriesAndPlayModes.createUsingPlayModeEnumList(bgWithBgCategories, PlayModeEnums);
 
                 Intent replyIntent = new Intent();
-                replyIntent.putExtra(EXTRA_REPLY, boardGame);
+                replyIntent.putExtra(EXTRA_REPLY, bgWithBgCategoriesAndPlayModes);
                 setResult(RESULT_OK, replyIntent);
                 finish();
             }
@@ -221,7 +226,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
      * solitaire.
      * @return a list of PlayMode.PlayModeEnum representing viable play modes for the board game.
      */
-    private List<PlayMode.PlayModeEnum> getPlayModes() {
+    private List<PlayMode.PlayModeEnum> getPlayModeEnums() {
         boolean competitive = competitiveCheckBox.isChecked();
         boolean cooperative = cooperativeCheckBox.isChecked();
         boolean solitaire = solitaireCheckBox.isChecked();

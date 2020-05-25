@@ -1,5 +1,8 @@
 package com.floatingpanda.scoreboard.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -14,9 +17,8 @@ import androidx.room.PrimaryKey;
                 childColumns = "bg_id",
                 onDelete = ForeignKey.CASCADE,
                 onUpdate = ForeignKey.CASCADE)})
-public class PlayMode {
+public class PlayMode implements Parcelable {
 
-    @NonNull
     @ColumnInfo(name = "bg_id")
     int bgId;
 
@@ -29,17 +31,21 @@ public class PlayMode {
         this.playModeEnum = playModeEnum;
     }
 
+    @Ignore
+    public PlayMode(Parcel source) {
+        this.bgId = source.readInt();
+        this.playModeEnum = PlayMode.PlayModeEnum.valueOf(source.readString());
+
+    }
+
     public int getBgId() { return this.bgId; }
     public void setBgId(int bgId) { this.bgId = bgId; }
 
     public PlayModeEnum getPlayModeEnum() { return playModeEnum; }
-
     public void setPlayModeEnum(PlayModeEnum playModeEnum) { this.playModeEnum = playModeEnum; }
 
-    public enum PlayModeEnum {
-        COMPETITIVE,
-        COOPERATIVE,
-        SOLITAIRE
+    public String getPlayModeString() {
+        return this.playModeEnum.toString();
     }
 
     @Override
@@ -52,6 +58,35 @@ public class PlayMode {
 
         return (playMode.getBgId() == this.getBgId()
                 && playMode.getPlayModeEnum() == this.getPlayModeEnum());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(bgId);
+        dest.writeString(playModeEnum.name());
+    }
+
+    public static final Creator<PlayMode> CREATOR = new Creator<PlayMode>() {
+        @Override
+        public PlayMode[] newArray(int size) {
+            return new PlayMode[size];
+        }
+
+        @Override
+        public PlayMode createFromParcel(Parcel source) {
+            return new PlayMode(source);
+        }
+    };
+
+    public enum PlayModeEnum {
+        COMPETITIVE,
+        COOPERATIVE,
+        SOLITAIRE
     }
 }
 
