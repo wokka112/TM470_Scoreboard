@@ -146,16 +146,17 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 String difficultyString = difficultyEditText.getText().toString();
                 String minPlayersString = minPlayersEditText.getText().toString();
                 String maxPlayersString = maxPlayersEditText.getText().toString();
+                BoardGame.TeamOption teamOption = getTeamOption();
+                List<PlayMode.PlayModeEnum> playModeEnums = getPlayModeEnums();
 
                 if (!boardGameAddEditViewModel.addActivityInputsValid(BoardGameAddActivity.this, bgName, difficultyString,
-                        minPlayersString, maxPlayersString)) {
+                        minPlayersString, maxPlayersString, teamOption, playModeEnums, false)) {
                     return;
                 }
 
                 int difficulty = Integer.parseInt(difficultyString);
                 int minPlayers = Integer.parseInt(minPlayersString);
                 int maxPlayers = Integer.parseInt(maxPlayersString);
-                BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 String houseRules = houseRulesEditText.getText().toString();
@@ -167,9 +168,8 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
                 BoardGameWithBgCategories bgWithBgCategories = new BoardGameWithBgCategories(boardGame, bgCategories);
 
-                List<PlayMode.PlayModeEnum> PlayModeEnums = getPlayModeEnums();
                 BoardGameWithBgCategoriesAndPlayModes bgWithBgCategoriesAndPlayModes =
-                        BoardGameWithBgCategoriesAndPlayModes.createUsingPlayModeEnumList(bgWithBgCategories, PlayModeEnums);
+                        BoardGameWithBgCategoriesAndPlayModes.createUsingPlayModeEnumList(bgWithBgCategories, playModeEnums);
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, bgWithBgCategoriesAndPlayModes);

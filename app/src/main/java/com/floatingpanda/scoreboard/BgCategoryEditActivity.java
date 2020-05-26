@@ -50,7 +50,7 @@ public class BgCategoryEditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String categoryName = categoryEditText.getText().toString();
 
-                if (!bgCategoryViewModel.editActivityInputsValid(BgCategoryEditActivity.this, bgCategory.getCategoryName(), categoryName)) {
+                if (!bgCategoryViewModel.editActivityInputsValid(BgCategoryEditActivity.this, bgCategory.getCategoryName(), categoryName, false)) {
                     return;
                 }
 

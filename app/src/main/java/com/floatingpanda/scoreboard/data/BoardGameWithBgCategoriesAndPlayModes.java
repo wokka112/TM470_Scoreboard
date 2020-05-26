@@ -2,7 +2,9 @@ package com.floatingpanda.scoreboard.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
@@ -33,6 +35,11 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
 
     public List<PlayMode> getPlayModes() { return this.playModes; }
     public void setPlayModes(List<PlayMode> playModes) { this.playModes = playModes; }
+
+    public BoardGame getBoardGame() { return bgWithBgCategories.getBoardGame(); }
+    //TODO change the return to return a new list and then use the add, get and remove category methods?
+    //TODO maybe use interfaces for this relation and the boardgamewithbgcategories relation to restrict access to the lists.
+    public List<BgCategory> getBgCategories() { return bgWithBgCategories.getBgCategories(); }
 
     public void addPlayMode(PlayMode playMode) {
         if (!playModes.contains(playMode)) {
@@ -118,6 +125,24 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
     }
 
     @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes =
+                (BoardGameWithBgCategoriesAndPlayModes) obj;
+
+        for (PlayMode playMode : boardGameWithBgCategoriesAndPlayModes.getPlayModes()) {
+            if (!this.getPlayModes().contains(playMode)) {
+                return false;
+            }
+        }
+
+        return (boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().equals(this.getBoardGameWithBgCategories()));
+    }
+
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -139,92 +164,4 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
             return new BoardGameWithBgCategoriesAndPlayModes(source);
         }
     };
-
-    /*
-    public List<PlayMode.PlayModeEnum> getPlayModeEnums() {
-        List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>();
-
-        for (PlayMode playMode : playModes) {
-            playModeEnums.add(playMode.getPlayModeEnum());
-        }
-
-        return playModeEnums;
-    }
-
-    /**
-     * Adds a play mode to the list of board game play modes.
-     *
-     * If the list already contains the play mode, does nothing.
-     * @param playMode the play mode to be added.
-     */
-    /*
-    public void addPlayMode(PlayMode.PlayModeEnum playMode) {
-        if (!playModes.contains(playMode)) {
-            playModes.add(playMode);
-        }
-    }
-
-    /**
-     * Gets the play mode at a specific index from the list of board game play modes.
-     * @param index the index of the wanted play mode
-     * @return a PlayMode
-     */
-    /*
-    public PlayMode.PlayModeEnum getPlayMode (int index) { return this.playModes.get(index); }
-
-    /**
-     * Removes a play mode from the list of board game play modes.
-     * @param playMode a PlayMode
-     */
-    /*
-    public void removePlayMode(PlayMode.PlayModeEnum playMode) { this.playModes.remove(playMode); }
-
-    //TODO maybe change this to return a list of strings? Then I could do formatting if I wanted somewhere else.
-    /**
-     * Builds a string to represent the potential play modes that the board game can be played in.
-     * String is built up based on the PlayModeEnum's that are set for the board game, a substring
-     * being appended for each enum.
-     *
-     * COMPETITIVE: appends "Competitive"
-     * COOPERATIVE: appends "Cooperative"
-     * SOLITAIRE: appends "Solitaire"
-     *
-     * Competitive always comes first, followed by cooperative, then solitaire. If a play mode comes
-     * after another one (i.e. a board game is set for both competitive and solitaire) then a comma
-     * is appended before the playmode.
-     *
-     * If no play modes are set, returns "No play modes assigned. This is an error. Please report."
-     *
-     * @return a String representing the potential play modes set for the board game
-     */
-    /*
-    public String getPlayModesString() {
-        if (playModes.isEmpty()) {
-            return "No play modes assigned. This is an error. Please report.";
-        }
-
-        StringBuilder sb = new StringBuilder();
-
-        if (playModes.contains(PlayMode.PlayModeEnum.COMPETITIVE)) {
-            sb.append("Competitive");
-        }
-
-        if (playModes.contains(PlayMode.PlayModeEnum.COOPERATIVE)) {
-            if (sb.length() > 0) {
-                sb.append(", ");
-            }
-            sb.append("Cooperative");
-        }
-
-        if (playModes.contains(PlayMode.PlayModeEnum.SOLITAIRE)) {
-            if (sb.length() > 0) {
-                sb.append(", ");
-            }
-            sb.append("Solitaire");
-        }
-
-        return sb.toString();
-    }
-
-     */
 }

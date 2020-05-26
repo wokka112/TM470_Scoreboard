@@ -42,7 +42,7 @@ public class BgCategoryAddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String categoryName = categoryEditText.getText().toString();
-                if (!bgCategoryViewModel.addActivityInputsValid(BgCategoryAddActivity.this, categoryName)) {
+                if (!bgCategoryViewModel.addActivityInputsValid(BgCategoryAddActivity.this, categoryName, false)) {
                     return;
                 }
 

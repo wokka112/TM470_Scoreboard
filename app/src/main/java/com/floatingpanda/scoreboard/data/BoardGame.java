@@ -11,9 +11,6 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
-import java.util.List;
-
 //TODO look into refactoring code to use serializable instead of Parcelable.
 // Parcelable should not be used for persistent data, and all of my data is persistent.
 // Hence, I should look into moving to Serializable and what tradeoffs it may involve.
@@ -79,6 +76,13 @@ public class BoardGame implements Parcelable {
     @Ignore
     public BoardGame(String bgName, int difficulty, BoardGame.TeamOption teamOptions) {
         this(bgName, difficulty, 1, 8, teamOptions, "", "", "", "TBA");
+    }
+
+    @Ignore
+    public BoardGame(BoardGame boardGame) {
+        this(boardGame.getId(), boardGame.getBgName(), boardGame.getDifficulty(), boardGame.getMinPlayers(), boardGame.getMaxPlayers(),
+                boardGame.getTeamOptions(), boardGame.getDescription(), boardGame.getHouseRules(), boardGame.getNotes(),
+                boardGame.getImgFilePath());
     }
 
     @Ignore
@@ -150,7 +154,7 @@ public class BoardGame implements Parcelable {
             case TEAMS_ONLY:
                 teamOptionsString = "Teams only.";
                 break;
-            case TEAMS_OR_SOLOS:
+            case TEAMS_AND_SOLOS_ALLOWED:
                 teamOptionsString = "Teams, solo players, or a mix of teams and solo players allowed.";
                 break;
             case ERROR:
@@ -214,6 +218,6 @@ public class BoardGame implements Parcelable {
         ERROR,
         NO_TEAMS,
         TEAMS_ONLY,
-        TEAMS_OR_SOLOS
+        TEAMS_AND_SOLOS_ALLOWED
     }
 }

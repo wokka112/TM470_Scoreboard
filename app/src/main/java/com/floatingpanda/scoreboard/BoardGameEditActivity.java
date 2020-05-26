@@ -2,7 +2,6 @@ package com.floatingpanda.scoreboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -90,6 +89,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 adapter = new ArrayAdapter<BgCategory>(BoardGameEditActivity.this, android.R.layout.simple_spinner_item, bgCategories);
                 multiSpinner.setAdapter(adapter, false, onSelectedListener);
                 //TODO work out where to put this setselected.
+                //(Can I make this a 1 time thing? Like add a boolean and then set it to off once initialised or somein?)
                 setMultiSpinnerSelected(boardGameAddEditViewModel.getSelectedBgCategories());
             }
         });
@@ -129,9 +129,11 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 String difficultyString = difficultyEditText.getText().toString();
                 String minPlayersString = minPlayersEditText.getText().toString();
                 String maxPlayersString = maxPlayersEditText.getText().toString();
+                List<PlayMode.PlayModeEnum> playModeEnums = getPlayModeEnums();
+                BoardGame.TeamOption teamOption = getTeamOption();
 
                 if(!boardGameAddEditViewModel.editActivityInputsValid(BoardGameEditActivity.this, originalBgName, bgName,
-                        difficultyString, minPlayersString, maxPlayersString)) {
+                        difficultyString, minPlayersString, maxPlayersString, teamOption, playModeEnums, false)) {
                     return;
                 }
 
@@ -139,13 +141,11 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 int difficulty = Integer.parseInt(difficultyString);
                 int minPlayers = Integer.parseInt(minPlayersString);
                 int maxPlayers = Integer.parseInt(maxPlayersString);
-                BoardGame.TeamOption teamOption = getTeamOption();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 String houseRules = houseRulesEditText.getText().toString();
                 String imgFilePath = "TBA";
                 List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
-                List<PlayMode.PlayModeEnum> playModeEnums = getPlayModeEnums();
 
                 BoardGame boardGame = new BoardGame(bgId, bgName, difficulty, minPlayers, maxPlayers, teamOption, description,
                         houseRules, notes, imgFilePath);
@@ -228,7 +228,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
             case NO_TEAMS:
                 noTeamsRadioButton.setChecked(true);
                 break;
-            case TEAMS_OR_SOLOS:
+            case TEAMS_AND_SOLOS_ALLOWED:
                 teamsOrSoloRadioButton.setChecked(true);
                 break;
             case TEAMS_ONLY:

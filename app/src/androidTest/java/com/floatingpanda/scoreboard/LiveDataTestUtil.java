@@ -24,4 +24,18 @@ public class LiveDataTestUtil {
         latch.await(2, TimeUnit.SECONDS);
         return (T) data[0];
     }
+
+    public static <T> void waitForChange(final LiveData<T> liveData) throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        Observer<T> observer = new Observer<T>() {
+            @Override
+            public void onChanged(@Nullable T o) {
+                latch.countDown();
+                liveData.removeObserver(this);
+            }
+        };
+        liveData.observeForever(observer);
+        latch.await(2, TimeUnit.SECONDS);
+        return;
+    }
 }

@@ -84,6 +84,7 @@ public class PlayMode implements Parcelable {
     };
 
     public enum PlayModeEnum {
+        ERROR,
         COMPETITIVE,
         COOPERATIVE,
         SOLITAIRE

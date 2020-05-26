@@ -2,14 +2,12 @@ package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Activity;
 import android.app.Application;
-import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.AlertDialogHelper;
-import com.floatingpanda.scoreboard.MemberEditActivity;
+import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.MemberRepository;
 
@@ -26,7 +24,14 @@ public class MemberViewModel extends AndroidViewModel {
     public MemberViewModel(Application application) {
         super(application);
         memberRepository = new MemberRepository(application);
-        allMembers = memberRepository.getAllMembers();
+        allMembers = memberRepository.getAll();
+    }
+
+    // Used for testing
+    public MemberViewModel(Application application, AppDatabase db) {
+        super(application);
+        memberRepository = new MemberRepository(db);
+        allMembers = memberRepository.getAll();
     }
 
     /**
@@ -42,7 +47,7 @@ public class MemberViewModel extends AndroidViewModel {
      * @return live data member from the database
      */
     public LiveData<Member> getLiveDataMember(Member member) {
-        return memberRepository.getLiveMember(member.getId());
+        return memberRepository.getLiveMemberById(member.getId());
     }
 
     // Preconditions: - member does not exist in the database.
@@ -91,21 +96,26 @@ public class MemberViewModel extends AndroidViewModel {
      */
     public void deleteMember(Member member) { memberRepository.delete(member); }
 
-    public boolean addActivityInputsValid(Activity activity, String nickname) {
-        return editActivityInputsValid(activity, "", nickname);
+    //TODO move this into a validator class??
+    public boolean addActivityInputsValid(Activity activity, String nickname, boolean testing) {
+        return editActivityInputsValid(activity, "", nickname, testing);
     }
 
-    public boolean editActivityInputsValid(Activity activity, String originalNickname, String nickname) {
+    public boolean editActivityInputsValid(Activity activity, String originalNickname, String nickname, boolean testing) {
         //TODO sort out popup messages so they sound better.
         //TODO look into removing popup messages and replace with messages that appear next to highlighted edittext that is wrong
         if (nickname.isEmpty()) {
-            AlertDialogHelper.popupWarning("You must enter a nickname for the member.", activity);
+            if(!testing) {
+                AlertDialogHelper.popupWarning("You must enter a nickname for the member.", activity);
+            }
             return false;
         }
 
         if (!nickname.equals(originalNickname)
                 && memberRepository.contains(nickname)) {
-            AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", activity);
+            if(!testing) {
+                AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", activity);
+            }
             return false;
         }
 

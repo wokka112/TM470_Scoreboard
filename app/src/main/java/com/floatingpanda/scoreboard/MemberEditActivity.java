@@ -74,7 +74,7 @@ public class MemberEditActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String nickname = nicknameEditText.getText().toString();
 
-                if(!memberViewModel.editActivityInputsValid(MemberEditActivity.this, member.getNickname(), nickname)) {
+                if(!memberViewModel.editActivityInputsValid(MemberEditActivity.this, member.getNickname(), nickname, false)) {
                     return;
                 }
 

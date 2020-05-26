@@ -4,7 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Room;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,7 @@ public class BoardGameRepository {
 
     private AssignedCategoryDao assignedCategoryDao;
     private BoardGameDao boardGameDao;
-    private BgCategoryDao bgCategoryDao;
     private PlayModeDao playModeDao;
-    private LiveData<List<BoardGame>> allBoardGames;
-    private LiveData<List<AssignedCategory>> allAssignedCategories;
     private LiveData<List<BoardGameWithBgCategories>> allBoardGamesWithCategories;
     private LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> allBoardGamesWithCategoriesAndPlayModes;
 
@@ -27,34 +23,31 @@ public class BoardGameRepository {
 
         assignedCategoryDao = db.assignedCategoryDao();
         boardGameDao = db.boardGameDao();
-        bgCategoryDao = db.bgCategoryDao();
         playModeDao = db.playModeDao();
 
-        allBoardGames = boardGameDao.getAllLive();
-        allAssignedCategories = assignedCategoryDao.getAll();
-        allBoardGamesWithCategories = boardGameDao.getAllBoardGamesAndBgCategories();
-        allBoardGamesWithCategoriesAndPlayModes = boardGameDao.getAllBgsAndCategoriesAndPlayModes();
+        allBoardGamesWithCategories = boardGameDao.getAllBoardGamesWithBgCategories();
+        allBoardGamesWithCategoriesAndPlayModes = boardGameDao.getAllBoardGamesWithBgCategoriesAndPlayModes();
     }
 
-    public LiveData<List<BoardGameWithBgCategories>> getAllBoardGamesWithCategories() {
+    public BoardGameRepository(AppDatabase db) {
+        assignedCategoryDao = db.assignedCategoryDao();
+        boardGameDao = db.boardGameDao();
+        playModeDao = db.playModeDao();
+
+        allBoardGamesWithCategories = boardGameDao.getAllBoardGamesWithBgCategories();
+        allBoardGamesWithCategoriesAndPlayModes = boardGameDao.getAllBoardGamesWithBgCategoriesAndPlayModes();
+    }
+
+    public LiveData<List<BoardGameWithBgCategories>> getAllBoardGamesWithBgCategories() {
         return allBoardGamesWithCategories;
     }
 
-    public LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> getAllBoardGamesWithCategoriesAndPlayModes() {
+    public LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> getAllBoardGamesWithBgCategoriesAndPlayModes() {
         return allBoardGamesWithCategoriesAndPlayModes;
     }
 
-    // Maybe make private and use only inside the repository? Won't work in main thread cause it accesses db.
-    private BoardGame getBoardGame(String bgName) {
-        return boardGameDao.findNonLiveDataByName(bgName);
-    }
-
-    public LiveData<BoardGameWithBgCategories> getLiveDataBoardGameAndCategories(BoardGame boardGame) {
-        return boardGameDao.findBoardGameAndBgCategoriesById(boardGame.getId());
-    }
-
-    public LiveData<BoardGameWithBgCategoriesAndPlayModes> getLiveDataBgAndCategoriesAndPlayModes(BoardGame boardGame) {
-        return boardGameDao.findBgAndCategoriesAndPlayModesById(boardGame.getId());
+    public LiveData<BoardGameWithBgCategoriesAndPlayModes> getLiveDataBoardGameWithBgCategoriesAndPlayModes(int bgId) {
+        return boardGameDao.findBoardGameWithBgCategoriesAndPlayModesById(bgId);
     }
 
     //Preconditions: playmodes is not empty.
@@ -79,6 +72,8 @@ public class BoardGameRepository {
     public void update(BoardGameWithBgCategoriesAndPlayModes originalBoardGameWithBgCategoriesAndPlayModes,
                        BoardGameWithBgCategoriesAndPlayModes editedBoardGameWithBgCategoriesAndPlayModes) {
         AppDatabase.getExecutorService().execute(() -> {
+            boardGameDao.update(editedBoardGameWithBgCategoriesAndPlayModes.getBoardGame());
+
             List<PlayMode> playModesToDelete = getPlayModesToDelete(originalBoardGameWithBgCategoriesAndPlayModes.getPlayModes(),
                     editedBoardGameWithBgCategoriesAndPlayModes.getPlayModes());
             deletePlayModes(playModesToDelete);
@@ -104,6 +99,10 @@ public class BoardGameRepository {
     }
 
     public boolean contains(String bgName) {
+        if (bgName == null || bgName.isEmpty()) {
+            return false;
+        }
+
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
@@ -147,7 +146,7 @@ public class BoardGameRepository {
     private void insertBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         insertBoardGameWithBgCategories(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories());
 
-        int bgId = boardGameDao.findNonLiveDataByName(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getBgName()).getId();
+        int bgId = getBoardGameId(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getBgName());
         List<PlayMode> playModes = boardGameWithBgCategoriesAndPlayModes.getPlayModes();
 
         for(int i = 0; i < playModes.size(); i++) {

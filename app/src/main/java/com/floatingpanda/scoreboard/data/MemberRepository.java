@@ -20,10 +20,16 @@ public class MemberRepository {
         allMembers = memberDao.getAllLive();
     }
 
+    //Used for testing
+    public MemberRepository(AppDatabase db) {
+        memberDao = db.memberDao();
+        allMembers = memberDao.getAllLive();
+    }
+
     /**
      * @return live data list of all members from the database
      */
-    public LiveData<List<Member>> getAllMembers() {
+    public LiveData<List<Member>> getAll() {
         return allMembers;
     }
 
@@ -36,7 +42,7 @@ public class MemberRepository {
      * @param id the id of a member
      * @return live data member from the database with a member_id of id
      */
-    public LiveData<Member> getLiveMember(int id) {
+    public LiveData<Member> getLiveMemberById(int id) {
         return memberDao.findLiveDataById(id);
     }
 
@@ -108,6 +114,11 @@ public class MemberRepository {
      */
     //TODO look into whether this is basically just running on the main thread. I think it may be.
     public boolean contains(String nickname) {
+        if(nickname == null) {
+            Log.w("MemberRepo.java", "contains() method passed null parameter.");
+            return false;
+        }
+
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {

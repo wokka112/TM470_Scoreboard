@@ -8,6 +8,7 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
+import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.AssignedCategory;
 import com.floatingpanda.scoreboard.data.AssignedCategoryDao;
@@ -20,7 +21,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.experimental.categories.Categories;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;

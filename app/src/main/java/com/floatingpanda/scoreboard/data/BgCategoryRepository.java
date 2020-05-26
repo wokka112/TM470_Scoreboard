@@ -26,17 +26,21 @@ public class BgCategoryRepository {
         assignedCategoryDao = db.assignedCategoryDao();
     }
 
+    // Constructor used for testing purposes.
+    public BgCategoryRepository(AppDatabase database) {
+        bgCategoryDao = database.bgCategoryDao();
+        allBgCategories = bgCategoryDao.getAllLive();
+
+        //Used for testing
+        assignedCategoryDao = database.assignedCategoryDao();
+    }
+
     /**
      * @return live data list of all bg categories from database
      */
     public LiveData<List<BgCategory>> getAll() {
         return allBgCategories;
     }
-
-    /**
-     * @return normal list of all bg categories from database
-     */
-    public List<BgCategory> getAllNonLive() { return bgCategoryDao.getAllNonLive(); }
 
     // Precondition: BgCategory with bgCategory's name or id should not exist in database.
     // Postcondition: new BgCategory exists in the database.
@@ -80,31 +84,13 @@ public class BgCategoryRepository {
     // Postconditions: - bgCategory will no longer exist in the database.
     //                 - assigned_categories tables with bgCategory in will have been deleted.
     //                 - skill ratings for players for this category will have been deleted.
-    //TODO add assert tests.
     /**
      * Deletes bgCategory from the database.
      * @param bgCategory a BgCategory that exists in the database
      */
     public void delete(BgCategory bgCategory) {
         AppDatabase.getExecutorService().execute(() -> {
-            //TODO remove logs, they are for testing.
-            List<AssignedCategory> assignedCategories = assignedCategoryDao.findNonLiveDataByCategoryId(bgCategory.getId());
-
-            for (int i = 0; i < assignedCategories.size(); i++) {
-                Log.w("BGCatRepos.java", "1 Bg: " + bgCategory.getId() + ", AC: " + assignedCategories.get(i).getBgId());
-            }
-
             bgCategoryDao.delete(bgCategory);
-
-            assignedCategories = assignedCategoryDao.findNonLiveDataByCategoryId(bgCategory.getId());
-
-            if (assignedCategories.isEmpty()) {
-                Log.w("BGCatRepos.java", "2 Empty");
-            } else {
-                for (int i = 0; i < assignedCategories.size(); i++) {
-                    Log.w("BGCatRepos.java", "2 Category: " + bgCategory.getId() + ", AC: " + assignedCategories.get(i).getBgId());
-                }
-            }
         });
     }
 
@@ -118,6 +104,11 @@ public class BgCategoryRepository {
      * @return
      */
     public boolean containsCategoryName(String categoryName) {
+        if(categoryName == null) {
+            Log.w("BgCatRepo.java", "containsCategoryName() method passed null parameter.");
+            return false;
+        }
+
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {

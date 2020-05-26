@@ -43,7 +43,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class, "scoreboard_database")
                             .fallbackToDestructiveMigration()
                             //.allowMainThreadQueries() // Use for testing purposes
-                            .addCallback(sRoomDatabaseCallback)
+                            .addCallback(sRoomDatabaseCallback) // Comment out when testing.
                             .build();
                 }
             }
@@ -76,22 +76,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 member = new Member("Bailey", "Bailey");
                 memberDao.insert(member);
                 member = new Member("Bailey",  "Bailey");
-
-                /*
-                BgCategoryDao bgCategoryDao = INSTANCE.bgCategoryDao();
-                bgCategoryDao.deleteAll();
-
-                BgCategory category = new BgCategory("Strategy");
-                bgCategoryDao.insert(category);
-                category = new BgCategory("Gambling");
-                bgCategoryDao.insert(category);
-                category = new BgCategory("Bluffing");
-                bgCategoryDao.insert(category);
-                category = new BgCategory("Eurotrash");
-                bgCategoryDao.insert(category);
-                category = new BgCategory("Ameritrash");
-                bgCategoryDao.insert(category);
-                */
 
                 GroupDao groupDao = INSTANCE.groupDao();
                 groupDao.deleteAll();
@@ -145,7 +129,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 BoardGame bg1 = new BoardGame("Monopoly", 3, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 
-                teamOption = BoardGame.TeamOption.TEAMS_OR_SOLOS;
+                teamOption = BoardGame.TeamOption.TEAMS_AND_SOLOS_ALLOWED;
                 BoardGame bg2 = new BoardGame("Go", 3, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 

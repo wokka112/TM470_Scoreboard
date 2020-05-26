@@ -2,7 +2,9 @@ package com.floatingpanda.scoreboard.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.core.os.ParcelableCompatCreatorCallbacks;
 import androidx.room.Embedded;
 import androidx.room.Ignore;
@@ -88,6 +90,23 @@ public class BoardGameWithBgCategories implements Parcelable {
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+
+        BoardGameWithBgCategories boardGameWithBgCategories = (BoardGameWithBgCategories) obj;
+
+        for (BgCategory bgCategory : bgCategories) {
+            if (!this.getBgCategories().contains(bgCategory)) {
+                return false;
+            }
+        }
+
+        return (boardGameWithBgCategories.getBoardGame().equals(this.getBoardGame()));
     }
 
     @Override

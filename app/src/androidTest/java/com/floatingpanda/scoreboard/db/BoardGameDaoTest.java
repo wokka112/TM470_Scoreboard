@@ -9,11 +9,18 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
+import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.AssignedCategory;
+import com.floatingpanda.scoreboard.data.AssignedCategoryDao;
+import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.BgCategoryDao;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameDao;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.MemberDao;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.data.PlayMode;
+import com.floatingpanda.scoreboard.data.PlayModeDao;
 
 import org.junit.After;
 import org.junit.Before;
@@ -22,11 +29,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -39,7 +48,10 @@ public class BoardGameDaoTest {
 
     private AppDatabase db;
 
+    private AssignedCategoryDao assignedCategoryDao;
     private BoardGameDao boardGameDao;
+    private BgCategoryDao bgCategoryDao;
+    private PlayModeDao playModeDao;
 
     @Before
     public void createDb() {
@@ -47,7 +59,10 @@ public class BoardGameDaoTest {
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
                 .allowMainThreadQueries()
                 .build();
+        assignedCategoryDao = db.assignedCategoryDao();
         boardGameDao = db.boardGameDao();
+        bgCategoryDao = db.bgCategoryDao();
+        playModeDao = db.playModeDao();
     }
 
     @After
@@ -90,7 +105,7 @@ public class BoardGameDaoTest {
     }
 
     @Test
-    public void getLiveBoardGameWhenSpecificBoardGameInserted() throws InterruptedException {
+    public void getLiveBoardGamesWhenSpecificBoardGameInserted() throws InterruptedException {
         boardGameDao.insert(TestData.BOARD_GAME_1);
 
         List<BoardGame> boardGames = LiveDataTestUtil.getValue(boardGameDao.getAllLive());
@@ -101,7 +116,7 @@ public class BoardGameDaoTest {
     }
 
     @Test
-    public void getNonLiveBoardGameWhenSpecificBoardGameInserted() {
+    public void getNonLiveBoardGamesWhenSpecificBoardGameInserted() {
         boardGameDao.insert(TestData.BOARD_GAME_1);
 
         List<BoardGame> boardGames = boardGameDao.getAllNonLive();
@@ -241,5 +256,71 @@ public class BoardGameDaoTest {
         assertThat(updatedBoardGame.getImgFilePath(), is(newImgFilePath));
     }
 
-    //TODO write tests for transactions once board game is updated in regards to play modes and associated categories lists.
+    @Test
+    public void getLiveBoardGamesWithBgCategoriesWhenNoneInserted() throws InterruptedException {
+        List<BoardGameWithBgCategories> boardGamesWithBgCategories = LiveDataTestUtil.getValue(boardGameDao.getAllBoardGamesWithBgCategories());
+
+        assertTrue(boardGamesWithBgCategories.isEmpty());
+    }
+
+    @Test
+    public void getLiveBoardGamesWithBgCategoriesWhenInserted() throws InterruptedException {
+        boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+
+        List<BoardGameWithBgCategories> boardGamesWithBgCategories = LiveDataTestUtil.getValue(boardGameDao.getAllBoardGamesWithBgCategories());
+
+        assertThat(boardGamesWithBgCategories.size(), is(TestData.BOARD_GAMES_WITH_BG_CATEGORIES.size()));
+    }
+
+    @Test
+    public void getLiveBoardGameWithBgCategoriesById() throws InterruptedException {
+        boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+
+        //board game 3 is associated with 2 bg categories via assigned categories - bg category 1 and bg category 3.
+        BoardGameWithBgCategories boardGameWithBgCategories =
+                LiveDataTestUtil.getValue(boardGameDao.findBoardGameWithBgCategoriesById(TestData.BOARD_GAME_WITH_BG_CATEGORIES_3.getBoardGame().getId()));
+
+        assertNotNull(boardGameWithBgCategories);
+        assertThat(boardGameWithBgCategories, is(TestData.BOARD_GAME_WITH_BG_CATEGORIES_3));
+    }
+
+    @Test
+    public void getLiveBoardGamesWithBgCategoriesAndPlayModesWhenNoneInserted() throws InterruptedException {
+        List<BoardGameWithBgCategoriesAndPlayModes> boardGamesWithBgCategoriesAndPlayModes = LiveDataTestUtil.getValue(boardGameDao.
+                getAllBoardGamesWithBgCategoriesAndPlayModes());
+
+        assertTrue(boardGamesWithBgCategoriesAndPlayModes.isEmpty());
+    }
+
+    @Test
+    public void getLiveBoardGamesWithBgCategoriesAndPlayModesWhenInserted() throws InterruptedException {
+        boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        playModeDao.insertAll(TestData.PLAY_MODES.toArray(new PlayMode[TestData.PLAY_MODES.size()]));
+
+        List<BoardGameWithBgCategoriesAndPlayModes> boardGamesWithBgCategoriesAndPlayModes = LiveDataTestUtil.getValue(boardGameDao.
+                getAllBoardGamesWithBgCategoriesAndPlayModes());
+
+        assertThat(boardGamesWithBgCategoriesAndPlayModes.size(), is(TestData.BOARD_GAMES_WITH_BG_CATEGORIES_AND_PLAY_MODES.size()));
+    }
+
+    @Test
+    public void getLiveBoardGameWithBgCategoriesAndPlayModesById() throws InterruptedException {
+        boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        playModeDao.insertAll(TestData.PLAY_MODES.toArray(new PlayMode[TestData.PLAY_MODES.size()]));
+
+        //Get boardgame3's categories and play modes
+        BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes = LiveDataTestUtil.getValue(boardGameDao.
+                findBoardGameWithBgCategoriesAndPlayModesById(TestData.BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_3.getBoardGame().getId()));
+
+        assertNotNull(boardGameWithBgCategoriesAndPlayModes);
+        assertThat(boardGameWithBgCategoriesAndPlayModes, is(TestData.BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_3));
+    }
 }

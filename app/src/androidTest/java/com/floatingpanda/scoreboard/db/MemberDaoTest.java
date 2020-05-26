@@ -3,12 +3,12 @@ package com.floatingpanda.scoreboard.db;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
+import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.MemberDao;

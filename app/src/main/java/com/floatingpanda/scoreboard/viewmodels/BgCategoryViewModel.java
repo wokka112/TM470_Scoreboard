@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData;
 import com.floatingpanda.scoreboard.AlertDialogHelper;
 import com.floatingpanda.scoreboard.BgCategoryAddActivity;
 import com.floatingpanda.scoreboard.BgCategoryEditActivity;
+import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 
@@ -23,6 +24,13 @@ public class BgCategoryViewModel extends AndroidViewModel {
     public BgCategoryViewModel(Application application) {
         super(application);
         bgCategoryRepository = new BgCategoryRepository(application);
+        allBgCategories = bgCategoryRepository.getAll();
+    }
+
+    // Used for testing purposes.
+    public BgCategoryViewModel(Application application, AppDatabase database) {
+        super(application);
+        bgCategoryRepository = new BgCategoryRepository(database);
         allBgCategories = bgCategoryRepository.getAll();
     }
 
@@ -71,25 +79,33 @@ public class BgCategoryViewModel extends AndroidViewModel {
      */
     public void deleteBgCategory(BgCategory bgCategory) { bgCategoryRepository.delete(bgCategory); }
 
-    public boolean addActivityInputsValid(Activity activity, String categoryName) {
-        return editActivityInputsValid(activity, "", categoryName);
+    //TODO move this into a validator class??
+    public boolean addActivityInputsValid(Activity activity, String categoryName, boolean testing) {
+        return editActivityInputsValid(activity, "", categoryName, testing);
     }
 
-    public boolean editActivityInputsValid(Activity activity, String originalCategoryName, String categoryName) {
+    public boolean editActivityInputsValid(Activity activity, String originalCategoryName, String categoryName, boolean testing) {
         //TODO remove popup warnings and instead direct people to the edit text in error and
         // inform them what they need to do to fix it?
         if (categoryName.isEmpty()) {
-            AlertDialogHelper.popupWarning("You must enter a name for the category.", activity);
+            if (!testing) {
+                AlertDialogHelper.popupWarning("You must enter a name for the category.", activity);
+            }
             return false;
         }
 
         // Do not return false if the category name has not been edited.
         if (!categoryName.equals(originalCategoryName)
                 && bgCategoryRepository.containsCategoryName(categoryName)) {
-            AlertDialogHelper.popupWarning("You must enter a unique name for the category.", activity);
+            if (!testing) {
+                AlertDialogHelper.popupWarning("You must enter a unique name for the category.", activity);
+            }
             return false;
         }
 
         return true;
     }
+
+    //TODO maybe put enums here for invalidity and simply return them. Then the enum determines what popup to create in the view?
+    // then get rid of testing boolean?
 }
