@@ -22,6 +22,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +69,7 @@ public class MemberRepositoryTest {
     @Test
     public void getLiveMembersFromDatabaseWhenMembersInserted() throws InterruptedException {
         memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberRepository.getAll());
 
@@ -87,6 +89,7 @@ public class MemberRepositoryTest {
     @Test
     public void getLiveMemberFromDatabaseWhenMembersInserted() throws InterruptedException {
         memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue((memberRepository.getAll()));
         assertThat(members.size(), is(TestData.MEMBERS.size()));
@@ -113,6 +116,7 @@ public class MemberRepositoryTest {
     @Test
     public void editMemberInDatabase() throws  InterruptedException {
         memberRepository.insert(TestData.MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberRepository.getAll());
 
@@ -125,15 +129,14 @@ public class MemberRepositoryTest {
         String newNickname = "Changed nickname";
         String newNotes = "Changed notes";
         String newImgFilePath = "Changed img file path";
+        Date newDateCreated = new Date(100);
 
         member.setNickname(newNickname);
         member.setNotes(newNotes);
         member.setImgFilePath(newImgFilePath);
+        member.setDateCreated(newDateCreated);
 
         assertThat(member, is(not(members.get(0))));
-        assertThat(member.getNickname(), is(newNickname));
-        assertThat(member.getNotes(), is(newNotes));
-        assertThat(member.getImgFilePath(), is(newImgFilePath));
 
         memberRepository.update(member);
         // Waiting for background thread to finish.
@@ -142,13 +145,21 @@ public class MemberRepositoryTest {
         members = LiveDataTestUtil.getValue(memberRepository.getAll());
 
         assertThat(members.size(), is(1));
-        assertThat(members.get(0), is(not(TestData.BG_CATEGORY_1)));
-        assertThat(members.get(0), is(member));
+
+        Member editedMember = members.get(0);
+
+        assertThat(editedMember, is(not(TestData.BG_CATEGORY_1)));
+        assertThat(editedMember, is(member));
+        assertThat(editedMember.getNickname(), is(newNickname));
+        assertThat(editedMember.getNotes(), is(newNotes));
+        assertThat(editedMember.getImgFilePath(), is(newImgFilePath));
+        assertThat(editedMember.getDateCreated(), is(newDateCreated));
     }
 
     @Test
     public void deleteMemberInDatabase() throws InterruptedException {
         memberRepository.insert(TestData.MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberRepository.getAll());
 
@@ -166,12 +177,10 @@ public class MemberRepositoryTest {
 
     @Test
     public void testContains() throws InterruptedException {
-        memberRepository.insert(TestData.MEMBER_1);
-
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
         List<Member> members = LiveDataTestUtil.getValue(memberRepository.getAll());
 
-        assertThat(members.size(), is(1));
-        assertThat(members.get(0), is(TestData.MEMBER_1));
+        assertThat(members.size(), is(TestData.MEMBERS.size()));
 
         //Test case 1: Contains - nickname exists in database.
         String nickname = TestData.MEMBER_1.getNickname();
@@ -187,10 +196,16 @@ public class MemberRepositoryTest {
         nickname = "";
         contains = memberRepository.contains(nickname);
         assertFalse(contains);
+    }
 
-        //Test case 4: Does not contain - null nickname passed.
-        nickname = null;
-        contains = memberRepository.contains(nickname);
-        assertFalse(contains);
+    @Test(expected = IllegalArgumentException.class)
+    public void testContainsWithNull() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        List<Member> members = LiveDataTestUtil.getValue(memberRepository.getAll());
+
+        assertThat(members.size(), is(TestData.MEMBERS.size()));
+
+        String nickname = null;
+        boolean contains = memberRepository.contains(nickname);
     }
 }

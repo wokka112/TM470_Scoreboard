@@ -39,6 +39,7 @@ import static org.hamcrest.Matchers.not;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class BoardGameAddEditViewModelTest {
@@ -47,10 +48,8 @@ public class BoardGameAddEditViewModelTest {
 
     private AppDatabase db;
 
-    private AssignedCategoryDao assignedCategoryDao;
     private BgCategoryDao bgCategoryDao;
     private BoardGameDao boardGameDao;
-    private PlayModeDao playModeDao;
     private BoardGameAddEditViewModel boardGameAddEditViewModel;
 
     @Mock
@@ -62,10 +61,8 @@ public class BoardGameAddEditViewModelTest {
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
                 .allowMainThreadQueries()
                 .build();
-        assignedCategoryDao = db.assignedCategoryDao();
         bgCategoryDao = db.bgCategoryDao();
         boardGameDao = db.boardGameDao();
-        playModeDao = db.playModeDao();
         boardGameAddEditViewModel = new BoardGameAddEditViewModel(ApplicationProvider.getApplicationContext(), db);
     }
 
@@ -366,8 +363,9 @@ public class BoardGameAddEditViewModelTest {
     //Precondition that difficultyString, minPlayersString and maxPlayersString all be integers. I am not testing
     // for them not being integers.
     @Test
-    public void editActivityInputsValid() {
+    public void editActivityInputsValid() throws InterruptedException {
         boardGameDao.insert(TestData.BOARD_GAME_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         //Test Case 1: Invalid - editedBgName empty
         String originalBgName = "Bloople";

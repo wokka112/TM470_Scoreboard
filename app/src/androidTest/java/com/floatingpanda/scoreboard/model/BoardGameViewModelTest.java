@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -202,11 +203,13 @@ public class BoardGameViewModelTest {
     @Test
     public void deleteBoardGame() throws InterruptedException {
         boardGameDao.insert(TestData.BOARD_GAME_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         BoardGame boardGame = LiveDataTestUtil.getValue(boardGameDao.findLiveDataById(TestData.BOARD_GAME_1.getId()));
         assertThat(boardGame, is(TestData.BOARD_GAME_1));
 
         boardGameViewModel.deleteBoardGame(TestData.BOARD_GAME_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         boardGame = LiveDataTestUtil.getValue(boardGameDao.findLiveDataById(TestData.BOARD_GAME_1.getId()));
         assertNull(boardGame);

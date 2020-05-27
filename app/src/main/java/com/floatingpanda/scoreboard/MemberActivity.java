@@ -30,7 +30,7 @@ public class MemberActivity extends AppCompatActivity {
     private MemberViewModel memberViewModel;
     private Member member;
 
-    private TextView nicknameTextView, notesTextView, groupsTextView, viewGroupsLink,
+    private TextView nicknameTextView, dateCreatedTextView, notesTextView, groupsTextView, viewGroupsLink,
             bestGameTextView, worstGameTextView;
     private ImageView imageView;
 
@@ -41,6 +41,7 @@ public class MemberActivity extends AppCompatActivity {
         memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
 
         nicknameTextView = findViewById(R.id.memberact_nickname_output);
+        dateCreatedTextView = findViewById(R.id.memberact_date_created_output);
         notesTextView = findViewById(R.id.memberact_notes_output);
         //TODO implement groupcount in member and functionality to work it out.
         groupsTextView = findViewById(R.id.memberact_groups_output);
@@ -57,10 +58,11 @@ public class MemberActivity extends AppCompatActivity {
 
         member = (Member) getIntent().getExtras().get("MEMBER");
 
-        Log.w("MemberActivity.java", "Using member: " + member.getNickname());
+        //TODO change the memberviewmodel to get live data member via id.
         memberViewModel.getLiveDataMember(member).observe(MemberActivity.this, new Observer<Member>() {
             @Override
             public void onChanged(@Nullable final Member liveMember) {
+                setMember(liveMember);
                 setViews(liveMember);
             }
         });
@@ -84,6 +86,14 @@ public class MemberActivity extends AppCompatActivity {
         });
     }
 
+    private void setMember(Member member) {
+        if (member == null) {
+            return;
+        }
+
+        this.member = member;
+    }
+
     // Postconditions: - The text and imageviews in this member activity are updated to match the member
     //                    passed as a parameter.
     /**
@@ -102,6 +112,8 @@ public class MemberActivity extends AppCompatActivity {
 
         Log.w("MemberActivity.java", "Setting details: " + member);
         nicknameTextView.setText(member.getNickname());
+        //TODO fix so it presents only day, month, year. Maybe do that via a method in the Member object.
+        dateCreatedTextView.setText(member.getDateCreated().toString());
         notesTextView.setText(member.getNotes());
 
         //TODO implement groupcount in member and functionality to work it out.
@@ -119,8 +131,6 @@ public class MemberActivity extends AppCompatActivity {
         //TODO implement imgfilepath and functionality for it all
         //member.getImage();
         imageView.setImageResource(R.drawable.ic_launcher_foreground);
-
-        this.member = member;
     }
 
     // Preconditions: - member exists in database.

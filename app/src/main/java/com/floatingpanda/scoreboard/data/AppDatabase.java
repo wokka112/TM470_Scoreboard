@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
+import com.floatingpanda.scoreboard.typeconverters.DateTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.PlayModeTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.TeamOptionTypeConverter;
 
@@ -18,8 +19,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 19, exportSchema = false)
-@TypeConverters({PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
+@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 22, exportSchema = false)
+@TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MemberDao memberDao();
@@ -65,34 +66,29 @@ public abstract class AppDatabase extends RoomDatabase {
                 MemberDao memberDao = INSTANCE.memberDao();
                 memberDao.deleteAll();
 
-                Member member = new Member("Bill", "Bill");
+                Member member = new Member("Bill", "Bill", "TBA");
                 memberDao.insert(member);
-                member = new Member("Frank",  "Frank");
+                member = new Member("Frank",  "Frank", "TBA");
                 memberDao.insert(member);
-                member = new Member("Bailey","Bailey");
+                member = new Member("Bailey","Bailey", "TBA");
                 memberDao.insert(member);
-                member = new Member("Bailey",  "Bailey");
-                memberDao.insert(member);
-                member = new Member("Bailey", "Bailey");
-                memberDao.insert(member);
-                member = new Member("Bailey",  "Bailey");
 
                 GroupDao groupDao = INSTANCE.groupDao();
                 groupDao.deleteAll();
 
-                Group group = new Group("Ragnarok", "", "");
+                Group group = new Group("Ragnarok", "", "", "TBA", "TBA");
                 groupDao.insert(group);
-                group = new Group("The Monday Knights", "", "");
+                group = new Group("The Monday Knights", "", "", "TBA", "TBA");
                 groupDao.insert(group);
-                group = new Group("The Hospitallers", "", "");
+                group = new Group("The Hospitallers", "", "", "TBA", "TBA");
                 groupDao.insert(group);
-                group = new Group("The Templars", "", "");
+                group = new Group("The Templars", "", "", "TBA", "TBA");
                 groupDao.insert(group);
-                group = new Group("The Crusaders", "", "");
+                group = new Group("The Crusaders", "", "", "TBA", "TBA");
                 groupDao.insert(group);
-                group = new Group("The Saracens", "", "");
+                group = new Group("The Saracens", "", "", "TBA", "TBA");
                 groupDao.insert(group);
-                group = new Group("The Turks", "", "");
+                group = new Group("The Turks", "", "", "TBA", "TBA");
                 groupDao.insert(group);
 
                 BoardGameDao bgDao = INSTANCE.boardGameDao();

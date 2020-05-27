@@ -5,10 +5,12 @@ import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.data.Group;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.PlayMode;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,9 +27,9 @@ public class TestData {
 
     public static final List<BgCategory> BG_CATEGORIES = Arrays.asList(BG_CATEGORY_1, BG_CATEGORY_2, BG_CATEGORY_3);
 
-    public static final Member MEMBER_1 = new Member(5, "Ragnar", "", "");
-    public static final Member MEMBER_2 = new Member(6, "Eggs", "", "");
-    public static final Member MEMBER_3 = new Member(7, "Bob", "", "");
+    public static final Member MEMBER_1 = new Member(5, "Ragnar", "", "TBA", new Date());
+    public static final Member MEMBER_2 = new Member(6, "Eggs", "", "TBA", new Date());
+    public static final Member MEMBER_3 = new Member(7, "Bob", "", "TBA", new Date());
 
     public static final List<Member> MEMBERS = Arrays.asList(MEMBER_1, MEMBER_2, MEMBER_3);
 
@@ -39,6 +41,12 @@ public class TestData {
             2, 2, BoardGame.TeamOption.TEAMS_ONLY, "", "", "", "");
 
     public static final List<BoardGame> BOARD_GAMES = Arrays.asList(BOARD_GAME_1, BOARD_GAME_2, BOARD_GAME_3);
+
+    public static final Group GROUP_1 = new Group(11, "Ragnarok", "", "", "TBA", "TBA", new Date());
+    public static final Group GROUP_2 = new Group(12, "The Monday Knights", "", "", "TBA", "TBA", new Date());
+    public static final Group GROUP_3 = new Group(13, "The Thirds", "", "", "TBA", "TBA", new Date());
+
+    public static final List<Group> GROUPS = Arrays.asList(GROUP_1, GROUP_2, GROUP_3);
 
     public static final AssignedCategory ASSIGNED_CATEGORY_1 = new AssignedCategory(BOARD_GAME_1.getId(), BG_CATEGORY_1.getId());
     public static final AssignedCategory ASSIGNED_CATEGORY_2 = new AssignedCategory(BOARD_GAME_2.getId(), BG_CATEGORY_2.getId());
@@ -78,4 +86,6 @@ public class TestData {
 
     public static final List<BoardGameWithBgCategoriesAndPlayModes> BOARD_GAMES_WITH_BG_CATEGORIES_AND_PLAY_MODES =
             Arrays.asList(BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_1, BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_2, BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_3);
+
+
 }

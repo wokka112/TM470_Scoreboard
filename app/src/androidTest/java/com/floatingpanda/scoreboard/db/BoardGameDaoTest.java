@@ -29,8 +29,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -123,6 +125,50 @@ public class BoardGameDaoTest {
 
         assertFalse(boardGames.isEmpty());
         assertThat(boardGames.size(), is(1));
+        assertThat(boardGames.get(0), is(TestData.BOARD_GAME_1));
+    }
+
+    @Test
+    public void getLiveBoardGamesWhenSameBoardGameInsertedTwice() throws InterruptedException {
+        boardGameDao.insert(TestData.BOARD_GAME_1);
+
+        List<BoardGame> boardGames = LiveDataTestUtil.getValue(boardGameDao.getAllLive());
+
+        assertFalse(boardGames.isEmpty());
+        assertThat(boardGames.size(), is(1));
+        assertThat(boardGames.get(0), is(TestData.BOARD_GAME_1));
+
+        boardGameDao.insert(TestData.BOARD_GAME_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        boardGames = LiveDataTestUtil.getValue(boardGameDao.getAllLive());
+
+        assertFalse(boardGames.isEmpty());
+        assertThat(boardGames.size(), is(not(2)));
+        assertThat(boardGames.size(), is(1));
+        assertThat(boardGames.get(0), is(TestData.BOARD_GAME_1));
+    }
+
+    @Test
+    public void getLiveBoardGamesWhenBoardGameIsInsertedThenEditedVersionWithSamePrimaryKeyIsInserted() throws InterruptedException {
+        boardGameDao.insert(TestData.BOARD_GAME_1);
+
+        List<BoardGame> boardGames = LiveDataTestUtil.getValue(boardGameDao.getAllLive());
+
+        assertFalse(boardGames.isEmpty());
+        assertThat(boardGames.size(), is(1));
+        assertThat(boardGames.get(0), is(TestData.BOARD_GAME_1));
+
+        BoardGame editedBoardGame = new BoardGame(boardGames.get(0));
+        editedBoardGame.setBgName("Changed");
+
+        boardGameDao.insert(editedBoardGame);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        assertFalse(boardGames.isEmpty());
+        assertThat(boardGames.size(), is(not(2)));
+        assertThat(boardGames.size(), is(1));
+        assertThat(boardGames.get(0), is(not(editedBoardGame)));
         assertThat(boardGames.get(0), is(TestData.BOARD_GAME_1));
     }
 

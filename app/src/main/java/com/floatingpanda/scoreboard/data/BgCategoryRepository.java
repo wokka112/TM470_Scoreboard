@@ -97,16 +97,16 @@ public class BgCategoryRepository {
     // Postconditions: - if a BgCategory with bgCategory's name exists in the database, returns true.
     //                 - if no BgCategory with bgCategory's name exists in the database, returns false.
     //TODO look into whether this is basically just running on the main thread. I think it may be.
+    //TODO make empty string an illegal argument as well?
     /**
      * Checks whether the database contains a BgCategory with the name categoryName. If it does,
      * returns true. Otherwise, returns false.
      * @param categoryName
      * @return
      */
-    public boolean containsCategoryName(String categoryName) {
+    public boolean containsCategoryName(String categoryName) throws IllegalArgumentException {
         if(categoryName == null) {
-            Log.w("BgCatRepo.java", "containsCategoryName() method passed null parameter.");
-            return false;
+            throw new IllegalArgumentException("null categoryName passed to contains method.");
         }
 
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {

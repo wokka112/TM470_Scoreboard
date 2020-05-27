@@ -11,6 +11,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 /**
  * Represents a member of board game groups. The member may belong to zero, one or more groups.
  */
@@ -33,22 +35,26 @@ public class Member implements Parcelable {
     @ColumnInfo(name = "img_file_path")
     private String imgFilePath;
 
-    //TODO add date created attribute
+    @NonNull
+    @ColumnInfo(name = "date_created")
+    private Date dateCreated;
 
     @Ignore
-    public Member(int id, String nickname, String notes, String imgFilePath) {
+    public Member(int id, String nickname, String notes, String imgFilePath, Date dateCreated) {
         this.id = id;
         this.nickname = nickname;
         this.notes = notes;
         this.imgFilePath = imgFilePath;
+        this.dateCreated = dateCreated;
     }
 
-    public Member(@NonNull String nickname, String notes) {
-        this.id = 0;
-        this.nickname = nickname;
-        this.notes = notes;
-        //TODO sort out imgfilepath default value
-        this.imgFilePath = "TBA";
+    public Member(@NonNull String nickname, String notes, String imgFilePath) {
+        this(0, nickname, notes, imgFilePath, new Date());
+    }
+
+    @Ignore
+    public Member(@NonNull String nickname, String notes, String imgFilePath, Date dateCreated) {
+        this(0, nickname, notes, imgFilePath, dateCreated);
     }
 
     @Ignore
@@ -57,14 +63,7 @@ public class Member implements Parcelable {
         this.nickname = member.getNickname();
         this.notes = member.getNotes();
         this.imgFilePath = member.getImgFilePath();
-    }
-
-    @Ignore
-    public Member(@NonNull String nickname, String notes, String imgFilePath) {
-        this.id = 0;
-        this.nickname = nickname;
-        this.notes = notes;
-        this.imgFilePath = imgFilePath;
+        this.dateCreated = member.getDateCreated();
     }
 
     @Ignore
@@ -73,6 +72,7 @@ public class Member implements Parcelable {
         this.nickname = source.readString();
         this.notes = source.readString();
         this.imgFilePath = source.readString();
+        this.dateCreated = new Date(source.readLong());
     }
 
     public int getId() { return this.id; }
@@ -83,6 +83,8 @@ public class Member implements Parcelable {
     public void setNotes(String notes) { this.notes = notes; }
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
+    public Date getDateCreated() { return this.dateCreated; }
+    public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 
     @Override
     public int describeContents() {
@@ -95,6 +97,7 @@ public class Member implements Parcelable {
         dest.writeString(nickname);
         dest.writeString(notes);
         dest.writeString(imgFilePath);
+        dest.writeLong(dateCreated.getTime());
     }
 
     public static final Creator<Member> CREATOR = new Creator<Member>() {
@@ -123,5 +126,11 @@ public class Member implements Parcelable {
         Member other = (Member) obj;
 
         return (other.getNickname().equals(this.getNickname()));
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Member ID:" + this.getId() + ", Nickname: " + this.getNickname() + ", Date created: " + this.getDateCreated().toString();
     }
 }

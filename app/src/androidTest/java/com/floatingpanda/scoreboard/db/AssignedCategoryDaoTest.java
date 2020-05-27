@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -91,6 +92,27 @@ public class AssignedCategoryDaoTest {
         List<AssignedCategory> assignedCategories = LiveDataTestUtil.getValue(assignedCategoryDao.getAll());
 
         assertFalse(assignedCategories.isEmpty());
+        assertThat(assignedCategories.size(), is(1));
+        assertThat(assignedCategories.get(0), is(TestData.ASSIGNED_CATEGORY_1));
+    }
+
+    @Test
+    public void getAssignedCategoriesWhenSameAssignedCategoryInsertedTwice() throws InterruptedException {
+        assignedCategoryDao.insert(TestData.ASSIGNED_CATEGORY_1);
+
+        List<AssignedCategory> assignedCategories = LiveDataTestUtil.getValue(assignedCategoryDao.getAll());
+
+        assertFalse(assignedCategories.isEmpty());
+        assertThat(assignedCategories.size(), is(1));
+        assertThat(assignedCategories.get(0), is(TestData.ASSIGNED_CATEGORY_1));
+
+        assignedCategoryDao.insert(TestData.ASSIGNED_CATEGORY_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        assignedCategories = LiveDataTestUtil.getValue(assignedCategoryDao.getAll());
+
+        assertFalse(assignedCategories.isEmpty());
+        assertThat(assignedCategories.size(), is(not(2)));
         assertThat(assignedCategories.size(), is(1));
         assertThat(assignedCategories.get(0), is(TestData.ASSIGNED_CATEGORY_1));
     }

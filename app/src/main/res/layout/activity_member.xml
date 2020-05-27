@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/memberact_image"
@@ -30,6 +31,22 @@
         app:layout_constraintLeft_toRightOf="@id/memberact_nickname_header"
         app:layout_constraintTop_toTopOf="@id/memberact_nickname_header"
         android:layout_marginLeft="40dp"/>
+
+    <TextView
+        android:id="@+id/memberact_date_created_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/memberact_nickname_header"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_header"
+        android:text="Date created:"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/memberact_date_created_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/memberact_date_created_header"
+        app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_output" />
 
     <TextView
         android:id="@+id/memberact_notes_header"

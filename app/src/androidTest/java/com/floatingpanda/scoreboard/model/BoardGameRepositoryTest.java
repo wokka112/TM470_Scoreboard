@@ -288,11 +288,17 @@ public class BoardGameRepositoryTest {
         bgName = "";
         contains = boardGameRepository.contains(bgName);
         assertFalse(contains);
+    }
 
-        //Test Case 4: Does not contain - null bgName.
-        bgName = null;
-        contains = boardGameRepository.contains(bgName);
-        assertFalse(contains);
+    @Test(expected = IllegalArgumentException.class)
+    public void testContainsWithNull() throws InterruptedException {
+        boardGameDao.insert(TestData.BOARD_GAME_1);
+        BoardGame boardGame = LiveDataTestUtil.getValue(boardGameDao.findLiveDataById(TestData.BOARD_GAME_1.getId()));
+
+        assertNotNull(boardGame);
+
+        String bgName = null;
+        boolean contains = boardGameRepository.contains(bgName);
     }
 
     //TODO move these into a utility class holding board game testing methods?

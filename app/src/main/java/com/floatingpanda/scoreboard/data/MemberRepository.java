@@ -113,17 +113,16 @@ public class MemberRepository {
      * @return
      */
     //TODO look into whether this is basically just running on the main thread. I think it may be.
-    public boolean contains(String nickname) {
+    ////TODO make empty string an illegal argument as well?
+    public boolean contains(String nickname) throws IllegalArgumentException {
         if(nickname == null) {
-            Log.w("MemberRepo.java", "contains() method passed null parameter.");
-            return false;
+            throw new IllegalArgumentException("null nickname passed to contains method.");
         }
 
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 Member databaseMember = memberDao.findNonLiveDataByNickname(nickname);
-                Log.w("MemberRepos.java", "databaseMember: " + databaseMember);
                 return databaseMember != null;
             };
         });

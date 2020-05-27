@@ -4,6 +4,7 @@ import androidx.room.TypeConverter;
 
 import com.floatingpanda.scoreboard.data.BoardGame;
 
+//TODO add in null checks like date type converter?
 public class TeamOptionTypeConverter {
     @TypeConverter
     public static BoardGame.TeamOption toTeamOption(String name) {

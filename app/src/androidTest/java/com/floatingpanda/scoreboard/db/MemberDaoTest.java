@@ -20,7 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.sql.Time;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -88,7 +91,7 @@ public class MemberDaoTest {
     }
 
     @Test
-    public void getLiveMemberWhenSpecificMemberInserted() throws InterruptedException {
+    public void getLiveMembersWhenSpecificMemberInserted() throws InterruptedException {
         memberDao.insert(TestData.MEMBER_1);
 
         List<Member> members = LiveDataTestUtil.getValue(memberDao.getAllLive());
@@ -99,13 +102,61 @@ public class MemberDaoTest {
     }
 
     @Test
-    public void getNonLiveMemberWhenSpecificMemberInserted() {
+    public void getNonLiveMembersWhenSpecificMemberInserted() {
         memberDao.insert(TestData.MEMBER_1);
 
         List<Member> members = memberDao.getAllNonLive();
 
         assertFalse(members.isEmpty());
         assertThat(members.size(), is(1));
+        assertThat(members.get(0), is(TestData.MEMBER_1));
+    }
+
+    @Test
+    public void getLiveMembersWhenSameMemberInsertedTwice() throws InterruptedException {
+        memberDao.insert(TestData.MEMBER_1);
+
+        List<Member> members = LiveDataTestUtil.getValue(memberDao.getAllLive());
+
+        assertFalse(members.isEmpty());
+        assertThat(members.size(), is(1));
+        assertThat(members.get(0), is(TestData.MEMBER_1));
+
+        memberDao.insert(TestData.MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        members = LiveDataTestUtil.getValue(memberDao.getAllLive());
+
+        assertFalse(members.isEmpty());
+        assertThat(members.size(), is(not(2)));
+        assertThat(members.size(), is (1));
+        assertThat(members.get(0), is(TestData.MEMBER_1));
+    }
+
+    @Test
+    public void getLiveMembersWhenMemberIsInsertedThenEditedVersionWithSamePrimaryKeyIsInserted() throws InterruptedException {
+        memberDao.insert(TestData.MEMBER_1);
+
+        List<Member> members = LiveDataTestUtil.getValue(memberDao.getAllLive());
+
+        assertFalse(members.isEmpty());
+        assertThat(members.size(), is(1));
+        assertThat(members.get(0), is(TestData.MEMBER_1));
+
+        Member editedMember = new Member(members.get(0));
+
+        editedMember.setNickname("Changed");
+        assertThat(editedMember, is(not(members.get(0))));
+
+        memberDao.insert(editedMember);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        members = LiveDataTestUtil.getValue(memberDao.getAllLive());
+
+        assertFalse(members.isEmpty());
+        assertThat(members.size(), is(not(2)));
+        assertThat(members.size(), is(1));
+        assertThat(members.get(0), is(not(editedMember)));
         assertThat(members.get(0), is(TestData.MEMBER_1));
     }
 
@@ -183,6 +234,7 @@ public class MemberDaoTest {
         member.setNickname(newNickname);
         member.setNotes(newNotes);
         member.setImgFilePath(newImgFilePath);
+        member.setDateCreated(new Date(100));
         memberDao.update(member);
 
         //Should no longer exist in database, hence should return null.
@@ -197,6 +249,7 @@ public class MemberDaoTest {
         assertThat(updatedMember.getNickname(), is(member.getNickname()));
         assertThat(updatedMember.getNotes(), is(member.getNotes()));
         assertThat(updatedMember.getImgFilePath(), is(member.getImgFilePath()));
+        assertThat(updatedMember.getDateCreated(), is(member.getDateCreated()));
 
         assertThat(updatedMember.getId(), is(TestData.MEMBER_2.getId()));
         assertThat(updatedMember.getNickname(), is(not(TestData.MEMBER_2.getNickname())));

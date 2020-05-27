@@ -76,7 +76,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Minimum players (Optional)"
+            android:hint="Minimum players"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_difficulty_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_difficulty_edittext" />
 
@@ -87,7 +87,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Maximum players (Optional)"
+            android:hint="Maximum players"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_min_players_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_min_players_edittext" />
 

@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RunWith(AndroidJUnit4.class)
 public class BgCategoryDaoTest {
@@ -89,7 +90,7 @@ public class BgCategoryDaoTest {
     }
 
     @Test
-    public void getLiveBgCategoryWhenSpecificBgCategoryInserted() throws InterruptedException {
+    public void getLiveBgCategoriesWhenSpecificBgCategoryInserted() throws InterruptedException {
         bgCategoryDao.insert(TestData.BG_CATEGORY_1);
 
         List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
@@ -100,13 +101,60 @@ public class BgCategoryDaoTest {
     }
 
     @Test
-    public void getNonLiveBgCategoryWhenSpecificBgCategoryInserted() {
+    public void getNonLiveBgCategoriesWhenSpecificBgCategoryInserted() {
         bgCategoryDao.insert(TestData.BG_CATEGORY_1);
 
         List<BgCategory> bgCategories = bgCategoryDao.getAllNonLive();
 
         assertFalse(bgCategories.isEmpty());
         assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+    }
+
+    @Test
+    public void getLiveBgCategoriesWhenSameBgCategoryInsertedTwice() throws  InterruptedException {
+        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+
+        List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
+
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+
+        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
+
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(not(2)));
+        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+    }
+
+    @Test
+    public void getLiveBgCategoriesWhenBgCategoryIsInsertedThenEditedVersionWithSamePrimaryKeyIsInserted() throws InterruptedException {
+        bgCategoryDao.insert(TestData.BG_CATEGORY_1);
+
+        List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
+
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+
+        BgCategory editedBgCategory = new BgCategory(bgCategories.get(0));
+        editedBgCategory.setCategoryName("Changed");
+        assertThat(editedBgCategory, is(not(bgCategories.get(0))));
+
+        bgCategoryDao.insert(editedBgCategory);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        bgCategories = LiveDataTestUtil.getValue(bgCategoryDao.getAllLive());
+
+        assertFalse(bgCategories.isEmpty());
+        assertThat(bgCategories.size(), is(not(2)));
+        assertThat(bgCategories.size(), is(1));
+        assertThat(bgCategories.get(0), is(not(editedBgCategory)));
         assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
     }
 

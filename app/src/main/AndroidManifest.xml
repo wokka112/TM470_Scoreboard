@@ -18,6 +18,8 @@
         <activity android:name=".BoardGameEditActivity"/>
         <activity android:name=".BoardGameActivity" />
         <activity android:name=".GroupActivity"/>
+        <activity android:name=".GroupAddActivity"/>
+        <activity android:name=".GroupEditActivity"/>
         <activity android:name=".old.GroupActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

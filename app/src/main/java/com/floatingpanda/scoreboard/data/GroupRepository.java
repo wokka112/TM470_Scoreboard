@@ -1,10 +1,13 @@
 package com.floatingpanda.scoreboard.data;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public class GroupRepository {
 
@@ -17,6 +20,11 @@ public class GroupRepository {
         allGroups = groupDao.getAll();
     }
 
+    public GroupRepository(AppDatabase db) {
+        groupDao = db.groupDao();
+        allGroups = groupDao.getAll();
+    }
+
     /**
      * @return live data list of all groups from the database
      */
@@ -24,7 +32,7 @@ public class GroupRepository {
         return allGroups;
     }
 
-    public LiveData<Group> getGroupById(int groupId) { return groupDao.findById(groupId); }
+    public LiveData<Group> getGroupById(int groupId) { return groupDao.findLiveDataById(groupId); }
 
     /**
      * Inserts a new Group into the database. If the Group already exists in the database, no new
@@ -40,5 +48,38 @@ public class GroupRepository {
         AppDatabase.getExecutorService().execute(() -> {
             groupDao.insert(group);
         });
+    }
+
+    public void update(Group group) {
+        AppDatabase.getExecutorService().execute(() -> {
+            groupDao.update(group);
+        });
+    }
+
+    public void delete(Group group) {
+        AppDatabase.getExecutorService().execute(() -> {
+            groupDao.delete(group);
+        });
+    }
+
+    //TODO make empty string an illegal argument as well?
+    public boolean contains(String groupName) throws IllegalArgumentException {
+        if(groupName == null) {
+            throw new IllegalArgumentException("null groupName passed to contains method.");
+        }
+
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Group databaseGroup = groupDao.findNonLiveDataByName(groupName);
+                return databaseGroup != null;
+            };
+        });
+
+        try {
+            return (Boolean) future.get();
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

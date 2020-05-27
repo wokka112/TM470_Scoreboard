@@ -24,8 +24,10 @@ import org.junit.runner.RunWith;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -84,6 +86,27 @@ public class PlayModeDaoTest {
         List<PlayMode> playModes = LiveDataTestUtil.getValue(playModeDao.getAll());
 
         assertFalse(playModes.isEmpty());
+        assertThat(playModes.size(), is(1));
+        assertThat(playModes.get(0), is(TestData.PLAY_MODE_1));
+    }
+
+    @Test
+    public void getPlayModesWhenSamePlayModeInsertedTwice() throws InterruptedException {
+        playModeDao.insert(TestData.PLAY_MODE_1);
+
+        List<PlayMode> playModes = LiveDataTestUtil.getValue(playModeDao.getAll());
+
+        assertFalse(playModes.isEmpty());
+        assertThat(playModes.size(), is(1));
+        assertThat(playModes.get(0), is(TestData.PLAY_MODE_1));
+
+        playModeDao.insert(TestData.PLAY_MODE_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        playModes = LiveDataTestUtil.getValue(playModeDao.getAll());
+
+        assertFalse(playModes.isEmpty());
+        assertThat(playModes.size(), is(not(2)));
         assertThat(playModes.size(), is(1));
         assertThat(playModes.get(0), is(TestData.PLAY_MODE_1));
     }

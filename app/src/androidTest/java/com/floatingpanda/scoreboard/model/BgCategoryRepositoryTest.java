@@ -143,13 +143,12 @@ public class BgCategoryRepositoryTest {
     }
 
     @Test
-    public void testContainsCategoryName() throws InterruptedException {
-        bgCategoryRepository.insert(TestData.BG_CATEGORY_1);
+    public void testContains() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
 
         List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryRepository.getAll());
 
-        assertThat(bgCategories.size(), is(1));
-        assertThat(bgCategories.get(0), is(TestData.BG_CATEGORY_1));
+        assertThat(bgCategories.size(), is(TestData.BG_CATEGORIES.size()));
 
         //Test case 1: Contains - categoryName exists in database.
         String categoryName = TestData.BG_CATEGORY_1.getCategoryName();
@@ -165,10 +164,17 @@ public class BgCategoryRepositoryTest {
         categoryName = "";
         contains = bgCategoryRepository.containsCategoryName(categoryName);
         assertFalse(contains);
+    }
 
-        //Test case 4: Does not contain - null categoryName passed.
-        categoryName = null;
-        contains = bgCategoryRepository.containsCategoryName(categoryName);
-        assertFalse(contains);
+    @Test(expected = IllegalArgumentException.class)
+    public void testContainsWithNull() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+
+        List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryRepository.getAll());
+
+        assertThat(bgCategories.size(), is(TestData.BG_CATEGORIES.size()));
+
+        String categoryName = null;
+        boolean contains = bgCategoryRepository.containsCategoryName(categoryName);
     }
 }

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/groupadd_button_banner_browse"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/groupadd_button_banner_camera"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_folder_open_black_24dp" />
+
+        <Button
+            android:id="@+id/groupadd_button_banner_camera"
+            app:layout_constraintLeft_toRightOf="@id/groupadd_button_banner_browse"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/groupadd_button_banner_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_photo_camera_black_24dp" />
+
+        <Button
+            android:id="@+id/groupadd_button_img_browse"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/groupadd_button_img_camera"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_folder_open_black_24dp" />
+
+        <Button
+            android:id="@+id/groupadd_button_img_camera"
+            app:layout_constraintLeft_toRightOf="@id/groupadd_button_img_browse"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/groupadd_button_img_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_photo_camera_black_24dp" />
+
+        <Button
+            android:id="@+id/groupadd_button_save"
+            app:layout_constraintLeft_toRightOf="@id/groupadd_button_cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_notes_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Save" />
+
+        <Button
+            android:id="@+id/groupadd_button_cancel"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/groupadd_button_save"
+            app:layout_constraintTop_toTopOf="@id/groupadd_button_save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel" />
+
+        <EditText
+            android:id="@+id/groupadd_name_edittext"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_button_img_browse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="8dp"
+            android:hint="Group Name" />
+
+        <EditText
+            android:id="@+id/groupadd_description_edittext"
+            app:layout_constraintLeft_toLeftOf="@id/groupadd_name_edittext"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_name_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Description (Optional)" />
+
+        <EditText
+            android:id="@+id/groupadd_notes_edittext"
+            app:layout_constraintLeft_toLeftOf="@id/groupadd_description_edittext"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_description_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:hint="Notes (Optional)" />
+
+        <ImageView
+            android:id="@+id/groupadd_banner"
+            app:layout_constraintBottom_toTopOf="@id/groupadd_banner_guideline"
+            app:layout_constraintHeight_percent="100"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher_background" />
+
+        <ImageView
+            android:id="@+id/groupadd_img"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_button_banner_browse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_launcher_foreground" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/groupadd_banner_guideline"
+            app:layout_constraintGuide_percent="0.20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

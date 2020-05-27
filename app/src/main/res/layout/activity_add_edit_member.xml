@@ -56,31 +56,10 @@
         android:hint="Nickname"/>
 
     <TextView
-        android:id="@+id/memberadd_realname_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
-        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_textview"
-        android:text="Real Name:"
-        android:visibility="gone"
-        android:layout_marginTop="8dp"/>
-
-    <EditText
-        android:id="@+id/memberadd_realname_edittext"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
-        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_edittext"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
-        android:hint="Real Name (Optional)"/>
-
-    <TextView
         android:id="@+id/memberadd_notes_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_realname_edittext"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
         app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_textview"
         android:layout_marginTop="8dp"/>
 
@@ -88,8 +67,8 @@
         android:id="@+id/memberadd_notes_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_realname_edittext"
-        app:layout_constraintLeft_toLeftOf="@id/memberadd_realname_edittext"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
+        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_edittext"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"

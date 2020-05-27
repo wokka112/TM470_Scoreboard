@@ -11,6 +11,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.util.Date;
+
 @Entity(tableName = "groups", indices = {@Index(value = "group_name",
         unique = true)})
 public class Group implements Parcelable {
@@ -32,11 +34,34 @@ public class Group implements Parcelable {
     @ColumnInfo(name = "img_file_path")
     private String imgFilePath;
 
+    @NonNull
+    @ColumnInfo(name = "date_created")
+    private Date dateCreated;
+
+    @Nullable
+    @ColumnInfo(name = "banner_file_path")
+    private String bannerFilePath;
+
     //TODO add in list variables for holding game records and members, make them Ignore
     //TODO find a way to make it so the list only partially loads as necessary maybe? Load it only,
     // when going onto a detailed groups activity.
     //TODO make it so the group details view has records and winner lists that expand when tapped,
     // rather than leading you to separate activities just to view the record or winner list details.
+
+    @Ignore
+    public Group(int id, String groupName, String notes, String description, String imgFilePath, String bannerFilePath, Date dateCreated) {
+        this.id = id;
+        this.groupName = groupName;
+        this.notes = notes;
+        this.description = description;
+        this.imgFilePath = imgFilePath;
+        this.bannerFilePath = bannerFilePath;
+        this.dateCreated = dateCreated;
+    }
+
+    public Group(String groupName, String notes, String description, String imgFilePath, String bannerFilePath) {
+        this(0, groupName, notes, description, imgFilePath, bannerFilePath, new Date());
+    }
 
     @Ignore
     public Group(Group group) {
@@ -45,22 +70,8 @@ public class Group implements Parcelable {
         this.notes = group.getNotes();
         this.description = group.getDescription();
         this.imgFilePath = group.getImgFilePath();
-    }
-
-    public Group(String groupName, String notes, String description) {
-        this.id = 0;
-        this.groupName = groupName;
-        this.notes = notes;
-        this.description = description;
-    }
-
-    @Ignore
-    public Group(String groupName, String notes, String description, String imgFilePath) {
-        this.id = 0;
-        this.groupName = groupName;
-        this.notes = notes;
-        this.description = description;
-        this.imgFilePath = imgFilePath;
+        this.bannerFilePath = group.getBannerFilePath();
+        this.dateCreated = group.getDateCreated();
     }
 
     @Ignore
@@ -70,6 +81,8 @@ public class Group implements Parcelable {
         this.notes = source.readString();
         this.description = source.readString();
         this.imgFilePath = source.readString();
+        this.bannerFilePath = source.readString();
+        this.dateCreated = new Date(source.readLong());
     }
 
     public int getId() { return this.id; }
@@ -82,17 +95,14 @@ public class Group implements Parcelable {
     public void setDescription(String description) { this.description = description; }
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
-
-    //TODO implement properly functionality
-    public int getGamesPlayed() {
-        return 100;
-    }
+    public String getBannerFilePath() { return this.bannerFilePath; }
+    public void setBannerFilePath(String bannerFilePath) { this.bannerFilePath = bannerFilePath; }
+    public Date getDateCreated() { return this.dateCreated; }
+    public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 
     //TODO implement proper functionality
-    //TODO implement a Date created element in the database for this entity
-    // need to add this in
-    public int getDateCreated() {
-        return 24021995;
+    public int getGamesPlayed() {
+        return 100;
     }
 
     //TODO implement proper functionality. Maybe move this elsewhere?
@@ -123,6 +133,8 @@ public class Group implements Parcelable {
         dest.writeString(notes);
         dest.writeString(description);
         dest.writeString(imgFilePath);
+        dest.writeString(bannerFilePath);
+        dest.writeLong(dateCreated.getTime());
     }
 
     public static final Creator<Group> CREATOR = new Creator<Group>() {

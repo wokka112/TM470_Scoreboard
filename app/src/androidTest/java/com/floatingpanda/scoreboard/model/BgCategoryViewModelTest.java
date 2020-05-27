@@ -121,6 +121,7 @@ public class BgCategoryViewModelTest {
     @Test
     public void deleteBgCategoryInDatabase() throws InterruptedException {
         bgCategoryViewModel.addBgCategory(TestData.BG_CATEGORY_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryViewModel.getAllBgCategories());
 

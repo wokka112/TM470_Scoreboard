@@ -25,6 +25,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -74,6 +75,7 @@ public class MemberViewModelTest {
     @Test
     public void getLiveMembersFromDatabaseWhenMembersInserted() throws InterruptedException {
         memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberViewModel.getAllMembers());
 
@@ -93,6 +95,7 @@ public class MemberViewModelTest {
     @Test
     public void getLiveMemberFromDatabaseWhenMembersInserted() throws InterruptedException {
         memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberViewModel.getAllMembers());
         assertThat(members.size(), is(TestData.MEMBERS.size()));
@@ -104,6 +107,7 @@ public class MemberViewModelTest {
     @Test
     public void addMemberToDatabase() throws InterruptedException {
         memberViewModel.addMember(TestData.MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberViewModel.getAllMembers());
 
@@ -114,6 +118,7 @@ public class MemberViewModelTest {
     @Test
     public void editMemberInDatabase() throws  InterruptedException {
         memberViewModel.addMember(TestData.MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberViewModel.getAllMembers());
 
@@ -126,15 +131,14 @@ public class MemberViewModelTest {
         String newNickname = "Changed nickname";
         String newNotes = "Changed notes";
         String newImgFilePath = "Changed img file path";
+        Date newDateCreated = new Date(100);
 
         member.setNickname(newNickname);
         member.setNotes(newNotes);
         member.setImgFilePath(newImgFilePath);
+        member.setDateCreated(newDateCreated);
 
         assertThat(member, is(not(members.get(0))));
-        assertThat(member.getNickname(), is(newNickname));
-        assertThat(member.getNotes(), is(newNotes));
-        assertThat(member.getImgFilePath(), is(newImgFilePath));
 
         memberViewModel.editMember(member);
         // Waiting for background thread to finish.
@@ -143,13 +147,21 @@ public class MemberViewModelTest {
         members = LiveDataTestUtil.getValue(memberViewModel.getAllMembers());
 
         assertThat(members.size(), is(1));
-        assertThat(members.get(0), is(not(TestData.BG_CATEGORY_1)));
-        assertThat(members.get(0), is(member));
+
+        Member editedMember = members.get(0);
+
+        assertThat(editedMember, is(not(TestData.BG_CATEGORY_1)));
+        assertThat(editedMember, is(member));
+        assertThat(editedMember.getNickname(), is(newNickname));
+        assertThat(editedMember.getNotes(), is(newNotes));
+        assertThat(editedMember.getImgFilePath(), is(newImgFilePath));
+        assertThat(editedMember.getDateCreated(), is(newDateCreated));
     }
 
     @Test
     public void deleteMemberInDatabase() throws InterruptedException {
         memberViewModel.addMember(TestData.MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
 
         List<Member> members = LiveDataTestUtil.getValue(memberViewModel.getAllMembers());
 
@@ -166,7 +178,7 @@ public class MemberViewModelTest {
     }
 
     @Test
-    public void testAddActivityInputsValid() {
+    public void testAddActivityInputsValid() throws InterruptedException {
         //Test Case 1: Valid input
         String nickname = "Nickname";
         boolean isValid = memberViewModel.addActivityInputsValid(activity, nickname, true);
@@ -179,6 +191,8 @@ public class MemberViewModelTest {
 
         //Test Case 3: Invalid String input that already exists in category database
         memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        TimeUnit.MILLISECONDS.sleep(100);
+
         Member member = memberDao.findNonLiveDataByNickname(TestData.MEMBER_1.getNickname());
         assertTrue(member != null);
 
