@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 

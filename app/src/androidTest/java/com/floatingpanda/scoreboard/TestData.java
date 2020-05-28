@@ -6,6 +6,7 @@ import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.GroupMember;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.PlayMode;
 
@@ -87,5 +88,10 @@ public class TestData {
     public static final List<BoardGameWithBgCategoriesAndPlayModes> BOARD_GAMES_WITH_BG_CATEGORIES_AND_PLAY_MODES =
             Arrays.asList(BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_1, BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_2, BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_3);
 
+    public static final GroupMember GROUP_MEMBER_1 = new GroupMember(TestData.GROUP_1.getId(), TestData.MEMBER_1.getId());
+    public static final GroupMember GROUP_MEMBER_2 = new GroupMember(TestData.GROUP_2.getId(), TestData.MEMBER_2.getId());
+    public static final GroupMember GROUP_MEMBER_3 = new GroupMember(TestData.GROUP_3.getId(), TestData.MEMBER_3.getId());
+    public static final GroupMember GROUP_MEMBER_4 = new GroupMember(TestData.GROUP_3.getId(), TestData.MEMBER_1.getId());
 
+    public static final List<GroupMember> GROUP_MEMBERS = Arrays.asList(GROUP_MEMBER_1, GROUP_MEMBER_2, GROUP_MEMBER_3, GROUP_MEMBER_4);
 }

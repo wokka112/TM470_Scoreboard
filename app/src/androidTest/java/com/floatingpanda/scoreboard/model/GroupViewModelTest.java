@@ -4,19 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
-import androidx.room.Dao;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.floatingpanda.scoreboard.AlertDialogHelper;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.Group;
 import com.floatingpanda.scoreboard.data.GroupDao;
-import com.floatingpanda.scoreboard.data.GroupRepository;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 import org.junit.After;

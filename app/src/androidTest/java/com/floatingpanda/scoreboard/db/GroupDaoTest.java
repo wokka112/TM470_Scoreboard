@@ -12,6 +12,10 @@ import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.Group;
 import com.floatingpanda.scoreboard.data.GroupDao;
+import com.floatingpanda.scoreboard.data.GroupMember;
+import com.floatingpanda.scoreboard.data.GroupMemberDao;
+import com.floatingpanda.scoreboard.data.GroupWithMembers;
+import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.data.MemberDao;
 
 import org.junit.After;
@@ -22,6 +26,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +46,9 @@ public class GroupDaoTest {
 
     private AppDatabase db;
 
+    private MemberDao memberDao;
     private GroupDao groupDao;
+    private GroupMemberDao groupMemberDao;
 
     @Before
     public void createDb() {
@@ -49,7 +56,9 @@ public class GroupDaoTest {
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
                 .allowMainThreadQueries()
                 .build();
+        memberDao = db.memberDao();
         groupDao = db.groupDao();
+        groupMemberDao = db.groupMemberDao();
     }
 
     @After
@@ -196,5 +205,31 @@ public class GroupDaoTest {
 
         assertThat(groups.size(), is(TestData.GROUPS.size() - 1));
         assertFalse(groups.contains(TestData.GROUP_2));
+    }
+
+    @Test
+    public void getLiveGroupWithMembersByGroupId() throws  InterruptedException {
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertThat(groupMembers.size(), is(TestData.GROUP_MEMBERS.size()));
+
+        //group 3 should have 2 members - member 1 and member 3.
+        GroupWithMembers groupWithMembers = LiveDataTestUtil.getValue(groupDao.findGroupWithMembersById(TestData.GROUP_3.getId()));
+
+        assertNotNull(groupWithMembers);
+        assertThat(groupWithMembers.getGroup(), is(TestData.GROUP_3));
+        assertThat(groupWithMembers.getMembers().size(), is(2));
+
+        List<Integer> memberIds = new ArrayList<>();
+        for (Member member : groupWithMembers.getMembers()) {
+            memberIds.add(member.getId());
+        }
+
+        assertThat(memberIds.size(), is(2));
+        assertTrue(memberIds.contains(TestData.MEMBER_1.getId()));
+        assertTrue(memberIds.contains(TestData.MEMBER_3.getId()));
     }
 }

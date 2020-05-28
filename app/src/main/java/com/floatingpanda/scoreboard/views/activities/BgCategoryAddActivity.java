@@ -1,9 +1,7 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,8 +9,8 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BgCategoryRepository;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 
 //TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for add)

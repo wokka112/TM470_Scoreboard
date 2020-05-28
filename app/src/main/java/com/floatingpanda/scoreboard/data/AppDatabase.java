@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, Member.class, PlayMode.class}, version = 22, exportSchema = false)
+@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, GroupMember.class, Member.class, PlayMode.class}, version = 23, exportSchema = false)
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -29,6 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract BoardGameDao boardGameDao();
     public abstract AssignedCategoryDao assignedCategoryDao();
     public abstract PlayModeDao playModeDao();
+    public abstract GroupMemberDao groupMemberDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -91,6 +92,32 @@ public abstract class AppDatabase extends RoomDatabase {
                 group = new Group("The Turks", "", "", "TBA", "TBA");
                 groupDao.insert(group);
 
+                GroupMemberDao groupMemberDao = INSTANCE.groupMemberDao();
+
+                Member member1 = memberDao.findNonLiveDataByNickname("Bill");
+                Member member2 = memberDao.findNonLiveDataByNickname("Frank");
+                Member member3 = memberDao.findNonLiveDataByNickname("Bailey");
+
+                Group group1 = groupDao.findNonLiveDataByName("Ragnarok");
+                Group group2 = groupDao.findNonLiveDataByName("The Monday Knights");
+                Group group3 = groupDao.findNonLiveDataByName("The Hospitallers");
+
+                GroupMember groupMember = new GroupMember(group1.getId(), member1.getId());
+                groupMemberDao.insert(groupMember);
+                groupMember = new GroupMember(group1.getId(), member2.getId());
+                groupMemberDao.insert(groupMember);
+                groupMember = new GroupMember(group1.getId(), member3.getId());
+                groupMemberDao.insert(groupMember);
+
+                groupMember = new GroupMember(group2.getId(), member1.getId());
+                groupMemberDao.insert(groupMember);
+                groupMember = new GroupMember(group2.getId(), member3.getId());
+                groupMemberDao.insert(groupMember);
+
+                groupMember = new GroupMember(group3.getId(), member3.getId());
+                groupMemberDao.insert(groupMember);
+
+
                 BoardGameDao bgDao = INSTANCE.boardGameDao();
                 AssignedCategoryDao acDao = INSTANCE.assignedCategoryDao();
                 BgCategoryDao boardGameCategoryDao = INSTANCE.bgCategoryDao();
@@ -114,8 +141,6 @@ public abstract class AppDatabase extends RoomDatabase {
                     test = new BgCategory("Test" + i);
                     boardGameCategoryDao.insert(test);
                 }
-
-
 
                 BoardGame.TeamOption teamOption = BoardGame.TeamOption.NO_TEAMS;
                 BoardGame bg = new BoardGame("Medieval", 3, 1, 8, teamOption,

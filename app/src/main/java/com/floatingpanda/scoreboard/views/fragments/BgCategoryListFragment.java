@@ -1,7 +1,6 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.floatingpanda.scoreboard.views.activities.BgCategoryAddActivity;
+import com.floatingpanda.scoreboard.views.activities.BgCategoryEditActivity;
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.BgCategoryListAdapter;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.interfaces.ActivityAdapterInterface;

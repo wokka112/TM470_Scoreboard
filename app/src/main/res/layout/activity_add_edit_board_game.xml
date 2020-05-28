@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/bgadd_button_browse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,7 +19,7 @@
             app:layout_constraintRight_toLeftOf="@id/bgadd_button_camera"
             app:layout_constraintTop_toBottomOf="@id/bgadd_img" />
 
-        <Button
+        <ImageButton
             android:id="@+id/bgadd_button_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

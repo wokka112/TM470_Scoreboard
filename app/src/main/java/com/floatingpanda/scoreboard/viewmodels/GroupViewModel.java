@@ -2,7 +2,6 @@ package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Activity;
 import android.app.Application;
-import android.appwidget.AppWidgetProvider;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;

@@ -1,35 +1,33 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.MemberRepository;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
-//TODO put images into the browse and picture buttons
-//TODO add input filters to inputs to ensure first letter capitalised. Do some for other activities.
-// (This can probably be done in the layout file's xml).
-
-public class MemberAddActivity extends AppCompatActivity {
+public class MemberEditActivity extends AppCompatActivity {
 
     //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private MemberViewModel memberViewModel;
+    private Member member;
 
+    //TODO add imageview and image setting functionality.
     //TODO remove cancelButton and replace with an up arrow?
-    //TODO implement image taking/picking and filepath saving functionality
     private EditText nicknameEditText, notesEditText;
-    private Button browseButton, cameraButton, cancelButton, saveButton;
+    private ImageButton browseButton, cameraButton;
+    private Button cancelButton, saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +39,9 @@ public class MemberAddActivity extends AppCompatActivity {
         nicknameEditText = findViewById(R.id.memberadd_nickname_edittext);
         notesEditText = findViewById(R.id.memberadd_notes_edittext);
 
+        member = (Member) getIntent().getExtras().get("MEMBER");
+        setViews(member);
+
         browseButton = findViewById(R.id.memberadd_button_browse);
         cameraButton = findViewById(R.id.memberadd_button_camera);
         cancelButton = findViewById(R.id.memberadd_button_cancel);
@@ -49,7 +50,7 @@ public class MemberAddActivity extends AppCompatActivity {
         browseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MemberAddActivity.this, "Browse pressed",
+                Toast.makeText(MemberEditActivity.this, "Browse pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -57,7 +58,7 @@ public class MemberAddActivity extends AppCompatActivity {
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MemberAddActivity.this, "Camera pressed",
+                Toast.makeText(MemberEditActivity.this, "Camera pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -74,15 +75,14 @@ public class MemberAddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String nickname = nicknameEditText.getText().toString();
 
-                if (!memberViewModel.addActivityInputsValid(MemberAddActivity.this, nickname, false)) {
+                if(!memberViewModel.editActivityInputsValid(MemberEditActivity.this, member.getNickname(), nickname, false)) {
                     return;
                 }
 
-                String notes = notesEditText.getText().toString();
+                member.setNickname(nicknameEditText.getText().toString());
+                member.setNotes(notesEditText.getText().toString());
                 //TODO implement image taking/picking and filepath saving functionality
-                String imgFilePath = "TBA";
-
-                Member member = new Member(nickname, notes, imgFilePath);
+                member.setImgFilePath("TBA");
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, member);
@@ -90,5 +90,10 @@ public class MemberAddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void setViews(Member member) {
+        nicknameEditText.setText(member.getNickname());
+        notesEditText.setText(member.getNotes());
     }
 }

@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;

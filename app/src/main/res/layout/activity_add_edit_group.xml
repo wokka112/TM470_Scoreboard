@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/groupadd_button_banner_browse"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/groupadd_button_banner_camera"
@@ -18,7 +18,7 @@
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_folder_open_black_24dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/groupadd_button_banner_camera"
             app:layout_constraintLeft_toRightOf="@id/groupadd_button_banner_browse"
             app:layout_constraintRight_toRightOf="parent"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_photo_camera_black_24dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/groupadd_button_img_browse"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/groupadd_button_img_camera"
@@ -37,7 +37,7 @@
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_folder_open_black_24dp" />
 
-        <Button
+        <ImageButton
             android:id="@+id/groupadd_button_img_camera"
             app:layout_constraintLeft_toRightOf="@id/groupadd_button_img_browse"
             app:layout_constraintRight_toRightOf="parent"

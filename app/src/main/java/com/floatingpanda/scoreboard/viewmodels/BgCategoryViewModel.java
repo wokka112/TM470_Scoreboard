@@ -2,14 +2,11 @@ package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Activity;
 import android.app.Application;
-import android.text.TextUtils;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.AlertDialogHelper;
-import com.floatingpanda.scoreboard.BgCategoryAddActivity;
-import com.floatingpanda.scoreboard.BgCategoryEditActivity;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;

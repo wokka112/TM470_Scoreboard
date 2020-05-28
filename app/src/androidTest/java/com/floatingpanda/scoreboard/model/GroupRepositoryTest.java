@@ -17,7 +17,11 @@ import com.floatingpanda.scoreboard.data.BoardGameDao;
 import com.floatingpanda.scoreboard.data.BoardGameRepository;
 import com.floatingpanda.scoreboard.data.Group;
 import com.floatingpanda.scoreboard.data.GroupDao;
+import com.floatingpanda.scoreboard.data.GroupMember;
+import com.floatingpanda.scoreboard.data.GroupMemberDao;
 import com.floatingpanda.scoreboard.data.GroupRepository;
+import com.floatingpanda.scoreboard.data.Member;
+import com.floatingpanda.scoreboard.data.MemberDao;
 import com.floatingpanda.scoreboard.data.PlayModeDao;
 
 import org.junit.After;
@@ -27,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -47,6 +52,8 @@ public class GroupRepositoryTest {
     private AppDatabase db;
 
     private GroupDao groupDao;
+    private MemberDao memberDao;
+    private GroupMemberDao groupMemberDao;
     private GroupRepository groupRepository;
 
     @Before
@@ -56,6 +63,8 @@ public class GroupRepositoryTest {
                 .allowMainThreadQueries()
                 .build();
         groupDao = db.groupDao();
+        memberDao = db.memberDao();
+        groupMemberDao = db.groupMemberDao();
         groupRepository = new GroupRepository(db);
     }
 
@@ -158,6 +167,61 @@ public class GroupRepositoryTest {
 
         assertThat(groups.size(), is(TestData.GROUPS.size() - 1));
         assertFalse(groups.contains(TestData.GROUP_2));
+    }
+
+    @Test
+    public void insertGroupMember() throws InterruptedException {
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+
+        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertTrue(groupMembers.isEmpty());
+
+        groupRepository.insertGroupMember(TestData.GROUP_MEMBER_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertThat(groupMembers.size(), is(1));
+        assertThat(groupMembers.get(0), is(TestData.GROUP_MEMBER_1));
+    }
+
+    @Test
+    public void insertGroupMembers() throws InterruptedException {
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+
+        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertTrue(groupMembers.isEmpty());
+
+        List<GroupMember> groupMembersToAdd = new ArrayList<>();
+        groupMembersToAdd.add(TestData.GROUP_MEMBER_1);
+        groupMembersToAdd.add(TestData.GROUP_MEMBER_2);
+
+        groupRepository.insertGroupMembers(groupMembersToAdd);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertThat(groupMembers.size(), is(2));
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_1));
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_2));
+    }
+
+    @Test
+    public void deleteGroupMember() throws InterruptedException {
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertThat(groupMembers.size(), is(TestData.GROUP_MEMBERS.size()));
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_2));
+
+        groupRepository.removeGroupMember(TestData.GROUP_MEMBER_2);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertThat(groupMembers.size(), is(TestData.GROUP_MEMBERS.size() - 1));
+        assertFalse(groupMembers.contains(TestData.GROUP_MEMBER_2));
     }
 
     @Test

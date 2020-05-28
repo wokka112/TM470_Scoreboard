@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import androidx.room.Update;
 
 import java.util.List;
@@ -35,4 +36,10 @@ public interface GroupDao {
 
     @Delete
     void delete(Group group);
+
+    @Transaction
+    @Query("SELECT * FROM groups WHERE group_id LIKE :groupId")
+    public LiveData<GroupWithMembers> findGroupWithMembersById(int groupId);
+
+    //TODO add in a groupwithmembers that organises the members list based on name? Or do that programmatically?
 }

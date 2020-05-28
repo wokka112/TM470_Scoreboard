@@ -12,16 +12,19 @@ import java.util.concurrent.Future;
 public class GroupRepository {
 
     private GroupDao groupDao;
+    private GroupMemberDao groupMemberDao;
     private LiveData<List<Group>> allGroups;
 
     public GroupRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         groupDao = db.groupDao();
+        groupMemberDao = db.groupMemberDao();
         allGroups = groupDao.getAll();
     }
 
     public GroupRepository(AppDatabase db) {
         groupDao = db.groupDao();
+        groupMemberDao = db.groupMemberDao();
         allGroups = groupDao.getAll();
     }
 
@@ -33,6 +36,8 @@ public class GroupRepository {
     }
 
     public LiveData<Group> getGroupById(int groupId) { return groupDao.findLiveDataById(groupId); }
+
+    public LiveData<GroupWithMembers> getGroupWithMembersByGroupId(int groupId) { return groupDao.findGroupWithMembersById(groupId); }
 
     /**
      * Inserts a new Group into the database. If the Group already exists in the database, no new
@@ -59,6 +64,24 @@ public class GroupRepository {
     public void delete(Group group) {
         AppDatabase.getExecutorService().execute(() -> {
             groupDao.delete(group);
+        });
+    }
+
+    public void insertGroupMember(GroupMember groupMember) {
+        AppDatabase.getExecutorService().execute(() -> {
+            groupMemberDao.insert(groupMember);
+        });
+    }
+
+    public void insertGroupMembers(List<GroupMember> groupMembers) {
+        AppDatabase.getExecutorService().execute(() -> {
+            groupMemberDao.insertAll(groupMembers.toArray(new GroupMember[groupMembers.size()]));
+        });
+    }
+
+    public void removeGroupMember(GroupMember groupMember) {
+        AppDatabase.getExecutorService().execute(() -> {
+            groupMemberDao.delete(groupMember);
         });
     }
 

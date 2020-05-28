@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.floatingpanda.scoreboard.views.activities.BoardGameActivity;
+import com.floatingpanda.scoreboard.views.activities.BoardGameAddActivity;
+import com.floatingpanda.scoreboard.views.activities.MemberAddActivity;
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.BoardGameListAdapter;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGame;

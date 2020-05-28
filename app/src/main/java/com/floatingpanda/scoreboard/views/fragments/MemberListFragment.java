@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.floatingpanda.scoreboard.views.activities.MemberActivity;
+import com.floatingpanda.scoreboard.views.activities.MemberAddActivity;
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.MemberListAdapter;
 import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
@@ -22,12 +25,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
-
-//TODO 1. Make a MemberActivity to display the details of a single member. DONE
-//TODO 2. Link clicking a member in the list to displaying the MemberActivity. DONE
-//TODO 3. Add the add functionality to the MemberList
-//TODO 4. Add the edit functionality to the MemberActivity.
-//TODO 5. Add the delete functionality to the MemberActivity.
 
 public class MemberListFragment extends Fragment implements DetailAdapterInterface {
 

@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.BgCategory;
 import com.floatingpanda.scoreboard.data.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
@@ -75,7 +77,8 @@ public class BoardGameAddActivity extends AppCompatActivity {
         multiSpinner = findViewById(R.id.bgadd_multi_spinner);
         multiSpinner.setAllText("Choose categories");
 
-        final Button browseButton, cameraButton, saveButton, cancelButton;
+        final ImageButton browseButton, cameraButton;
+        final Button saveButton, cancelButton;
 
         boardGameAddEditViewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
             @Override

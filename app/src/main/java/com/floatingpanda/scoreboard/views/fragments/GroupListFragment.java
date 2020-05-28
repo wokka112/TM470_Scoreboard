@@ -1,6 +1,5 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.fragments;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,18 +13,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.floatingpanda.scoreboard.views.activities.GroupActivity;
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.GroupListAdapter;
-import com.floatingpanda.scoreboard.adapters.MemberListAdapter;
 import com.floatingpanda.scoreboard.data.Group;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
-import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
+import com.floatingpanda.scoreboard.views.activities.GroupAddActivity;
+import com.floatingpanda.scoreboard.views.activities.MemberAddActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 //TODO add in add functionality
 
 public class GroupListFragment extends Fragment implements DetailAdapterInterface {
+
+    private final int ADD_GROUP_REQUEST_CODE = 1;
 
     private GroupViewModel groupViewModel;
 
@@ -39,6 +45,8 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
         View rootView = inflater.inflate(R.layout.recyclerview_test, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
+        FloatingActionButton fab = rootView.findViewById(R.id.fab);
+
         final GroupListAdapter adapter = new GroupListAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -52,7 +60,19 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
             }
         });
 
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAddActivity();
+            }
+        });
+
         return rootView;
+    }
+
+    private void startAddActivity() {
+        Intent addMemberIntent = new Intent(getContext(), GroupAddActivity.class);
+        startActivityForResult(addMemberIntent, ADD_GROUP_REQUEST_CODE);
     }
 
     @Override
@@ -62,5 +82,15 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
         Intent detailsIntent = new Intent(getContext(), GroupActivity.class);
         detailsIntent.putExtra("GROUP", group);
         startActivity(detailsIntent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_GROUP_REQUEST_CODE && resultCode == RESULT_OK) {
+            Group group = (Group) data.getExtras().get(GroupAddActivity.EXTRA_REPLY);
+            groupViewModel.addGroup(group);
+        }
     }
 }

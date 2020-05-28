@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.views.activities;
 
 import android.os.Bundle;
 import android.widget.TextView;
@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.GroupActivityAdapter;
 import com.floatingpanda.scoreboard.adapters.MainActivityAdapter;
 import com.floatingpanda.scoreboard.data.Group;
