@@ -20,7 +20,8 @@
         <activity android:name=".views.activities.GroupActivity"/>
         <activity android:name=".views.activities.GroupAddActivity"/>
         <activity android:name=".views.activities.GroupEditActivity"/>
-        <activity android:name=".views.activities.AddGroupMembersActivity"/>
+        <activity android:name=".views.activities.AddGroupMembersActivity" />
+        <activity android:name=".views.activities.AddGameRecordActivity" />
         <activity android:name=".old.GroupActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

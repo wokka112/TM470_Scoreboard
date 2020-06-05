@@ -125,9 +125,9 @@ public class BoardGameActivity extends AppCompatActivity {
         //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(BoardGameActivity.this);
         builder.setTitle("Delete Board Game?")
-                .setMessage("Are you sure you want to delete " + boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame().getBgName() +
-                        "?\nThe member will be removed from winner lists, groups and game records, and " +
-                        "their skill ratings will be deleted.\nThis operation is irreversible.")
+                .setMessage("Are you sure you want to delete " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName() +
+                        "?\nThe board game will be removed from game records and will no longer appear as a best or worst " +
+                        "board game for members.\nThis operation is irreversible.")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

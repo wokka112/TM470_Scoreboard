@@ -20,7 +20,6 @@ import com.floatingpanda.scoreboard.data.Group;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.floatingpanda.scoreboard.views.activities.GroupAddActivity;
-import com.floatingpanda.scoreboard.views.activities.MemberAddActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recyclerview_test, container, false);
+        View rootView = inflater.inflate(R.layout.recyclerview_main, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);

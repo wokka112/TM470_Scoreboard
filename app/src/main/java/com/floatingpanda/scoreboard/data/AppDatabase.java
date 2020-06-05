@@ -14,12 +14,16 @@ import com.floatingpanda.scoreboard.typeconverters.DateTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.PlayModeTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.TeamOptionTypeConverter;
 
+import net.sqlcipher.database.SQLiteDatabase;
+import net.sqlcipher.database.SupportFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, GroupMember.class, Member.class, PlayMode.class}, version = 23, exportSchema = false)
+@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, GroupMember.class, Member.class, PlayMode.class,
+            GameRecord.class, Player.class, PlayerTeam.class}, version = 24, exportSchema = false)
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -30,6 +34,9 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract AssignedCategoryDao assignedCategoryDao();
     public abstract PlayModeDao playModeDao();
     public abstract GroupMemberDao groupMemberDao();
+    public abstract GameRecordDao gameRecordDao();
+    public abstract PlayerDao playerDao();
+    public abstract PlayerTeamDao playerTeamDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -41,11 +48,14 @@ public abstract class AppDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
+                    final byte[] passphrase = SQLiteDatabase.getBytes("TestPassPhrase".toCharArray());
+                    final SupportFactory factory = new SupportFactory(passphrase);
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "scoreboard_database")
                             .fallbackToDestructiveMigration()
                             //.allowMainThreadQueries() // Use for testing purposes
-                            .addCallback(sRoomDatabaseCallback) // Comment out when testing.
+                            .addCallback(sRoomDatabaseCallback)
+                            .openHelperFactory(factory)
                             .build();
                 }
             }

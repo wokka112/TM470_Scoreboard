@@ -1,6 +1,5 @@
 package com.floatingpanda.scoreboard.views.fragments;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.views.activities.AddGroupMembersActivity;
-import com.floatingpanda.scoreboard.views.activities.GroupAddActivity;
 import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.GroupMemberListAdapter;
@@ -29,7 +26,6 @@ import com.floatingpanda.scoreboard.data.Member;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.interfaces.RemoveGroupMemberInterface;
 import com.floatingpanda.scoreboard.viewmodels.GroupMemberViewModel;
-import com.floatingpanda.scoreboard.views.activities.MemberAddActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -53,7 +49,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recyclerview_test, container, false);
+        View rootView = inflater.inflate(R.layout.recyclerview_main, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/add_game_record_set_up_teams_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Up"
+            app:layout_constraintBottom_toBottomOf="@id/add_game_record_player_count_edittext"
+            app:layout_constraintLeft_toRightOf="@id/add_game_record_player_count_edittext"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/add_game_record_player_count_edittext" />
+
+        <EditText
+            android:id="@+id/add_game_record_player_count_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:inputType="number"
+            app:layout_constraintLeft_toRightOf="@id/add_game_record_player_count_textview"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_teams_setting_radio_group" />
+
+        <RadioGroup
+            android:id="@+id/add_game_record_teams_setting_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_teams_setting_textview">
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_teams"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Teams" />
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_no_teams"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="No Teams" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/add_game_record_difficulty_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Difficulty:"
+            app:layout_constraintLeft_toLeftOf="@id/add_game_record_bg_textview"
+            app:layout_constraintTop_toTopOf="@id/add_game_record_player_count_textview" />
+
+        <TextView
+            android:id="@+id/add_game_record_difficulty_output"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintLeft_toRightOf="@id/add_game_record_difficulty_header"
+            app:layout_constraintTop_toTopOf="@id/add_game_record_difficulty_header"
+            tools:text="3" />
+
+        <!-- Need to style to look like edittext test -->
+        <TextView
+            android:id="@+id/add_game_record_player_count_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="72dp"
+            android:text="Players:"
+            app:layout_constraintBottom_toBottomOf="@id/add_game_record_player_count_edittext"
+            app:layout_constraintLeft_toLeftOf="@id/add_game_record_difficulty_output"
+            app:layout_constraintTop_toTopOf="@id/add_game_record_player_count_edittext" />
+
+        <TextView
+            android:id="@+id/add_game_record_teams_setting_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Teams Setting"
+            app:layout_constraintLeft_toLeftOf="@id/add_game_record_bg_textview"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_bg_spinner" />
+
+        <TextView
+            android:id="@+id/add_game_record_bg_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="Board Game:"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
+            android:id="@+id/add_game_record_bg_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_bg_textview" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/add_game_record_players_recyclerview_wrapper"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_set_up_teams_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:id="@+id/add_game_record_player_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_set_up_teams_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:orientation="vertical"
+            android:visibility="gone"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_players_recyclerview_wrapper"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="16dp"
+            android:text="Create"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
