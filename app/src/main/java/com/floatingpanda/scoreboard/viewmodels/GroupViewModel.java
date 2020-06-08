@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.AlertDialogHelper;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.GroupRepository;
 
 import java.util.List;

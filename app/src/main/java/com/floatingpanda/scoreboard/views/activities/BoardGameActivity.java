@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
-import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 
 public class BoardGameActivity extends AppCompatActivity {

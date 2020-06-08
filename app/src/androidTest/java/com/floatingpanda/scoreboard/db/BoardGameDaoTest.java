@@ -3,7 +3,6 @@ package com.floatingpanda.scoreboard.db;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,16 +10,16 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.AssignedCategory;
-import com.floatingpanda.scoreboard.data.AssignedCategoryDao;
-import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BgCategoryDao;
-import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameDao;
+import com.floatingpanda.scoreboard.data.entities.AssignedCategory;
+import com.floatingpanda.scoreboard.data.daos.AssignedCategoryDao;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
+import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
-import com.floatingpanda.scoreboard.data.PlayMode;
-import com.floatingpanda.scoreboard.data.PlayModeDao;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.data.daos.PlayModeDao;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,8 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

@@ -1,31 +1,19 @@
 package com.floatingpanda.scoreboard.views.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.AddGameRecordPlayersAdapter;
-import com.floatingpanda.scoreboard.adapters.AddGroupMembersListAdapter;
-import com.floatingpanda.scoreboard.adapters.BgCategoryListAdapter;
-import com.floatingpanda.scoreboard.data.GroupWithMembers;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
+import com.floatingpanda.scoreboard.data.entities.Member;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;

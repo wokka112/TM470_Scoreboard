@@ -7,20 +7,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.adapters.GameRecordListAdapter;
+import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
 import com.floatingpanda.scoreboard.views.activities.AddGameRecordActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class GroupGameRecordListFragment extends Fragment {
+import java.util.List;
+
+public class GameRecordListFragment extends Fragment {
 
     private final int ADD_GAME_RECORD_REQUEST_CODE = 1;
 
     private Group group;
+    private GameRecordViewModel gameRecordViewModel;
 
-    public GroupGameRecordListFragment(Group group) {
+    public GameRecordListFragment(Group group) {
         this.group = group;
     }
 
@@ -39,23 +48,19 @@ public class GroupGameRecordListFragment extends Fragment {
         // - first of all sort out the score calculations as that's the simplest thing.
         // - then move on to skill rating as that's much more complex to deal with.
 
-        /*
-        final GroupMemberListAdapter adapter = new GroupMemberListAdapter(getActivity(), this, this);
+        final GameRecordListAdapter adapter = new GameRecordListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        groupMemberViewModel = new ViewModelProvider(this).get(GroupMemberViewModel.class);
-        groupMemberViewModel.initGroupWithMembers(group.getId());
+        gameRecordViewModel = new ViewModelProvider(this).get(GameRecordViewModel.class);
+        gameRecordViewModel.initGameRecordWithPlayerTeamsAndPlayers(group.getId());
 
-        groupMemberViewModel.getGroupWithMembers().observe(getViewLifecycleOwner(), new Observer<GroupWithMembers>() {
+        gameRecordViewModel.getGroupsGameRecordsWithTeamsAndPlayers().observe(getViewLifecycleOwner(), new Observer<List<GameRecordWithPlayerTeamsAndPlayers>>() {
             @Override
-            public void onChanged(GroupWithMembers observedGroupWithMembers) {
-                Log.w("GroupMemberListFrg.java", "Got groupWithMembers: " + groupWithMembers);
-                setGroupWithMembers(observedGroupWithMembers);
-                adapter.setGroupMembers(groupWithMembers.getMembers());
+            public void onChanged(List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers) {
+                adapter.setGameRecordsWithPlayerTeamsAndPlayers(gameRecordsWithPlayerTeamsAndPlayers);
             }
         });
-        */
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

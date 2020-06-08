@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.AddGroupMembersListAdapter;
 import com.floatingpanda.scoreboard.data.GroupWithMembers;
-import com.floatingpanda.scoreboard.data.Member;
+import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 //TODO make the groups list sort itself based on date.

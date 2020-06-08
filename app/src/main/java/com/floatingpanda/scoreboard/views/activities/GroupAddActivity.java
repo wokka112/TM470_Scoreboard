@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 public class GroupAddActivity extends AppCompatActivity {

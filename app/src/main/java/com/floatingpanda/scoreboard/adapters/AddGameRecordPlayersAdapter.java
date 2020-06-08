@@ -5,21 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.PlayerTeam;
-import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
+import com.floatingpanda.scoreboard.data.entities.Member;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 

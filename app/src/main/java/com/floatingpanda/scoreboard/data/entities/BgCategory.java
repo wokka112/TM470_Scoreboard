@@ -1,8 +1,7 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.daos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -6,7 +6,8 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
+
+import com.floatingpanda.scoreboard.data.entities.Player;
 
 import java.util.List;
 
@@ -18,11 +19,8 @@ public interface PlayerDao {
     @Query("SELECT * FROM players WHERE player_id LIKE :playerId")
     LiveData<Player> findLiveDataPlayerByPlayerId(int playerId);
 
-    @Query("SELECT * FROM players WHERE team_number LIKE :teamNumber AND record_id LIKE :recordId")
-    LiveData<List<Player>> findLiveDataPlayersByTeamNumberAndRecordId(int teamNumber, int recordId);
-
-    @Query("SELECT * FROM players WHERE record_id LIKE :recordId")
-    LiveData<List<Player>> findLiveDataPlayersByRecordId(int recordId);
+    @Query("SELECT * FROM players WHERE player_team_id LIKE :playerTeamId")
+    LiveData<List<Player>> findLiveDataPlayersByPlayerTeamId(int playerTeamId);
 
     @Query("SELECT * FROM players WHERE member_nickname LIKE :memberNickname")
     LiveData<List<Player>> findLiveDataPlayersByMemberNickname(String memberNickname);

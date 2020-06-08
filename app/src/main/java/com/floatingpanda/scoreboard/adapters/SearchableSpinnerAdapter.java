@@ -10,8 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 
 import java.util.List;
 

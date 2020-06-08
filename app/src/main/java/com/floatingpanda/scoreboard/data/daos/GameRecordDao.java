@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.daos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,8 +7,11 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import androidx.room.Update;
 
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
+import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+
+import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -18,6 +21,9 @@ public interface GameRecordDao {
 
     @Query("SELECT * FROM game_records WHERE record_id LIKE :recordId")
     LiveData<GameRecord> findLiveDataGameRecordByRecordId(int recordId);
+
+    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId AND bg_name LIKE :bgName AND date LIKE :dateTimeStamp")
+    GameRecord findNonLiveDataGameRecordByRecordId(int groupId, String bgName, Long dateTimeStamp);
 
     @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId")
     LiveData<List<GameRecord>> findLiveDataGameRecordsByGroupId(int groupId);
@@ -36,4 +42,16 @@ public interface GameRecordDao {
 
     @Delete
     void delete(GameRecord gameRecord);
+
+    @Transaction
+    @Query("SELECT * FROM game_records")
+    public LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> getAllGameRecordsWithPlayerTeamsAndPlayers();
+
+    @Transaction
+    @Query("SELECT * FROM game_records WHERE record_id LIKE :recordId")
+    public LiveData<GameRecordWithPlayerTeamsAndPlayers> findGameRecordWithPlayerTeamsAndPlayersByRecordId(int recordId);
+
+    @Transaction
+    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId")
+    public LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> findGameRecordsWithPlayerTeamsAndPlayersByGroupId(int groupId);
 }

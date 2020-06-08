@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Member;
+import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 public class MemberEditActivity extends AppCompatActivity {

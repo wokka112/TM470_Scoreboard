@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 
 //TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for add)

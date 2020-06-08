@@ -11,8 +11,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.Group;
-import com.floatingpanda.scoreboard.data.GroupDao;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 import org.junit.After;

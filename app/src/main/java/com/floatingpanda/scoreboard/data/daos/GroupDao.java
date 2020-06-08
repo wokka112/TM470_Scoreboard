@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.daos;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -8,6 +8,9 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 import androidx.room.Update;
+
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.GroupWithMembers;
 
 import java.util.List;
 

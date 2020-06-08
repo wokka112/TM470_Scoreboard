@@ -12,13 +12,11 @@ import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.AssignedCategoryDao;
-import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BgCategoryDao;
-import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameDao;
-import com.floatingpanda.scoreboard.data.PlayMode;
-import com.floatingpanda.scoreboard.data.PlayModeDao;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
+import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameAddEditViewModel;
 
 import org.junit.After;

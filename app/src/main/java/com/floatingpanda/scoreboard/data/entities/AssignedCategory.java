@@ -1,11 +1,10 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.entities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
-import androidx.room.Index;
 
 //No need to cascade updates as ids should not change???
 @Entity(tableName = "assigned_categories", primaryKeys = {"bg_id", "category_id"},

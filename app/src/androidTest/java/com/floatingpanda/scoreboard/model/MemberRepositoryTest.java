@@ -10,9 +10,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.MemberDao;
+import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.MemberRepository;
 
 import org.junit.After;

@@ -1,17 +1,17 @@
 package com.floatingpanda.scoreboard;
 
-import com.floatingpanda.scoreboard.data.AssignedCategory;
-import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.entities.AssignedCategory;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
-import com.floatingpanda.scoreboard.data.GameRecord;
-import com.floatingpanda.scoreboard.data.Group;
-import com.floatingpanda.scoreboard.data.GroupMember;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.PlayMode;
-import com.floatingpanda.scoreboard.data.Player;
-import com.floatingpanda.scoreboard.data.PlayerTeam;
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.entities.GroupMember;
+import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.data.entities.Player;
+import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -109,20 +109,20 @@ public class TestData {
 
     public static final List<GameRecord> GAME_RECORDS = Arrays.asList(GAME_RECORD_1, GAME_RECORD_2, GAME_RECORD_3, GAME_RECORD_4);
 
-    public static final PlayerTeam PLAYER_TEAM_1 = new PlayerTeam(1, GAME_RECORD_1.getId(), 1, 30);
-    public static final PlayerTeam PLAYER_TEAM_2 = new PlayerTeam(2, GAME_RECORD_1.getId(), 2, 20);
-    public static final PlayerTeam PLAYER_TEAM_3 = new PlayerTeam(3, GAME_RECORD_1.getId(), 2, 20);
-    public static final PlayerTeam PLAYER_TEAM_4 = new PlayerTeam(4, GAME_RECORD_1.getId(), 4, 0);
-    public static final PlayerTeam PLAYER_TEAM_5 = new PlayerTeam(1, GAME_RECORD_2.getId(), 1, 60);
-    public static final PlayerTeam PLAYER_TEAM_6 = new PlayerTeam(1, GAME_RECORD_3.getId(), 1, 20);
+    public static final PlayerTeam PLAYER_TEAM_1 = new PlayerTeam(18, 1, GAME_RECORD_1.getId(), 1, 30);
+    public static final PlayerTeam PLAYER_TEAM_2 = new PlayerTeam(19, 2, GAME_RECORD_1.getId(), 2, 20);
+    public static final PlayerTeam PLAYER_TEAM_3 = new PlayerTeam(20, 3, GAME_RECORD_1.getId(), 2, 20);
+    public static final PlayerTeam PLAYER_TEAM_4 = new PlayerTeam(21, 4, GAME_RECORD_1.getId(), 4, 0);
+    public static final PlayerTeam PLAYER_TEAM_5 = new PlayerTeam(22, 1, GAME_RECORD_2.getId(), 1, 60);
+    public static final PlayerTeam PLAYER_TEAM_6 = new PlayerTeam(23, 1, GAME_RECORD_3.getId(), 1, 20);
 
     public static final List<PlayerTeam> PLAYER_TEAMS = Arrays.asList(PLAYER_TEAM_1, PLAYER_TEAM_2, PLAYER_TEAM_3, PLAYER_TEAM_4, PLAYER_TEAM_5, PLAYER_TEAM_6);
 
-    public static final Player PLAYER_1 = new Player(18, 1, GAME_RECORD_1.getId(), MEMBER_1.getNickname());
-    public static final Player PLAYER_2 = new Player(19, 2, GAME_RECORD_1.getId(), MEMBER_2.getNickname());
-    public static final Player PLAYER_3 = new Player(20, 2, GAME_RECORD_1.getId(), MEMBER_3.getNickname());
-    public static final Player PLAYER_4 = new Player(21, 1, GAME_RECORD_2.getId(), MEMBER_2.getNickname());
-    public static final Player PLAYER_5 = new Player(22, 1, GAME_RECORD_3.getId(), MEMBER_1.getNickname());
+    public static final Player PLAYER_1 = new Player(24, PLAYER_TEAM_1.getId(), MEMBER_1.getNickname());
+    public static final Player PLAYER_2 = new Player(25, PLAYER_TEAM_2.getId(), MEMBER_2.getNickname());
+    public static final Player PLAYER_3 = new Player(26, PLAYER_TEAM_2.getId(), MEMBER_3.getNickname());
+    public static final Player PLAYER_4 = new Player(27, PLAYER_TEAM_5.getId(), MEMBER_2.getNickname());
+    public static final Player PLAYER_5 = new Player(28, PLAYER_TEAM_6.getId(), MEMBER_1.getNickname());
 
     public static final List<Player> PLAYERS = Arrays.asList(PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, PLAYER_5);
 }

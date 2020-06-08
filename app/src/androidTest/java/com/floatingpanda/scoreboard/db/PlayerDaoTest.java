@@ -3,7 +3,6 @@ package com.floatingpanda.scoreboard.db;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,18 +10,18 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameDao;
-import com.floatingpanda.scoreboard.data.GameRecord;
-import com.floatingpanda.scoreboard.data.GameRecordDao;
-import com.floatingpanda.scoreboard.data.Group;
-import com.floatingpanda.scoreboard.data.GroupDao;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.MemberDao;
-import com.floatingpanda.scoreboard.data.Player;
-import com.floatingpanda.scoreboard.data.PlayerDao;
-import com.floatingpanda.scoreboard.data.PlayerTeam;
-import com.floatingpanda.scoreboard.data.PlayerTeamDao;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
+import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.daos.GroupDao;
+import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.daos.MemberDao;
+import com.floatingpanda.scoreboard.data.entities.Player;
+import com.floatingpanda.scoreboard.data.daos.PlayerDao;
+import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
+import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,12 +30,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -116,46 +113,24 @@ public class PlayerDaoTest {
     }
 
     @Test
-    public void getPlayersByTeamNumberAndRecordIdWhenNoneInserted() throws InterruptedException {
-        int recordId = TestData.PLAYER_2.getRecordId();
-        int teamNo = TestData.PLAYER_2.getTeamNumber();
-        List<Player> players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByTeamNumberAndRecordId(teamNo, recordId));
+    public void getPlayersByPlayerTeamIdWhenNoneInserted() throws InterruptedException {
+        List<Player> players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByPlayerTeamId(TestData.PLAYER_TEAM_2.getId()));
 
         assertTrue(players.isEmpty());
     }
 
     @Test
-    public void getPlayersByTeamNumberAndRecordIdWhenAllInserted() throws InterruptedException {
+    public void getPlayersByPlayerTeamIdWhenAllInserted() throws InterruptedException {
         playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
-
-        // The record id and team number for player 2 are shared by one other player - player 3.
-        int recordId = TestData.PLAYER_2.getRecordId();
-        int teamNo = TestData.PLAYER_2.getTeamNumber();
-        List<Player> players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByTeamNumberAndRecordId(teamNo, recordId));
+        //Player team 2 has 2 players in it.
+        List<Player> players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByPlayerTeamId(TestData.PLAYER_TEAM_2.getId()));
 
         assertThat(players.size(), is(2));
-        assertTrue(players.contains(TestData.PLAYER_2));
-        assertTrue(players.contains(TestData.PLAYER_3));
-    }
 
-    @Test
-    public void getPlayersByRecordIdWhenNoneInserted() throws InterruptedException {
-        List<Player> players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByRecordId(TestData.PLAYER_1.getRecordId()));
+        //Player team 4 has 0 players in it.
+        players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByPlayerTeamId(TestData.PLAYER_TEAM_4.getId()));
 
         assertTrue(players.isEmpty());
-    }
-
-    @Test
-    public void getPlayersByRecordIdWhenAllInserted() throws InterruptedException {
-        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
-
-        //The record id associated with player 1 is shared by 2 other players - players 2 and 3.
-        List<Player> players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByRecordId(TestData.PLAYER_1.getRecordId()));
-
-        assertThat(players.size(), is(3));
-        assertTrue(players.contains(TestData.PLAYER_1));
-        assertTrue(players.contains(TestData.PLAYER_2));
-        assertTrue(players.contains(TestData.PLAYER_3));
     }
 
     @Test
@@ -250,10 +225,37 @@ public class PlayerDaoTest {
         assertNotNull(player);
         assertThat(player, is(TestData.PLAYER_3));
         assertThat(player.getId(), is(TestData.PLAYER_3.getId()));
-        assertThat(player.getRecordId(), is(TestData.PLAYER_3.getRecordId()));
-        assertThat(player.getTeamNumber(), is(TestData.PLAYER_3.getTeamNumber()));
+        assertThat(player.getPlayerTeamId(), is(TestData.PLAYER_3.getPlayerTeamId()));
         assertThat(player.getMemberNickname(), is(not(TestData.PLAYER_3.getMemberNickname())));
         assertNull(player.getMemberNickname());
+    }
+
+    @Test
+    public void getAllPlayersAfterInsertingAllAndDeletingAnAssociatedPlayerTeam() throws InterruptedException {
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        List<Player> players = LiveDataTestUtil.getValue(playerDao.getAll());
+
+        assertThat(players.size(), is(TestData.PLAYERS.size()));
+        assertTrue(players.contains(TestData.PLAYER_1));
+
+        List<Player> playerTeam1Players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByPlayerTeamId(TestData.PLAYER_TEAM_1.getId()));
+        assertThat(playerTeam1Players.size(), is(1));
+        assertThat(playerTeam1Players.get(0), is(TestData.PLAYER_1));
+
+        playerTeamDao.delete(TestData.PLAYER_TEAM_1);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        List<PlayerTeam> playerTeams = LiveDataTestUtil.getValue(playerTeamDao.getAll());
+        assertThat(playerTeams.size(), is(TestData.PLAYER_TEAMS.size() - 1));
+        assertFalse(playerTeams.contains(TestData.PLAYER_TEAM_1));
+
+        players = LiveDataTestUtil.getValue(playerDao.getAll());
+
+        assertThat(players.size(), is(TestData.PLAYERS.size() - 1));
+        assertFalse(players.contains(TestData.PLAYER_1));
+
+        playerTeam1Players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByPlayerTeamId(TestData.PLAYER_TEAM_1.getId()));
+        assertTrue(playerTeam1Players.isEmpty());
     }
 
     @Test
@@ -264,12 +266,6 @@ public class PlayerDaoTest {
         assertThat(players.size(), is(TestData.PLAYERS.size()));
         assertTrue(players.contains(TestData.PLAYER_1));
 
-        // Game record 1 is associated with 3 players - players 1, 2 and 3
-        List<Player> gameRecord1Players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByRecordId(TestData.GAME_RECORD_1.getId()));
-
-        assertThat(gameRecord1Players.size(), is(3));
-        assertTrue(gameRecord1Players.contains(TestData.PLAYER_1));
-
         gameRecordDao.delete(TestData.GAME_RECORD_1);
         TimeUnit.MILLISECONDS.sleep(100);
 
@@ -277,9 +273,5 @@ public class PlayerDaoTest {
 
         assertThat(players.size(), is(TestData.PLAYERS.size() - 3));
         assertFalse(players.contains(TestData.PLAYER_1));
-
-        gameRecord1Players = LiveDataTestUtil.getValue(playerDao.findLiveDataPlayersByRecordId(TestData.GAME_RECORD_1.getId()));
-
-        assertTrue(gameRecord1Players.isEmpty());
     }
 }

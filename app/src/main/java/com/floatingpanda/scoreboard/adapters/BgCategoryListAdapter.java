@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.interfaces.ActivityAdapterInterface;
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;

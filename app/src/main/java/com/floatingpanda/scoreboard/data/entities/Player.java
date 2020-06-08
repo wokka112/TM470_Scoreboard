@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.entities;
 
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -7,10 +7,11 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+//TODO add unique constraint to the combination of the three columns in this entity?
 @Entity(tableName = "players",
         foreignKeys = {@ForeignKey(entity = PlayerTeam.class,
-                parentColumns = {"team_number", "record_id"},
-                childColumns = {"team_number", "record_id"},
+                parentColumns = "player_team_id",
+                childColumns = "player_team_id",
                 onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Member.class,
                 parentColumns = "nickname",
@@ -22,33 +23,27 @@ public class Player {
     @ColumnInfo(name = "player_id")
     private int id;
 
-    @ColumnInfo(name = "team_number")
-    private int teamNumber;
-
-    @ColumnInfo(name = "record_id")
-    private int recordId;
+    @ColumnInfo(name = "player_team_id")
+    private int playerTeamId;
 
     @ColumnInfo(name = "member_nickname")
     private String memberNickname;
 
     @Ignore
-    public Player(int id, int teamNumber, int recordId, String memberNickname) {
+    public Player(int id, int playerTeamId, String memberNickname) {
         this.id = id;
-        this.teamNumber = teamNumber;
-        this.recordId = recordId;
+        this.playerTeamId = playerTeamId;
         this.memberNickname = memberNickname;
     }
 
-    public Player(int teamNumber, int recordId, String memberNickname) {
-        this(0, teamNumber, recordId, memberNickname);
+    public Player(int playerTeamId, String memberNickname) {
+        this(0, playerTeamId, memberNickname);
     }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-    public int getTeamNumber() { return teamNumber; }
-    public void setTeamNumber(int teamNumber) { this.teamNumber = teamNumber; }
-    public int getRecordId() { return recordId; }
-    public void setRecordId(int recordId) { this.recordId = recordId; }
+    public int getPlayerTeamId() { return playerTeamId; }
+    public void setPlayerTeamId(int playerTeamId) { this.playerTeamId = playerTeamId; }
     public String getMemberNickname() { return memberNickname; }
     public void setMemberNickname(String memberNickname) { this.memberNickname = memberNickname; }
 
@@ -61,7 +56,6 @@ public class Player {
         Player player = (Player) obj;
 
         return (player.getId() == this.getId()
-                && player.getRecordId() == this.getRecordId()
-                && player.getTeamNumber() == this.getTeamNumber());
+                && player.getPlayerTeamId() == this.getPlayerTeamId());
     }
 }

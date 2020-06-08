@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingBottom="8dp">
 
     <TextView
@@ -12,7 +13,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        tools:text="Medieval"/>
 
     <TextView
         android:id="@+id/records_date"
@@ -21,7 +23,8 @@
         app:layout_constraintTop_toBottomOf="@id/records_game_name"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/records_time"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        tools:text="11 May 2020"/>
 
     <TextView
         android:id="@+id/records_time"
@@ -29,7 +32,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/records_date"
         app:layout_constraintLeft_toRightOf="@id/records_date"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="17:43"/>
 
     <TextView
         android:id="@+id/records_difficulty_header"
@@ -47,7 +51,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/records_difficulty_header"
         app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
-        android:layout_marginLeft="12dp"/>
+        android:layout_marginLeft="12dp"
+        tools:text="3"/>
 
     <TextView
         android:id="@+id/records_player_count_header"
@@ -64,25 +69,35 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
         app:layout_constraintLeft_toRightOf="@id/records_player_count_header"
-        android:layout_marginLeft="12dp"/>
+        android:layout_marginLeft="12dp"
+        tools:text="8"/>
 
     <TextView
-        android:id="@+id/records_position"
+        android:id="@+id/records_place"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Place"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/records_difficulty_header"
-        app:layout_constraintRight_toLeftOf="@id/records_player_name"
+        app:layout_constraintRight_toLeftOf="@id/records_team_number"
         android:layout_marginTop="8dp"
         />
+
+    <TextView
+        android:id="@+id/records_team_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Team"
+        app:layout_constraintLeft_toRightOf="@id/records_place"
+        app:layout_constraintRight_toLeftOf="@id/records_player_name"
+        app:layout_constraintTop_toTopOf="@id/records_place"/>
 
     <TextView
         android:id="@+id/records_player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/records_position"
-        app:layout_constraintTop_toTopOf="@id/records_position"
+        app:layout_constraintLeft_toRightOf="@id/records_team_number"
+        app:layout_constraintTop_toTopOf="@id/records_place"
         app:layout_constraintRight_toLeftOf="@id/records_score"
         android:text="Name"/>
 
@@ -91,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/records_player_name"
-        app:layout_constraintTop_toTopOf="@id/records_position"
+        app:layout_constraintTop_toTopOf="@id/records_place"
         app:layout_constraintRight_toRightOf="parent"
         android:text="Score"/>
 
@@ -99,17 +114,28 @@
         android:id="@+id/records_first_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/records_position"
-        app:layout_constraintLeft_toLeftOf="@id/records_position"
+        app:layout_constraintTop_toBottomOf="@id/records_place"
+        app:layout_constraintLeft_toLeftOf="@id/records_place"
+        app:layout_constraintRight_toRightOf="@id/records_place"
         android:layout_marginTop="8dp"
-        android:text="1st Place"/>
+        android:text="1st"/>
+
+    <TextView
+        android:id="@+id/records_first_team_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_first_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_team_number"
+        app:layout_constraintRight_toRightOf="@id/records_team_number"
+        tools:text="1"/>
 
     <TextView
         android:id="@+id/records_first_player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/records_first_header"
-        app:layout_constraintLeft_toLeftOf="@id/records_player_name"/>
+        app:layout_constraintLeft_toLeftOf="@id/records_player_name"
+        tools:text="Bailey, Theo"/>
 
     <TextView
         android:id="@+id/records_first_score"
@@ -123,16 +149,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/records_first_header"
-        app:layout_constraintLeft_toLeftOf="@id/records_position"
+        app:layout_constraintLeft_toLeftOf="@id/records_place"
+        app:layout_constraintRight_toRightOf="@id/records_place"
         android:layout_marginTop="8dp"
-        android:text="2nd Place"/>
+        android:text="2nd"/>
+
+    <TextView
+        android:id="@+id/records_second_team_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_second_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_team_number"
+        app:layout_constraintRight_toRightOf="@id/records_team_number"
+        tools:text="2"/>
 
     <TextView
         android:id="@+id/records_second_player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/records_second_header"
-        app:layout_constraintLeft_toLeftOf="@id/records_player_name"/>
+        app:layout_constraintLeft_toLeftOf="@id/records_player_name"
+        tools:text="Theo"/>
 
     <TextView
         android:id="@+id/records_second_score"
@@ -146,16 +183,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/records_second_header"
-        app:layout_constraintLeft_toLeftOf="@id/records_position"
+        app:layout_constraintLeft_toLeftOf="@id/records_place"
+        app:layout_constraintRight_toRightOf="@id/records_place"
         android:layout_marginTop="8dp"
-        android:text="3rd Place"/>
+        android:text="3rd"/>
+
+    <TextView
+        android:id="@+id/records_third_team_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_third_header"
+        app:layout_constraintLeft_toLeftOf="@id/records_team_number"
+        app:layout_constraintRight_toRightOf="@id/records_team_number"
+        tools:text="3"/>
 
     <TextView
         android:id="@+id/records_third_player_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/records_third_header"
-        app:layout_constraintLeft_toLeftOf="@id/records_player_name"/>
+        app:layout_constraintLeft_toLeftOf="@id/records_player_name"
+        tools:text="Adam"/>
 
     <TextView
         android:id="@+id/records_third_score"

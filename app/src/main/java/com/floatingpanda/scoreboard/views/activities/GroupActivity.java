@@ -8,8 +8,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.GroupActivityAdapter;
-import com.floatingpanda.scoreboard.adapters.MainActivityAdapter;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.entities.Group;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 

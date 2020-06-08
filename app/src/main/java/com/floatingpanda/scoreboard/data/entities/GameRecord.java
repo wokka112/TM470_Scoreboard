@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.entities;
 
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
@@ -35,8 +35,10 @@ public class GameRecord {
 
     private Date date;
 
+    //TODO include time.
     //private Time time;
 
+    //TODO change name of teamsAllowed to teams
     @ColumnInfo(name = "teams_allowed")
     private boolean teamsAllowed;
 
@@ -45,6 +47,10 @@ public class GameRecord {
 
     @ColumnInfo(name = "no_of_teams")
     private int noOfTeams;
+
+    //TODO include a boolean for cooperative/solitaire win/lose.
+    // If the game is competitive, ignore and use the competitive layout.
+    // If the game is cooperative or solitaire, use another layout which says whether you win or lose.
 
     @Ignore
     public GameRecord(int id, int groupId, String boardGameName, int difficulty, Date date, boolean teamsAllowed, PlayMode.PlayModeEnum playModePlayed,

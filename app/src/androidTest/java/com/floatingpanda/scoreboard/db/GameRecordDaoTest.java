@@ -3,7 +3,6 @@ package com.floatingpanda.scoreboard.db;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -11,13 +10,20 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.BgCategory;
-import com.floatingpanda.scoreboard.data.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameDao;
-import com.floatingpanda.scoreboard.data.GameRecord;
-import com.floatingpanda.scoreboard.data.GameRecordDao;
-import com.floatingpanda.scoreboard.data.Group;
-import com.floatingpanda.scoreboard.data.GroupDao;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
+import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
+import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.daos.GroupDao;
+import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.daos.MemberDao;
+import com.floatingpanda.scoreboard.data.entities.Player;
+import com.floatingpanda.scoreboard.data.daos.PlayerDao;
+import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
+import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
+import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,6 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -48,6 +55,9 @@ public class GameRecordDaoTest {
     private GameRecordDao gameRecordDao;
     private GroupDao groupDao;
     private BoardGameDao boardGameDao;
+    private PlayerTeamDao playerTeamDao;
+    private PlayerDao playerDao;
+    private MemberDao memberDao;
 
     @Before
     public void createDb() {
@@ -58,6 +68,9 @@ public class GameRecordDaoTest {
         gameRecordDao = db.gameRecordDao();
         boardGameDao = db.boardGameDao();
         groupDao = db.groupDao();
+        playerTeamDao = db.playerTeamDao();
+        playerDao = db.playerDao();
+        memberDao = db.memberDao();
 
         boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
         groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
@@ -243,5 +256,141 @@ public class GameRecordDaoTest {
         gameRecord = LiveDataTestUtil.getValue(gameRecordDao.findLiveDataGameRecordByRecordId(TestData.GAME_RECORD_1.getId()));
 
         assertNull(gameRecord);
+    }
+
+    @Test
+    public void getAllGameRecordsWithPlayerTeamsAndPlayersWhenNoneInserted() throws InterruptedException {
+        List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers());
+
+        assertTrue(gameRecordsWithPlayerTeamsAndPlayers.isEmpty());
+    }
+
+    @Test
+    public void getAllGameRecordsWithPlayerTeamsAndPlayersWhenAllInserted() throws InterruptedException {
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+
+        List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers());
+
+        assertThat(gameRecordsWithPlayerTeamsAndPlayers.size(), is(TestData.GAME_RECORDS.size()));
+
+        List<PlayerTeamWithPlayers> playerTeamsWithPlayers = new ArrayList<>();
+        for (GameRecordWithPlayerTeamsAndPlayers gameRecordWithPlayerTeamsAndPlayers : gameRecordsWithPlayerTeamsAndPlayers) {
+            if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_1.getId()) {
+                playerTeamsWithPlayers = gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers();
+                assertThat(playerTeamsWithPlayers.size(), is(4));
+
+                List<Player> players;
+                for(PlayerTeamWithPlayers playerTeamWithPlayers : gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers()) {
+                    if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_1.getId()) {
+                        players = playerTeamWithPlayers.getPlayers();
+                        assertThat(players.size(), is(1));
+                        assertThat(players.get(0), is(TestData.PLAYER_1));
+                    } else if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_2.getId()) {
+                        players = playerTeamWithPlayers.getPlayers();
+                        assertThat(players.size(), is(2));
+                        assertTrue(players.contains(TestData.PLAYER_2));
+                        assertTrue(players.contains(TestData.PLAYER_3));
+                    } else if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_3.getId()) {
+                        players = playerTeamWithPlayers.getPlayers();
+                        assertTrue(players.isEmpty());
+                    } else if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_4.getId()) {
+                        players = playerTeamWithPlayers.getPlayers();
+                        assertTrue(players.isEmpty());
+                    }
+                }
+            } else if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_2.getId()) {
+                playerTeamsWithPlayers = gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers();
+                assertThat(playerTeamsWithPlayers.size(), is(1));
+                assertThat(playerTeamsWithPlayers.get(0).getPlayerTeam(), is(TestData.PLAYER_TEAM_5));
+
+                List<Player> players = playerTeamsWithPlayers.get(0).getPlayers();
+                assertThat(players.get(0), is(TestData.PLAYER_4));
+
+            } else if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_3.getId()) {
+                playerTeamsWithPlayers = gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers();
+                assertThat(playerTeamsWithPlayers.size(), is(1));
+                assertThat(playerTeamsWithPlayers.get(0).getPlayerTeam(), is(TestData.PLAYER_TEAM_6));
+
+                List<Player> players = playerTeamsWithPlayers.get(0).getPlayers();
+                assertThat(players.get(0), is(TestData.PLAYER_5));
+            } else if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_4.getId()) {
+                playerTeamsWithPlayers = gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers();
+                assertTrue(playerTeamsWithPlayers.isEmpty());
+            }
+        }
+    }
+
+    @Test
+    public void getSpecificGameRecordWithPlayerTeamsAndPlayersByRecordIdWhenNoneInserted() throws InterruptedException {
+        GameRecordWithPlayerTeamsAndPlayers gameRecordWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordWithPlayerTeamsAndPlayersByRecordId(TestData.GAME_RECORD_1.getId()));
+
+        assertNull(gameRecordWithPlayerTeamsAndPlayers);
+    }
+
+    @Test
+    public void getSpecificGameRecordWithPlayerTeamsAndPlayersByRecordIdWhenAllInserted() throws InterruptedException {
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+
+        GameRecordWithPlayerTeamsAndPlayers gameRecordWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordWithPlayerTeamsAndPlayersByRecordId(TestData.GAME_RECORD_1.getId()));
+
+        assertThat(gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId(), is(TestData.GAME_RECORD_1.getId()));
+        assertThat(gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers().size(), is(4));
+
+        List<Player> players;
+        for(PlayerTeamWithPlayers playerTeamWithPlayers : gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers()) {
+            if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_1.getId()) {
+                players = playerTeamWithPlayers.getPlayers();
+                assertThat(players.size(), is(1));
+                assertThat(players.get(0), is(TestData.PLAYER_1));
+            } else if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_2.getId()) {
+                players = playerTeamWithPlayers.getPlayers();
+                assertThat(players.size(), is(2));
+                assertTrue(players.contains(TestData.PLAYER_2));
+                assertTrue(players.contains(TestData.PLAYER_3));
+            } else if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_3.getId()) {
+                players = playerTeamWithPlayers.getPlayers();
+                assertTrue(players.isEmpty());
+            } else if (playerTeamWithPlayers.getPlayerTeam().getId() == TestData.PLAYER_TEAM_4.getId()) {
+                players = playerTeamWithPlayers.getPlayers();
+                assertTrue(players.isEmpty());
+            }
+        }
+
+        gameRecordWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordWithPlayerTeamsAndPlayersByRecordId(TestData.GAME_RECORD_4.getId()));
+
+        assertThat(gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId(), is(TestData.GAME_RECORD_4.getId()));
+        assertTrue(gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers().isEmpty());
+    }
+
+    @Test
+    public void getGameRecordsWithPlayerTeamAndPlayersByGroupIdWhenNoneInserted() throws InterruptedException {
+        List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordsWithPlayerTeamsAndPlayersByGroupId(TestData.GROUP_1.getId()));
+
+        assertTrue(gameRecordsWithPlayerTeamsAndPlayers.isEmpty());
+    }
+
+    @Test
+    public void getGameRecordsWithPlayerTeamAndPlayersByGroupIdWhenAllInserted() throws InterruptedException {
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+
+        //Group 1 has 3 game records associated with it.
+        List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordsWithPlayerTeamsAndPlayersByGroupId(TestData.GROUP_1.getId()));
+
+        assertThat(gameRecordsWithPlayerTeamsAndPlayers.size(), is(3));
+
+        for(GameRecordWithPlayerTeamsAndPlayers gameRecordWithPlayerTeamsAndPlayers : gameRecordsWithPlayerTeamsAndPlayers) {
+            if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_1.getId()) {
+                assertThat(gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers().size(), is(4));
+            }
+        }
     }
 }

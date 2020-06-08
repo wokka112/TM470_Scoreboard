@@ -2,7 +2,7 @@ package com.floatingpanda.scoreboard.typeconverters;
 
 import androidx.room.TypeConverter;
 
-import com.floatingpanda.scoreboard.data.PlayMode;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
 //TODO add in null checks like date type converter?
 public class PlayModeTypeConverter {

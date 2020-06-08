@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingBottom="8dp">
+
+    <TextView
+        android:id="@+id/records_game_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="8dp"
+        tools:text="Medieval"/>
+
+    <TextView
+        android:id="@+id/records_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_game_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/records_time"
+        android:layout_marginTop="8dp"
+        tools:text="11 May 2020"/>
+
+    <TextView
+        android:id="@+id/records_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_date"
+        app:layout_constraintLeft_toRightOf="@id/records_date"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:text="17:43"/>
+
+    <TextView
+        android:id="@+id/records_difficulty_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_date"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="36dp"
+        android:text="Difficulty:"/>
+
+    <TextView
+        android:id="@+id/records_difficulty_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/records_difficulty_header"
+        app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
+        android:layout_marginLeft="12dp"
+        tools:text="3"/>
+
+    <TextView
+        android:id="@+id/records_player_count_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/records_difficulty_output"
+        app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="Players:"/>
+
+    <TextView
+        android:id="@+id/records_player_count_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
+        app:layout_constraintLeft_toRightOf="@id/records_player_count_header"
+        android:layout_marginLeft="12dp"
+        tools:text="8"/>
+
+    <TextView
+        android:id="@+id/records_first_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1st Place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/records_difficulty_header"
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/records_first_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_first_place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:orientation="vertical"/>
+
+    <!--
+    <TextView
+        android:id="@+id/records_first_score_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Score:"
+        app:layout_constraintLeft_toRightOf="@id/records_first_place"
+        android:layout_marginLeft="36dp"
+        app:layout_constraintTop_toBottomOf="@id/records_first_place"/>
+
+    <TextView
+        android:id="@+id/records_first_score_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="30"
+        app:layout_constraintLeft_toRightOf="@id/records_first_score_header"
+        app:layout_constraintTop_toBottomOf="@id/records_first_place"
+        android:layout_marginLeft="4dp"/>
+        -->
+
+    <TextView
+        android:id="@+id/records_second_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2nd Place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/records_first_wrapper"
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/records_second_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_second_place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/records_third_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3rd Place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/records_second_wrapper"
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/records_third_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/records_third_place"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:orientation="vertical"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

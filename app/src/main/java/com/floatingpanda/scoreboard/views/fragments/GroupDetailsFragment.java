@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.views.activities.GroupEditActivity;
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 import static android.app.Activity.RESULT_OK;

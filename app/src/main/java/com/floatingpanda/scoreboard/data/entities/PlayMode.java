@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard.data;
+package com.floatingpanda.scoreboard.data.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,7 +9,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
 
 @Entity(tableName = "play_modes", primaryKeys = {"bg_id", "play_mode_enum"},
         foreignKeys = {@ForeignKey(entity = BoardGame.class,

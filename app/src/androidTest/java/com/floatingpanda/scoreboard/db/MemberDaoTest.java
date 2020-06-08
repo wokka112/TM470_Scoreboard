@@ -10,8 +10,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.Member;
-import com.floatingpanda.scoreboard.data.MemberDao;
+import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.daos.MemberDao;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;

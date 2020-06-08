@@ -16,7 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Member;
+import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 //TODO remove testing log warnings.

@@ -9,11 +9,11 @@ import androidx.lifecycle.LiveData;
 import com.floatingpanda.scoreboard.AlertDialogHelper;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.BgCategoryRepository;
-import com.floatingpanda.scoreboard.data.BoardGame;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.BoardGameRepository;
-import com.floatingpanda.scoreboard.data.PlayMode;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
 import java.util.ArrayList;
 import java.util.List;

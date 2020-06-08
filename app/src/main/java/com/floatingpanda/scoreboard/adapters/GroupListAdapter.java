@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;

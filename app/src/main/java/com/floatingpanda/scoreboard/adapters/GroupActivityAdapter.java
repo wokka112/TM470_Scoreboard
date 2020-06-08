@@ -6,11 +6,9 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.floatingpanda.scoreboard.views.fragments.GroupDetailsFragment;
-import com.floatingpanda.scoreboard.views.fragments.GroupGameRecordListFragment;
-import com.floatingpanda.scoreboard.views.fragments.GroupListFragment;
+import com.floatingpanda.scoreboard.views.fragments.GameRecordListFragment;
 import com.floatingpanda.scoreboard.views.fragments.GroupMemberListFragment;
-import com.floatingpanda.scoreboard.views.fragments.MemberListFragment;
-import com.floatingpanda.scoreboard.data.Group;
+import com.floatingpanda.scoreboard.data.entities.Group;
 
 public class GroupActivityAdapter extends FragmentStateAdapter {
 
@@ -27,7 +25,7 @@ public class GroupActivityAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 0) {
-            return new GroupGameRecordListFragment(group);
+            return new GameRecordListFragment(group);
         } else if (position == 1) {
             return new GroupMemberListFragment(group);
         } else if (position == 2) {

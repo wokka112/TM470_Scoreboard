@@ -7,7 +7,10 @@ import androidx.room.Embedded;
 import androidx.room.Junction;
 import androidx.room.Relation;
 
-import java.util.ArrayList;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.entities.GroupMember;
+import com.floatingpanda.scoreboard.data.entities.Member;
+
 import java.util.List;
 
 public class GroupWithMembers implements Parcelable {

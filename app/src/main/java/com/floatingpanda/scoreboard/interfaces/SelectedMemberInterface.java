@@ -1,6 +1,6 @@
 package com.floatingpanda.scoreboard.interfaces;
 
-import com.floatingpanda.scoreboard.data.Member;
+import com.floatingpanda.scoreboard.data.entities.Member;
 
 public interface SelectedMemberInterface {
     public void addSelectedMember(Member member);

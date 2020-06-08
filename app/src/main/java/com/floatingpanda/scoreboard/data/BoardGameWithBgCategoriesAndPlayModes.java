@@ -2,11 +2,14 @@ package com.floatingpanda.scoreboard.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.room.Embedded;
 import androidx.room.Relation;
+
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
 import java.util.ArrayList;
 import java.util.List;

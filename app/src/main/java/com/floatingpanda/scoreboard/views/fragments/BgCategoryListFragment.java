@@ -20,7 +20,7 @@ import com.floatingpanda.scoreboard.views.activities.BgCategoryAddActivity;
 import com.floatingpanda.scoreboard.views.activities.BgCategoryEditActivity;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.BgCategoryListAdapter;
-import com.floatingpanda.scoreboard.data.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.interfaces.ActivityAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
