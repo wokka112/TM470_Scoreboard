@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +26,12 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
     private List<Member> teamPlayers;
     private ChoosePlayerInterface listener;
 
-    public ChoosePlayersListAdapter(Context context, ChoosePlayerInterface listener) {
+    private int teamNo;
+
+    public ChoosePlayersListAdapter(Context context, ChoosePlayerInterface listener, int teamNo) {
         inflater = LayoutInflater.from(context);
         this.listener = listener;
+        this.teamNo = teamNo;
     }
 
     @Override
@@ -44,29 +48,23 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
             holder.groupsItemView.setText("7");
 
             if(position < teamPlayers.size()) {
+                Log.w("ChoosePlayersListAdapter.java", "Team " + teamNo + ", checking position " + position + " player: " + current);
                 holder.checkBoxItemView.setChecked(true);
+            } else {
+                //A bug occurs when selecting boxes and hitting the back button - multiple boxes become checked even though some of them aren't
+                // team members. This else clause solves that.
+                holder.checkBoxItemView.setChecked(false);
             }
 
-            /*
-            holder.checkBoxItemView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        listener.addPlayerToTeam(current);
-                    } else {
-                        listener.removePlayerFromTeam(current);
-                    }
-                }
-            });
-
-             */
-
+            // Can't use on checked because it activates when checking the boxes in the above if condition.
             holder.checkBoxItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (holder.checkBoxItemView.isChecked()) {
+                        Log.w("ChoosePlayerListAdapt.java", "Box checked, adding player to team " + teamNo + ": " + current);
                         listener.addPlayerToTeam(current);
                     } else {
+                        Log.w("ChoosePlayerListAdapt.java", "Box unchecked, removing player from team " + teamNo + ": " + current);
                         listener.removePlayerFromTeam(current);
                     }
                 }
@@ -80,9 +78,31 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
         this.teamPlayers = teamPlayers;
         this.potentialPlayers = potentialPlayers;
 
+        /*
+        Log.w("ChoosePlayerListAdapt.java", "Team Players");
+        for (Member member : teamPlayers) {
+            Log.w("ChoosePlayerListAdapt.java", "Team Player: " + member);
+        }
+
+        Log.w("ChoosePlayerListAdapt.java", "Potential Players");
+        for (Member member : potentialPlayers) {
+            Log.w("ChoosePlayerListAdapt.java", "Potential Player: " + member);
+        }
+
+         */
+
         teamAndPotentialPlayers = new ArrayList<>();
         teamAndPotentialPlayers.addAll(this.teamPlayers);
         teamAndPotentialPlayers.addAll(this.potentialPlayers);
+
+        Log.w("ChoosePlayerListAdapt.java", "Team and Potential Players for team " + teamNo);
+        for (int i = 0; i < teamAndPotentialPlayers.size(); i++) {
+            if (i < teamPlayers.size()) {
+                Log.w("ChoosePlayerListAdapt.java", "Team Player: " + teamAndPotentialPlayers.get(i));
+            } else {
+                Log.w("ChoosePlayerListAdapt.java", "Potential Player: " + teamAndPotentialPlayers.get(i));
+            }
+        }
         notifyDataSetChanged();
     }
 

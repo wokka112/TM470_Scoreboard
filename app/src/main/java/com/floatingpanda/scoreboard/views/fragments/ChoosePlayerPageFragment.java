@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -41,20 +40,20 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
         View rootView = inflater.inflate(R.layout.recyclerview_layout_choose_players, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.choose_players_recyclerview);
-        Button nextButton = rootView.findViewById(R.id.choose_players_button);
 
-        final ChoosePlayersListAdapter adapter = new ChoosePlayersListAdapter(getContext(), this);
+        final ChoosePlayersListAdapter adapter = new ChoosePlayersListAdapter(getContext(), this, teamNo);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //TODO change to observe from fragment instead of calling activity??
         choosePlayerSharedViewModel = new ViewModelProvider(requireActivity()).get(ChoosePlayerSharedViewModel.class);
-        choosePlayerSharedViewModel.getPotentialPlayers().observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
+        choosePlayerSharedViewModel.getObservablePotentialPlayers().observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
             public void onChanged(List<Member> potentialPlayers) {
-                Log.w("ChoosePlayPageFrag.java", "Got potential players.");
-                Toast.makeText(getContext(), "Got potential players", Toast.LENGTH_SHORT).show();
                 List<Member> teamPlayers = choosePlayerSharedViewModel.getTeamPlayers(teamNo);
+                //Log.w("ChoosePlayerPageFrag.java", "Got team players for team " + teamNo);
+                for (Member member : teamPlayers) {
+                    //Log.w("ChoosePlayerPageFrag.java", "Team Player: " + member);
+                }
                 adapter.setTeamAndPotentialPlayers(teamPlayers, potentialPlayers);
             }
         });
@@ -63,10 +62,12 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
     }
 
     public void addPlayerToTeam(Member member) {
+        //Log.w("ChoosePlayerPageFrag.java", "Adding member to team: " + member);
         choosePlayerSharedViewModel.addPlayerToTeam(teamNo, member);
     }
 
     public void removePlayerFromTeam(Member member) {
+        //Log.w("ChoosePlayerPageFrag.java", "Removing member from team: " + member);
         choosePlayerSharedViewModel.removePlayerFromTeam(teamNo, member);
     }
 }
