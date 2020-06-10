@@ -217,4 +217,22 @@ public class GroupMemberDaoTest {
 
         assertTrue(specificGroupMembers.isEmpty());
     }
+
+    @Test
+    public void findMembersFromASpecificGroupByGroupId() throws InterruptedException {
+        //Group 3 has 2 members - member 1 and member 3.
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        List<GroupMember> allGroupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+
+        assertThat(allGroupMembers.size(), is(TestData.GROUP_MEMBERS.size()));
+
+        List<Member> group3Members = LiveDataTestUtil.getValue(groupMemberDao.findMembersOfASpecificGroupByGroupId(TestData.GROUP_3.getId()));
+
+        assertThat(group3Members.size(), is(2));
+        assertTrue(group3Members.contains(TestData.MEMBER_1));
+        assertTrue(group3Members.contains(TestData.MEMBER_3));
+    }
 }

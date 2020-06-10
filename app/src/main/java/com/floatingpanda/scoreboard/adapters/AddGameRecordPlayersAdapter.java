@@ -4,8 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,41 +40,52 @@ public class AddGameRecordPlayersAdapter extends RecyclerView.Adapter<AddGameRec
         if (members != null) {
             Member current = members.get(position);
 
-            holder.positionSpinner.setAdapter(getAdapter(members.size()));
+            holder.positionSpinner.setAdapter(createPositionSpinnerAdapter(members.size()));
+            setupSearchableSpinner(holder);
         }
-
-        /*
-        if (players != null) {
-            Player current = players.get(position);
-            holder.nicknameItemView.setText(current.getNickname());
-            holder.groupsItemView.setText("7");
-
-            holder.checkBoxItemView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        listener.addSelectedMember(current);
-                    } else {
-                        listener.removeSelectedMember(current);
-                    }
-                }
-            });
-        } else {
-            holder.nicknameItemView.setText("No nickname");
-        }
-
-         */
     }
 
-    private ArrayAdapter<Integer> getAdapter(int numberOfTeams) {
+    private ArrayAdapter<Integer> createPositionSpinnerAdapter(int numberOfTeams) {
         List<Integer> positionList = new ArrayList<Integer>();
 
         for (int i = 1; i <= numberOfTeams; i++) {
             positionList.add(i);
         }
 
-        ArrayAdapter<Integer> positions = new ArrayAdapter<Integer>(context, android.R.layout.simple_spinner_item, positionList);
-        return positions;
+        ArrayAdapter<Integer> positionsAdapter = new ArrayAdapter<Integer>(context, android.R.layout.simple_spinner_item, positionList);
+        return positionsAdapter;
+    }
+
+    private void setupSearchableSpinner(AddGameRecordPlayersAdapter.AddGameRecordPlayerDialogViewHolder holder) {
+        holder.playerSearchableSpinner.setAdapter(new SearchableSpinnerAdapter(context, members));
+
+        holder.playerSearchableSpinner.setPositiveButton("Ok");
+
+        holder.playerSearchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                /* Maybe could use this???
+                if (parent.getItemAtPosition(position) == null) {
+
+                }
+                 */
+
+                if (position == 0) {
+                    return;
+                }
+
+                Toast.makeText(context, "Selected: " + parent.getItemAtPosition(position).toString(),
+                        Toast.LENGTH_SHORT).show();
+
+                //add member to list of selected members.
+                //add player to player team.
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     public void setPlayers(List<Member> members) {

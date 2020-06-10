@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.entities.Member;
 
@@ -15,17 +16,20 @@ import java.util.concurrent.Future;
 public class MemberRepository {
 
     private MemberDao memberDao;
+    private GroupMemberDao groupMemberDao;
     private LiveData<List<Member>> allMembers;
 
     public MemberRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         memberDao = db.memberDao();
+        groupMemberDao = db.groupMemberDao();
         allMembers = memberDao.getAllLive();
     }
 
     //Used for testing
     public MemberRepository(AppDatabase db) {
         memberDao = db.memberDao();
+        groupMemberDao = db.groupMemberDao();
         allMembers = memberDao.getAllLive();
     }
 
@@ -48,6 +52,11 @@ public class MemberRepository {
     public LiveData<Member> getLiveMemberById(int id) {
         return memberDao.findLiveDataById(id);
     }
+
+    //TODO move elsewhere??
+    public LiveData<List<Member>> getLiveMembersOfAGroupByGroupId(int groupId) { return groupMemberDao.findMembersOfASpecificGroupByGroupId(groupId); }
+
+    public List<Member> getNonLiveMembersOfAGroupByGroupId(int groupId) { return groupMemberDao.findNonLiveMembersOfASpecificGroupByGroupId(groupId); }
 
     // Precondition: member should not exist in database.
     // Postcondition: new member exists in the database.

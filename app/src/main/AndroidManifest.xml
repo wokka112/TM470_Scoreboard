@@ -22,6 +22,7 @@
         <activity android:name=".views.activities.GroupEditActivity"/>
         <activity android:name=".views.activities.AddGroupMembersActivity" />
         <activity android:name=".views.activities.AddGameRecordActivity" />
+        <activity android:name=".views.activities.ChoosePlayersActivity" />
         <activity android:name=".old.GroupActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

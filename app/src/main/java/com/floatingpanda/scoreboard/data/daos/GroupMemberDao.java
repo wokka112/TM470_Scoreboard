@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
+import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.List;
 
@@ -35,4 +36,14 @@ public interface GroupMemberDao {
 
     @Delete
     void delete(GroupMember groupMember);
+
+    @Query("SELECT * FROM members JOIN group_members " +
+            "WHERE group_members.group_id LIKE :groupId " +
+            "AND group_members.member_id LIKE members.member_id")
+    public LiveData<List<Member>> findMembersOfASpecificGroupByGroupId(int groupId);
+
+    @Query("SELECT * FROM members JOIN group_members " +
+            "WHERE group_members.group_id LIKE :groupId " +
+            "AND group_members.member_id LIKE members.member_id")
+    public List<Member> findNonLiveMembersOfASpecificGroupByGroupId(int groupId);
 }

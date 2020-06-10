@@ -11,14 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.List;
 
-public class SearchableSpinnerAdapter extends ArrayAdapter<BgCategory> {
+public class SearchableSpinnerAdapter extends ArrayAdapter<Member> {
 
-    public SearchableSpinnerAdapter(Context context, List<BgCategory> bgCategories) {
-        super(context, android.R.layout.simple_spinner_item, bgCategories);
-        this.insert(new BgCategory("Filler"), 0);
+    public SearchableSpinnerAdapter(Context context, List<Member> members) {
+        super(context, android.R.layout.simple_spinner_item, members);
+        this.insert(null, 0);
     }
 
     @Override
@@ -33,10 +34,11 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BgCategory> {
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        return initialSelection(false);
-        //return getCustomView(position, convertView, parent);
+        if (position == 0) {
+            return initialSelection(false);
+        }
+        return getCustomView(position, convertView, parent);
     }
-
 
     @Override
     public int getCount() {
@@ -46,12 +48,14 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BgCategory> {
     private View initialSelection(boolean dropdown) {
 
         TextView view = new TextView(getContext());
-        view.setText("Add category");
+        view.setText("Select player");
 
+        /*
         if (dropdown == true) {
             view.setHeight(0);
             view.setVisibility(View.GONE);
         }
+        */
 
         return view;
     }
@@ -63,11 +67,10 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BgCategory> {
                 LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
 
         position = position; // Adjust for initial selection item
-        BgCategory bgCategory = getItem(position);
+        Member member = getItem(position);
 
         TextView text = row.findViewById(android.R.id.text1);
-        text.setText(bgCategory.getCategoryName());
-
+        text.setText(member.getNickname());
 
         return row;
     }

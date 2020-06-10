@@ -17,6 +17,7 @@ import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAdapter.GameRecordViewHolder> {
@@ -38,17 +39,33 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     @Override
     public void onBindViewHolder(GameRecordViewHolder holder, int position) {
         if (gameRecordsWithPlayerTeamsAndPlayers != null) {
-            //Need game record with teams and players.
+            holder.firstPlaceWrapper.removeAllViews();
+            holder.secondPlaceWrapper.removeAllViews();
+            holder.thirdPlaceWrapper.removeAllViews();
+
             GameRecordWithPlayerTeamsAndPlayers current = gameRecordsWithPlayerTeamsAndPlayers.get(position);
             GameRecord currentGameRecord = current.getGameRecord();
             holder.gameNameTextView.setText(currentGameRecord.getBoardGameName());
-            holder.dateTextView.setText(Long.toString(currentGameRecord.getDate().getTime()));
+            holder.dateTextView.setText(currentGameRecord.getDate().toString());
+            holder.playModeTextView.setText(currentGameRecord.getPlayModePlayed().toString());
+            holder.difficultyTextView.setText(Integer.toString(currentGameRecord.getDifficulty()));
+
+            if(currentGameRecord.getTeamsAllowed()) {
+                holder.teamCountHeaderTextView.setText("Teams: ");
+            } else {
+                holder.teamCountHeaderTextView.setText("Players: ");
+            }
+
+            holder.teamCountOutputTextView.setText(Integer.toString(currentGameRecord.getNoOfTeams()));
 
             List<PlayerTeamWithPlayers> currentPlayerTeamsWithPlayers = current.getPlayerTeamsWithPlayers();
             //TODO this sort requires minimum API level 24 which targets 74% of devices. Look into doing this some other way so I can
             // reduce to level 18?
             currentPlayerTeamsWithPlayers.sort(new PlayerTeamWithPlayersComparator());
 
+            //TODO add padding or margin to wrappers so the text wraps around before it hits the right end of phone.
+
+            //TODO move this stuff into its own method.
             for (PlayerTeamWithPlayers playerTeamWithPlayers : currentPlayerTeamsWithPlayers) {
                 PlayerTeam playerTeam = playerTeamWithPlayers.getPlayerTeam();
                 List<Player> players = playerTeamWithPlayers.getPlayers();
@@ -63,6 +80,10 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
                     TextView playersTextView = view.findViewById(R.id.players);
 
                     teamTextView.setText("Team " + playerTeam.getTeamNumber());
+
+                    if (!currentGameRecord.getTeamsAllowed()) {
+                       teamTextView.setVisibility(View.INVISIBLE);
+                    }
 
                     StringBuilder sb = new StringBuilder();
                     for (Player player : players) {
@@ -83,6 +104,10 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
                     teamTextView.setText("Team " + playerTeam.getTeamNumber());
 
+                    if (!currentGameRecord.getTeamsAllowed()) {
+                        teamTextView.setVisibility(View.INVISIBLE);
+                    }
+
                     StringBuilder sb = new StringBuilder();
                     for (Player player : players) {
                         if (sb.length() > 0) {
@@ -101,6 +126,10 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
                     TextView playersTextView = view.findViewById(R.id.players);
 
                     teamTextView.setText("Team " + playerTeam.getTeamNumber());
+
+                    if (!currentGameRecord.getTeamsAllowed()) {
+                        teamTextView.setVisibility(View.INVISIBLE);
+                    }
 
                     StringBuilder sb = new StringBuilder();
                     for (Player player : players) {
@@ -140,7 +169,8 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     }
 
     class GameRecordViewHolder extends RecyclerView.ViewHolder {
-        private final TextView gameNameTextView, dateTextView, timeTextView;
+        private final TextView gameNameTextView, dateTextView, timeTextView, difficultyTextView, teamCountHeaderTextView, teamCountOutputTextView,
+                playModeTextView;
         private final LinearLayout firstPlaceWrapper, secondPlaceWrapper, thirdPlaceWrapper;
 
         private GameRecordViewHolder(View itemView) {
@@ -149,6 +179,11 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             gameNameTextView = itemView.findViewById(R.id.records_game_name);
             dateTextView = itemView.findViewById(R.id.records_date);
             timeTextView = itemView.findViewById(R.id.records_time);
+            difficultyTextView = itemView.findViewById(R.id.records_difficulty_output);
+            teamCountHeaderTextView = itemView.findViewById(R.id.records_player_count_header);
+            teamCountOutputTextView = itemView.findViewById(R.id.records_player_count_output);
+            playModeTextView = itemView.findViewById(R.id.records_play_mode);
+
             firstPlaceWrapper = itemView.findViewById(R.id.records_first_wrapper);
             secondPlaceWrapper = itemView.findViewById(R.id.records_second_wrapper);
             thirdPlaceWrapper = itemView.findViewById(R.id.records_third_wrapper);

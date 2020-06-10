@@ -36,7 +36,7 @@ public class GameRecordListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recyclerview_main, container, false);
+        View rootView = inflater.inflate(R.layout.recyclerview_layout_main, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -74,6 +74,7 @@ public class GameRecordListFragment extends Fragment {
 
     private void startAddGameRecord() {
         Intent intent = new Intent(getContext(), AddGameRecordActivity.class);
+        intent.putExtra("GROUP", group);
         startActivityForResult(intent, ADD_GAME_RECORD_REQUEST_CODE);
     }
 }
