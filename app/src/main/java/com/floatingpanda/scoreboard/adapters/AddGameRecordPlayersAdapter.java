@@ -41,7 +41,7 @@ public class AddGameRecordPlayersAdapter extends RecyclerView.Adapter<AddGameRec
             Member current = members.get(position);
 
             holder.positionSpinner.setAdapter(createPositionSpinnerAdapter(members.size()));
-            setupSearchableSpinner(holder);
+            //setupSearchableSpinner(holder);
         }
     }
 
@@ -56,6 +56,7 @@ public class AddGameRecordPlayersAdapter extends RecyclerView.Adapter<AddGameRec
         return positionsAdapter;
     }
 
+    /*
     private void setupSearchableSpinner(AddGameRecordPlayersAdapter.AddGameRecordPlayerDialogViewHolder holder) {
         holder.playerSearchableSpinner.setAdapter(new SearchableSpinnerAdapter(context, members));
 
@@ -69,7 +70,7 @@ public class AddGameRecordPlayersAdapter extends RecyclerView.Adapter<AddGameRec
 
                 }
                  */
-
+/*
                 if (position == 0) {
                     return;
                 }
@@ -87,6 +88,7 @@ public class AddGameRecordPlayersAdapter extends RecyclerView.Adapter<AddGameRec
             }
         });
     }
+    */
 
     public void setPlayers(List<Member> members) {
         this.members = members;

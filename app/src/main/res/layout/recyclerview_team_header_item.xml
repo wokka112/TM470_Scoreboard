@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:id="@+id/recyclerview_linear_team_header_item"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="16dp"
+    android:layout_width="match_parent"
+    android:padding="8dp"
+    android:textSize="16sp"
+    tools:text="Team 1"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

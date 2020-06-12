@@ -18,7 +18,7 @@ public class ChoosePlayersPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public Fragment createFragment(int position) {
-        return new ChoosePlayerPageFragment(position + 1);
+        return new ChoosePlayerPageFragment(position + 1, numOfTeams);
     }
 
     @Override

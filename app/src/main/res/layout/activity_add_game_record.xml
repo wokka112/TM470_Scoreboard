@@ -9,6 +9,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/add_game_record_add_players_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="32dp"
+            android:text="Add Players"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_player_count_header_textview" />
+
         <EditText
             android:id="@+id/add_game_record_player_count_edittext"
             android:layout_width="wrap_content"
@@ -16,8 +26,20 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:inputType="number"
-            app:layout_constraintLeft_toRightOf="@id/add_game_record_player_count_textview"
+            app:layout_constraintLeft_toRightOf="@id/add_game_record_player_count_header_textview"
             app:layout_constraintTop_toBottomOf="@id/add_game_record_teams_setting_radio_group" />
+
+        <TextView
+            android:id="@+id/add_game_record_player_count_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/add_game_record_player_count_edittext"
+            app:layout_constraintBottom_toBottomOf="@id/add_game_record_player_count_edittext"
+            app:layout_constraintLeft_toLeftOf="@id/add_game_record_player_count_edittext"
+            app:layout_constraintRight_toRightOf="@id/add_game_record_player_count_edittext"
+            tools:text="1"
+            android:visibility="gone"/>
+
 
         <RadioGroup
             android:id="@+id/add_game_record_teams_setting_radio_group"
@@ -46,14 +68,92 @@
 
         </RadioGroup>
 
+        <RadioGroup
+            android:id="@+id/add_game_record_play_mode_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_play_mode_textview">
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_competitive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Competitive"/>
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_cooperative"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Cooperative"/>
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_solitaire"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Solitaire"/>
+
+        </RadioGroup>
+
+        <RadioGroup
+            android:id="@+id/add_game_record_win_lose_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_win_lose_textview">
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_won"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Won" />
+
+            <RadioButton
+                android:id="@+id/add_game_record_radio_button_lost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Lost"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/add_game_record_play_mode_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:text="Play Mode"
+            app:layout_constraintLeft_toLeftOf="@id/add_game_record_bg_textview"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_bg_spinner" />
+
+        <TextView
+            android:id="@+id/add_game_record_win_lose_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Won or Lost?"
+            app:layout_constraintLeft_toLeftOf="@id/add_game_record_play_mode_textview"
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_play_mode_radio_group" />
+
         <TextView
             android:id="@+id/add_game_record_difficulty_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Difficulty:"
             app:layout_constraintLeft_toLeftOf="@id/add_game_record_bg_textview"
-            app:layout_constraintTop_toTopOf="@id/add_game_record_player_count_textview" />
+            app:layout_constraintTop_toTopOf="@id/add_game_record_player_count_header_textview" />
 
+        <!-- Need to style to look like edittext text -->
         <TextView
             android:id="@+id/add_game_record_difficulty_output"
             android:layout_width="wrap_content"
@@ -63,9 +163,8 @@
             app:layout_constraintTop_toTopOf="@id/add_game_record_difficulty_header"
             tools:text="3" />
 
-        <!-- Need to style to look like edittext test -->
         <TextView
-            android:id="@+id/add_game_record_player_count_textview"
+            android:id="@+id/add_game_record_player_count_header_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="72dp"
@@ -81,7 +180,7 @@
             android:layout_marginTop="8dp"
             android:text="Teams Setting"
             app:layout_constraintLeft_toLeftOf="@id/add_game_record_bg_textview"
-            app:layout_constraintTop_toBottomOf="@id/add_game_record_bg_spinner" />
+            app:layout_constraintTop_toBottomOf="@id/add_game_record_win_lose_radio_group" />
 
         <TextView
             android:id="@+id/add_game_record_bg_textview"
@@ -102,16 +201,6 @@
             android:layout_marginRight="8dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/add_game_record_bg_textview" />
-
-        <Button
-            android:id="@+id/add_game_record_add_players_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/add_game_record_player_count_edittext"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="32dp"
-            android:text="Add Players"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

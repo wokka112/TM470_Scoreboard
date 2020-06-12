@@ -3,6 +3,7 @@ package com.floatingpanda.scoreboard.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.room.Embedded;
 import androidx.room.Relation;
@@ -167,4 +168,10 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
             return new BoardGameWithBgCategoriesAndPlayModes(source);
         }
     };
+
+    @NonNull
+    @Override
+    public String toString() {
+        return getBoardGame().getBgName();
+    }
 }

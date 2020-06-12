@@ -1,19 +1,18 @@
 package com.floatingpanda.scoreboard.views.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.floatingpanda.scoreboard.R;
+import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.adapters.ChoosePlayersPagerAdapter;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
@@ -23,27 +22,30 @@ import java.util.List;
 
 public class ChoosePlayersActivity extends AppCompatActivity {
 
+    private final int CONFIRM_PLAYERS_REQUEST_CODE = 1;
+    public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
+
     private Button backButton, nextButton;
-    private Spinner spinner;
-    private TextView teamTextView;
 
     private ChoosePlayerSharedViewModel choosePlayerSharedViewModel;
 
     private Group group;
     private int numOfTeams;
+    private boolean solitaire;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.viewpager_layout);
+        setContentView(R.layout.activity_choose_players);
 
         backButton = findViewById(R.id.back_button);
         nextButton = findViewById(R.id.next_button);
-        spinner = findViewById(R.id.viewpager_layout_position_spinner);
-        teamTextView = findViewById(R.id.viewpager_layout_team_textview);
 
         group = (Group) getIntent().getExtras().get("GROUP");
         numOfTeams = (int) getIntent().getExtras().get("NUM_OF_TEAMS");
+        solitaire = (boolean) getIntent().getExtras().get("SOLITAIRE_BOOL");
+        //TODO pass the map of selected players so if a person cancels at the last minute they can easily carry on with the teams as they were?
+        // But then if they change lots, like from competitive 8-team to cooperative, then it may cause issues.
 
         choosePlayerSharedViewModel = new ViewModelProvider(this).get(ChoosePlayerSharedViewModel.class);
         choosePlayerSharedViewModel.initialisePotentialPlayers(group.getId());
@@ -53,36 +55,9 @@ public class ChoosePlayersActivity extends AppCompatActivity {
         //Disables swiping so it can be controlled with buttons.
         viewPager.setUserInputEnabled(false);
 
-        //TODO style the area where the teamTextView is so it's a different colour to the viewpager of players.
-        teamTextView.setText("Team " + (viewPager.getCurrentItem() + 1));
-
-        spinner.setAdapter(createPositionSpinnerAdapter());
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int teamPosition = (int) parent.getItemAtPosition(position);
-                Log.w("ChoosePlayersAct.java", "Got position: " + teamPosition);
-                //TODO set the position of the team with this.
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        //TODO add in a tab at the top with the current team number and a spinner to select the team's position.
-
-        //TODO maybe make a special class for holding the members of a team.
-        // Class can hold a list of the members, an int for the team number, and an int for the position.
-        // Map can hold a list of these classes.
-
-        //TODO add in ability to choose cooperative, competitive or solitaire.
-        // If coop or solitaire, also choose whether win or loss.
-        // Also need to change to a specialised version of fragments
-        // - coop uses a single team.
-        // - solitaire uses a single team and limits to selecting 1 player.
+        if (numOfTeams == 1) {
+            nextButton.setText("Finish");
+        }
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,7 +69,6 @@ public class ChoosePlayersActivity extends AppCompatActivity {
                 choosePlayerSharedViewModel.updateObservablePotentialPlayers();
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-                teamTextView.setText("Team " + (viewPager.getCurrentItem() + 1));
 
                 if (viewPager.getCurrentItem() < (numOfTeams - 1)) {
                     nextButton.setText("Next Team");
@@ -111,13 +85,35 @@ public class ChoosePlayersActivity extends AppCompatActivity {
                     // If they are, then return to original activity and create new record.
                     // If they are not, then return to this activity and allow changes to be made.
 
-                    //Go to new activity showing selected teams, players in them, and their positions.
-                    //Provide 2 buttons - create, cancel.
-                    //Create returns here with the players to create the game.
-                    //Cancel returns to the fragment to go through and change team players.
+                    List<TeamOfPlayers> teamsOfMembers = choosePlayerSharedViewModel.getTeamsOfMembers();
+
+                    if (teamsOfMembers.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "You need to have at least one team of members.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (solitaire) {
+                        if (teamsOfMembers.size() > 1) {
+                            Toast.makeText(getApplicationContext(), "A solitaire game cannot have more than one team.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if(teamsOfMembers.get(0).getMembers().size() != 1) {
+                            Toast.makeText(getApplicationContext(), "A solitaire game can only have one player.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+                    for (TeamOfPlayers teamOfPlayers : teamsOfMembers) {
+                        if (teamOfPlayers.getMembers().size() < 1) {
+                            Toast.makeText(getApplicationContext(), "Each team needs to have at least one player.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+                    startConfirmPlayersActivity();
                 } else {
                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-                    teamTextView.setText("Team " + (viewPager.getCurrentItem() + 1));
                 }
 
                 if (viewPager.getCurrentItem() == (numOfTeams - 1)) {
@@ -127,14 +123,21 @@ public class ChoosePlayersActivity extends AppCompatActivity {
         });
     }
 
-    private ArrayAdapter<Integer> createPositionSpinnerAdapter() {
-        List<Integer> positionList = new ArrayList<Integer>();
+    public void startConfirmPlayersActivity() {
+        Intent intent = new Intent(this, ConfirmPlayersActivity.class);
+        intent.putParcelableArrayListExtra("TEAMS_OF_MEMBERS", (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
+        startActivityForResult(intent, CONFIRM_PLAYERS_REQUEST_CODE);
+    }
 
-        for (int i = 1; i <= numOfTeams; i++) {
-            positionList.add(i);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && requestCode == CONFIRM_PLAYERS_REQUEST_CODE) {
+            Intent replyIntent = new Intent();
+            replyIntent.putExtra(EXTRA_REPLY, (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
+            setResult(RESULT_OK, replyIntent);
+            finish();
         }
-
-        ArrayAdapter<Integer> positionsAdapter = new ArrayAdapter<Integer>(getApplicationContext(), android.R.layout.simple_spinner_item, positionList);
-        return positionsAdapter;
     }
 }

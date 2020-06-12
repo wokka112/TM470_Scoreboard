@@ -3,6 +3,7 @@ package com.floatingpanda.scoreboard.model;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -10,6 +11,10 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.daos.GroupDao;
+import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
+import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.entities.GroupMember;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.MemberRepository;
@@ -40,7 +45,9 @@ public class MemberRepositoryTest {
 
     private AppDatabase db;
 
+    private GroupDao groupDao;
     private MemberDao memberDao;
+    private GroupMemberDao groupMemberDao;
     private MemberRepository memberRepository;
 
     @Before
@@ -49,7 +56,9 @@ public class MemberRepositoryTest {
         db = Room.inMemoryDatabaseBuilder(context, AppDatabase.class)
                 .allowMainThreadQueries()
                 .build();
+        groupDao = db.groupDao();
         memberDao = db.memberDao();
+        groupMemberDao = db.groupMemberDao();
         memberRepository = new MemberRepository(db);
     }
 
@@ -95,6 +104,56 @@ public class MemberRepositoryTest {
 
         Member member = LiveDataTestUtil.getValue(memberRepository.getLiveMemberById(TestData.MEMBER_1.getId()));
         assertThat(member, is(TestData.MEMBER_1));
+    }
+
+    @Test
+    public void getLiveMembersOfAGroupByGroupIdWhenNoneInserted() throws InterruptedException {
+        List<Member> members = LiveDataTestUtil.getValue(memberRepository.getLiveMembersOfAGroupByGroupId(TestData.GROUP_3.getId()));
+
+        assertTrue(members.isEmpty());
+    }
+
+    @Test
+    public void getLiveMembersOfAGroupByGroupIdWhenAllInserted() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        //Group 3 has 2 members, member 1 and member 3, associated via groupmember 3 and groupmember 4, respectively.
+        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_3));
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_4));
+
+        List<Member> group3Members = LiveDataTestUtil.getValue(memberRepository.getLiveMembersOfAGroupByGroupId(TestData.GROUP_3.getId()));
+        assertThat(group3Members.size(), is(2));
+
+        assertTrue(group3Members.contains(TestData.MEMBER_1));
+        assertTrue(group3Members.contains(TestData.MEMBER_3));
+    }
+
+    @Test
+    public void getNonLiveMembersOfAGroupByGroupIdWhenNoneInserted() throws InterruptedException {
+        List<Member> members = memberRepository.getNonLiveMembersOfAGroupByGroupId(TestData.GROUP_3.getId());
+
+        assertTrue(members.isEmpty());
+    }
+
+    @Test
+    public void getNonLiveMembersOfAGroupByGroupIdWhenAllInserted() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        //Group 3 has 2 members, member 1 and member 3, associated via groupmember 3 and groupmember 4, respectively.
+        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_3));
+        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_4));
+
+        List<Member> group3Members = memberRepository.getNonLiveMembersOfAGroupByGroupId(TestData.GROUP_3.getId());
+        assertThat(group3Members.size(), is(2));
+
+        assertTrue(group3Members.contains(TestData.MEMBER_1));
+        assertTrue(group3Members.contains(TestData.MEMBER_3));
     }
 
     @Test

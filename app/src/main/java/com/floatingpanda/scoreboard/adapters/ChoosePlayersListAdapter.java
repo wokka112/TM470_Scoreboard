@@ -48,7 +48,7 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
             holder.groupsItemView.setText("7");
 
             if(position < teamPlayers.size()) {
-                Log.w("ChoosePlayersListAdapter.java", "Team " + teamNo + ", checking position " + position + " player: " + current);
+                //Log.w("ChoosePlayersListAdapter.java", "Team " + teamNo + ", checking position " + position + " player: " + current);
                 holder.checkBoxItemView.setChecked(true);
             } else {
                 //A bug occurs when selecting boxes and hitting the back button - multiple boxes become checked even though some of them aren't
@@ -56,15 +56,17 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
                 holder.checkBoxItemView.setChecked(false);
             }
 
-            // Can't use on checked because it activates when checking the boxes in the above if condition.
+            //Can't use on checked listener because it activates when checking the boxes in the above if condition.
+            // This causes major problems, such as exponentially adding members to a team when you return to a page
+            // with checked members.
             holder.checkBoxItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (holder.checkBoxItemView.isChecked()) {
-                        Log.w("ChoosePlayerListAdapt.java", "Box checked, adding player to team " + teamNo + ": " + current);
+                        //Log.w("ChoosePlayerListAdapt.java", "Box checked, adding player to team " + teamNo + ": " + current);
                         listener.addPlayerToTeam(current);
                     } else {
-                        Log.w("ChoosePlayerListAdapt.java", "Box unchecked, removing player from team " + teamNo + ": " + current);
+                        //Log.w("ChoosePlayerListAdapt.java", "Box unchecked, removing player from team " + teamNo + ": " + current);
                         listener.removePlayerFromTeam(current);
                     }
                 }
@@ -95,6 +97,7 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
         teamAndPotentialPlayers.addAll(this.teamPlayers);
         teamAndPotentialPlayers.addAll(this.potentialPlayers);
 
+        /*
         Log.w("ChoosePlayerListAdapt.java", "Team and Potential Players for team " + teamNo);
         for (int i = 0; i < teamAndPotentialPlayers.size(); i++) {
             if (i < teamPlayers.size()) {
@@ -103,6 +106,8 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
                 Log.w("ChoosePlayerListAdapt.java", "Potential Player: " + teamAndPotentialPlayers.get(i));
             }
         }
+
+         */
         notifyDataSetChanged();
     }
 

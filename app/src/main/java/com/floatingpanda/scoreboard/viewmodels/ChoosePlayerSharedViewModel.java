@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.MemberRepository;
 import com.floatingpanda.scoreboard.data.entities.Member;
@@ -23,14 +24,14 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
 
     private MutableLiveData<List<Member>> observablePotentialPlayers;
     private List<Member> potentialPlayers;
-    private Map<Integer, List<Member>> selectedPlayers;
+    private Map<Integer, TeamOfPlayers> selectedPlayers;
 
     public ChoosePlayerSharedViewModel(Application application) {
         super(application);
         memberRepository = new MemberRepository(application);
 
         if (selectedPlayers == null) {
-            selectedPlayers = new HashMap<Integer, List<Member>>();
+            selectedPlayers = new HashMap<Integer, TeamOfPlayers>();
         }
 
         if (potentialPlayers == null) {
@@ -46,7 +47,14 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
     public ChoosePlayerSharedViewModel(Application application, AppDatabase db) {
         super(application);
         memberRepository = new MemberRepository(db);
-        selectedPlayers = new HashMap<Integer, List<Member>>();
+
+        if (selectedPlayers == null) {
+            selectedPlayers = new HashMap<Integer, TeamOfPlayers>();
+        }
+
+        if (potentialPlayers == null) {
+            potentialPlayers = new ArrayList<Member>();
+        }
 
         if (observablePotentialPlayers == null) {
             observablePotentialPlayers = new MutableLiveData<List<Member>>();
@@ -70,42 +78,104 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
         return observablePotentialPlayers;
     }
 
+    public void updateObservablePotentialPlayers() {
+        /*
+        Log.w("ChoosePlayerShVM.java", "Updating observable potential players.");
+        for (Member member : potentialPlayers) {
+            Log.w("ChoosePlayerShVM.java", "Potential Player: " + member);
+        }
+         */
+
+        //Activates notifyall.
+        observablePotentialPlayers.setValue(potentialPlayers);
+    }
+
     public void addPlayerToTeam(int teamNo, Member player) {
-        if (selectedPlayers.get(teamNo) == null) {
-            selectedPlayers.put(teamNo, new ArrayList<Member>());
+        TeamOfPlayers teamOfPlayers = selectedPlayers.get(teamNo);
+
+        if (teamOfPlayers == null) {
+            teamOfPlayers = new TeamOfPlayers(teamNo, teamNo);
         }
 
-        //Log.w("ChoosePlayerShVM.java", "Adding player to team " + teamNo + ": " + player);
-        selectedPlayers.get(teamNo).add(player);
+        teamOfPlayers.addPlayer(player);
+
+        selectedPlayers.put(teamNo, teamOfPlayers);
         potentialPlayers.remove(player);
     }
 
     public void removePlayerFromTeam(int teamNo, Member player) {
-        if (selectedPlayers.get(teamNo) == null) {
+        TeamOfPlayers teamOfPlayers = selectedPlayers.get(teamNo);
+
+        if (teamOfPlayers == null) {
             return;
         }
 
-        //Log.w("ChoosePlayerShVM.java", "Removing player from team " + teamNo + ": " + player);
-        selectedPlayers.get(teamNo).remove(player);
+        teamOfPlayers.removePlayer(player);
+
+        selectedPlayers.put(teamNo, teamOfPlayers);
         potentialPlayers.add(player);
     }
 
-    public List<Member> getTeamPlayers(int teamNo) {
-        List<Member> teamPlayers = selectedPlayers.get(teamNo);
+    public TeamOfPlayers getTeamOfMembers(int teamNo) {
+        TeamOfPlayers teamOfPlayers = selectedPlayers.get(teamNo);
 
-        if (teamPlayers == null) {
-            return new ArrayList<Member>();
+        if (teamOfPlayers == null) {
+            teamOfPlayers = new TeamOfPlayers(teamNo, teamNo);
+            selectedPlayers.put(teamNo, teamOfPlayers);
         }
 
-        return new ArrayList<Member>(teamPlayers);
+        return teamOfPlayers;
     }
 
-    public void updateObservablePotentialPlayers() {
-        //Log.w("ChoosePlayerShVM.java", "Updating observable potential players.");
-        for (Member member : potentialPlayers) {
-            //Log.w("ChoosePlayerShVM.java", "Potential Player: " + member);
+    public List<Member> getTeamMemberList(int teamNo) {
+        if (selectedPlayers.get(teamNo) == null) {
+            selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, teamNo));
         }
-        observablePotentialPlayers.setValue(potentialPlayers);
+
+        List<Member> teamMemberList = new ArrayList<>(selectedPlayers.get(teamNo).getMembers());
+
+        return teamMemberList;
+    }
+
+    public void setTeamPosition(int teamNo, int position) {
+        if (selectedPlayers.get(teamNo) == null) {
+            selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, position));
+        } else {
+            selectedPlayers.get(teamNo).setPosition(position);
+        }
+    }
+
+    public int getTeamPosition(int teamNo) {
+        if (selectedPlayers.get(teamNo) == null) {
+            selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, teamNo));
+        }
+
+        return selectedPlayers.get(teamNo).getPosition();
+    }
+
+    public List<Member> getPotentialPlayers() {
+        return new ArrayList<>(potentialPlayers);
+    }
+
+    public List<TeamOfPlayers> getTeamsOfMembers() {
+        List<TeamOfPlayers> teamsOfMembers = new ArrayList<>();
+        for (int key : selectedPlayers.keySet()) {
+            teamsOfMembers.add(selectedPlayers.get(key));
+        }
+
+        return teamsOfMembers;
+    }
+
+    /**
+     * If no team exists with the key teamNo, creates an empty team with the key teamNo, team number
+     * teamNo and position teamNo. If a team already exists with the key teamNo, does nothing.
+     * @param teamNo
+     */
+    public void createEmptyTeam(int teamNo, int initialPosition) {
+        if (selectedPlayers.get(teamNo) == null) {
+            Log.w("ChoosePlayerShVM.java", "Created team " + teamNo + ", position: " + initialPosition);
+            selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, initialPosition));
+        }
     }
 
     private void printList(List<Member> list) {

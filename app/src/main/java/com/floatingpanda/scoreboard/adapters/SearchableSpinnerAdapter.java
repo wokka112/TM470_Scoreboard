@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,54 +11,52 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
+import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.List;
 
-public class SearchableSpinnerAdapter extends ArrayAdapter<Member> {
+public class SearchableSpinnerAdapter extends ArrayAdapter<BoardGameWithBgCategoriesAndPlayModes> {
 
-    public SearchableSpinnerAdapter(Context context, List<Member> members) {
-        super(context, android.R.layout.simple_spinner_item, members);
-        this.insert(null, 0);
+    public SearchableSpinnerAdapter(Context context, List<BoardGameWithBgCategoriesAndPlayModes> boardGamesWithBgCategoriesAndPlayModes) {
+        super(context, android.R.layout.simple_spinner_item, boardGamesWithBgCategoriesAndPlayModes);
     }
+
+    //TODO try and get it working with the custom views rather than using boardGamesWithBgCategoriesAndPlayModes toString() method.
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView,
                                 @NonNull ViewGroup parent) {
-        if (position == 0) {
-            return initialSelection(true);
-        }
-        return getCustomView(position, convertView, parent);
+        BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes = getItem(position);
+
+        View view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
+        TextView text = view.findViewById(android.R.id.text1);
+        Log.w("SearchableSpinnerAdapt.java", "Boardgame id: " + boardGameWithBgCategoriesAndPlayModes);
+        Log.w("SearchableSpinnerAdapt.java", "Boardgame name: " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
+        text.setText(boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
+
+        return view;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-        if (position == 0) {
-            return initialSelection(false);
-        }
-        return getCustomView(position, convertView, parent);
+        BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes = getItem(position);
+
+        View view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
+        TextView text = view.findViewById(android.R.id.text1);
+        Log.w("SearchableSpinnerAdapt.java", "Boardgame id: " + boardGameWithBgCategoriesAndPlayModes);
+        Log.w("SearchableSpinnerAdapt.java", "Boardgame name: " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
+        text.setText(boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
+
+        return view;
     }
 
     @Override
     public int getCount() {
         return super.getCount(); // Adjust for initial selection item
-    }
-
-    private View initialSelection(boolean dropdown) {
-
-        TextView view = new TextView(getContext());
-        view.setText("Select player");
-
-        /*
-        if (dropdown == true) {
-            view.setHeight(0);
-            view.setVisibility(View.GONE);
-        }
-        */
-
-        return view;
     }
 
     private View getCustomView(int position, View convertView, ViewGroup parent) {
@@ -66,11 +65,10 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<Member> {
                 ? convertView :
                 LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
 
-        position = position; // Adjust for initial selection item
-        Member member = getItem(position);
+        BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes = getItem(position);
 
-        TextView text = row.findViewById(android.R.id.text1);
-        text.setText(member.getNickname());
+        TextView text = convertView.findViewById(android.R.id.text1);
+        text.setText(boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
 
         return row;
     }

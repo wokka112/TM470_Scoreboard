@@ -205,23 +205,23 @@ public abstract class AppDatabase extends RoomDatabase {
                 BoardGameDao bgDao = INSTANCE.boardGameDao();
 
                 BoardGame.TeamOption teamOption = BoardGame.TeamOption.TEAMS_ONLY;
-                BoardGame bg = new BoardGame("Medieval", 3, 1, 8, teamOption,
+                BoardGame bg = new BoardGame("Medieval", 4, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
-                BoardGame bg1 = new BoardGame("Monopoly", 3, 1, 8, teamOption,
+                BoardGame bg1 = new BoardGame("Monopoly", 2, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.TEAMS_AND_SOLOS_ALLOWED;
-                BoardGame bg2 = new BoardGame("Go", 3, 1, 8, teamOption,
+                BoardGame bg2 = new BoardGame("Go", 5, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
-                BoardGame bg3 = new BoardGame("Game of Life", 3, 1, 8, teamOption,
+                BoardGame bg3 = new BoardGame("Game of Life", 1, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.TEAMS_AND_SOLOS_ALLOWED;
-                BoardGame bg4 = new BoardGame("Dawn of Madness", 3, 1, 8, teamOption,
+                BoardGame bg4 = new BoardGame("Dawn of Madness", 4, 1, 8, teamOption,
                         "N/A", "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
