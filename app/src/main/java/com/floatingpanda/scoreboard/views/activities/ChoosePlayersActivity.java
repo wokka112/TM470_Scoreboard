@@ -14,7 +14,9 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.adapters.ChoosePlayersPagerAdapter;
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
 
 import java.util.ArrayList;
@@ -22,7 +24,7 @@ import java.util.List;
 
 public class ChoosePlayersActivity extends AppCompatActivity {
 
-    private final int CONFIRM_PLAYERS_REQUEST_CODE = 1;
+    private final int CONFIRM_GAME_RECORD_REQUEST_CODE = 1;
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private Button backButton, nextButton;
@@ -30,8 +32,8 @@ public class ChoosePlayersActivity extends AppCompatActivity {
     private ChoosePlayerSharedViewModel choosePlayerSharedViewModel;
 
     private Group group;
-    private int numOfTeams;
-    private boolean solitaire;
+    private GameRecord gameRecord;
+    private int noOfTeams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +44,18 @@ public class ChoosePlayersActivity extends AppCompatActivity {
         nextButton = findViewById(R.id.next_button);
 
         group = (Group) getIntent().getExtras().get("GROUP");
-        numOfTeams = (int) getIntent().getExtras().get("NUM_OF_TEAMS");
-        solitaire = (boolean) getIntent().getExtras().get("SOLITAIRE_BOOL");
-        //TODO pass the map of selected players so if a person cancels at the last minute they can easily carry on with the teams as they were?
-        // But then if they change lots, like from competitive 8-team to cooperative, then it may cause issues.
+        gameRecord = (GameRecord) getIntent().getExtras().get("GAME_RECORD");
+        noOfTeams = gameRecord.getNoOfTeams();
 
         choosePlayerSharedViewModel = new ViewModelProvider(this).get(ChoosePlayerSharedViewModel.class);
         choosePlayerSharedViewModel.initialisePotentialPlayers(group.getId());
 
         ViewPager2 viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(new ChoosePlayersPagerAdapter(this, numOfTeams));
+        viewPager.setAdapter(new ChoosePlayersPagerAdapter(this, noOfTeams));
         //Disables swiping so it can be controlled with buttons.
         viewPager.setUserInputEnabled(false);
 
-        if (numOfTeams == 1) {
+        if (noOfTeams == 1) {
             nextButton.setText("Finish");
         }
 
@@ -70,7 +70,7 @@ public class ChoosePlayersActivity extends AppCompatActivity {
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
 
-                if (viewPager.getCurrentItem() < (numOfTeams - 1)) {
+                if (viewPager.getCurrentItem() < (noOfTeams - 1)) {
                     nextButton.setText("Next Team");
                 }
             }
@@ -80,60 +80,63 @@ public class ChoosePlayersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 choosePlayerSharedViewModel.updateObservablePotentialPlayers();
-                if (viewPager.getCurrentItem() == (numOfTeams - 1)) {
-                    //TODO add in code to start new activity for result asking if the settings are okay.
-                    // If they are, then return to original activity and create new record.
-                    // If they are not, then return to this activity and allow changes to be made.
-
-                    List<TeamOfPlayers> teamsOfMembers = choosePlayerSharedViewModel.getTeamsOfMembers();
-
-                    if (teamsOfMembers.isEmpty()) {
-                        Toast.makeText(getApplicationContext(), "You need to have at least one team of members.", Toast.LENGTH_SHORT).show();
-                        return;
+                if (viewPager.getCurrentItem() == (noOfTeams - 1)) {
+                    if (checkValidTeams()) {
+                        startConfirmGameRecordActivity();
                     }
-
-                    if (solitaire) {
-                        if (teamsOfMembers.size() > 1) {
-                            Toast.makeText(getApplicationContext(), "A solitaire game cannot have more than one team.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if(teamsOfMembers.get(0).getMembers().size() != 1) {
-                            Toast.makeText(getApplicationContext(), "A solitaire game can only have one player.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-
-                    for (TeamOfPlayers teamOfPlayers : teamsOfMembers) {
-                        if (teamOfPlayers.getMembers().size() < 1) {
-                            Toast.makeText(getApplicationContext(), "Each team needs to have at least one player.", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-
-                    startConfirmPlayersActivity();
                 } else {
                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
                 }
 
-                if (viewPager.getCurrentItem() == (numOfTeams - 1)) {
+                if (viewPager.getCurrentItem() == (noOfTeams - 1)) {
                     nextButton.setText("Finish");
                 }
             }
         });
     }
 
-    public void startConfirmPlayersActivity() {
-        Intent intent = new Intent(this, ConfirmPlayersActivity.class);
-        intent.putParcelableArrayListExtra("TEAMS_OF_MEMBERS", (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
-        startActivityForResult(intent, CONFIRM_PLAYERS_REQUEST_CODE);
+    private void startConfirmGameRecordActivity() {
+        Intent intent = new Intent(this, ConfirmGameRecordActivity.class);
+        intent.putExtra("GAME_RECORD", gameRecord);
+        intent.putParcelableArrayListExtra("TEAMS_OF_PLAYERS", (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
+        startActivityForResult(intent, CONFIRM_GAME_RECORD_REQUEST_CODE);
+    }
+
+    private boolean checkValidTeams() {
+        List<TeamOfPlayers> teamsOfMembers = choosePlayerSharedViewModel.getTeamsOfMembers();
+
+        if (teamsOfMembers.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "You need to have at least one team of members.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (gameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.SOLITAIRE) {
+            if (teamsOfMembers.size() > 1) {
+                Toast.makeText(getApplicationContext(), "A solitaire game cannot have more than one team.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            if(teamsOfMembers.get(0).getMembers().size() != 1) {
+                Toast.makeText(getApplicationContext(), "A solitaire game can only have one player.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        for (TeamOfPlayers teamOfPlayers : teamsOfMembers) {
+            if (teamOfPlayers.getMembers().size() < 1) {
+                Toast.makeText(getApplicationContext(), "Each team needs to have at least one player.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK && requestCode == CONFIRM_PLAYERS_REQUEST_CODE) {
+        if (resultCode == RESULT_OK && requestCode == CONFIRM_GAME_RECORD_REQUEST_CODE) {
             Intent replyIntent = new Intent();
             replyIntent.putExtra(EXTRA_REPLY, (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
             setResult(RESULT_OK, replyIntent);

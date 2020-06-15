@@ -22,7 +22,7 @@ public interface GameRecordDao {
     @Query("SELECT * FROM game_records WHERE record_id LIKE :recordId")
     LiveData<GameRecord> findLiveDataGameRecordByRecordId(int recordId);
 
-    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId AND bg_name LIKE :bgName AND date LIKE :dateTimeStamp")
+    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId AND bg_name LIKE :bgName AND date_time LIKE :dateTimeStamp")
     GameRecord findNonLiveDataGameRecordByRecordId(int groupId, String bgName, Long dateTimeStamp);
 
     @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId")
@@ -44,7 +44,7 @@ public interface GameRecordDao {
     void delete(GameRecord gameRecord);
 
     @Transaction
-    @Query("SELECT * FROM game_records ORDER BY date DESC")
+    @Query("SELECT * FROM game_records ORDER BY date_time DESC")
     public LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> getAllGameRecordsWithPlayerTeamsAndPlayers();
 
     @Transaction
@@ -52,6 +52,6 @@ public interface GameRecordDao {
     public LiveData<GameRecordWithPlayerTeamsAndPlayers> findGameRecordWithPlayerTeamsAndPlayersByRecordId(int recordId);
 
     @Transaction
-    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId ORDER BY date DESC")
+    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId ORDER BY date_time DESC")
     public LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> findGameRecordsWithPlayerTeamsAndPlayersByGroupId(int groupId);
 }

@@ -18,27 +18,25 @@ import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.List;
 
-public class ConfirmPlayersListAdapter extends RecyclerView.Adapter<ConfirmPlayersListAdapter.GameRecordPlayerViewHolder> {
+public class CompetitiveConfirmPlayersListAdapter extends RecyclerView.Adapter<CompetitiveConfirmPlayersListAdapter.GameRecordPlayerViewHolder> {
 
     private Context context;
     private final LayoutInflater inflater;
-    //Needs to be sorted according to finishing place.
     private List<TeamOfPlayers> playerTeams;
-    //private DetailAdapterInterface listener;
 
-    public ConfirmPlayersListAdapter(Context context) {
+    public CompetitiveConfirmPlayersListAdapter(Context context) {
         this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
     @Override
-    public ConfirmPlayersListAdapter.GameRecordPlayerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public CompetitiveConfirmPlayersListAdapter.GameRecordPlayerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.recyclerview_linear_vertical_wrapper, parent, false);
-        return new ConfirmPlayersListAdapter.GameRecordPlayerViewHolder(itemView);
+        return new CompetitiveConfirmPlayersListAdapter.GameRecordPlayerViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(ConfirmPlayersListAdapter.GameRecordPlayerViewHolder holder, int position) {
+    public void onBindViewHolder(CompetitiveConfirmPlayersListAdapter.GameRecordPlayerViewHolder holder, int position) {
         if (playerTeams != null) {
             Log.w("GameRecordPlayListAdapt.java", "Adapter position: " + position);
             holder.layout.removeAllViews();
@@ -88,13 +86,6 @@ public class ConfirmPlayersListAdapter extends RecyclerView.Adapter<ConfirmPlaye
                 placeHeaderTextView.setPadding(8, 8, 8, 8);
                 holder.layout.addView(placeHeaderTextView);
             }
-
-            //TODO make this work for cooperative and solitaire games
-            // - coop games should show a single team (Do i include win/loss?)
-            // - solitaire games show a single player (Do I include win/loss?)
-            // Do I do this by using booleans
-            // - competitiveTeams for the places and teamtextview, coop for coop, soli for soli??
-            // or do I create different adapters for them?
 
             TextView teamTextView = (TextView) inflater.inflate(R.layout.recyclerview_team_header_item, null);
             teamTextView.setText("Team " + current.getTeamNo());

@@ -36,10 +36,8 @@ public class GameRecord implements Parcelable {
 
     private int difficulty;
 
-    private Date date;
-
-    //TODO include time.
-    //private Time time;
+    @ColumnInfo(name = "date_time")
+    private Date dateTime;
 
     @ColumnInfo(name = "teams")
     private boolean teams;
@@ -50,26 +48,35 @@ public class GameRecord implements Parcelable {
     @ColumnInfo(name = "no_of_teams")
     private int noOfTeams;
 
+    private boolean won;
+
     //TODO include a boolean for cooperative/solitaire win/lose.
     // If the game is competitive, ignore and use the competitive layout.
     // If the game is cooperative or solitaire, use another layout which says whether you win or lose.
 
     @Ignore
-    public GameRecord(int id, int groupId, String boardGameName, int difficulty, Date date, boolean teams, PlayMode.PlayModeEnum playModePlayed,
-                      int noOfTeams) {
+    public GameRecord(int id, int groupId, String boardGameName, int difficulty, Date dateTime, boolean teams, PlayMode.PlayModeEnum playModePlayed,
+                      int noOfTeams, boolean won) {
         this.id = id;
         this.groupId = groupId;
         this.boardGameName = boardGameName;
         this.difficulty = difficulty;
-        this.date = date;
+        this.dateTime = dateTime;
         this.teams = teams;
         this.playModePlayed = playModePlayed;
         this.noOfTeams = noOfTeams;
+        this.won = won;
     }
 
-    public GameRecord(int groupId, String boardGameName, int difficulty, Date date, boolean teams, PlayMode.PlayModeEnum playModePlayed,
+    public GameRecord(int groupId, String boardGameName, int difficulty, Date dateTime, boolean teams, PlayMode.PlayModeEnum playModePlayed,
+                      int noOfTeams, boolean won) {
+        this(0, groupId, boardGameName, difficulty, dateTime, teams, playModePlayed, noOfTeams, won);
+    }
+
+    @Ignore
+    public GameRecord(int groupId, String boardGameName, int difficulty, Date dateTime, boolean teams, PlayMode.PlayModeEnum playModePlayed,
                       int noOfTeams) {
-        this(0, groupId, boardGameName, difficulty, date, teams, playModePlayed, noOfTeams);
+        this(0, groupId, boardGameName, difficulty, dateTime, teams, playModePlayed, noOfTeams, false);
     }
 
     @Ignore
@@ -78,10 +85,11 @@ public class GameRecord implements Parcelable {
         groupId = source.readInt();
         boardGameName = source.readString();
         difficulty = source.readInt();
-        date = new Date(source.readLong());
+        dateTime = new Date(source.readLong());
         teams = (Boolean) source.readValue(null);
         playModePlayed = PlayMode.PlayModeEnum.valueOf(source.readString());
         noOfTeams = source.readInt();
+        won = (Boolean) source.readValue(null);
     }
 
     public Integer getId() { return id; }
@@ -92,14 +100,16 @@ public class GameRecord implements Parcelable {
     public void setBoardGameName(String boardGameName) { this.boardGameName = boardGameName; }
     public int getDifficulty() { return difficulty; }
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
+    public Date getDateTime() { return dateTime; }
+    public void setDateTime(Date dateTime) { this.dateTime = dateTime; }
     public boolean getTeams() { return teams; }
     public void setTeams(boolean teams) { this.teams = teams; }
     public PlayMode.PlayModeEnum getPlayModePlayed() { return playModePlayed; }
     public void setPlayModePlayed(PlayMode.PlayModeEnum playModePlayed) { this.playModePlayed = playModePlayed; }
     public int getNoOfTeams() { return noOfTeams; }
     public void setNoOfTeams(int noOfTeams) { this.noOfTeams = noOfTeams; }
+    public boolean getWon() { return won; }
+    public void setWon(boolean won) { this.won = won;}
 
     @Override
     public boolean equals(@Nullable Object obj) {
@@ -112,7 +122,7 @@ public class GameRecord implements Parcelable {
         return (gameRecord.getId() == this.getId()
                 && gameRecord.getGroupId() == this.getGroupId()
                 && gameRecord.getBoardGameName().equals(this.getBoardGameName())
-                && gameRecord.getDate().getTime() == this.getDate().getTime());
+                && gameRecord.getDateTime().getTime() == this.getDateTime().getTime());
     }
 
     @Override
@@ -126,10 +136,11 @@ public class GameRecord implements Parcelable {
         dest.writeInt(groupId);
         dest.writeString(boardGameName);
         dest.writeInt(difficulty);
-        dest.writeLong(date.getTime());
+        dest.writeLong(dateTime.getTime());
         dest.writeValue(teams);
         dest.writeString(playModePlayed.name());
         dest.writeInt(noOfTeams);
+        dest.writeValue(won);
     }
 
     public static final Creator<GameRecord> CREATOR = new Creator<GameRecord>() {

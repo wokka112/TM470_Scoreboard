@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
-import com.floatingpanda.scoreboard.adapters.ConfirmPlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.CompetitiveConfirmPlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.CoopSoliConfirmPlayersListAdapter;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.floatingpanda.scoreboard.data.entities.PlayMode.PlayModeEnum.COMPETITIVE;
 
 public class ConfirmGameRecordActivity extends AppCompatActivity {
 
@@ -50,12 +53,12 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
         List<TeamOfPlayers> teamsOfPlayers = (ArrayList) getIntent().getExtras().get("TEAMS_OF_PLAYERS");
 
         gameTextView.setText(gameRecord.getBoardGameName());
-        dateTextView.setText(gameRecord.getDate().toString());
+        dateTextView.setText(gameRecord.getDateTime().toString());
 
         PlayMode.PlayModeEnum playModePlayed = gameRecord.getPlayModePlayed();
         setPlayModePlayedTextView(playModePlayed);
 
-        if(playModePlayed == PlayMode.PlayModeEnum.COMPETITIVE) {
+        if(playModePlayed == COMPETITIVE) {
             if (gameRecord.getTeams()) {
                 teamSettingOrWinLoseTextView.setText("Teams");
             } else {
@@ -69,10 +72,17 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
             teamCountTextView.setText(gameRecord.getNoOfTeams() + " Players");
         }
 
-        final ConfirmPlayersListAdapter adapter = new ConfirmPlayersListAdapter(this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter.setPlayerTeams(teamsOfPlayers);
+        if (gameRecord.getPlayModePlayed() == COMPETITIVE) {
+            final CompetitiveConfirmPlayersListAdapter adapter = new CompetitiveConfirmPlayersListAdapter(this);
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            adapter.setPlayerTeams(teamsOfPlayers);
+        } else {
+            final CoopSoliConfirmPlayersListAdapter adapter = new CoopSoliConfirmPlayersListAdapter(this, gameRecord.getWon());
+            recyclerView.setAdapter(adapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            adapter.setPlayerTeams(teamsOfPlayers);
+        }
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override

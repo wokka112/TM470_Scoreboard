@@ -219,7 +219,7 @@ public class GameRecordDaoTest {
         assertThat(gameRecord.getId(), is(TestData.GAME_RECORD_1.getId()));
         assertThat(gameRecord.getGroupId(), is(TestData.GAME_RECORD_1.getGroupId()));
         assertThat(gameRecord.getDifficulty(), is(TestData.GAME_RECORD_1.getDifficulty()));
-        assertThat(gameRecord.getDate(), is(TestData.GAME_RECORD_1.getDate()));
+        assertThat(gameRecord.getDateTime(), is(TestData.GAME_RECORD_1.getDateTime()));
         assertThat(gameRecord.getNoOfTeams(), is(TestData.GAME_RECORD_1.getNoOfTeams()));
         assertThat(gameRecord.getPlayModePlayed(), is(TestData.GAME_RECORD_1.getPlayModePlayed()));
         assertThat(gameRecord.getTeams(), is(TestData.GAME_RECORD_1.getTeams()));

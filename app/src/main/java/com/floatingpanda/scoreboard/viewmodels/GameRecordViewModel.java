@@ -47,6 +47,7 @@ public class GameRecordViewModel extends AndroidViewModel {
         return groupsGameRecordsWithTeamsAndPlayers;
     }
 
+    //TODO setup tests for this.
     public void addGameRecordAndPlayers(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
         //Calculate and assign scores
         for (TeamOfPlayers teamOfPlayers : teamsOfPlayers) {

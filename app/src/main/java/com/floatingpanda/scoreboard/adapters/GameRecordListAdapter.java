@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.floatingpanda.scoreboard.comparators.PlayerTeamWithPlayersComparator;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
@@ -38,14 +40,10 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     @Override
     public void onBindViewHolder(GameRecordViewHolder holder, int position) {
         if (gameRecordsWithPlayerTeamsAndPlayers != null) {
-            holder.firstPlaceWrapper.removeAllViews();
-            holder.secondPlaceWrapper.removeAllViews();
-            holder.thirdPlaceWrapper.removeAllViews();
-
             GameRecordWithPlayerTeamsAndPlayers current = gameRecordsWithPlayerTeamsAndPlayers.get(position);
             GameRecord currentGameRecord = current.getGameRecord();
             holder.gameNameTextView.setText(currentGameRecord.getBoardGameName());
-            holder.dateTextView.setText(currentGameRecord.getDate().toString());
+            holder.dateTextView.setText(currentGameRecord.getDateTime().toString());
             holder.playModeTextView.setText(currentGameRecord.getPlayModePlayed().toString());
             holder.difficultyTextView.setText(Integer.toString(currentGameRecord.getDifficulty()));
 
@@ -64,92 +62,15 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
             //TODO add padding or margin to wrappers so the text wraps around before it hits the right end of phone.
 
-            //TODO move this stuff into its own method.
-            for (PlayerTeamWithPlayers playerTeamWithPlayers : currentPlayerTeamsWithPlayers) {
-                PlayerTeam playerTeam = playerTeamWithPlayers.getPlayerTeam();
-                List<Player> players = playerTeamWithPlayers.getPlayers();
-
-                if (players.isEmpty()) {
-                    continue;
-                }
-
-                if (playerTeam.getPosition() == 1) {
-                    View view = inflater.inflate(R.layout.game_record_team, null);
-                    TextView teamTextView = view.findViewById(R.id.team);
-                    TextView playersTextView = view.findViewById(R.id.players);
-
-                    teamTextView.setText("Team " + playerTeam.getTeamNumber());
-
-                    if (!currentGameRecord.getTeams()) {
-                       teamTextView.setVisibility(View.INVISIBLE);
-                    }
-
-                    StringBuilder sb = new StringBuilder();
-                    for (Player player : players) {
-                        if (sb.length() > 0) {
-                            sb.append(", ");
-                        }
-
-                        sb.append(player.getMemberNickname());
-                    }
-
-                    playersTextView.setText(sb.toString());
-
-                    holder.firstPlaceWrapper.addView(view);
-                } else if (playerTeam.getPosition() == 2) {
-                    View view = inflater.inflate(R.layout.game_record_team, null);
-                    TextView teamTextView = view.findViewById(R.id.team);
-                    TextView playersTextView = view.findViewById(R.id.players);
-
-                    teamTextView.setText("Team " + playerTeam.getTeamNumber());
-
-                    if (!currentGameRecord.getTeams()) {
-                        teamTextView.setVisibility(View.INVISIBLE);
-                    }
-
-                    StringBuilder sb = new StringBuilder();
-                    for (Player player : players) {
-                        if (sb.length() > 0) {
-                            sb.append(", ");
-                        }
-
-                        sb.append(player.getMemberNickname());
-                    }
-
-                    playersTextView.setText(sb.toString());
-
-                    holder.secondPlaceWrapper.addView(view);
-                } else if (playerTeam.getPosition() == 3) {
-                    View view = inflater.inflate(R.layout.game_record_team, null);
-                    TextView teamTextView = view.findViewById(R.id.team);
-                    TextView playersTextView = view.findViewById(R.id.players);
-
-                    teamTextView.setText("Team " + playerTeam.getTeamNumber());
-
-                    if (!currentGameRecord.getTeams()) {
-                        teamTextView.setVisibility(View.INVISIBLE);
-                    }
-
-                    StringBuilder sb = new StringBuilder();
-                    for (Player player : players) {
-                        if (sb.length() > 0) {
-                            sb.append(", ");
-                        }
-
-                        sb.append(player.getMemberNickname());
-                    }
-
-                    playersTextView.setText(sb.toString());
-
-                    holder.thirdPlaceWrapper.addView(view);
-                }
+            if (currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
+                populateCompetitive(holder, currentGameRecord.getTeams(), currentPlayerTeamsWithPlayers);
+            } else if (currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COOPERATIVE
+                    || currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.SOLITAIRE){
+                populateCooperative(holder, currentGameRecord.getWon(), currentPlayerTeamsWithPlayers);
+            } else {
+                Log.w("GameRecordListAdapt.java", "Current game record is neither competitive, coop or solitaire.");
             }
 
-            //Go through teams and populate first wrapper with teams.
-            //Get teams in second place.
-            //Go through teams and populate second wrapper with teams.
-            //Get teams in third place.
-            //Go through teams and populate third wrapper with teams.
         } else {
 
         }
@@ -158,6 +79,83 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     public void setGameRecordsWithPlayerTeamsAndPlayers(List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers) {
         this.gameRecordsWithPlayerTeamsAndPlayers = gameRecordsWithPlayerTeamsAndPlayers;
         notifyDataSetChanged();
+    }
+
+    private void populateCompetitive(GameRecordViewHolder holder, boolean teams, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
+        holder.firstPlaceWrapper.removeAllViews();
+        holder.secondPlaceWrapper.removeAllViews();
+        holder.thirdPlaceWrapper.removeAllViews();
+
+        for (PlayerTeamWithPlayers playerTeamWithPlayers : playerTeamsWithPlayers) {
+            PlayerTeam playerTeam = playerTeamWithPlayers.getPlayerTeam();
+            List<Player> players = playerTeamWithPlayers.getPlayers();
+
+            if (players.isEmpty()) {
+                continue;
+            }
+
+            if (playerTeam.getPosition() == 1) {
+                View view = createTeamView(playerTeam, players, teams);
+                holder.firstPlaceWrapper.addView(view);
+            } else if (playerTeam.getPosition() == 2) {
+                View view = createTeamView(playerTeam, players, teams);
+                holder.secondPlaceWrapper.addView(view);
+            } else if (playerTeam.getPosition() == 3) {
+                View view = createTeamView(playerTeam, players, teams);
+                holder.thirdPlaceWrapper.addView(view);
+            }
+        }
+    }
+
+    private void populateCooperative(GameRecordViewHolder holder, boolean won, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
+        holder.firstPlaceWrapper.removeAllViews();
+        holder.secondPlaceWrapper.removeAllViews();
+        holder.thirdPlaceWrapper.removeAllViews();
+        holder.secondPlaceTextView.setVisibility(View.GONE);
+        holder.thirdPlaceTextView.setVisibility(View.GONE);
+
+        //TODO hide first place text view and move the WON/LOST thin to replace the teamCountHeader/Output textviews?
+        if (won) {
+            holder.firstPlaceTextView.setText("WON");
+        } else {
+            holder.firstPlaceTextView.setText("LOST");
+        }
+
+        for (PlayerTeamWithPlayers playerTeamWithPlayers : playerTeamsWithPlayers) {
+            PlayerTeam playerTeam = playerTeamWithPlayers.getPlayerTeam();
+            List<Player> players = playerTeamWithPlayers.getPlayers();
+
+            if (players.isEmpty()) {
+                continue;
+            }
+
+            View view = createTeamView(playerTeam, players, false);
+            holder.firstPlaceWrapper.addView(view);
+        }
+    }
+
+    private View createTeamView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
+        View view = inflater.inflate(R.layout.game_record_team, null);
+        TextView teamTextView = view.findViewById(R.id.team);
+        TextView playersTextView = view.findViewById(R.id.players);
+        teamTextView.setText("Team " + playerTeam.getTeamNumber());
+
+        if (!teams) {
+            teamTextView.setVisibility(View.INVISIBLE);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (Player player : players) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+
+            sb.append(player.getMemberNickname());
+        }
+
+        playersTextView.setText(sb.toString());
+
+        return view;
     }
 
     @Override
@@ -169,7 +167,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
     class GameRecordViewHolder extends RecyclerView.ViewHolder {
         private final TextView gameNameTextView, dateTextView, timeTextView, difficultyTextView, teamCountHeaderTextView, teamCountOutputTextView,
-                playModeTextView;
+                playModeTextView, firstPlaceTextView, secondPlaceTextView, thirdPlaceTextView;
         private final LinearLayout firstPlaceWrapper, secondPlaceWrapper, thirdPlaceWrapper;
 
         private GameRecordViewHolder(View itemView) {
@@ -182,6 +180,9 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             teamCountHeaderTextView = itemView.findViewById(R.id.records_player_count_header);
             teamCountOutputTextView = itemView.findViewById(R.id.records_player_count_output);
             playModeTextView = itemView.findViewById(R.id.records_play_mode);
+            firstPlaceTextView = itemView.findViewById(R.id.records_first_place);
+            secondPlaceTextView = itemView.findViewById(R.id.records_second_place);
+            thirdPlaceTextView = itemView.findViewById(R.id.records_third_place);
 
             firstPlaceWrapper = itemView.findViewById(R.id.records_first_wrapper);
             secondPlaceWrapper = itemView.findViewById(R.id.records_second_wrapper);

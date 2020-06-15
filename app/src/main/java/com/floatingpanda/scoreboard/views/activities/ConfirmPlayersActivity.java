@@ -11,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
-import com.floatingpanda.scoreboard.adapters.ConfirmPlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.CompetitiveConfirmPlayersListAdapter;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ConfirmPlayersActivity extends AppCompatActivity {
@@ -30,7 +29,7 @@ public class ConfirmPlayersActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.activity_confirm_players_recyclerview);
 
-        final ConfirmPlayersListAdapter adapter = new ConfirmPlayersListAdapter(this);
+        final CompetitiveConfirmPlayersListAdapter adapter = new CompetitiveConfirmPlayersListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

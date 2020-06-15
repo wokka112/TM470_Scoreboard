@@ -44,7 +44,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, GroupMember.class, Member.class, PlayMode.class,
-            GameRecord.class, Player.class, PlayerTeam.class}, version = 27, exportSchema = false)
+            GameRecord.class, Player.class, PlayerTeam.class}, version = 28, exportSchema = false)
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -347,29 +347,31 @@ public abstract class AppDatabase extends RoomDatabase {
                 //Can only have 1 team for cooperative and solitaire games.
                 // record 4 - Dawn of Madness, cooperative, 1 team, 4 players, win.
                 GameRecord gameRecord4 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.COOPERATIVE,
-                        1);
+                        1, false);
                 gameRecordDao.insert(gameRecord4);
 
                 //record 5 - Dawn of Madness, cooperative, 1 team, 6 players, lose.
                 GameRecord gameRecord5 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.COOPERATIVE,
-                        1);
+                        1, false);
                 gameRecordDao.insert(gameRecord5);
 
                 // record 6 - Dawn of Madness, solitaire, 1 player, win.
-                GameRecord gameRecord6 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.SOLITAIRE, 1);
+                GameRecord gameRecord6 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.SOLITAIRE,
+                        1, true);
                 gameRecordDao.insert(gameRecord6);
 
                 // record 7 - Dawn of Madness, solitaire, 1 player, lose
-                GameRecord gameRecord7 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.SOLITAIRE, 1);
+                GameRecord gameRecord7 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.SOLITAIRE,
+                        1, false);
                 gameRecordDao.insert(gameRecord7);
 
-                gameRecord1 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord1.getGroupId(), gameRecord1.getBoardGameName(), gameRecord1.getDate().getTime());
-                gameRecord2 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord2.getGroupId(), gameRecord2.getBoardGameName(), gameRecord2.getDate().getTime());
-                gameRecord3 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord3.getGroupId(), gameRecord3.getBoardGameName(), gameRecord3.getDate().getTime());
-                gameRecord4 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord4.getGroupId(), gameRecord4.getBoardGameName(), gameRecord4.getDate().getTime());
-                gameRecord5 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord5.getGroupId(), gameRecord5.getBoardGameName(), gameRecord5.getDate().getTime());
-                gameRecord6 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord6.getGroupId(), gameRecord6.getBoardGameName(), gameRecord6.getDate().getTime());
-                gameRecord7 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord7.getGroupId(), gameRecord7.getBoardGameName(), gameRecord7.getDate().getTime());
+                gameRecord1 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord1.getGroupId(), gameRecord1.getBoardGameName(), gameRecord1.getDateTime().getTime());
+                gameRecord2 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord2.getGroupId(), gameRecord2.getBoardGameName(), gameRecord2.getDateTime().getTime());
+                gameRecord3 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord3.getGroupId(), gameRecord3.getBoardGameName(), gameRecord3.getDateTime().getTime());
+                gameRecord4 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord4.getGroupId(), gameRecord4.getBoardGameName(), gameRecord4.getDateTime().getTime());
+                gameRecord5 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord5.getGroupId(), gameRecord5.getBoardGameName(), gameRecord5.getDateTime().getTime());
+                gameRecord6 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord6.getGroupId(), gameRecord6.getBoardGameName(), gameRecord6.getDateTime().getTime());
+                gameRecord7 = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord7.getGroupId(), gameRecord7.getBoardGameName(), gameRecord7.getDateTime().getTime());
 
                 // PLAYER TEAM ENTRIES //
                 PlayerTeamDao playerTeamDao = INSTANCE.playerTeamDao();

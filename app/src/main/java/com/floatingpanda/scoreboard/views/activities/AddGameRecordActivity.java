@@ -1,22 +1,25 @@
 package com.floatingpanda.scoreboard.views.activities;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
@@ -26,11 +29,11 @@ import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
-import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -49,8 +52,10 @@ public class AddGameRecordActivity extends AppCompatActivity {
     private RadioButton teamsRadioButton, noTeamsRadioButton, compRadioButton, coopRadioButton, soliRadioButton,
             wonRadioButton, lostRadioButton;
     private TextView winLoseRadioGroupHeader, playerCountTextView, difficultyTextView;
-    private EditText playerCountEditText;
+    private EditText dateEditText, timeEditText, playerCountEditText;
     private SearchableSpinner boardGameSpinner;
+
+    private Calendar calendar = Calendar.getInstance();
 
     private BoardGameViewModel boardGameViewModel;
 
@@ -85,6 +90,14 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         boardGameSpinner = findViewById(R.id.add_game_record_bg_spinner);
 
+        dateEditText = findViewById(R.id.add_game_record_datetime_edittext);
+        timeEditText = findViewById(R.id.add_game_record_time_edittext);
+
+        setDateEditText();
+        setTimeEditText();
+
+        group = (Group) getIntent().getExtras().get("GROUP");
+
         //Populate board game spinner
         boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
         boardGameViewModel.getAllBoardGamesWithBgCategoriesAndPlayModes().observe(this, new Observer<List<BoardGameWithBgCategoriesAndPlayModes>>() {
@@ -94,7 +107,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
             }
         });
 
-        //User selects board game from spinner and activates listener.
         boardGameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -109,10 +121,19 @@ public class AddGameRecordActivity extends AppCompatActivity {
             }
         });
 
-        //Get all details
-        //Hit next and then setup fragments, one for each team.
+        dateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDatePickerDialog();
+            }
+        });
 
-        group = (Group) getIntent().getExtras().get("GROUP");
+        timeEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openTimePickerDialog();
+            }
+        });
 
         addPlayersButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,49 +181,20 @@ public class AddGameRecordActivity extends AppCompatActivity {
         int numOfTeams = Integer.parseInt(playerCountEditText.getText().toString());
         boolean solitaire = isSolitaire();
 
-        Intent intent = new Intent(this, ChoosePlayersActivity.class);
-        intent.putExtra("GROUP", group);
-        intent.putExtra("NUM_OF_TEAMS", numOfTeams);
-        intent.putExtra("SOLITAIRE_BOOL", solitaire);
-        startActivityForResult(intent, CHOOSE_PLAYERS_REQUEST_CODE);
-    }
-
-    private void startConfirmGameRecordActivity(ArrayList<TeamOfPlayers> teamsOfPlayers) {
-        //Things to pass: num of teams, game record details, player lists.
         GameRecord gameRecord = createGameRecord();
 
-        Intent intent = new Intent(this, ConfirmGameRecordActivity.class);
+        Intent intent = new Intent(this, ChoosePlayersActivity.class);
+        intent.putExtra("GROUP", group);
         intent.putExtra("GAME_RECORD", gameRecord);
-        intent.putParcelableArrayListExtra("TEAMS_OF_PLAYERS", teamsOfPlayers);
-        startActivityForResult(intent, CONFIRM_GAME_RECORD_REQUEST_CODE);
-    }
-
-    private GameRecord createGameRecord() {
-        int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
-        //TODO change this so user inputs a date/time.
-        Date date = new Date();
-        PlayMode.PlayModeEnum playModePlayed = getPlayModePlayed();
-
-        if (playModePlayed == PlayMode.PlayModeEnum.ERROR) {
-            Toast.makeText(this, "Playmode ERROR returned", Toast.LENGTH_SHORT).show();
-        }
-
-        boolean teams = getTeams();
-        int noOfTeams = Integer.parseInt(playerCountEditText.getText().toString());
-
-        GameRecord gameRecord = new GameRecord(group.getId(), boardGameName, difficulty, date, teams, playModePlayed, noOfTeams);
-        return gameRecord;
+        startActivityForResult(intent, CHOOSE_PLAYERS_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CHOOSE_PLAYERS_REQUEST_CODE && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == CHOOSE_PLAYERS_REQUEST_CODE) {
             ArrayList<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(ChoosePlayersActivity.EXTRA_REPLY);
-            startConfirmGameRecordActivity(teamsOfPlayers);
-        } else if (requestCode == CONFIRM_GAME_RECORD_REQUEST_CODE && resultCode == RESULT_OK) {
-            ArrayList<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(ConfirmGameRecordActivity.EXTRA_REPLY);
             GameRecord gameRecord = createGameRecord();
 
             Intent replyIntent = new Intent();
@@ -211,6 +203,31 @@ public class AddGameRecordActivity extends AppCompatActivity {
             setResult(RESULT_OK, replyIntent);
             finish();
         }
+    }
+
+    private GameRecord createGameRecord() {
+        int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
+        //TODO change this so user inputs a date/time.
+        Date date = calendar.getTime();
+        Log.w("AddGameRecordAct.java", "Date: " + date.toString());
+        PlayMode.PlayModeEnum playModePlayed = getPlayModePlayed();
+
+        if (playModePlayed == PlayMode.PlayModeEnum.ERROR) {
+            Toast.makeText(this, "Playmode ERROR returned", Toast.LENGTH_SHORT).show();
+        }
+
+        boolean won = false;
+        if (playModePlayed == PlayMode.PlayModeEnum.COOPERATIVE
+                || playModePlayed == PlayMode.PlayModeEnum.SOLITAIRE) {
+            won = getWon();
+            Log.w("AddGameRecordAct.java", "Got won: " + won);
+        }
+
+        boolean teams = getTeams();
+        int noOfTeams = Integer.parseInt(playerCountEditText.getText().toString());
+
+        GameRecord gameRecord = new GameRecord(group.getId(), boardGameName, difficulty, date, teams, playModePlayed, noOfTeams, won);
+        return gameRecord;
     }
 
     public boolean inputsValid() {
@@ -231,6 +248,22 @@ public class AddGameRecordActivity extends AppCompatActivity {
         return false;
     }
 
+    private void openDatePickerDialog() {
+        // Get Current Date
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, dateListener, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+
+        datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+        datePickerDialog.show();
+    }
+
+    private void openTimePickerDialog() {
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, timeListener, calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE), true);
+
+        timePickerDialog.show();
+    }
+
     private void setViews(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         //Set default playmode to first available option.
         List<PlayMode.PlayModeEnum> potentialPlayModes = boardGameWithBgCategoriesAndPlayModes.getPlayModeEnums();
@@ -242,6 +275,26 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         //Set difficulty to board game difficulty.
         difficultyTextView.setText(Integer.toString(boardGameWithBgCategoriesAndPlayModes.getBoardGame().getDifficulty()));
+    }
+
+    private void setDateEditText() {
+        int year = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        dateEditText.setText(dayOfMonth + "/" + (month + 1) + "/" + year);
+    }
+
+    private void setTimeEditText() {
+        int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        //TODO change to use some sort of formatting for the minutes.
+        if (minute < 10) {
+            timeEditText.setText(hourOfDay + ":0" + minute);
+        } else {
+            timeEditText.setText(hourOfDay + ":" + minute);
+        }
     }
 
     private void setPotentialPlayModes(List<PlayMode.PlayModeEnum> potentialPlayModes) {
@@ -392,7 +445,41 @@ public class AddGameRecordActivity extends AppCompatActivity {
             case R.id.add_game_record_radio_button_no_teams:
                 return false;
             default:
+                Log.w("AddGameRecordAct.java", "Failed to return proper result when getting teams.");
                 return false;
         }
     }
+
+    private boolean getWon() {
+        switch (winLoseRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.add_game_record_radio_button_won:
+                return true;
+            case R.id.add_game_record_radio_button_lost:
+                return false;
+            default:
+                Log.w("AddGameRecordAct.java", "Failed to return proper result when getting won.");
+                return false;
+        }
+    }
+
+    DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+            setDateEditText();
+        }
+    };
+
+    TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calendar.set(Calendar.MINUTE, minute);
+
+            setTimeEditText();
+        }
+    };
 }
