@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,14 +14,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
+import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.adapters.GameRecordListAdapter;
 import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
 import com.floatingpanda.scoreboard.views.activities.AddGameRecordActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class GameRecordListFragment extends Fragment {
 
@@ -76,5 +82,17 @@ public class GameRecordListFragment extends Fragment {
         Intent intent = new Intent(getContext(), AddGameRecordActivity.class);
         intent.putExtra("GROUP", group);
         startActivityForResult(intent, ADD_GAME_RECORD_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_GAME_RECORD_REQUEST_CODE && resultCode == RESULT_OK) {
+            GameRecord gameRecord = (GameRecord) data.getExtras().get(AddGameRecordActivity.EXTRA_REPLY_GAME_RECORD);
+            List<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(AddGameRecordActivity.EXTRA_REPLY_PLAYERS);
+
+            gameRecordViewModel.addGameRecordAndPlayers(gameRecord, teamsOfPlayers);
+        }
     }
 }

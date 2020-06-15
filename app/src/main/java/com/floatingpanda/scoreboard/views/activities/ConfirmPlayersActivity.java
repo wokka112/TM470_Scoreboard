@@ -35,7 +35,6 @@ public class ConfirmPlayersActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         List<TeamOfPlayers> teamsOfMembers = getIntent().getExtras().getParcelableArrayList("TEAMS_OF_MEMBERS");
-        Collections.sort(teamsOfMembers);
         adapter.setPlayerTeams(teamsOfMembers);
 
         yesButton.setOnClickListener(new View.OnClickListener() {

@@ -34,7 +34,7 @@ public interface PlayerTeamDao {
     void insertAll(PlayerTeam... playerTeams);
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
-    void insert(PlayerTeam playerTeam);
+    long insert(PlayerTeam playerTeam);
 
     @Query ("DELETE FROM player_teams")
     void deleteAll();

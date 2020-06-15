@@ -137,19 +137,19 @@ public class GroupMemberDaoTest {
 
         assertThat(allGroupMembers.size(), is(TestData.GROUP_MEMBERS.size()));
 
-        //Group member 1's group has only 1 member assigned to it, so only 1 entry in group members.
-        List<GroupMember> specificGroupMembers = groupMemberDao.findNonLiveDataByGroupId(TestData.GROUP_MEMBER_1.getGroupId());
+        //Group 2 has 1 member in it - GROUP_MEMBER_2.
+        List<GroupMember> specificGroupMembers = groupMemberDao.findNonLiveDataByGroupId(TestData.GROUP_2.getId());
 
         assertThat(specificGroupMembers.size(), is(1));
 
-        groupMemberDao.delete(TestData.GROUP_MEMBER_1);
+        groupMemberDao.delete(TestData.GROUP_MEMBER_2);
         TimeUnit.MILLISECONDS.sleep(100);
 
         allGroupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
 
         assertThat(allGroupMembers.size(), is(TestData.GROUP_MEMBERS.size() - 1));
 
-        specificGroupMembers = groupMemberDao.findNonLiveDataByGroupId(TestData.GROUP_MEMBER_1.getGroupId());
+        specificGroupMembers = groupMemberDao.findNonLiveDataByGroupId(TestData.GROUP_2.getId());
 
         assertTrue(specificGroupMembers.isEmpty());
     }

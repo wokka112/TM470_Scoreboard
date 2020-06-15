@@ -17,7 +17,6 @@ import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAdapter.GameRecordViewHolder> {
@@ -50,7 +49,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             holder.playModeTextView.setText(currentGameRecord.getPlayModePlayed().toString());
             holder.difficultyTextView.setText(Integer.toString(currentGameRecord.getDifficulty()));
 
-            if(currentGameRecord.getTeamsAllowed()) {
+            if(currentGameRecord.getTeams()) {
                 holder.teamCountHeaderTextView.setText("Teams: ");
             } else {
                 holder.teamCountHeaderTextView.setText("Players: ");
@@ -81,7 +80,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
                     teamTextView.setText("Team " + playerTeam.getTeamNumber());
 
-                    if (!currentGameRecord.getTeamsAllowed()) {
+                    if (!currentGameRecord.getTeams()) {
                        teamTextView.setVisibility(View.INVISIBLE);
                     }
 
@@ -104,7 +103,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
                     teamTextView.setText("Team " + playerTeam.getTeamNumber());
 
-                    if (!currentGameRecord.getTeamsAllowed()) {
+                    if (!currentGameRecord.getTeams()) {
                         teamTextView.setVisibility(View.INVISIBLE);
                     }
 
@@ -127,7 +126,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
                     teamTextView.setText("Team " + playerTeam.getTeamNumber());
 
-                    if (!currentGameRecord.getTeamsAllowed()) {
+                    if (!currentGameRecord.getTeams()) {
                         teamTextView.setVisibility(View.INVISIBLE);
                     }
 

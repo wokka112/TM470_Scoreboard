@@ -1,5 +1,8 @@
 package com.floatingpanda.scoreboard.data.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -19,7 +22,7 @@ import java.util.Date;
                 childColumns = "bg_name",
                 onDelete = ForeignKey.SET_NULL,
                 onUpdate = ForeignKey.CASCADE)})
-public class GameRecord {
+public class GameRecord implements Parcelable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "record_id")
     private int id;
@@ -38,9 +41,8 @@ public class GameRecord {
     //TODO include time.
     //private Time time;
 
-    //TODO change name of teamsAllowed to teams
-    @ColumnInfo(name = "teams_allowed")
-    private boolean teamsAllowed;
+    @ColumnInfo(name = "teams")
+    private boolean teams;
 
     @ColumnInfo(name = "play_mode_played")
     private PlayMode.PlayModeEnum playModePlayed;
@@ -53,21 +55,33 @@ public class GameRecord {
     // If the game is cooperative or solitaire, use another layout which says whether you win or lose.
 
     @Ignore
-    public GameRecord(int id, int groupId, String boardGameName, int difficulty, Date date, boolean teamsAllowed, PlayMode.PlayModeEnum playModePlayed,
+    public GameRecord(int id, int groupId, String boardGameName, int difficulty, Date date, boolean teams, PlayMode.PlayModeEnum playModePlayed,
                       int noOfTeams) {
         this.id = id;
         this.groupId = groupId;
         this.boardGameName = boardGameName;
         this.difficulty = difficulty;
         this.date = date;
-        this.teamsAllowed = teamsAllowed;
+        this.teams = teams;
         this.playModePlayed = playModePlayed;
         this.noOfTeams = noOfTeams;
     }
 
-    public GameRecord(int groupId, String boardGameName, int difficulty, Date date, boolean teamsAllowed, PlayMode.PlayModeEnum playModePlayed,
+    public GameRecord(int groupId, String boardGameName, int difficulty, Date date, boolean teams, PlayMode.PlayModeEnum playModePlayed,
                       int noOfTeams) {
-        this(0, groupId, boardGameName, difficulty, date, teamsAllowed, playModePlayed, noOfTeams);
+        this(0, groupId, boardGameName, difficulty, date, teams, playModePlayed, noOfTeams);
+    }
+
+    @Ignore
+    public GameRecord(Parcel source) {
+        id = source.readInt();
+        groupId = source.readInt();
+        boardGameName = source.readString();
+        difficulty = source.readInt();
+        date = new Date(source.readLong());
+        teams = (Boolean) source.readValue(null);
+        playModePlayed = PlayMode.PlayModeEnum.valueOf(source.readString());
+        noOfTeams = source.readInt();
     }
 
     public Integer getId() { return id; }
@@ -80,8 +94,8 @@ public class GameRecord {
     public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
     public Date getDate() { return date; }
     public void setDate(Date date) { this.date = date; }
-    public boolean getTeamsAllowed() { return teamsAllowed; }
-    public void setTeamsAllowed(boolean teamsAllowed) { this.teamsAllowed = teamsAllowed; }
+    public boolean getTeams() { return teams; }
+    public void setTeams(boolean teams) { this.teams = teams; }
     public PlayMode.PlayModeEnum getPlayModePlayed() { return playModePlayed; }
     public void setPlayModePlayed(PlayMode.PlayModeEnum playModePlayed) { this.playModePlayed = playModePlayed; }
     public int getNoOfTeams() { return noOfTeams; }
@@ -100,4 +114,33 @@ public class GameRecord {
                 && gameRecord.getBoardGameName().equals(this.getBoardGameName())
                 && gameRecord.getDate().getTime() == this.getDate().getTime());
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(groupId);
+        dest.writeString(boardGameName);
+        dest.writeInt(difficulty);
+        dest.writeLong(date.getTime());
+        dest.writeValue(teams);
+        dest.writeString(playModePlayed.name());
+        dest.writeInt(noOfTeams);
+    }
+
+    public static final Creator<GameRecord> CREATOR = new Creator<GameRecord>() {
+        @Override
+        public GameRecord[] newArray(int size) {
+            return new GameRecord[size];
+        }
+
+        @Override
+        public GameRecord createFromParcel(Parcel source) {
+            return new GameRecord(source);
+        }
+    };
 }

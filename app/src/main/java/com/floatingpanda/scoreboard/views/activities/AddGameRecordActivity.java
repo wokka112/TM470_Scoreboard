@@ -10,26 +10,39 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
+import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.adapters.SearchableSpinnerAdapter;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //TODO Add in competitive, cooperative or solitaire choice.
 //TODO Add in functionality so teams or no teams choice affects things.
 public class AddGameRecordActivity extends AppCompatActivity {
+
+    private final int CHOOSE_PLAYERS_REQUEST_CODE = 1;
+    private final int CONFIRM_GAME_RECORD_REQUEST_CODE = 2;
+
+    public static final String EXTRA_REPLY_PLAYERS = "com.floatingpanda.scoreboard.REPLY_PLAYERS";
+    public static final String EXTRA_REPLY_GAME_RECORD = "com.floatingpanda.scoreboard.REPLY_GAME_RECORD";
 
     private Button addPlayersButton;
     private RadioGroup teamsRadioGroup, playModeRadioGroup, winLoseRadioGroup;
@@ -42,6 +55,7 @@ public class AddGameRecordActivity extends AppCompatActivity {
     private BoardGameViewModel boardGameViewModel;
 
     private Group group;
+    private String boardGameName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +98,9 @@ public class AddGameRecordActivity extends AppCompatActivity {
         boardGameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                setViews((BoardGameWithBgCategoriesAndPlayModes) boardGameSpinner.getSelectedItem());
+                BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes = (BoardGameWithBgCategoriesAndPlayModes) boardGameSpinner.getSelectedItem();
+                setViews(boardGameWithBgCategoriesAndPlayModes);
+                boardGameName = boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName();
             }
 
             @Override
@@ -148,7 +164,53 @@ public class AddGameRecordActivity extends AppCompatActivity {
         intent.putExtra("GROUP", group);
         intent.putExtra("NUM_OF_TEAMS", numOfTeams);
         intent.putExtra("SOLITAIRE_BOOL", solitaire);
-        startActivity(intent);
+        startActivityForResult(intent, CHOOSE_PLAYERS_REQUEST_CODE);
+    }
+
+    private void startConfirmGameRecordActivity(ArrayList<TeamOfPlayers> teamsOfPlayers) {
+        //Things to pass: num of teams, game record details, player lists.
+        GameRecord gameRecord = createGameRecord();
+
+        Intent intent = new Intent(this, ConfirmGameRecordActivity.class);
+        intent.putExtra("GAME_RECORD", gameRecord);
+        intent.putParcelableArrayListExtra("TEAMS_OF_PLAYERS", teamsOfPlayers);
+        startActivityForResult(intent, CONFIRM_GAME_RECORD_REQUEST_CODE);
+    }
+
+    private GameRecord createGameRecord() {
+        int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
+        //TODO change this so user inputs a date/time.
+        Date date = new Date();
+        PlayMode.PlayModeEnum playModePlayed = getPlayModePlayed();
+
+        if (playModePlayed == PlayMode.PlayModeEnum.ERROR) {
+            Toast.makeText(this, "Playmode ERROR returned", Toast.LENGTH_SHORT).show();
+        }
+
+        boolean teams = getTeams();
+        int noOfTeams = Integer.parseInt(playerCountEditText.getText().toString());
+
+        GameRecord gameRecord = new GameRecord(group.getId(), boardGameName, difficulty, date, teams, playModePlayed, noOfTeams);
+        return gameRecord;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CHOOSE_PLAYERS_REQUEST_CODE && resultCode == RESULT_OK) {
+            ArrayList<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(ChoosePlayersActivity.EXTRA_REPLY);
+            startConfirmGameRecordActivity(teamsOfPlayers);
+        } else if (requestCode == CONFIRM_GAME_RECORD_REQUEST_CODE && resultCode == RESULT_OK) {
+            ArrayList<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(ConfirmGameRecordActivity.EXTRA_REPLY);
+            GameRecord gameRecord = createGameRecord();
+
+            Intent replyIntent = new Intent();
+            replyIntent.putExtra(EXTRA_REPLY_PLAYERS, teamsOfPlayers);
+            replyIntent.putExtra(EXTRA_REPLY_GAME_RECORD, gameRecord);
+            setResult(RESULT_OK, replyIntent);
+            finish();
+        }
     }
 
     public boolean inputsValid() {
@@ -240,7 +302,7 @@ public class AddGameRecordActivity extends AppCompatActivity {
         }
     }
 
-    //TODO maybe move "disabling" (setting to alpha and making non-clickable) into its own helper method?
+    //TODO maybe move "disabling" entities (setting to alpha and making non-clickable) into its own helper method?
 
     private void setToCompetitive() {
         //Unlock everything.
@@ -308,5 +370,29 @@ public class AddGameRecordActivity extends AppCompatActivity {
         winLoseRadioGroupHeader.setVisibility(View.VISIBLE);
         winLoseRadioGroup.setVisibility(View.VISIBLE);
         winLoseRadioGroup.clearCheck();
+    }
+
+    private PlayMode.PlayModeEnum getPlayModePlayed() {
+        switch (playModeRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.add_game_record_radio_button_competitive:
+                return PlayMode.PlayModeEnum.COMPETITIVE;
+            case R.id.add_game_record_radio_button_cooperative:
+                return PlayMode.PlayModeEnum.COOPERATIVE;
+            case R.id.add_game_record_radio_button_solitaire:
+                return PlayMode.PlayModeEnum.SOLITAIRE;
+            default:
+                return PlayMode.PlayModeEnum.ERROR;
+        }
+    }
+
+    private boolean getTeams() {
+        switch (teamsRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.add_game_record_radio_button_teams:
+                return true;
+            case R.id.add_game_record_radio_button_no_teams:
+                return false;
+            default:
+                return false;
+        }
     }
 }

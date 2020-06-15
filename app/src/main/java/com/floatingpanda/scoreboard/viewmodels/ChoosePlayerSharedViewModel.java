@@ -14,6 +14,7 @@ import com.floatingpanda.scoreboard.data.MemberRepository;
 import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -162,6 +163,7 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
         for (int key : selectedPlayers.keySet()) {
             teamsOfMembers.add(selectedPlayers.get(key));
         }
+        Collections.sort(teamsOfMembers);
 
         return teamsOfMembers;
     }

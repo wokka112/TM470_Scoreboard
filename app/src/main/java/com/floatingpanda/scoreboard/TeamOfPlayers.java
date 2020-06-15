@@ -12,22 +12,25 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
 
     private int teamNo;
     private int position;
+    private int score;
     //TODO use a hashset instead? Then it limits it so each member has to be unique.
     private List<Member> members;
 
-    public TeamOfPlayers(int teamNo, int position, List<Member> members) {
+    public TeamOfPlayers(int teamNo, int position, int score, List<Member> members) {
         this.teamNo = teamNo;
         this.position = position;
+        this.score = score;
         this.members = members;
     }
 
     public TeamOfPlayers(int teamNo, int position) {
-        this(teamNo, position, new ArrayList<Member>());
+        this(teamNo, position, -1, new ArrayList<Member>());
     }
 
     public TeamOfPlayers(Parcel source) {
         teamNo = source.readInt();
         position = source.readInt();
+        score = source.readInt();
         members = source.readArrayList(Member.class.getClassLoader());
     }
 
@@ -35,6 +38,8 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
     public void setTeamNo(int teamNo) { this.teamNo = teamNo; }
     public int getPosition() { return position; }
     public void setPosition(int position) { this.position = position; }
+    public int getScore() { return score; }
+    public void setScore(int score) { this.score = score; }
     public List<Member> getMembers() { return new ArrayList<>(members); }
     public void setMembers(List<Member> members) { this.members = members; }
 
@@ -74,6 +79,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(teamNo);
         dest.writeInt(position);
+        dest.writeInt(score);
         dest.writeList(members);
     }
 

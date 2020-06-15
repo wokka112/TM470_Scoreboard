@@ -121,7 +121,7 @@ public class GroupMemberViewModelTest {
         TimeUnit.MILLISECONDS.sleep(100);
 
         groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
-        assertThat(groupMembers.size(), is(3));
+        assertThat(groupMembers.size(), is(TestData.MEMBERS.size()));
 
         for (GroupMember groupMember : groupMembers) {
             assertThat(groupMember.getGroupId(), is(group.getId()));

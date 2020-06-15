@@ -35,7 +35,7 @@ public interface GameRecordDao {
     void insertAll(GameRecord... gameRecords);
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
-    void insert(GameRecord gameRecord);
+    long insert(GameRecord gameRecord);
 
     @Query ("DELETE FROM game_records")
     void deleteAll();
@@ -44,7 +44,7 @@ public interface GameRecordDao {
     void delete(GameRecord gameRecord);
 
     @Transaction
-    @Query("SELECT * FROM game_records")
+    @Query("SELECT * FROM game_records ORDER BY date DESC")
     public LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> getAllGameRecordsWithPlayerTeamsAndPlayers();
 
     @Transaction
@@ -52,6 +52,6 @@ public interface GameRecordDao {
     public LiveData<GameRecordWithPlayerTeamsAndPlayers> findGameRecordWithPlayerTeamsAndPlayersByRecordId(int recordId);
 
     @Transaction
-    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId")
+    @Query("SELECT * FROM game_records WHERE group_id LIKE :groupId ORDER BY date DESC")
     public LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> findGameRecordsWithPlayerTeamsAndPlayersByGroupId(int groupId);
 }
