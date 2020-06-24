@@ -142,7 +142,7 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
         if (selectedPlayers.get(teamNo) == null) {
             selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, position));
         } else {
-            selectedPlayers.get(teamNo).setPosition(position);
+            selectedPlayers.get(teamNo).setPlace(position);
         }
     }
 
@@ -151,7 +151,7 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
             selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, teamNo));
         }
 
-        return selectedPlayers.get(teamNo).getPosition();
+        return selectedPlayers.get(teamNo).getPlace();
     }
 
     public List<Member> getPotentialPlayers() {

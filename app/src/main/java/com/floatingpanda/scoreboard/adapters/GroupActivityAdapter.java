@@ -9,6 +9,7 @@ import com.floatingpanda.scoreboard.views.fragments.GroupDetailsFragment;
 import com.floatingpanda.scoreboard.views.fragments.GameRecordListFragment;
 import com.floatingpanda.scoreboard.views.fragments.GroupMemberListFragment;
 import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.views.fragments.ScoreWinnerListFragment;
 
 public class GroupActivityAdapter extends FragmentStateAdapter {
 
@@ -27,7 +28,7 @@ public class GroupActivityAdapter extends FragmentStateAdapter {
         if (position == 0) {
             return new GameRecordListFragment(group);
         } else if (position == 1) {
-            return new GroupMemberListFragment(group);
+            return new ScoreWinnerListFragment(group);
         } else if (position == 2) {
             return new GroupMemberListFragment(group);
         } else {

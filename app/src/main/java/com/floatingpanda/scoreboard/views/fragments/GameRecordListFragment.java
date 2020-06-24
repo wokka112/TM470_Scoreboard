@@ -47,13 +47,6 @@ public class GameRecordListFragment extends Fragment {
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
 
-        //TODO implement basic functionality using preset test game records.
-        //TODO once basic functioanlity is in, get in basic game record creation functionality
-        // - adding a game record with players, teams and positions, but no scores or skill ratings yet.
-        //TODO once that's done, start on the mediator
-        // - first of all sort out the score calculations as that's the simplest thing.
-        // - then move on to skill rating as that's much more complex to deal with.
-
         final GameRecordListAdapter adapter = new GameRecordListAdapter(getActivity());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -71,17 +64,22 @@ public class GameRecordListFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startAddGameRecord();
+                startAddGameRecordActivity();
             }
         });
 
         return rootView;
     }
 
-    private void startAddGameRecord() {
+    private void startAddGameRecordActivity() {
         Intent intent = new Intent(getContext(), AddGameRecordActivity.class);
         intent.putExtra("GROUP", group);
         startActivityForResult(intent, ADD_GAME_RECORD_REQUEST_CODE);
+    }
+
+    private void startDeleteGameRecordActivity() {
+        //TODO add in delete functionality
+        // needs to update scores and skill ratings when deleted.
     }
 
     @Override

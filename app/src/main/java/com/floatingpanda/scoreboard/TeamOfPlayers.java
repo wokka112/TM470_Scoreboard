@@ -11,33 +11,33 @@ import java.util.List;
 public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
 
     private int teamNo;
-    private int position;
+    private int place;
     private int score;
     //TODO use a hashset instead? Then it limits it so each member has to be unique.
     private List<Member> members;
 
-    public TeamOfPlayers(int teamNo, int position, int score, List<Member> members) {
+    public TeamOfPlayers(int teamNo, int place, int score, List<Member> members) {
         this.teamNo = teamNo;
-        this.position = position;
+        this.place = place;
         this.score = score;
         this.members = members;
     }
 
-    public TeamOfPlayers(int teamNo, int position) {
-        this(teamNo, position, -1, new ArrayList<Member>());
+    public TeamOfPlayers(int teamNo, int place) {
+        this(teamNo, place, -1, new ArrayList<Member>());
     }
 
     public TeamOfPlayers(Parcel source) {
         teamNo = source.readInt();
-        position = source.readInt();
+        place = source.readInt();
         score = source.readInt();
         members = source.readArrayList(Member.class.getClassLoader());
     }
 
     public int getTeamNo() { return teamNo; }
     public void setTeamNo(int teamNo) { this.teamNo = teamNo; }
-    public int getPosition() { return position; }
-    public void setPosition(int position) { this.position = position; }
+    public int getPlace() { return place; }
+    public void setPlace(int place) { this.place = place; }
     public int getScore() { return score; }
     public void setScore(int score) { this.score = score; }
     public List<Member> getMembers() { return new ArrayList<>(members); }
@@ -55,7 +55,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
 
     @Override
     public int compareTo(TeamOfPlayers other) {
-        if (this.getPosition() == other.getPosition()) {
+        if (this.getPlace() == other.getPlace()) {
             if (this.getTeamNo() == other.getTeamNo()) {
                 return 0;
             } else if (this.getTeamNo() > other.getTeamNo()) {
@@ -63,7 +63,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
             } else {
                 return -1;
             }
-        } else if (this.getPosition() > other.getPosition()) {
+        } else if (this.getPlace() > other.getPlace()) {
             return 1;
         } else {
             return -1;
@@ -78,7 +78,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(teamNo);
-        dest.writeInt(position);
+        dest.writeInt(place);
         dest.writeInt(score);
         dest.writeList(members);
     }

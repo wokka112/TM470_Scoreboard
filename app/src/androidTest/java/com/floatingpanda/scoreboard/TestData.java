@@ -8,10 +8,12 @@ import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
+import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
+import com.floatingpanda.scoreboard.data.entities.Score;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -112,13 +114,13 @@ public class TestData {
             GROUP_MEMBER_5, GROUP_MEMBER_6, GROUP_MEMBER_7, GROUP_MEMBER_8, GROUP_MEMBER_9);
 
     public static final GameRecord GAME_RECORD_1 = new GameRecord(19, GROUP_1.getId(), BOARD_GAME_1.getBgName(), BOARD_GAME_1.getDifficulty(), new Date(),
-            true, PlayMode.PlayModeEnum.COMPETITIVE, 4);
+            true, PlayMode.PlayModeEnum.COMPETITIVE, 4, false);
     public static final GameRecord GAME_RECORD_2 = new GameRecord(20, GROUP_1.getId(), BOARD_GAME_1.getBgName(), BOARD_GAME_1.getDifficulty(), new Date(),
-            true, PlayMode.PlayModeEnum.COMPETITIVE, 4);
+            true, PlayMode.PlayModeEnum.COMPETITIVE, 4, false);
     public static final GameRecord GAME_RECORD_3 = new GameRecord(21, GROUP_1.getId(), BOARD_GAME_2.getBgName(), BOARD_GAME_2.getDifficulty(), new Date(),
-            true, PlayMode.PlayModeEnum.COOPERATIVE, 4);
+            true, PlayMode.PlayModeEnum.COOPERATIVE, 4, true);
     public static final GameRecord GAME_RECORD_4 = new GameRecord(22, GROUP_2.getId(), BOARD_GAME_3.getBgName(), BOARD_GAME_3.getDifficulty(), new Date(),
-            false, PlayMode.PlayModeEnum.SOLITAIRE, 3);
+            false, PlayMode.PlayModeEnum.SOLITAIRE, 3, false);
 
     public static final List<GameRecord> GAME_RECORDS = Arrays.asList(GAME_RECORD_1, GAME_RECORD_2, GAME_RECORD_3, GAME_RECORD_4);
 
@@ -138,4 +140,42 @@ public class TestData {
     public static final Player PLAYER_5 = new Player(33, PLAYER_TEAM_6.getId(), MEMBER_1.getNickname());
 
     public static final List<Player> PLAYERS = Arrays.asList(PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4, PLAYER_5);
+
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_1 = new GroupMonthlyScore(34, GROUP_1.getId(), 2019, 3, 8);
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_2 = new GroupMonthlyScore(35, GROUP_1.getId(), 2020, 3, 8);
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_3 = new GroupMonthlyScore(36, GROUP_1.getId(), 2020, 3, 9);
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_4 = new GroupMonthlyScore(37, GROUP_1.getId(), 2020, 4, 10);
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_5 = new GroupMonthlyScore(38, GROUP_3.getId(), 2020, 1, 2);
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_6 = new GroupMonthlyScore(39, GROUP_2.getId(), 2019, 4, 12);
+    public static final GroupMonthlyScore GROUP_MONTHLY_SCORE_7 = new GroupMonthlyScore(40, GROUP_2.getId(), 2020, 1, 1);
+
+    public static final List<GroupMonthlyScore> GROUP_MONTHLY_SCORES = Arrays.asList(GROUP_MONTHLY_SCORE_1, GROUP_MONTHLY_SCORE_2, GROUP_MONTHLY_SCORE_3,
+            GROUP_MONTHLY_SCORE_4, GROUP_MONTHLY_SCORE_5, GROUP_MONTHLY_SCORE_6, GROUP_MONTHLY_SCORE_7);
+
+    //Monthly scores 1
+    public static final Score SCORE_1 = new Score(41, GROUP_MONTHLY_SCORE_1.getId(), MEMBER_1.getId(), 70);
+    public static final Score SCORE_2 = new Score(42, GROUP_MONTHLY_SCORE_1.getId(), MEMBER_4.getId(), 45);
+    public static final Score SCORE_3 = new Score(43, GROUP_MONTHLY_SCORE_1.getId(), MEMBER_5.getId(), 60);
+
+    //Monthly scores 2
+    public static final Score SCORE_4 = new Score(44, GROUP_MONTHLY_SCORE_2.getId(), MEMBER_1.getId(), 40);
+    public static final Score SCORE_5 = new Score(45, GROUP_MONTHLY_SCORE_2.getId(), MEMBER_4.getId(), 65);
+    public static final Score SCORE_6 = new Score(46, GROUP_MONTHLY_SCORE_2.getId(), MEMBER_5.getId(), 80);
+
+    //Monthly scores 3
+    public static final Score SCORE_7 = new Score(47, GROUP_MONTHLY_SCORE_3.getId(), MEMBER_1.getId(), 90);
+    public static final Score SCORE_8 = new Score(48, GROUP_MONTHLY_SCORE_3.getId(), MEMBER_4.getId(), 55);
+    public static final Score SCORE_9 = new Score(49, GROUP_MONTHLY_SCORE_3.getId(), MEMBER_5.getId(), 30);
+
+    //Monthly scores 4
+    public static final Score SCORE_10 = new Score(50, GROUP_MONTHLY_SCORE_4.getId(), MEMBER_1.getId(), 100);
+    public static final Score SCORE_11 = new Score(51, GROUP_MONTHLY_SCORE_4.getId(), MEMBER_4.getId(), 20);
+    public static final Score SCORE_12 = new Score(52, GROUP_MONTHLY_SCORE_4.getId(), MEMBER_5.getId(), 5);
+
+    //Monthly scores 5
+    public static final Score SCORE_13 = new Score(53, GROUP_MONTHLY_SCORE_5.getId(), MEMBER_1.getId(), 30);
+    public static final Score SCORE_14 = new Score(54, GROUP_MONTHLY_SCORE_5.getId(), MEMBER_3.getId(), 10);
+
+    public static final List<Score> SCORES = Arrays.asList(SCORE_1, SCORE_2, SCORE_3, SCORE_4, SCORE_5, SCORE_6, SCORE_7, SCORE_8, SCORE_9,
+            SCORE_10, SCORE_11, SCORE_12, SCORE_13, SCORE_14);
 }

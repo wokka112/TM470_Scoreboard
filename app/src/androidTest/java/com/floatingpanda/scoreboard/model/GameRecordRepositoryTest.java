@@ -168,7 +168,7 @@ public class GameRecordRepositoryTest {
         boolean teams = true;
         int noOfTeams = teamsOfPlayers.size();
         GameRecord gameRecord = new GameRecord(recordId, TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), TestData.BOARD_GAME_1.getDifficulty(),
-                new Date(), teams, PlayMode.PlayModeEnum.COMPETITIVE, noOfTeams);
+                new Date(), teams, PlayMode.PlayModeEnum.COMPETITIVE, noOfTeams, false);
 
         gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
         TimeUnit.MILLISECONDS.sleep(300);
@@ -259,7 +259,7 @@ public class GameRecordRepositoryTest {
         boolean teams = true;
         int noOfTeams = teamsOfPlayers.size();
         GameRecord gameRecord = new GameRecord(recordId, TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), TestData.BOARD_GAME_1.getDifficulty(),
-                new Date(), teams, PlayMode.PlayModeEnum.COMPETITIVE, noOfTeams);
+                new Date(), teams, PlayMode.PlayModeEnum.COMPETITIVE, noOfTeams, false);
 
         gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
         TimeUnit.MILLISECONDS.sleep(300);

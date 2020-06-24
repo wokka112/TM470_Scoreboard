@@ -4,8 +4,6 @@ import android.app.Application;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
 
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
@@ -60,7 +58,7 @@ public class GameRecordRepository {
             //For each team of players, insert the team into the db, then insert the players
             for (TeamOfPlayers teamOfPlayers : teamsOfPlayers) {
                 //Insert player team and get id
-                PlayerTeam playerTeam = new PlayerTeam(teamOfPlayers.getTeamNo(), recordId, teamOfPlayers.getPosition(), teamOfPlayers.getScore());
+                PlayerTeam playerTeam = new PlayerTeam(teamOfPlayers.getTeamNo(), recordId, teamOfPlayers.getPlace(), teamOfPlayers.getScore());
                 if (playerTeamDao == null) {
                     Log.w("GameRecordRepo.java", "Null playerTeamDao");
                 }

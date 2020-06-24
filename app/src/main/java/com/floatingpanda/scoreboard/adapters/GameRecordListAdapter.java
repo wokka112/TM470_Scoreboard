@@ -37,6 +37,8 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         return new GameRecordViewHolder(itemView);
     }
 
+    //TODO fix bug where competitive games showing LOST and WON and not behaving like competitive games
+
     @Override
     public void onBindViewHolder(GameRecordViewHolder holder, int position) {
         if (gameRecordsWithPlayerTeamsAndPlayers != null) {

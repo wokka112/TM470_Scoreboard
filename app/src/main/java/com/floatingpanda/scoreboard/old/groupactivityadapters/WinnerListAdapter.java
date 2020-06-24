@@ -22,7 +22,7 @@ public class WinnerListAdapter extends ArrayAdapter<Integer> {
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
-                    R.layout.winner_list_item, parent, false);
+                    R.layout.recyclerview_item_winner_list, parent, false);
         }
 
         int currentList = getItem(position);

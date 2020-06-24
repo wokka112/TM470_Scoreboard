@@ -16,20 +16,24 @@ import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
+import com.floatingpanda.scoreboard.data.daos.GroupMonthlyScoreDao;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.daos.PlayModeDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
+import com.floatingpanda.scoreboard.data.daos.ScoreDao;
 import com.floatingpanda.scoreboard.data.entities.AssignedCategory;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
+import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
+import com.floatingpanda.scoreboard.data.entities.Score;
 import com.floatingpanda.scoreboard.typeconverters.DateTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.PlayModeTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.TeamOptionTypeConverter;
@@ -44,7 +48,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, GroupMember.class, Member.class, PlayMode.class,
-            GameRecord.class, Player.class, PlayerTeam.class}, version = 28, exportSchema = false)
+            GameRecord.class, Player.class, PlayerTeam.class, GroupMonthlyScore.class, Score.class}, version = 30, exportSchema = false)
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -58,6 +62,8 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract GameRecordDao gameRecordDao();
     public abstract PlayerDao playerDao();
     public abstract PlayerTeamDao playerTeamDao();
+    public abstract ScoreDao scoreDao();
+    public abstract GroupMonthlyScoreDao groupMonthlyScoreDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
@@ -560,6 +566,256 @@ public abstract class AppDatabase extends RoomDatabase {
                 Player record7Player = new Player(record7PlayerTeam.getId(), member1.getNickname());
 
                 playerDao.insert(record7Player);
+
+                // GROUP 1 MONTHLY SCORES //
+                GroupMonthlyScoreDao groupMonthlyScoreDao = INSTANCE.groupMonthlyScoreDao();
+                ScoreDao scoreDao = INSTANCE.scoreDao();
+
+                //Group 1 scores
+                //Tests:
+                // Group monthly score 1
+                int groupId = group1.getId();
+                int year = 2019;
+                int quarter = 1;
+                int month = 1;
+
+                GroupMonthlyScore groupMonthlyScore1 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore1Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore1);
+
+                List<Score> scores1 = new ArrayList<Score>();
+                // Jan Everyone scores, one person per position
+                // - Player 1 100
+                scores1.add(new Score(groupMonthlyScore1Id, member1.getId(), 100));
+                // - Player 2 90
+                scores1.add(new Score(groupMonthlyScore1Id, member2.getId(), 90));
+                // - Player 3 80
+                scores1.add(new Score(groupMonthlyScore1Id, member3.getId(), 80));
+                // - Player 4 70
+                scores1.add(new Score(groupMonthlyScore1Id, member4.getId(), 70));
+                // - Player 5 55
+                scores1.add(new Score(groupMonthlyScore1Id, member5.getId(), 55));
+                // - Player 6 43
+                scores1.add(new Score(groupMonthlyScore1Id, member6.getId(), 43));
+                // - Player 7 18
+                scores1.add(new Score(groupMonthlyScore1Id, member7.getId(), 18));
+                // - Player 8 2
+                scores1.add(new Score(groupMonthlyScore1Id, member8.getId(), 2));
+
+                scoreDao.insertAll(scores1.toArray(new Score[scores1.size()]));
+
+                // Group monthly score 2
+                month = 2;
+
+                GroupMonthlyScore groupMonthlyScore2 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore2Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore2);
+
+                List<Score> scores2 = new ArrayList<Score>();
+                // Feb Everyone scores, 4 people for position 1.
+                // - Player 1 77
+                scores2.add(new Score(groupMonthlyScore2Id, member1.getId(), 77));
+                // - Player 2 77
+                scores2.add(new Score(groupMonthlyScore2Id, member2.getId(), 77));
+                // - Player 3 77
+                scores2.add(new Score(groupMonthlyScore2Id, member3.getId(), 77));
+                // - Player 4 77
+                scores2.add(new Score(groupMonthlyScore2Id, member4.getId(), 77));
+                // - Player 5 34
+                scores2.add(new Score(groupMonthlyScore2Id, member5.getId(), 34));
+                // - Player 6 34
+                scores2.add(new Score(groupMonthlyScore2Id, member6.getId(), 34));
+                // - Player 7 17
+                scores2.add(new Score(groupMonthlyScore2Id, member7.getId(), 17));
+                // - Player 8 8
+                scores2.add(new Score(groupMonthlyScore2Id, member8.getId(), 8));
+
+                scoreDao.insertAll(scores2.toArray(new Score[scores2.size()]));
+
+                // Group monthly score 3
+                month = 3;
+
+                GroupMonthlyScore groupMonthlyScore3 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore3Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore3);
+
+                List<Score> scores3 = new ArrayList<Score>();
+                // Mar Everyone scores, 2 people for position 1, 4 for position 3.
+                // - Player 1 100
+                scores3.add(new Score(groupMonthlyScore3Id, member1.getId(), 100));
+                // - Player 2 100
+                scores3.add(new Score(groupMonthlyScore3Id, member2.getId(), 100));
+                // - Player 3 62
+                scores3.add(new Score(groupMonthlyScore3Id, member3.getId(), 62));
+                // - Player 4 62
+                scores3.add(new Score(groupMonthlyScore3Id, member4.getId(), 62));
+                // - Player 5 62
+                scores3.add(new Score(groupMonthlyScore3Id, member5.getId(), 62));
+                // - Player 6 62
+                scores3.add(new Score(groupMonthlyScore3Id, member6.getId(), 62));
+                // - Player 7 62
+                scores3.add(new Score(groupMonthlyScore3Id, member7.getId(), 62));
+                // - Player 8 62
+                scores3.add(new Score(groupMonthlyScore3Id, member8.getId(), 62));
+
+                scoreDao.insertAll(scores3.toArray(new Score[scores3.size()]));
+
+                // Group monthly score 4
+                quarter = 2;
+                month = 4;
+
+                GroupMonthlyScore groupMonthlyScore4 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore4Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore4);
+
+                List<Score> scores4 = new ArrayList<>();
+                // Apr Everyone scores, 1 for position 1, 2 for position 2
+                // - Player 1 64
+                scores4.add(new Score(groupMonthlyScore4Id, member1.getId(), 64));
+                // - Player 2 40
+                scores4.add(new Score(groupMonthlyScore4Id, member2.getId(), 40));
+                // - Player 3 40
+                scores4.add(new Score(groupMonthlyScore4Id, member3.getId(), 40));
+                // - Player 4 35
+                scores4.add(new Score(groupMonthlyScore4Id, member4.getId(), 35));
+                // - Player 5 32
+                scores4.add(new Score(groupMonthlyScore4Id, member5.getId(), 32));
+                // - Player 6 28
+                scores4.add(new Score(groupMonthlyScore4Id, member6.getId(), 28));
+                // - Player 7 20
+                scores4.add(new Score(groupMonthlyScore4Id, member7.getId(), 20));
+                // - Player 8 15
+                scores4.add(new Score(groupMonthlyScore4Id, member8.getId(), 15));
+
+                scoreDao.insertAll(scores4.toArray(new Score[scores4.size()]));
+
+                // Group monthly score 5
+                month = 5;
+
+                GroupMonthlyScore groupMonthlyScore5 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore5Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore5);
+                // May Nobody scores
+
+                // Group monthly score 6
+                month = 6;
+
+                GroupMonthlyScore groupMonthlyScore6 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore6Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore6);
+
+                List<Score> scores6 = new ArrayList<Score>();
+                // Jun Everyone scores, 1 person for position 1, 1 for position 2, 5 for position 3
+                // - Player 1 75
+                scores6.add(new Score(groupMonthlyScore6Id, member1.getId(), 75));
+                // - Player 2 60
+                scores6.add(new Score(groupMonthlyScore6Id, member2.getId(), 60));
+                // - Player 3 55
+                scores6.add(new Score(groupMonthlyScore6Id, member3.getId(), 55));
+                // - Player 4 55
+                scores6.add(new Score(groupMonthlyScore6Id, member4.getId(), 55));
+                // - Player 5 55
+                scores6.add(new Score(groupMonthlyScore6Id, member5.getId(), 55));
+                // - Player 6 55
+                scores6.add(new Score(groupMonthlyScore6Id, member6.getId(), 55));
+                // - Player 7 55
+                scores6.add(new Score(groupMonthlyScore6Id, member7.getId(), 55));
+                // - Player 8 42
+                scores6.add(new Score(groupMonthlyScore6Id, member8.getId(), 42));
+
+                scoreDao.insertAll(scores6.toArray(new Score[scores6.size()]));
+
+                // Group monthly score 7
+                quarter = 3;
+                month = 7;
+
+                GroupMonthlyScore groupMonthlyScore7 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore7Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore7);
+
+                List<Score> scores7 = new ArrayList<>();
+                // Jul Two people score, 1 for position 1, 1 for position 2.
+                // - Player 1 4
+                scores7.add(new Score(groupMonthlyScore7Id, member1.getId(), 4));
+                // - Player 2 2
+                scores7.add(new Score(groupMonthlyScore7Id, member2.getId(), 2));
+
+                scoreDao.insertAll(scores7.toArray(new Score[scores7.size()]));
+
+                // Group monthly score 8
+                month = 8;
+
+                GroupMonthlyScore groupMonthlyScore8 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore8Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore8);
+
+                List<Score> scores8 = new ArrayList<>();
+                // Aug 8 people score for position 1.
+                // - Player 1 90
+                scores8.add(new Score(groupMonthlyScore8Id, member1.getId(), 90));
+                // - Player 2 90
+                scores8.add(new Score(groupMonthlyScore8Id, member2.getId(), 90));
+                // - Player 3 90
+                scores8.add(new Score(groupMonthlyScore8Id, member3.getId(), 90));
+                // - Player 4 90
+                scores8.add(new Score(groupMonthlyScore8Id, member4.getId(), 90));
+                // - Player 5 90
+                scores8.add(new Score(groupMonthlyScore8Id, member5.getId(), 90));
+                // - Player 6 90
+                scores8.add(new Score(groupMonthlyScore8Id, member6.getId(), 90));
+                // - Player 7 90
+                scores8.add(new Score(groupMonthlyScore8Id, member7.getId(), 90));
+                // - Player 8 90
+                scores8.add(new Score(groupMonthlyScore8Id, member8.getId(), 90));
+
+                scoreDao.insertAll(scores8.toArray(new Score[scores8.size()]));
+
+                // Group monthly score 9
+                month = 9;
+
+                GroupMonthlyScore groupMonthlyScore9 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore9Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore9);
+
+                List<Score> scores9 = new ArrayList<>();
+                // Sep 1 for position 1, 1 for position 2, 6 for position 3.
+                // - Player 1 75
+                scores9.add(new Score(groupMonthlyScore9Id, member1.getId(), 75));
+                // - Player 2 60
+                scores9.add(new Score(groupMonthlyScore9Id, member2.getId(), 60));
+                // - Player 3 55
+                scores9.add(new Score(groupMonthlyScore9Id, member3.getId(), 55));
+                // - Player 4 55
+                scores9.add(new Score(groupMonthlyScore9Id, member4.getId(), 55));
+                // - Player 5 55
+                scores9.add(new Score(groupMonthlyScore9Id, member5.getId(), 55));
+                // - Player 6 55
+                scores9.add(new Score(groupMonthlyScore9Id, member6.getId(), 55));
+                // - Player 7 55
+                scores9.add(new Score(groupMonthlyScore9Id, member7.getId(), 55));
+                // - Player 8 55
+                scores9.add(new Score(groupMonthlyScore9Id, member8.getId(), 55));
+
+                scoreDao.insertAll(scores9.toArray(new Score[scores9.size()]));
+
+                //Group monthly score 10
+                quarter = 4;
+                month = 10;
+
+                GroupMonthlyScore groupMonthlyScore10 = new GroupMonthlyScore(groupId, year, quarter, month);
+                int groupMonthlyScore10Id = (int) groupMonthlyScoreDao.insert(groupMonthlyScore10);
+
+                List<Score> scores10 = new ArrayList<>();
+                // Oct 1 for each position, added in a jumbled order.
+                // - Player 1 32
+                scores10.add(new Score(groupMonthlyScore10Id, member1.getId(), 32));
+                // - Player 2 5
+                scores10.add(new Score(groupMonthlyScore10Id, member2.getId(), 5));
+                // - Player 3 42
+                scores10.add(new Score(groupMonthlyScore10Id, member3.getId(), 42));
+                // - Player 4 80
+                scores10.add(new Score(groupMonthlyScore10Id, member4.getId(), 80));
+                // - Player 5 25
+                scores10.add(new Score(groupMonthlyScore10Id, member5.getId(), 25));
+                // - Player 6 63
+                scores10.add(new Score(groupMonthlyScore10Id, member6.getId(), 63));
+                // - Player 7 80
+                scores10.add(new Score(groupMonthlyScore10Id, member7.getId(), 80));
+                // - Player 8 70
+                scores10.add(new Score(groupMonthlyScore10Id, member8.getId(), 70));
+
+                scoreDao.insertAll(scores10.toArray(new Score[scores10.size()]));
             });
         }
     };
