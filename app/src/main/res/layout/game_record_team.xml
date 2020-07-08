@@ -9,11 +9,20 @@
         android:id="@+id/team"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="4dp"
+        app:layout_constraintLeft_toRightOf="@id/place"
+        app:layout_constraintTop_toTopOf="@id/place"
         android:layout_marginLeft="16dp"
         tools:text="Team 1"/>
+
+    <TextView
+        android:id="@+id/place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="1st Place"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="16dp"/>
 
     <TextView
         android:id="@+id/players"

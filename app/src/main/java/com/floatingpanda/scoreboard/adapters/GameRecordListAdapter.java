@@ -84,10 +84,8 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     }
 
     private void populateCompetitive(GameRecordViewHolder holder, boolean teams, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
-        holder.firstPlaceTextView.setText("1st Place");
+        holder.wonLostTextView.setVisibility(View.GONE);
         holder.firstPlaceWrapper.removeAllViews();
-        holder.secondPlaceWrapper.removeAllViews();
-        holder.thirdPlaceWrapper.removeAllViews();
 
         for (PlayerTeamWithPlayers playerTeamWithPlayers : playerTeamsWithPlayers) {
             PlayerTeam playerTeam = playerTeamWithPlayers.getPlayerTeam();
@@ -97,31 +95,23 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
                 continue;
             }
 
-            if (playerTeam.getPosition() == 1) {
+            if (playerTeam.getPosition() <= 3) {
                 View view = createTeamView(playerTeam, players, teams);
                 holder.firstPlaceWrapper.addView(view);
-            } else if (playerTeam.getPosition() == 2) {
-                View view = createTeamView(playerTeam, players, teams);
-                holder.secondPlaceWrapper.addView(view);
-            } else if (playerTeam.getPosition() == 3) {
-                View view = createTeamView(playerTeam, players, teams);
-                holder.thirdPlaceWrapper.addView(view);
+            } else {
+                break;
             }
         }
     }
 
     private void populateCooperative(GameRecordViewHolder holder, boolean won, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
         holder.firstPlaceWrapper.removeAllViews();
-        holder.secondPlaceWrapper.removeAllViews();
-        holder.thirdPlaceWrapper.removeAllViews();
-        holder.secondPlaceTextView.setVisibility(View.GONE);
-        holder.thirdPlaceTextView.setVisibility(View.GONE);
+        holder.wonLostTextView.setVisibility(View.VISIBLE);
 
-        //TODO hide first place text view and move the WON/LOST thin to replace the teamCountHeader/Output textviews?
         if (won) {
-            holder.firstPlaceTextView.setText("WON");
+            holder.wonLostTextView.setText("WON");
         } else {
-            holder.firstPlaceTextView.setText("LOST");
+            holder.wonLostTextView.setText("LOST");
         }
 
         for (PlayerTeamWithPlayers playerTeamWithPlayers : playerTeamsWithPlayers) {
@@ -139,12 +129,27 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
     private View createTeamView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
         View view = inflater.inflate(R.layout.game_record_team, null);
+        TextView placeTextView = view.findViewById(R.id.place);
         TextView teamTextView = view.findViewById(R.id.team);
         TextView playersTextView = view.findViewById(R.id.players);
         teamTextView.setText("Team " + playerTeam.getTeamNumber());
 
+        switch (playerTeam.getPosition()) {
+            case 1 :
+                placeTextView.setText("1st Place");
+                break;
+            case 2:
+                placeTextView.setText("2nd Place");
+                break;
+            case 3:
+                placeTextView.setText("3rd Place");
+                break;
+            default:
+                placeTextView.setText("ERROR");
+        }
+
         if (!teams) {
-            teamTextView.setVisibility(View.INVISIBLE);
+            teamTextView.setVisibility(View.GONE);
         } else {
             teamTextView.setVisibility(View.VISIBLE);
         }
@@ -172,8 +177,8 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
     class GameRecordViewHolder extends RecyclerView.ViewHolder {
         private final TextView gameNameTextView, dateTextView, timeTextView, difficultyTextView, teamCountHeaderTextView, teamCountOutputTextView,
-                playModeTextView, firstPlaceTextView, secondPlaceTextView, thirdPlaceTextView;
-        private final LinearLayout firstPlaceWrapper, secondPlaceWrapper, thirdPlaceWrapper;
+                playModeTextView, wonLostTextView;
+        private final LinearLayout firstPlaceWrapper;
 
         private GameRecordViewHolder(View itemView) {
             super(itemView);
@@ -185,13 +190,9 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             teamCountHeaderTextView = itemView.findViewById(R.id.records_player_count_header);
             teamCountOutputTextView = itemView.findViewById(R.id.records_player_count_output);
             playModeTextView = itemView.findViewById(R.id.records_play_mode);
-            firstPlaceTextView = itemView.findViewById(R.id.records_first_place);
-            secondPlaceTextView = itemView.findViewById(R.id.records_second_place);
-            thirdPlaceTextView = itemView.findViewById(R.id.records_third_place);
+            wonLostTextView = itemView.findViewById(R.id.records_won_lost);
 
             firstPlaceWrapper = itemView.findViewById(R.id.records_first_wrapper);
-            secondPlaceWrapper = itemView.findViewById(R.id.records_second_wrapper);
-            thirdPlaceWrapper = itemView.findViewById(R.id.records_third_wrapper);
         }
     }
 }
