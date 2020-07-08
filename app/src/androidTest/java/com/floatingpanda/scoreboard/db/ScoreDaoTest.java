@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -133,6 +134,26 @@ public class ScoreDaoTest {
         assertThat(score.getScore(), is(TestData.SCORE_4.getScore()));
         assertThat(score, is(not(TestData.SCORE_5)));
         assertThat(score, is(not(TestData.SCORE_1)));
+    }
+
+    @Test
+    public void getGroupMembersMonthlyScoreByGroupMonthlyScoreIdAndMemberIdAfterAddingScoreToIt() throws InterruptedException {
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+
+        Score score = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_2.getId(), TestData.MEMBER_1.getId()));
+        assertThat(score, is(TestData.SCORE_4));
+        assertThat(score.getScore(), is(TestData.SCORE_4.getScore()));
+        assertThat(score, is(not(TestData.SCORE_5)));
+        assertThat(score, is(not(TestData.SCORE_1)));
+
+        int addScore = 10;
+        scoreDao.addScore(score.getGroupMonthlyScoreId(), score.getMemberId(), addScore);
+
+        score = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_2.getId(), TestData.MEMBER_1.getId()));
+        assertThat(score.getId(), is(TestData.SCORE_4.getId()));
+        assertThat(score.getGroupMonthlyScoreId(), is(TestData.SCORE_4.getGroupMonthlyScoreId()));
+        assertThat(score.getMemberId(), is(TestData.SCORE_4.getMemberId()));
+        assertThat(score.getScore(), is(TestData.SCORE_4.getScore() + 10));
     }
 
     @Test

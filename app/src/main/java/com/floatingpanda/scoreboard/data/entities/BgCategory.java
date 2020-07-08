@@ -26,7 +26,6 @@ public class BgCategory implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "category_id")
-    @NonNull
     private int id;
 
     @ColumnInfo(name = "category_name")

@@ -118,7 +118,7 @@ public class GroupDetailsFragment extends Fragment {
     private void startDeleteActivity(Group group) {
         //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Delete Member?")
+        builder.setTitle("Delete Group?")
                 .setMessage("Are you sure you want to delete " + group.getGroupName() + "?\n" +
                         "The member will be removed from winner lists, groups and game records, and " +
                         "their skill ratings will be deleted.\n" +

@@ -112,7 +112,7 @@ public class ChoosePlayerSharedViewModelTest {
 
         assertNotNull(teamOfPlayers);
         assertThat(teamOfPlayers.getTeamNo(), is(teamNo));
-        assertThat(teamOfPlayers.getPlace(), is(teamNo));
+        assertThat(teamOfPlayers.getPosition(), is(teamNo));
         assertTrue(teamOfPlayers.getMembers().isEmpty());
     }
 

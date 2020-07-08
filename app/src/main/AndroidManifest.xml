@@ -25,6 +25,7 @@
         <activity android:name=".views.activities.ChoosePlayersActivity" />
         <activity android:name=".views.activities.ConfirmPlayersActivity" />
         <activity android:name=".views.activities.ConfirmGameRecordActivity" />
+        <activity android:name=".views.activities.GroupMonthlyScoreActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

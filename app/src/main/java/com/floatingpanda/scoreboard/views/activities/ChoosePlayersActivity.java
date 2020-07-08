@@ -68,6 +68,13 @@ public class ChoosePlayersActivity extends AppCompatActivity {
 
                 choosePlayerSharedViewModel.updateObservablePotentialPlayers();
 
+
+                if (gameRecord.getTeams() ==  false) {
+                    //TODO add in code to only allow 1 person per team if playing no teams.
+                    // Check if more than 1 person picked
+                    // If so, popup toast and return, don't go to next page.
+                }
+
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
 
                 if (viewPager.getCurrentItem() < (noOfTeams - 1)) {

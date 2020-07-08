@@ -84,6 +84,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     }
 
     private void populateCompetitive(GameRecordViewHolder holder, boolean teams, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
+        holder.firstPlaceTextView.setText("1st Place");
         holder.firstPlaceWrapper.removeAllViews();
         holder.secondPlaceWrapper.removeAllViews();
         holder.thirdPlaceWrapper.removeAllViews();
@@ -144,6 +145,8 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
         if (!teams) {
             teamTextView.setVisibility(View.INVISIBLE);
+        } else {
+            teamTextView.setVisibility(View.VISIBLE);
         }
 
         StringBuilder sb = new StringBuilder();

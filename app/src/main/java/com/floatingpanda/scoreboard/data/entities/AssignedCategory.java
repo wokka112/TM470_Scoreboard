@@ -6,7 +6,6 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
-//No need to cascade updates as ids should not change???
 @Entity(tableName = "assigned_categories", primaryKeys = {"bg_id", "category_id"},
     foreignKeys = {@ForeignKey(entity = BoardGame.class,
             parentColumns = "bg_id",

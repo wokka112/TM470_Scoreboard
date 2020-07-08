@@ -1,17 +1,21 @@
 package com.floatingpanda.scoreboard.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.Embedded;
 import androidx.room.Junction;
 import androidx.room.Relation;
 
 import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.entities.Score;
 
 import java.util.List;
 
-public class ScoreWithMemberDetails implements Comparable<ScoreWithMemberDetails>{
+public class ScoreWithMemberDetails implements Comparable<ScoreWithMemberDetails>, Parcelable {
     @Embedded
     public Score score;
     @Relation(
@@ -23,6 +27,11 @@ public class ScoreWithMemberDetails implements Comparable<ScoreWithMemberDetails
     public ScoreWithMemberDetails(Score score, Member member) {
         this.score = score;
         this.member = member;
+    }
+
+    public ScoreWithMemberDetails(Parcel source) {
+        score = source.readParcelable(Score.class.getClassLoader());
+        member = source.readParcelable(Member.class.getClassLoader());
     }
 
     public Score getScore() { return score; }
@@ -40,4 +49,27 @@ public class ScoreWithMemberDetails implements Comparable<ScoreWithMemberDetails
             return -1;
         }
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(score, 0);
+        dest.writeParcelable(member, 0);
+    }
+
+    public static final Creator<ScoreWithMemberDetails> CREATOR = new Creator<ScoreWithMemberDetails>() {
+        @Override
+        public ScoreWithMemberDetails[] newArray(int size) {
+            return new ScoreWithMemberDetails[size];
+        }
+
+        @Override
+        public ScoreWithMemberDetails createFromParcel(Parcel source) {
+            return new ScoreWithMemberDetails(source);
+        }
+    };
 }

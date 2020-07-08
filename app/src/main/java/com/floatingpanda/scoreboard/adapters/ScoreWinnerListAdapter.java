@@ -25,6 +25,7 @@ import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Score;
+import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
 
@@ -33,11 +34,12 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
     private final LayoutInflater inflater;
     private Context context;
     private List<GroupMonthlyScoreWithScoresAndMemberDetails> groupMonthlyScoresWithScoresAndMemberDetails;
-    //private DetailAdapterInterface listener;
+    private DetailAdapterInterface listener;
 
-    public ScoreWinnerListAdapter(Context context) {
+    public ScoreWinnerListAdapter(Context context, DetailAdapterInterface listener) {
         this.context = context;
         inflater = LayoutInflater.from(context);
+        this.listener = listener;
     }
 
     @Override
@@ -49,7 +51,6 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
     @Override
     public void onBindViewHolder(ScoreWinnerViewHolder holder, int position) {
         //TODO make it skip months with no scores. Maybe a condition in the if like (!groupMonthlyScoresAndMemberDetails.get(position).getScoresWithMemberDetails().isEmpty())
-        //TODO make it so in a month with only 2 people with scores, the 3rd position header is turned invisible. Likewise, a 1 person scoring month make 2nd and 3rd position headers invisible.
         if (groupMonthlyScoresWithScoresAndMemberDetails != null) {
             GroupMonthlyScoreWithScoresAndMemberDetails current = groupMonthlyScoresWithScoresAndMemberDetails.get(position);
 
@@ -57,9 +58,11 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
             GroupMonthlyScore currentGroupMonthlyScore = current.getGroupMonthlyScore();
             holder.dateTextView.setText(currentGroupMonthlyScore.getMonth() + " " + currentGroupMonthlyScore.getYear());
 
+            //TODO move this logic into its own method and refactor it so it's simplified.
+            //TODO make all text begin as GONE so that if there's only 2 members with scores, there's not a "third place" with nothing in it.
             List<ScoreWithMemberDetails> currentScoresWithMemberDetails = current.getScoresWithMemberDetails();
             int previousScore = 0;
-            for (int i = 0; i < currentScoresWithMemberDetails.size(); i++) {
+            for (int i = 0; i < 3 && i < currentScoresWithMemberDetails.size(); i++) {
                 ScoreWithMemberDetails scoreWithMemberDetails = currentScoresWithMemberDetails.get(i);
                 int currentScore = scoreWithMemberDetails.getScore().getScore();
 
@@ -71,61 +74,21 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
                     holder.firstPlaceScoreTextView.setText(Integer.toString(currentScore));
                     previousScore = currentScore;
                 } else if (i == 1) {
-                    // The else fixes a bug where sometimes headers would be made invisible when they shouldn't be.
                     if (currentScore == previousScore) {
-                        Log.w("ScoreWinnerListAdapter.java", "Set second invisible. Current Group Month: " + currentGroupMonthlyScore.getMonth() + ", i: " + i + ", previous score: "
-                                + previousScore + ", current score: " + currentScore);
-                        holder.secondPlaceHeaderTextView.setVisibility(View.INVISIBLE);
-                    } else {
-                        holder.secondPlaceHeaderTextView.setVisibility(View.VISIBLE);
+                        holder.secondPlaceHeaderTextView.setText(holder.firstPlaceHeaderTextView.getText());
                     }
 
                     holder.secondPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
                     holder.secondPlaceScoreTextView.setText(Integer.toString(currentScore));
                     previousScore = currentScore;
                 } else if (i == 2) {
-                    // The else fixes a bug where sometimes headers would be made invisible when they shouldn't be.
                     if (currentScore == previousScore) {
-                        Log.w("ScoreWinnerListAdapter.java", "Set third invisible. Current Group Month: " + currentGroupMonthlyScore.getMonth() + ", i: " + i + ", previous score: "
-                                + previousScore + ", current score: " + currentScore);
-                        holder.thirdPlaceHeaderTextView.setVisibility(View.INVISIBLE);
-                    } else {
-                        holder.thirdPlaceHeaderTextView.setVisibility(View.VISIBLE);
+                        holder.thirdPlaceHeaderTextView.setText(holder.secondPlaceHeaderTextView.getText());
                     }
 
                     holder.thirdPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
                     holder.thirdPlaceScoreTextView.setText(Integer.toString(currentScore));
                     previousScore = currentScore;
-                } else {
-                    if (i > 7 || currentScore < previousScore) {
-                        break;
-                    }
-
-                    //TODO add in logic to add more players to list if needed. (Is this necessary???)
-                    // Instantiate ConstraintSet before the for loop, then add to it via a helper method that does the ConstraintSet stuff for us - getConstraints(ConstraintSet set, int nameId, int scoreId)
-                    // Then apply constraint set after the for loop is finished.
-                    /*
-                    TextView playerNameTextView = new TextView(context);
-                    playerNameTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    playerNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
-                    playerNameTextView.setId(i);
-
-                    TextView playerScoreTextView = new TextView(context);
-                    playerScoreTextView.setText(Integer.toString(scoreWithMemberDetails.getScore().getScore()));
-                    playerScoreTextView.setId(i + 20);
-
-                    holder.layout.addView(playerNameTextView);
-                    holder.layout.addView(playerScoreTextView);
-
-                    ConstraintSet constraintSet = new ConstraintSet();
-                    constraintSet.clone(holder.layout);
-                    constraintSet.connect(playerNameTextView.getId(), ConstraintSet.LEFT, R.id.winners_name_header, ConstraintSet.LEFT, 0);
-                    constraintSet.connect(playerNameTextView.getId(), ConstraintSet.RIGHT, R.id.winners_name_header, ConstraintSet.RIGHT, 0);
-                    constraintSet.connect(playerScoreTextView.getId(), ConstraintSet.LEFT, R.id.winners_score_header, ConstraintSet.LEFT, 0);
-                    constraintSet.connect(playerScoreTextView.getId(), ConstraintSet.RIGHT, R.id.winners_score_header, ConstraintSet.RIGHT, 0);
-                    constraintSet.applyTo(holder.layout);
-
-                     */
                 }
             }
         } else {
@@ -146,7 +109,7 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
     }
 
     class ScoreWinnerViewHolder extends RecyclerView.ViewHolder {
-        private final TextView firstPlaceNameTextView, firstPlaceScoreTextView, secondPlaceNameTextView, secondPlaceScoreTextView,
+        private final TextView firstPlaceNameTextView, firstPlaceScoreTextView, firstPlaceHeaderTextView, secondPlaceNameTextView, secondPlaceScoreTextView,
             secondPlaceHeaderTextView, thirdPlaceNameTextView, thirdPlaceScoreTextView, thirdPlaceHeaderTextView, dateTextView;
         private final ConstraintLayout layout;
 
@@ -155,6 +118,7 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
 
             firstPlaceNameTextView = itemView.findViewById(R.id.winners_first_player_name);
             firstPlaceScoreTextView = itemView.findViewById(R.id.winners_first_score);
+            firstPlaceHeaderTextView = itemView.findViewById(R.id.winners_first_header);
             secondPlaceNameTextView = itemView.findViewById(R.id.winners_second_player_name);
             secondPlaceScoreTextView = itemView.findViewById(R.id.winners_second_score);
             secondPlaceHeaderTextView = itemView.findViewById(R.id.winners_second_header);
@@ -164,6 +128,15 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
             dateTextView = itemView.findViewById(R.id.winners_date);
 
             layout = itemView.findViewById(R.id.winners_layout);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    GroupMonthlyScoreWithScoresAndMemberDetails groupMonthlyScoreWithScoresAndMemberDetails = groupMonthlyScoresWithScoresAndMemberDetails.get(position);
+                    listener.viewDetails(groupMonthlyScoreWithScoresAndMemberDetails);
+                }
+            });
         }
     }
 }

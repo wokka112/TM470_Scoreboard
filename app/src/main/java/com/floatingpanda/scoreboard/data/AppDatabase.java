@@ -47,8 +47,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class, GroupMember.class, Member.class, PlayMode.class,
-            GameRecord.class, Player.class, PlayerTeam.class, GroupMonthlyScore.class, Score.class}, version = 30, exportSchema = false)
+@Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class,
+        GroupMember.class, Member.class, PlayMode.class, GameRecord.class, Player.class,
+        PlayerTeam.class, GroupMonthlyScore.class, Score.class}, version = 30, exportSchema = false)
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -353,7 +354,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 //Can only have 1 team for cooperative and solitaire games.
                 // record 4 - Dawn of Madness, cooperative, 1 team, 4 players, win.
                 GameRecord gameRecord4 = new GameRecord(group1.getId(), bg4.getBgName(), bg4.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.COOPERATIVE,
-                        1, false);
+                        1, true);
                 gameRecordDao.insert(gameRecord4);
 
                 //record 5 - Dawn of Madness, cooperative, 1 team, 6 players, lose.

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,7 +43,6 @@ import java.util.List;
 public class AddGameRecordActivity extends AppCompatActivity {
 
     private final int CHOOSE_PLAYERS_REQUEST_CODE = 1;
-    private final int CONFIRM_GAME_RECORD_REQUEST_CODE = 2;
 
     public static final String EXTRA_REPLY_PLAYERS = "com.floatingpanda.scoreboard.REPLY_PLAYERS";
     public static final String EXTRA_REPLY_GAME_RECORD = "com.floatingpanda.scoreboard.REPLY_GAME_RECORD";
@@ -61,6 +61,8 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
     private Group group;
     private String boardGameName;
+
+    private KeyListener editTextKeyListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,8 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         dateEditText = findViewById(R.id.add_game_record_datetime_edittext);
         timeEditText = findViewById(R.id.add_game_record_time_edittext);
+
+        editTextKeyListener = playerCountEditText.getKeyListener();
 
         setDateEditText();
         setTimeEditText();
@@ -167,11 +171,11 @@ public class AddGameRecordActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == teamsRadioButton.getId()) {
-                    playerCountTextView.setText("Teams");
+                    playerCountTextView.setText("Teams:");
                 }
 
                 if (checkedId == noTeamsRadioButton.getId()) {
-                    playerCountTextView.setText("Players");
+                    playerCountTextView.setText("Players:");
                 }
             }
         });
@@ -207,7 +211,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
     private GameRecord createGameRecord() {
         int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
-        //TODO change this so user inputs a date/time.
         Date date = calendar.getTime();
         Log.w("AddGameRecordAct.java", "Date: " + date.toString());
         PlayMode.PlayModeEnum playModePlayed = getPlayModePlayed();
@@ -278,7 +281,7 @@ public class AddGameRecordActivity extends AppCompatActivity {
     }
 
     private void setDateEditText() {
-        int year = calendar.get(Calendar.DAY_OF_MONTH);
+        int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
@@ -360,8 +363,11 @@ public class AddGameRecordActivity extends AppCompatActivity {
     private void setToCompetitive() {
         //Unlock everything.
         teamsRadioGroup.setClickable(true);
-        playerCountEditText.setClickable(true);
+        playerCountEditText.setKeyListener(editTextKeyListener);
+        playerCountEditText.setText("2");
         playerCountEditText.setFocusable(true);
+        playerCountEditText.setFocusableInTouchMode(true);
+        playerCountEditText.requestFocus();
 
         //TODO this feels like spaghetti code, look into it.
         if (!teamsRadioButton.isClickable()) {
@@ -391,8 +397,8 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         //Set teams to 1
         playerCountEditText.setText("1");
+        playerCountEditText.setKeyListener(null);
         playerCountEditText.setFocusable(false);
-        playerCountEditText.setClickable(false);
         playerCountEditText.clearFocus();
         playerCountEditText.setAlpha(0.5f);
 
@@ -414,9 +420,10 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         //Set players to 1 and lock it
         playerCountEditText.setText("1");
+        playerCountEditText.setKeyListener(null);
         playerCountEditText.setFocusable(false);
-        playerCountEditText.setClickable(false);
         playerCountEditText.clearFocus();
+
         playerCountEditText.setAlpha(0.5f);
 
         //Show win lose options

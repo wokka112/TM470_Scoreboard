@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Query;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -346,6 +347,27 @@ public class GroupMonthlyScoreDaoTest {
             assertTrue(scoreWithMemberDetails.getScore().getScore() <= previousScore);
             previousScore = scoreWithMemberDetails.getScore().getScore();
         }
+    }
+
+    @Test
+    public void getGroupMonthlyScoreIdWhenAllInserted() throws InterruptedException {
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+
+        int groupId = TestData.GROUP_MONTHLY_SCORE_2.getGroupId();
+        int year = TestData.GROUP_MONTHLY_SCORE_2.getYear();
+        int month = TestData.GROUP_MONTHLY_SCORE_2.getMonth();
+
+        int groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(groupId, year, month);
+        assertTrue(groupMonthlyScoreId == TestData.GROUP_MONTHLY_SCORE_2.getId());
+        assertFalse(groupMonthlyScoreId == TestData.GROUP_MONTHLY_SCORE_3.getId());
+
+        groupId = TestData.GROUP_MONTHLY_SCORE_3.getGroupId();
+        year = TestData.GROUP_MONTHLY_SCORE_3.getYear();
+        month = TestData.GROUP_MONTHLY_SCORE_3.getMonth();
+
+        groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(groupId, year, month);
+        assertTrue(groupMonthlyScoreId == TestData.GROUP_MONTHLY_SCORE_3.getId());
+        assertFalse(groupMonthlyScoreId == TestData.GROUP_MONTHLY_SCORE_2.getId());
     }
 
     private void testGroupMonthlyScoresWithScoresAndMemberDetails(List<GroupMonthlyScoreWithScoresAndMemberDetails> groupMonthlyScoresWithScoresAndMemberDetails) {

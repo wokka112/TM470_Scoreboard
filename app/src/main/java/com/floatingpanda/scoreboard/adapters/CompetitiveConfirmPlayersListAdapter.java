@@ -46,12 +46,12 @@ public class CompetitiveConfirmPlayersListAdapter extends RecyclerView.Adapter<C
             if (position == 0) {
                 lastFinishingPlace = 0;
             } else {
-                lastFinishingPlace = playerTeams.get(position - 1).getPlace();
+                lastFinishingPlace = playerTeams.get(position - 1).getPosition();
             }
             Log.w("GameRecordPlayListAdapt.java", "Initial Last Finishing Position: " + lastFinishingPlace);
-            Log.w("GameRecordPlayListAdapt.java", "Current team: " + current.getTeamNo() + ", Position: " + current.getPlace());
+            Log.w("GameRecordPlayListAdapt.java", "Current team: " + current.getTeamNo() + ", Position: " + current.getPosition());
             //Get the current finishing place
-            int currentFinishingPlace = current.getPlace();
+            int currentFinishingPlace = current.getPosition();
 
             //While lastFinishingPlace is less than the current place, increment the last finishing place and then pop in a new place header.
             while (lastFinishingPlace < currentFinishingPlace) {

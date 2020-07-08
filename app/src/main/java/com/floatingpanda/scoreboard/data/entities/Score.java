@@ -1,5 +1,8 @@
 package com.floatingpanda.scoreboard.data.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -16,7 +19,7 @@ import androidx.room.PrimaryKey;
         parentColumns = "member_id",
         childColumns = "member_id",
         onDelete = ForeignKey.CASCADE)})
-public class Score {
+public class Score implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "score_id")
@@ -68,6 +71,14 @@ public class Score {
         this(groupMonthlyScoreId, memberId, 0);
     }
 
+    @Ignore
+    public Score(Parcel source) {
+        this.id = source.readInt();
+        this.groupMonthlyScoreId = source.readInt();
+        this.memberId = source.readInt();
+        this.score = source.readInt();
+    }
+
     /**
      * Updates the score by adding scoreChange to the current score. You can reduce a score by
      * providing a negative number for scoreChange.
@@ -95,4 +106,29 @@ public class Score {
         return (score.getGroupMonthlyScoreId() == this.getGroupMonthlyScoreId()
                 && score.getMemberId() == this.getMemberId());
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(groupMonthlyScoreId);
+        dest.writeInt(memberId);
+        dest.writeInt(score);
+    }
+
+    public static final Creator<Score> CREATOR = new Creator<Score>() {
+        @Override
+        public Score[] newArray(int size) {
+            return new Score[size];
+        }
+
+        @Override
+        public Score createFromParcel(Parcel source) {
+            return new Score(source);
+        }
+    };
 }
