@@ -821,6 +821,69 @@ public abstract class AppDatabase extends RoomDatabase {
                 scores10.add(new Score(groupMonthlyScore10Id, member8.getId(), 70));
 
                 scoreDao.insertAll(scores10.toArray(new Score[scores10.size()]));
+
+                // GROUP 1 CATEGORY SKILL RATINGS //
+
+                GroupCategorySkillRatingDao groupCategorySkillRatingDao = INSTANCE.groupCategorySkillRatingDao();
+
+                // CATEGORY: STRATEGY //
+                List<GroupCategorySkillRating> group1StrategySkillRatings = new ArrayList<>();
+
+                //Member 1 - 1423, 6
+                GroupCategorySkillRating groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member1.getId(), strategy.getId(), 1423.40, 6);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 2 - 1750, 42
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member2.getId(), strategy.getId(), 1750.00, 42);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 3 - 1575, 3
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member3.getId(), strategy.getId(), 1575.00, 3);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 4 - 900.91, 60
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member4.getId(), strategy.getId(), 900.91, 60);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 5 - 1423.40, 1
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member5.getId(), strategy.getId(), 1423.40, 1);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 6 - 1642.35, 20
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member6.getId(), strategy.getId(), 1642.35, 20);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 7 - 1200, 20
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member7.getId(), strategy.getId(), 1200.73, 20);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                //Member 8 - 1520, 1
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member8.getId(), strategy.getId(), 1520.68, 1);
+                group1StrategySkillRatings.add(groupCategorySkillRating);
+
+                groupCategorySkillRatingDao.insertAll(group1StrategySkillRatings.toArray(new GroupCategorySkillRating[group1StrategySkillRatings.size()]));
+
+
+                // CATEGORY: LUCK //
+                List<GroupCategorySkillRating> group1LuckSkillRatings = new ArrayList<>();
+
+                //Member 1 - 1464, 10
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member1.getId(), luck.getId(), 1464.00, 10);
+                group1LuckSkillRatings.add(groupCategorySkillRating);
+
+                //Member 2 - 1800, 37
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member2.getId(), luck.getId(), 1800.80, 37);
+                group1LuckSkillRatings.add(groupCategorySkillRating);
+
+                //Member 3 - 1515, 1
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member3.getId(), luck.getId(), 1515.00, 1);
+                group1LuckSkillRatings.add(groupCategorySkillRating);
+
+                //Member 4 - 1356.08, 12
+                groupCategorySkillRating = new GroupCategorySkillRating(group1.getId(), member4.getId(), luck.getId(), 1356.08, 12);
+                group1LuckSkillRatings.add(groupCategorySkillRating);
+
+                groupCategorySkillRatingDao.insertAll(group1LuckSkillRatings.toArray(new GroupCategorySkillRating[group1LuckSkillRatings.size()]));
             });
         }
     };

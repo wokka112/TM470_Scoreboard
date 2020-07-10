@@ -51,7 +51,7 @@ public interface GroupCategorySkillRatingDao {
     @Delete
     void delete(GroupCategorySkillRating groupCategorySkillRating);
 
-    @Query("SELECT * FROM GroupCategorySkillRatingWithMemberDetailsView WHERE category_id LIKE :categoryId AND group_id LIKE :groupId ORDER BY skill_rating, nickname DESC")
+    @Query("SELECT * FROM GroupCategorySkillRatingWithMemberDetailsView WHERE category_id LIKE :categoryId AND group_id LIKE :groupId ORDER BY skill_rating DESC, nickname ASC")
     LiveData<List<GroupCategorySkillRatingWithMemberDetailsView>> getGroupSkillRatingsWithMemberDetailsByCategoryIdAndGroupId(int categoryId, int groupId);
 
     /*

@@ -98,8 +98,6 @@ public class BoardGameRepository {
         });
     }
 
-    //TODO add testing to ensure assigned categories with this bg are deleted.
-    // Need to find how to add appropriate asserts for this really.
     public void delete(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.delete(boardGame);
