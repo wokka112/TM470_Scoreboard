@@ -21,8 +21,11 @@ public interface AssignedCategoryDao {
     List<AssignedCategory> findNonLiveDataByBgId(int bgId);
 
     //Used for testing purposes
-    @Query("SELECT * FROM assigned_categories WHERE category_id like :categoryId")
+    @Query("SELECT * FROM assigned_categories WHERE category_id LIKE :categoryId")
     List<AssignedCategory> findNonLiveDataByCategoryId(int categoryId);
+
+    @Query("SELECT category_id FROM assigned_categories WHERE bg_id LIKE :bgId")
+    List<Integer> getAllCategoryIdsByBoardGameId(int bgId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(AssignedCategory... assignedCategories);

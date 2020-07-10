@@ -96,7 +96,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             }
 
             if (playerTeam.getPosition() <= 3) {
-                View view = createTeamView(playerTeam, players, teams);
+                View view = createCompetitiveTeamTextView(playerTeam, players, teams);
                 holder.firstPlaceWrapper.addView(view);
             } else {
                 break;
@@ -122,17 +122,16 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
                 continue;
             }
 
-            View view = createTeamView(playerTeam, players, false);
+            View view = createCooperativeTeamOrSolitaireTextView(playerTeam, players, false);
             holder.firstPlaceWrapper.addView(view);
         }
     }
 
-    private View createTeamView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
-        View view = inflater.inflate(R.layout.game_record_team, null);
+    private View createCompetitiveTeamTextView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
+        View view = inflater.inflate(R.layout.game_record_competitive_team, null);
         TextView placeTextView = view.findViewById(R.id.place);
         TextView teamTextView = view.findViewById(R.id.team);
         TextView playersTextView = view.findViewById(R.id.players);
-        teamTextView.setText("Team " + playerTeam.getTeamNumber());
 
         switch (playerTeam.getPosition()) {
             case 1 :
@@ -151,8 +150,27 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         if (!teams) {
             teamTextView.setVisibility(View.GONE);
         } else {
+            teamTextView.setText("Team " + playerTeam.getTeamNumber());
             teamTextView.setVisibility(View.VISIBLE);
         }
+
+        StringBuilder sb = new StringBuilder();
+        for (Player player : players) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+
+            sb.append(player.getMemberNickname());
+        }
+
+        playersTextView.setText(sb.toString());
+
+        return view;
+    }
+
+    private View createCooperativeTeamOrSolitaireTextView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
+        View view = inflater.inflate(R.layout.game_record_cooperative_solitaire_team, null);
+        TextView playersTextView = view.findViewById(R.id.players);
 
         StringBuilder sb = new StringBuilder();
         for (Player player : players) {

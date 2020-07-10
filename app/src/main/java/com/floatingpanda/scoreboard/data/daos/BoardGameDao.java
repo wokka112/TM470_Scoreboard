@@ -33,6 +33,9 @@ public interface BoardGameDao {
     @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
     BoardGame findNonLiveDataByName(String bgName);
 
+    @Query("SELECT bg_id FROM boardgames WHERE bg_name LIKE :bgName")
+    int findBoardGameIdByBoardGameName(String bgName);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(BoardGame... boardGames);
 
@@ -47,6 +50,7 @@ public interface BoardGameDao {
 
     @Delete
     void delete(BoardGame boardGame);
+
 
     @Transaction
     @Query("SELECT * FROM boardgames")

@@ -72,4 +72,47 @@ public class CalculatorTest {
             assertNotEquals(0, teamOfPlayers.getScore());
         }
     }
+
+    @Test
+    public void testCalculateCategoryPairwiseEloRatings() {
+        List<CategoryPairwiseEloRatingChange> categoryPairwiseEloRatingChanges = new ArrayList<>();
+        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 1, 1500));
+        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 1, 1400));
+        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 3, 1700));
+        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 4, 1200));
+
+        Calculator calculator = new Calculator();
+        calculator.calculateCategoryPairwiseEloRatings(categoryPairwiseEloRatingChanges, 30);
+
+        //Testing player 1 - Rating change should be roughly +7.7
+        assertEquals(7.7, categoryPairwiseEloRatingChanges.get(0).getEloRatingChange(), 0.5);
+
+        //Testing player 2 - Rating chage should be roughly +12.3
+        assertEquals(12.3, categoryPairwiseEloRatingChanges.get(1).getEloRatingChange(), 0.5);
+
+        //Testing player 3 - Rating change should be roughly -15.3
+        assertEquals(-15.3, categoryPairwiseEloRatingChanges.get(2).getEloRatingChange(), 0.5);
+
+        //Testing player 4 - Rating change should be roughly -4.7
+        assertEquals(-4.7, categoryPairwiseEloRatingChanges.get(3).getEloRatingChange(), 0.5);
+    }
+
+    /*
+    public void calculateCategoryPairwiseEloRatings(List<CategoryPairwiseEloRatingChange> categoryPairwiseEloRatingChanges, int kValue) {
+        for (int i = 0; i < categoryPairwiseEloRatingChanges.size(); i++) {
+            CategoryPairwiseEloRatingChange playerIRating = categoryPairwiseEloRatingChanges.get(i);
+
+            for (int j = i +1; j < categoryPairwiseEloRatingChanges.size(); j++) {
+                CategoryPairwiseEloRatingChange playerJRating = categoryPairwiseEloRatingChanges.get(j);
+
+                //Sort out rating change for i and store it.
+                double iRatingChange = eloSkillRatingCalculator.calculateSkillRatingChange(playerIRating, playerJRating, kValue);
+                playerIRating.increaseEloRatingChange(iRatingChange);
+                //Sort out rating change for j and store it.
+                double jRatingChange = eloSkillRatingCalculator.calculateSkillRatingChange(playerJRating, playerIRating, kValue);
+                playerJRating.increaseEloRatingChange(jRatingChange);
+            }
+        }
+    }
+     */
 }

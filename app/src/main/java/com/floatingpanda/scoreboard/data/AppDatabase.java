@@ -14,6 +14,7 @@ import com.floatingpanda.scoreboard.data.daos.AssignedCategoryDao;
 import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
+import com.floatingpanda.scoreboard.data.daos.GroupCategorySkillRatingDao;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMonthlyScoreDao;
@@ -27,6 +28,7 @@ import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
 import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.Member;
@@ -49,7 +51,8 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class,
         GroupMember.class, Member.class, PlayMode.class, GameRecord.class, Player.class,
-        PlayerTeam.class, GroupMonthlyScore.class, Score.class}, version = 30, exportSchema = false)
+        PlayerTeam.class, GroupMonthlyScore.class, Score.class, GroupCategorySkillRating.class}, version = 31, exportSchema = false,
+        views = {GroupCategorySkillRatingWithMemberDetailsView.class})
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -65,6 +68,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract PlayerTeamDao playerTeamDao();
     public abstract ScoreDao scoreDao();
     public abstract GroupMonthlyScoreDao groupMonthlyScoreDao();
+    public abstract GroupCategorySkillRatingDao groupCategorySkillRatingDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

@@ -5,7 +5,10 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.floatingpanda.scoreboard.CategoryPairwiseEloRatingChange;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
+import com.floatingpanda.scoreboard.data.daos.AssignedCategoryDao;
+import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMonthlyScoreDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerDao;
@@ -18,7 +21,9 @@ import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GameRecordRepository {
 
@@ -27,6 +32,8 @@ public class GameRecordRepository {
     private PlayerDao playerDao;
     private GroupMonthlyScoreDao groupMonthlyScoreDao;
     private ScoreDao scoreDao;
+    private BoardGameDao boardGameDao;
+    private AssignedCategoryDao assignedCategoryDao;
     private LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> allGameRecordsWithTeamsAndPlayers;
 
     public GameRecordRepository(Application application) {
@@ -37,6 +44,8 @@ public class GameRecordRepository {
         playerDao = db.playerDao();
         groupMonthlyScoreDao = db.groupMonthlyScoreDao();
         scoreDao = db.scoreDao();
+        boardGameDao = db.boardGameDao();
+        assignedCategoryDao = db.assignedCategoryDao();
 
         allGameRecordsWithTeamsAndPlayers = gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers();
     }
@@ -48,6 +57,8 @@ public class GameRecordRepository {
         playerDao = db.playerDao();
         groupMonthlyScoreDao = db.groupMonthlyScoreDao();
         scoreDao = db.scoreDao();
+        boardGameDao = db.boardGameDao();
+        assignedCategoryDao = db.assignedCategoryDao();
 
         allGameRecordsWithTeamsAndPlayers = gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers();
     }
@@ -63,6 +74,18 @@ public class GameRecordRepository {
     public void addGameRecordAndPlayerTeams(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
         AppDatabase.getExecutorService().execute(() -> {
             int recordId = (int) gameRecordDao.insert(gameRecord);
+
+            //Get board game id
+            int bgId = boardGameDao.findBoardGameIdByBoardGameName(gameRecord.getBoardGameName());
+            //Get associated categories
+            List<Integer> associatedCategoryIds = assignedCategoryDao.getAllCategoryIdsByBoardGameId(bgId);
+            //Create rating lists for each category.
+
+            Map<Integer, List<CategoryPairwiseEloRatingChange>> categoryIdRatings = new HashMap<>();
+            Map<Integer, List<CategoryPairwiseEloRatingChange>> teamIdRatings = new HashMap<>();
+            for (int categoryId = associatedCategoryIds.get(0); categoryId < associatedCategoryIds.size(); categoryId++) {
+
+            }
 
             //TODO make this work as a transaction.
             //For each team of players, insert the team into the db, then insert the players
@@ -86,11 +109,11 @@ public class GameRecordRepository {
                     int year = calendar.get(Calendar.YEAR);
                     //Get month
                     int month = calendar.get(Calendar.MONTH) + 1;
-                    // Get group monthly score id
+                    //Get group monthly score id
                     int groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(groupId, year, month);
-                    //  Get member id
+                    //Get member id
                     int memberId = member.getId();
-                    //   Update score for group monthly score id and member id with the new score.
+                    //Update score for group monthly score id and member id with the new score.
                     scoreDao.addScore(groupMonthlyScoreId, memberId, teamOfPlayers.getScore());
 
                     //Update skill ratings for this member.

@@ -7,6 +7,7 @@ import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
 import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
 import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.Member;
@@ -178,4 +179,66 @@ public class TestData {
 
     public static final List<Score> SCORES = Arrays.asList(SCORE_1, SCORE_2, SCORE_3, SCORE_4, SCORE_5, SCORE_6, SCORE_7, SCORE_8, SCORE_9,
             SCORE_10, SCORE_11, SCORE_12, SCORE_13, SCORE_14);
+
+    //Group 1's skill ratings
+    //Category 1
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_1 = new GroupCategorySkillRating(55, GROUP_1.getId(), GROUP_MEMBER_1.getMemberId(),
+            BG_CATEGORY_1.getId(), 1700.00, 14);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_2 = new GroupCategorySkillRating(56, GROUP_1.getId(), GROUP_MEMBER_5.getMemberId(),
+            BG_CATEGORY_1.getId(), 1700.00, 13);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_3 = new GroupCategorySkillRating(57, GROUP_1.getId(), GROUP_MEMBER_6.getMemberId(),
+            BG_CATEGORY_1.getId(), 1250.25, 26);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_4 = new GroupCategorySkillRating(58, GROUP_1.getId(), GROUP_MEMBER_7.getMemberId(),
+            BG_CATEGORY_1.getId(), 1600.42, 10);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_5 = new GroupCategorySkillRating(59, GROUP_1.getId(), GROUP_MEMBER_8.getMemberId(),
+            BG_CATEGORY_1.getId(), 1800.00, 8);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_6 = new GroupCategorySkillRating(60, GROUP_1.getId(), GROUP_MEMBER_9.getMemberId(),
+            BG_CATEGORY_1.getId(), 1400.12, 4);
+
+    //Category 2
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_7 = new GroupCategorySkillRating(61, GROUP_1.getId(), GROUP_MEMBER_1.getMemberId(),
+            BG_CATEGORY_2.getId(), 1550.00, 2);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_8 = new GroupCategorySkillRating(62, GROUP_1.getId(), GROUP_MEMBER_5.getMemberId(),
+            BG_CATEGORY_2.getId(), 1600.00, 3);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_9 = new GroupCategorySkillRating(63, GROUP_1.getId(), GROUP_MEMBER_6.getMemberId(),
+            BG_CATEGORY_2.getId(), 2000.00, 300);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_10 = new GroupCategorySkillRating(64, GROUP_1.getId(), GROUP_MEMBER_7.getMemberId(),
+            BG_CATEGORY_2.getId(), 1140.00, 72);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_11 = new GroupCategorySkillRating(65, GROUP_1.getId(), GROUP_MEMBER_8.getMemberId(),
+            BG_CATEGORY_2.getId(), 1372.00, 64);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_12 = new GroupCategorySkillRating(66, GROUP_1.getId(), GROUP_MEMBER_9.getMemberId(),
+            BG_CATEGORY_2.getId(), 900.00, 104);
+
+    //Category 3
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_13 = new GroupCategorySkillRating(67, GROUP_1.getId(), GROUP_MEMBER_1.getMemberId(),
+            BG_CATEGORY_3.getId(), 1500.00, 1);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_14 = new GroupCategorySkillRating(68, GROUP_1.getId(), GROUP_MEMBER_2.getMemberId(),
+            BG_CATEGORY_3.getId(), 1546.00, 2);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_15 = new GroupCategorySkillRating(69, GROUP_1.getId(), GROUP_MEMBER_3.getMemberId(),
+            BG_CATEGORY_3.getId(), 1235.00, 30);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_16 = new GroupCategorySkillRating(70, GROUP_1.getId(), GROUP_MEMBER_5.getMemberId(),
+            BG_CATEGORY_3.getId(), 1862.00, 20);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_17 = new GroupCategorySkillRating(71, GROUP_1.getId(), GROUP_MEMBER_6.getMemberId(),
+            BG_CATEGORY_3.getId(), 1200.00, 300);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_18 = new GroupCategorySkillRating(72, GROUP_1.getId(), GROUP_MEMBER_7.getMemberId(),
+            BG_CATEGORY_3.getId(), 1500.00, 80);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_19 = new GroupCategorySkillRating(73, GROUP_1.getId(), GROUP_MEMBER_8.getMemberId(),
+            BG_CATEGORY_3.getId(), 1400.00, 41);
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_20 = new GroupCategorySkillRating(74, GROUP_1.getId(), GROUP_MEMBER_9.getMemberId(),
+            BG_CATEGORY_3.getId(), 1300.00, 25);
+
+    //Group 2's skill ratings
+    //Category 1
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_21 = new GroupCategorySkillRating(75, GROUP_2.getId(), GROUP_MEMBER_2.getMemberId(),
+            BG_CATEGORY_1.getId(), 1300.00, 12);
+
+    //Category 3
+    public static final GroupCategorySkillRating GROUP_CATEGORY_SKILL_RATING_22 = new GroupCategorySkillRating(76, GROUP_2.getId(), GROUP_MEMBER_2.getMemberId(),
+            BG_CATEGORY_3.getId(), 1700.00, 25);
+
+    public static final List<GroupCategorySkillRating> GROUP_CATEGORY_SKILL_RATINGS = Arrays.asList(GROUP_CATEGORY_SKILL_RATING_1, GROUP_CATEGORY_SKILL_RATING_2, GROUP_CATEGORY_SKILL_RATING_3,
+            GROUP_CATEGORY_SKILL_RATING_4, GROUP_CATEGORY_SKILL_RATING_5, GROUP_CATEGORY_SKILL_RATING_6, GROUP_CATEGORY_SKILL_RATING_7, GROUP_CATEGORY_SKILL_RATING_8,
+            GROUP_CATEGORY_SKILL_RATING_9, GROUP_CATEGORY_SKILL_RATING_10, GROUP_CATEGORY_SKILL_RATING_11, GROUP_CATEGORY_SKILL_RATING_12, GROUP_CATEGORY_SKILL_RATING_13,
+            GROUP_CATEGORY_SKILL_RATING_14, GROUP_CATEGORY_SKILL_RATING_15, GROUP_CATEGORY_SKILL_RATING_16, GROUP_CATEGORY_SKILL_RATING_17, GROUP_CATEGORY_SKILL_RATING_18,
+            GROUP_CATEGORY_SKILL_RATING_19, GROUP_CATEGORY_SKILL_RATING_20, GROUP_CATEGORY_SKILL_RATING_21, GROUP_CATEGORY_SKILL_RATING_22);
 }

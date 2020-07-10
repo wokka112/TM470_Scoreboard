@@ -8,6 +8,8 @@ import com.floatingpanda.scoreboard.interfaces.Scoreable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Scoreable {
 
@@ -18,6 +20,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
     //TODO add ratingChange
     //TODO use a hashset instead? Then it limits it so each member has to be unique.
     private List<Member> members;
+    //private Map<Integer, CategoryPairwiseEloRatingChange> categoryRatingChanges;
 
     public TeamOfPlayers(int teamNo, int position, int score, List<Member> members) {
         this.teamNo = teamNo;
