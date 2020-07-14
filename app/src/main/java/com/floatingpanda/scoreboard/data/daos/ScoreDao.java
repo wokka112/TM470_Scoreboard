@@ -8,10 +8,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
-import com.floatingpanda.scoreboard.data.ScoreWithMemberDetails;
-import com.floatingpanda.scoreboard.data.entities.Player;
+import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 import com.floatingpanda.scoreboard.data.entities.Score;
 
 import java.util.List;

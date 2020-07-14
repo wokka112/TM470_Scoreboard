@@ -54,6 +54,11 @@ public class GroupCategorySkillRating {
         this(0, groupId, memberId, categoryId, skillRating, gamesRated);
     }
 
+    @Ignore
+    public GroupCategorySkillRating(int groupId, int memberId, int categoryId, double skillRating) {
+        this(0, groupId, memberId, categoryId, skillRating, 0);
+    }
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public int getGroupId() { return groupId; }

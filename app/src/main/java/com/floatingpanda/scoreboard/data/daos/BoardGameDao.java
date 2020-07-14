@@ -10,8 +10,8 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 
 import java.util.List;
 

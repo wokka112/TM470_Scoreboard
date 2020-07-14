@@ -1,10 +1,8 @@
 package com.floatingpanda.scoreboard.db;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -12,7 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.ScoreWithMemberDetails;
+import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMonthlyScoreDao;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
@@ -30,7 +28,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 

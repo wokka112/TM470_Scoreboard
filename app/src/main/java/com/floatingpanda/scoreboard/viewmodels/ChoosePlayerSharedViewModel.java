@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer;
 
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.MemberRepository;
+import com.floatingpanda.scoreboard.repositories.MemberRepository;
 import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.ArrayList;

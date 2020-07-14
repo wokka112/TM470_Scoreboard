@@ -22,7 +22,7 @@ import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.daos.PlayerDao;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
-import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 
 import org.junit.After;
 import org.junit.Before;
@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -265,5 +266,27 @@ public class PlayerTeamDaoTest {
         assertTrue(playerTeamWithPlayers.getPlayers().contains(TestData.PLAYER_2));
         assertTrue(playerTeamWithPlayers.getPlayers().contains(TestData.PLAYER_3));
         assertFalse(playerTeamWithPlayers.getPlayers().contains(TestData.PLAYER_1));
+    }
+
+    @Test
+    public void getPlayerTeamWithPlayersViaRecordIdWhenAllInserted() throws InterruptedException {
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+
+        List<PlayerTeamWithPlayers> playerTeamsWithPlayers = LiveDataTestUtil.getValue(playerTeamDao.findPlayerTeamsWithPlayersByRecordId(TestData.GAME_RECORD_1.getId()));
+
+        assertThat(playerTeamsWithPlayers.size(), is(4));
+
+        List<Integer> playerTeamNos = new ArrayList<>();
+
+        for (PlayerTeamWithPlayers playerTeamWithPlayers : playerTeamsWithPlayers) {
+            playerTeamNos.add(playerTeamWithPlayers.getPlayerTeam().getTeamNumber());
+        }
+
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_1.getTeamNumber()));
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_2.getTeamNumber()));
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_3.getTeamNumber()));
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_4.getTeamNumber()));
     }
 }

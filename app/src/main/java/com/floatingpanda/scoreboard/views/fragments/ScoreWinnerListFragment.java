@@ -15,19 +15,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.GameRecordListAdapter;
-import com.floatingpanda.scoreboard.adapters.ScoreWinnerListAdapter;
-import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreWithScoresAndMemberDetails;
-import com.floatingpanda.scoreboard.data.ScoreWithMemberDetails;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.ScoreWinnerListAdapter;
+import com.floatingpanda.scoreboard.data.relations.GroupMonthlyScoreWithScoresAndMemberDetails;
+import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 import com.floatingpanda.scoreboard.data.entities.Group;
-import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
-import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
 import com.floatingpanda.scoreboard.viewmodels.GroupMonthlyScoreViewModel;
-import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.floatingpanda.scoreboard.views.activities.GroupMonthlyScoreActivity;
-import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;

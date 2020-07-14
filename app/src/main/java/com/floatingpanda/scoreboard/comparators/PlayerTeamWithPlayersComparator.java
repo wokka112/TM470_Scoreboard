@@ -1,6 +1,6 @@
 package com.floatingpanda.scoreboard.comparators;
 
-import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
 import java.util.Comparator;

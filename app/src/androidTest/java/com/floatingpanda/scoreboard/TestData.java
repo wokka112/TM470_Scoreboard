@@ -3,8 +3,9 @@ package com.floatingpanda.scoreboard;
 import com.floatingpanda.scoreboard.data.entities.AssignedCategory;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.data.entities.PlayerSkillRatingChange;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
@@ -241,4 +242,16 @@ public class TestData {
             GROUP_CATEGORY_SKILL_RATING_9, GROUP_CATEGORY_SKILL_RATING_10, GROUP_CATEGORY_SKILL_RATING_11, GROUP_CATEGORY_SKILL_RATING_12, GROUP_CATEGORY_SKILL_RATING_13,
             GROUP_CATEGORY_SKILL_RATING_14, GROUP_CATEGORY_SKILL_RATING_15, GROUP_CATEGORY_SKILL_RATING_16, GROUP_CATEGORY_SKILL_RATING_17, GROUP_CATEGORY_SKILL_RATING_18,
             GROUP_CATEGORY_SKILL_RATING_19, GROUP_CATEGORY_SKILL_RATING_20, GROUP_CATEGORY_SKILL_RATING_21, GROUP_CATEGORY_SKILL_RATING_22);
+
+    public static final PlayerSkillRatingChange PLAYER_SKILL_RATING_CHANGE_1 = new PlayerSkillRatingChange(77, TestData.PLAYER_1.getId(), BG_CATEGORY_1.getCategoryName(),
+            1775.23, 15.16);
+    public static final PlayerSkillRatingChange PLAYER_SKILL_RATING_CHANGE_2 = new PlayerSkillRatingChange(78, TestData.PLAYER_1.getId(), BG_CATEGORY_2.getCategoryName(),
+            1640.00, 23.11);
+    public static final PlayerSkillRatingChange PLAYER_SKILL_RATING_CHANGE_3 = new PlayerSkillRatingChange(79, TestData.PLAYER_2.getId(), BG_CATEGORY_1.getCategoryName(),
+            1201.56, -12.4);
+    public static final PlayerSkillRatingChange PLAYER_SKILL_RATING_CHANGE_4 = new PlayerSkillRatingChange(80, TestData.PLAYER_3.getId(), BG_CATEGORY_1.getCategoryName(),
+            1500.00, 7.5);
+
+    public static final List<PlayerSkillRatingChange> PLAYER_SKILL_RATING_CHANGES = Arrays.asList(PLAYER_SKILL_RATING_CHANGE_1, PLAYER_SKILL_RATING_CHANGE_2, PLAYER_SKILL_RATING_CHANGE_3,
+            PLAYER_SKILL_RATING_CHANGE_4);
 }

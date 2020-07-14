@@ -16,9 +16,9 @@ import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
-import com.floatingpanda.scoreboard.data.BoardGameRepository;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.repositories.BoardGameRepository;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.daos.PlayModeDao;
 

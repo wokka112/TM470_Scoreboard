@@ -8,14 +8,16 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
+import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
-import com.floatingpanda.scoreboard.data.GameRecordRepository;
-import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.repositories.GameRecordRepository;
+import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.entities.Member;
@@ -33,6 +35,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
@@ -126,4 +129,35 @@ public class GameRecordViewModelTest {
         assertThat(gameRecordsWithPlayerTeamsAndPlayers.size(), is(3));
         assertThat(gameRecordsWithPlayerTeamsAndPlayers.get(0).getGameRecord().getGroupId(), is(TestData.GROUP_1.getId()));
     }
+
+    @Test
+    public void getPlayerTeamsWithPlayersWhenAllInserted() throws InterruptedException {
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+
+        List<PlayerTeamWithPlayers> playerTeamsWithPlayers = LiveDataTestUtil.getValue(gameRecordViewModel.getPlayerTeamsWithPlayers(TestData.GAME_RECORD_1.getId()));
+
+        assertThat(playerTeamsWithPlayers.size(), is(4));
+
+        List<Integer> playerTeamNos = new ArrayList<>();
+
+        for (PlayerTeamWithPlayers playerTeamWithPlayers : playerTeamsWithPlayers) {
+            playerTeamNos.add(playerTeamWithPlayers.getPlayerTeam().getTeamNumber());
+        }
+
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_1.getTeamNumber()));
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_2.getTeamNumber()));
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_3.getTeamNumber()));
+        assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_4.getTeamNumber()));
+    }
+
+    /*
+    public void addGameRecordAndPlayers(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
+        //Add game record, player team and players, then assign skill rating changes and score changes
+        gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+    }
+
+     */
 }

@@ -2,7 +2,6 @@ package com.floatingpanda.scoreboard;
 
 import com.floatingpanda.scoreboard.calculators.Calculator;
 import com.floatingpanda.scoreboard.data.entities.Member;
-import com.floatingpanda.scoreboard.interfaces.Scoreable;
 
 import org.junit.Test;
 
@@ -75,26 +74,26 @@ public class CalculatorTest {
 
     @Test
     public void testCalculateCategoryPairwiseEloRatings() {
-        List<CategoryPairwiseEloRatingChange> categoryPairwiseEloRatingChanges = new ArrayList<>();
-        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 1, 1500));
-        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 1, 1400));
-        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 3, 1700));
-        categoryPairwiseEloRatingChanges.add(new CategoryPairwiseEloRatingChange(1, 4, 1200));
+        List<GroupCategoryRatingChange> groupCategoryRatingChanges = new ArrayList<>();
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, 1500));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, 1400));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 3, 1700));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 4, 1200));
 
         Calculator calculator = new Calculator();
-        calculator.calculateCategoryPairwiseEloRatings(categoryPairwiseEloRatingChanges, 30);
+        calculator.calculateCategoryPairwiseEloRatings(groupCategoryRatingChanges, 30);
 
         //Testing player 1 - Rating change should be roughly +7.7
-        assertEquals(7.7, categoryPairwiseEloRatingChanges.get(0).getEloRatingChange(), 0.5);
+        assertEquals(7.7, groupCategoryRatingChanges.get(0).getEloRatingChange(), 0.5);
 
         //Testing player 2 - Rating chage should be roughly +12.3
-        assertEquals(12.3, categoryPairwiseEloRatingChanges.get(1).getEloRatingChange(), 0.5);
+        assertEquals(12.3, groupCategoryRatingChanges.get(1).getEloRatingChange(), 0.5);
 
         //Testing player 3 - Rating change should be roughly -15.3
-        assertEquals(-15.3, categoryPairwiseEloRatingChanges.get(2).getEloRatingChange(), 0.5);
+        assertEquals(-15.3, groupCategoryRatingChanges.get(2).getEloRatingChange(), 0.5);
 
         //Testing player 4 - Rating change should be roughly -4.7
-        assertEquals(-4.7, categoryPairwiseEloRatingChanges.get(3).getEloRatingChange(), 0.5);
+        assertEquals(-4.7, groupCategoryRatingChanges.get(3).getEloRatingChange(), 0.5);
     }
 
     /*

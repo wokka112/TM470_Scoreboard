@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
-import com.floatingpanda.scoreboard.adapters.CompetitiveConfirmPlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.CompetitiveConfirmPlayersListAdapter;
 
 import java.util.List;
 

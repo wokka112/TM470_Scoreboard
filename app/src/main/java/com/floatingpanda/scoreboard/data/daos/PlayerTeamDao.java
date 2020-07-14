@@ -9,7 +9,7 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
-import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 
 import java.util.List;
 
@@ -49,4 +49,8 @@ public interface PlayerTeamDao {
     @Transaction
     @Query("SELECT * FROM player_teams WHERE player_team_id LIKE :playerTeamId")
     public LiveData<PlayerTeamWithPlayers> findPlayerTeamWithPlayersByPlayerTeamId(int playerTeamId);
+
+    @Transaction
+    @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId")
+    public LiveData<List<PlayerTeamWithPlayers>> findPlayerTeamsWithPlayersByRecordId(int recordId);
 }

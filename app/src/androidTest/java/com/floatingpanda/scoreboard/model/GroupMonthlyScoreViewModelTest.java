@@ -12,8 +12,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreWithScoresAndMemberDetails;
-import com.floatingpanda.scoreboard.data.ScoreWithMemberDetails;
+import com.floatingpanda.scoreboard.data.relations.GroupMonthlyScoreWithScoresAndMemberDetails;
+import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMonthlyScoreDao;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
@@ -23,7 +23,6 @@ import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.entities.Score;
 import com.floatingpanda.scoreboard.viewmodels.GroupMonthlyScoreViewModel;
-import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 import org.junit.After;
 import org.junit.Before;

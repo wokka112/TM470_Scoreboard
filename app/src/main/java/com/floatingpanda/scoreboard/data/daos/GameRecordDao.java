@@ -9,9 +9,8 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
-import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 
-import java.util.Date;
 import java.util.List;
 
 @Dao

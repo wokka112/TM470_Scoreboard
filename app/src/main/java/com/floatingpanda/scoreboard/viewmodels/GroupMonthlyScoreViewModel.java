@@ -6,11 +6,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreRepository;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreWithScoresAndMemberDetails;
-import com.floatingpanda.scoreboard.data.GroupRepository;
-import com.floatingpanda.scoreboard.data.MemberRepository;
-import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
+import com.floatingpanda.scoreboard.repositories.GroupMonthlyScoreRepository;
+import com.floatingpanda.scoreboard.data.relations.GroupMonthlyScoreWithScoresAndMemberDetails;
 
 import java.util.List;
 

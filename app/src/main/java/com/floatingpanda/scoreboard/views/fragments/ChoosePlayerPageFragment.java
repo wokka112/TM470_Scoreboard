@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.ChoosePlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.ChoosePlayersListAdapter;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.ChoosePlayerInterface;
 import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;

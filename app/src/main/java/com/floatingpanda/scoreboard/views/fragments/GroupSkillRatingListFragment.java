@@ -8,23 +8,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.GroupCategorySkillRatingListAdapter;
-import com.floatingpanda.scoreboard.adapters.GroupListAdapter;
-import com.floatingpanda.scoreboard.data.GroupCategorySkillRatingWithMemberDetailsView;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.GroupCategorySkillRatingListAdapter;
+import com.floatingpanda.scoreboard.data.database_views.GroupCategorySkillRatingWithMemberDetailsView;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupCategorySkillRatingViewModel;
-import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 

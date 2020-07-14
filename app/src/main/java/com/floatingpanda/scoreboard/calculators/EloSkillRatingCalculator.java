@@ -42,9 +42,9 @@ public class EloSkillRatingCalculator {
     }
 
     private double calculateSValue(EloRateable player, EloRateable opponent) {
-        if (player.getPosition() < opponent.getPosition()) {
+        if (player.getFinishingPosition() < opponent.getFinishingPosition()) {
             return 1.0;
-        } else if (player.getPosition() == opponent.getPosition()) {
+        } else if (player.getFinishingPosition() == opponent.getFinishingPosition()) {
             return 0.5;
         } else {
             return 0.0;

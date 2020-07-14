@@ -3,7 +3,6 @@ package com.floatingpanda.scoreboard.model;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
-import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -17,7 +16,7 @@ import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
-import com.floatingpanda.scoreboard.data.MemberRepository;
+import com.floatingpanda.scoreboard.repositories.MemberRepository;
 
 import org.junit.After;
 import org.junit.Before;

@@ -21,6 +21,7 @@ import com.floatingpanda.scoreboard.data.daos.GroupMonthlyScoreDao;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.daos.PlayModeDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerDao;
+import com.floatingpanda.scoreboard.data.daos.PlayerSkillRatingChangeDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
 import com.floatingpanda.scoreboard.data.daos.ScoreDao;
 import com.floatingpanda.scoreboard.data.entities.AssignedCategory;
@@ -34,8 +35,10 @@ import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Player;
+import com.floatingpanda.scoreboard.data.entities.PlayerSkillRatingChange;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.entities.Score;
+import com.floatingpanda.scoreboard.data.database_views.GroupCategorySkillRatingWithMemberDetailsView;
 import com.floatingpanda.scoreboard.typeconverters.DateTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.PlayModeTypeConverter;
 import com.floatingpanda.scoreboard.typeconverters.TeamOptionTypeConverter;
@@ -51,7 +54,8 @@ import java.util.concurrent.Executors;
 
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class,
         GroupMember.class, Member.class, PlayMode.class, GameRecord.class, Player.class,
-        PlayerTeam.class, GroupMonthlyScore.class, Score.class, GroupCategorySkillRating.class}, version = 31, exportSchema = false,
+        PlayerTeam.class, GroupMonthlyScore.class, Score.class, GroupCategorySkillRating.class,
+        PlayerSkillRatingChange.class}, version = 32, exportSchema = false,
         views = {GroupCategorySkillRatingWithMemberDetailsView.class})
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -69,6 +73,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ScoreDao scoreDao();
     public abstract GroupMonthlyScoreDao groupMonthlyScoreDao();
     public abstract GroupCategorySkillRatingDao groupCategorySkillRatingDao();
+    public abstract PlayerSkillRatingChangeDao playerSkillRatingChangeDao();
 
     private static volatile AppDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.views.activities.GroupActivity;
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.GroupListAdapter;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.GroupListAdapter;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;

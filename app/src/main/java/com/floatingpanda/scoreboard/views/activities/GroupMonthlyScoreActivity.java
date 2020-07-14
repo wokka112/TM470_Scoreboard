@@ -1,24 +1,15 @@
 package com.floatingpanda.scoreboard.views.activities;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.DetailedWinnerListAdapter;
-import com.floatingpanda.scoreboard.adapters.ScoreWinnerListAdapter;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreWithScoresAndMemberDetails;
-import com.floatingpanda.scoreboard.data.ScoreWithMemberDetails;
-import com.floatingpanda.scoreboard.data.entities.Group;
-import com.floatingpanda.scoreboard.old.groupactivityadapters.WinnerListAdapter;
-import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.DetailedWinnerListAdapter;
+import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 
 import java.util.ArrayList;
 import java.util.List;

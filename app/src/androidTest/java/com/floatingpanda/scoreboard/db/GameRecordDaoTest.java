@@ -14,7 +14,7 @@ import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
-import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.entities.Member;
@@ -23,7 +23,7 @@ import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.daos.PlayerDao;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
-import com.floatingpanda.scoreboard.data.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 
 import org.junit.After;
 import org.junit.Before;

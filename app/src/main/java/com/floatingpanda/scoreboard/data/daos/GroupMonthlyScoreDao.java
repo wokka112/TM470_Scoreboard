@@ -8,11 +8,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
 
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreWithScoresAndMemberDetails;
-import com.floatingpanda.scoreboard.data.ScoreWithMemberDetails;
-import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.data.relations.GroupMonthlyScoreWithScoresAndMemberDetails;
 import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
-import com.floatingpanda.scoreboard.data.entities.Player;
 
 import java.util.List;
 

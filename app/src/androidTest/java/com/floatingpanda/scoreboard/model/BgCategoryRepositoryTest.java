@@ -12,7 +12,7 @@ import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
-import com.floatingpanda.scoreboard.data.BgCategoryRepository;
+import com.floatingpanda.scoreboard.repositories.BgCategoryRepository;
 
 import org.junit.After;
 import org.junit.Before;

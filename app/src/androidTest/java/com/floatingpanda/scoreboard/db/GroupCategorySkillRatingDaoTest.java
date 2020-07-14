@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.not;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.GroupCategorySkillRatingWithMemberDetailsView;
+import com.floatingpanda.scoreboard.data.database_views.GroupCategorySkillRatingWithMemberDetailsView;
 import com.floatingpanda.scoreboard.data.daos.GroupCategorySkillRatingDao;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
@@ -219,7 +219,7 @@ public class GroupCategorySkillRatingDaoTest {
     }
 
     @Test
-    public void insertAllAndUpdateOneSkillRating() throws InterruptedException {
+    public void insertAllAndUpdateOneSkillRatingByGroupCategorySkillRatingId() throws InterruptedException {
         groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
         GroupCategorySkillRating groupCategorySkillRating = LiveDataTestUtil.getValue(groupCategorySkillRatingDao.getGroupCategorySkillRatingById(TestData.GROUP_CATEGORY_SKILL_RATING_1.getId()));
 
@@ -280,5 +280,48 @@ public class GroupCategorySkillRatingDaoTest {
         assertTrue(containsCorrectNickname);
         assertTrue(containsCorrectSkillRating);
         assertTrue(containsCorrectGamesRated);
+    }
+
+    @Test
+    public void testDatabaseContainsGroupCategorySkillRatingByGroupIdAndCategoryIdAndMemberId() throws InterruptedException {
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        List<GroupCategorySkillRating> groupCategorySkillRatings = LiveDataTestUtil.getValue(groupCategorySkillRatingDao.getAll());
+
+        assertThat(groupCategorySkillRatings.size(), is(TestData.GROUP_CATEGORY_SKILL_RATINGS.size()));
+
+        assertTrue(groupCategorySkillRatingDao.containsGroupCategorySkillRating(TestData.GROUP_1.getId(), TestData.BG_CATEGORY_1.getId(), TestData.MEMBER_1.getId()));
+        assertFalse(groupCategorySkillRatingDao.containsGroupCategorySkillRating(TestData.GROUP_2.getId(), TestData.BG_CATEGORY_1.getId(), TestData.MEMBER_1.getId()));
+    }
+
+    @Test
+    public void getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId() throws InterruptedException {
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        List<GroupCategorySkillRating> groupCategorySkillRatings = LiveDataTestUtil.getValue(groupCategorySkillRatingDao.getAll());
+
+        assertThat(groupCategorySkillRatings.size(), is(TestData.GROUP_CATEGORY_SKILL_RATINGS.size()));
+
+        double rating = groupCategorySkillRatingDao.getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId(TestData.GROUP_1.getId(), TestData.BG_CATEGORY_1.getId(), TestData.MEMBER_1.getId());
+        assertThat(rating, is(TestData.GROUP_CATEGORY_SKILL_RATING_1.getSkillRating()));
+    }
+
+    @Test
+    public void insertAllAndUpdateOneSkillRatingByGroupIdAndCategoryIdAndMemberId() throws InterruptedException {
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        GroupCategorySkillRating groupCategorySkillRating = LiveDataTestUtil.getValue(groupCategorySkillRatingDao.getGroupCategorySkillRatingById(TestData.GROUP_CATEGORY_SKILL_RATING_1.getId()));
+
+        assertThat(groupCategorySkillRating, is(TestData.GROUP_CATEGORY_SKILL_RATING_1));
+
+        int groupId = TestData.GROUP_CATEGORY_SKILL_RATING_1.getGroupId();
+        int categoryId = TestData.GROUP_CATEGORY_SKILL_RATING_1.getCategoryId();
+        int memberId = TestData.GROUP_CATEGORY_SKILL_RATING_1.getMemberId();
+        double addSkillRating = 15.00;
+        groupCategorySkillRatingDao.addSkillRatingFromSingleGame(groupId, categoryId, memberId, addSkillRating);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        GroupCategorySkillRating updatedGroupCategorySkillRating = LiveDataTestUtil.getValue(groupCategorySkillRatingDao.getGroupCategorySkillRatingById(TestData.GROUP_CATEGORY_SKILL_RATING_1.getId()));
+
+        assertThat(updatedGroupCategorySkillRating.getId(), is(groupCategorySkillRating.getId()));
+        assertThat(updatedGroupCategorySkillRating.getSkillRating(), is(groupCategorySkillRating.getSkillRating() + addSkillRating));
+        assertThat(updatedGroupCategorySkillRating.getGamesRated(), is(groupCategorySkillRating.getGamesRated() + 1));
     }
 }

@@ -8,10 +8,10 @@ import androidx.lifecycle.LiveData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
-import com.floatingpanda.scoreboard.data.GroupRepository;
-import com.floatingpanda.scoreboard.data.GroupWithMembers;
+import com.floatingpanda.scoreboard.repositories.GroupRepository;
+import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.entities.Member;
-import com.floatingpanda.scoreboard.data.MemberRepository;
+import com.floatingpanda.scoreboard.repositories.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;

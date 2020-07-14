@@ -1,11 +1,8 @@
 package com.floatingpanda.scoreboard.calculators;
 
-import com.floatingpanda.scoreboard.CategoryPairwiseEloRatingChange;
-import com.floatingpanda.scoreboard.TeamOfPlayers;
-import com.floatingpanda.scoreboard.interfaces.EloRateable;
+import com.floatingpanda.scoreboard.GroupCategoryRatingChange;
 import com.floatingpanda.scoreboard.interfaces.Scoreable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Calculator {
@@ -43,14 +40,18 @@ public class Calculator {
         }
     }
 
-    public void calculateCategoryPairwiseEloRatings(List<CategoryPairwiseEloRatingChange> categoryPairwiseEloRatingChanges, int twoPlayerkValue) {
-        int kValue = (int) Math.ceil((double) twoPlayerkValue / (categoryPairwiseEloRatingChanges.size() - 1));
+    public void calculateCategoryPairwiseEloRatings(List<GroupCategoryRatingChange> groupCategoryRatingChanges) {
+        calculateCategoryPairwiseEloRatings(groupCategoryRatingChanges, 32);
+    }
 
-        for (int i = 0; i < categoryPairwiseEloRatingChanges.size(); i++) {
-            CategoryPairwiseEloRatingChange playerIRating = categoryPairwiseEloRatingChanges.get(i);
+    public void calculateCategoryPairwiseEloRatings(List<GroupCategoryRatingChange> groupCategoryRatingChanges, int twoPlayerkValue) {
+        int kValue = (int) Math.ceil((double) twoPlayerkValue / (groupCategoryRatingChanges.size() - 1));
 
-            for (int j = i +1; j < categoryPairwiseEloRatingChanges.size(); j++) {
-                CategoryPairwiseEloRatingChange playerJRating = categoryPairwiseEloRatingChanges.get(j);
+        for (int i = 0; i < groupCategoryRatingChanges.size(); i++) {
+            GroupCategoryRatingChange playerIRating = groupCategoryRatingChanges.get(i);
+
+            for (int j = i +1; j < groupCategoryRatingChanges.size(); j++) {
+                GroupCategoryRatingChange playerJRating = groupCategoryRatingChanges.get(j);
 
                 //Sort out rating change for i and store it.
                 double iRatingChange = eloSkillRatingCalculator.calculateSkillRatingChange(playerIRating, playerJRating, kValue);

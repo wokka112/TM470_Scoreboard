@@ -7,8 +7,8 @@ import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.Scoreable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Scoreable {
@@ -16,17 +16,16 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
     private int teamNo;
     private int position;
     private int score;
-    //TODO add avgSkillRating
-    //TODO add ratingChange
     //TODO use a hashset instead? Then it limits it so each member has to be unique.
     private List<Member> members;
-    //private Map<Integer, CategoryPairwiseEloRatingChange> categoryRatingChanges;
+    private List<GroupCategoryRatingChange> groupCategoryRatingChanges;
 
     public TeamOfPlayers(int teamNo, int position, int score, List<Member> members) {
         this.teamNo = teamNo;
         this.position = position;
         this.score = score;
         this.members = members;
+        this.groupCategoryRatingChanges = new ArrayList<>();
     }
 
     public TeamOfPlayers(int teamNo, int position) {
@@ -38,6 +37,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
         position = source.readInt();
         score = source.readInt();
         members = source.readArrayList(Member.class.getClassLoader());
+        groupCategoryRatingChanges = source.readArrayList(GroupCategoryRatingChange.class.getClassLoader());
     }
 
     public int getTeamNo() { return teamNo; }
@@ -48,6 +48,8 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
     public void setScore(int score) { this.score = score; }
     public List<Member> getMembers() { return new ArrayList<>(members); }
     public void setMembers(List<Member> members) { this.members = members; }
+    public List<GroupCategoryRatingChange> getGroupCategoryRatingChanges() { return new ArrayList<>(groupCategoryRatingChanges); }
+    public void setGroupCategoryRatingChanges(List<GroupCategoryRatingChange> groupCategoryRatingChanges) { this.groupCategoryRatingChanges = groupCategoryRatingChanges; }
 
     public void addPlayer(Member member) {
         if (!this.members.contains(member)) {
@@ -58,6 +60,10 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
     public void removePlayer(Member member) {
         this.members.remove(member);
     }
+
+    public void addGroupCategoryRatingChange(GroupCategoryRatingChange groupCategoryRatingChange) { this.groupCategoryRatingChanges.add(groupCategoryRatingChange); }
+
+    public void removeGroupCategoryRatingChange(GroupCategoryRatingChange groupCategoryRatingChange) { groupCategoryRatingChanges.remove(groupCategoryRatingChange); }
 
     @Override
     public int compareTo(TeamOfPlayers other) {
@@ -87,6 +93,7 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
         dest.writeInt(position);
         dest.writeInt(score);
         dest.writeList(members);
+        dest.writeList(groupCategoryRatingChanges);
     }
 
     public static final Creator<TeamOfPlayers> CREATOR = new Creator<TeamOfPlayers>() {

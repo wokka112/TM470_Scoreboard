@@ -6,10 +6,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategories;
-import com.floatingpanda.scoreboard.data.BoardGameWithBgCategoriesAndPlayModes;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
-import com.floatingpanda.scoreboard.data.BoardGameRepository;
+import com.floatingpanda.scoreboard.repositories.BoardGameRepository;
 
 import java.util.List;
 

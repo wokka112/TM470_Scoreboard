@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import com.floatingpanda.scoreboard.views.activities.MemberAddActivity;
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.MemberListAdapter;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.MemberListAdapter;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;

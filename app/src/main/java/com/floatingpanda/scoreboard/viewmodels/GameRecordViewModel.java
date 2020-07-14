@@ -8,12 +8,10 @@ import androidx.lifecycle.LiveData;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.calculators.Calculator;
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.GameRecordRepository;
-import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
-import com.floatingpanda.scoreboard.data.GroupRepository;
-import com.floatingpanda.scoreboard.data.MemberRepository;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.repositories.GameRecordRepository;
+import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
-import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
 import java.util.List;
@@ -49,19 +47,12 @@ public class GameRecordViewModel extends AndroidViewModel {
         return groupsGameRecordsWithTeamsAndPlayers;
     }
 
-    //TODO setup tests for this.
     public void addGameRecordAndPlayers(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
-        Calculator calculator = new Calculator();
-        //Calculate and assign scores
-        if (gameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
-            calculator.calculateCompetitiveScores(gameRecord.getDifficulty(), teamsOfPlayers);
-        } else {
-            calculator.calculateCooperativeSolitaireScores(gameRecord.getDifficulty(), teamsOfPlayers, gameRecord.getWon());
-        }
-
-        //Calculate skill ratings
-
         //Add game record, player team and players, then assign skill rating changes and score changes
         gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+    }
+
+    public LiveData<List<PlayerTeamWithPlayers>> getPlayerTeamsWithPlayers(int recordId) {
+        return gameRecordRepository.getPlayerTeamsWithPlayersViaRecordId(recordId);
     }
 }

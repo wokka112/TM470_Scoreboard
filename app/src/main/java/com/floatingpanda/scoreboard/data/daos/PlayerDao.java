@@ -28,7 +28,7 @@ public interface PlayerDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Player... players);
 
-    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(Player player);
 
     @Query ("DELETE FROM players")

@@ -5,16 +5,12 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.floatingpanda.scoreboard.data.AppDatabase;
-import com.floatingpanda.scoreboard.data.BgCategoryRepository;
-import com.floatingpanda.scoreboard.data.GroupCategorySkillRatingRepository;
-import com.floatingpanda.scoreboard.data.GroupCategorySkillRatingWithMemberDetailsView;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreRepository;
-import com.floatingpanda.scoreboard.data.GroupMonthlyScoreWithScoresAndMemberDetails;
+import com.floatingpanda.scoreboard.repositories.BgCategoryRepository;
+import com.floatingpanda.scoreboard.repositories.GroupCategorySkillRatingRepository;
+import com.floatingpanda.scoreboard.data.database_views.GroupCategorySkillRatingWithMemberDetailsView;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
-import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
 
 import java.util.List;
 

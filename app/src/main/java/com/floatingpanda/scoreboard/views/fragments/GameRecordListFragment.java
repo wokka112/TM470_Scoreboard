@@ -15,12 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
-import com.floatingpanda.scoreboard.adapters.GameRecordListAdapter;
-import com.floatingpanda.scoreboard.data.GameRecordWithPlayerTeamsAndPlayers;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.GameRecordListAdapter;
+import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
 import com.floatingpanda.scoreboard.views.activities.AddGameRecordActivity;
+import com.floatingpanda.scoreboard.views.activities.GameRecordActivity;
+import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -28,7 +31,7 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-public class GameRecordListFragment extends Fragment {
+public class GameRecordListFragment extends Fragment implements DetailAdapterInterface {
 
     private final int ADD_GAME_RECORD_REQUEST_CODE = 1;
 
@@ -47,7 +50,7 @@ public class GameRecordListFragment extends Fragment {
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
 
-        final GameRecordListAdapter adapter = new GameRecordListAdapter(getActivity());
+        final GameRecordListAdapter adapter = new GameRecordListAdapter(getActivity(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -80,6 +83,15 @@ public class GameRecordListFragment extends Fragment {
     private void startDeleteGameRecordActivity() {
         //TODO add in delete functionality
         // needs to update scores and skill ratings when deleted.
+    }
+
+    @Override
+    public void viewDetails(Object object) {
+        GameRecordWithPlayerTeamsAndPlayers gameRecordWithPlayerTeamsAndPlayers = (GameRecordWithPlayerTeamsAndPlayers) object;
+
+        Intent detailsIntent = new Intent(getContext(), GameRecordActivity.class);
+        detailsIntent.putExtra("GAME_RECORD", gameRecordWithPlayerTeamsAndPlayers.getGameRecord());
+        startActivity(detailsIntent);
     }
 
     @Override

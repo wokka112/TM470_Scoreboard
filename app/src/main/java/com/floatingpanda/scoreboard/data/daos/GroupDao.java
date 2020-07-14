@@ -10,7 +10,7 @@ import androidx.room.Transaction;
 import androidx.room.Update;
 
 import com.floatingpanda.scoreboard.data.entities.Group;
-import com.floatingpanda.scoreboard.data.GroupWithMembers;
+import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 
 import java.util.List;
 

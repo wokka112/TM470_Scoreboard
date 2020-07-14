@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
-import com.floatingpanda.scoreboard.adapters.AddGroupMembersListAdapter;
-import com.floatingpanda.scoreboard.data.GroupWithMembers;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.AddGroupMembersListAdapter;
+import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;

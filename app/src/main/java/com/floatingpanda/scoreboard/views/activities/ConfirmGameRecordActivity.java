@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
-import com.floatingpanda.scoreboard.adapters.CompetitiveConfirmPlayersListAdapter;
-import com.floatingpanda.scoreboard.adapters.CoopSoliConfirmPlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.CompetitiveConfirmPlayersListAdapter;
+import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.CoopSoliConfirmPlayersListAdapter;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 

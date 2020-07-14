@@ -14,7 +14,7 @@ import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
 import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
-import com.floatingpanda.scoreboard.data.GroupWithMembers;
+import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 
