@@ -868,7 +868,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 groupCategorySkillRatingDao.insertAll(group1StrategySkillRatings.toArray(new GroupCategorySkillRating[group1StrategySkillRatings.size()]));
 
-
                 // CATEGORY: LUCK //
                 List<GroupCategorySkillRating> group1LuckSkillRatings = new ArrayList<>();
 
@@ -889,6 +888,70 @@ public abstract class AppDatabase extends RoomDatabase {
                 group1LuckSkillRatings.add(groupCategorySkillRating);
 
                 groupCategorySkillRatingDao.insertAll(group1LuckSkillRatings.toArray(new GroupCategorySkillRating[group1LuckSkillRatings.size()]));
+
+                // SKILL RATING CHANGES
+
+                PlayerSkillRatingChangeDao playerSkillRatingChangeDao = INSTANCE.playerSkillRatingChangeDao();
+
+                int player1Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam1.getId(), member1.getNickname());
+                int player2Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam1.getId(), member2.getNickname());
+                int player3Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam2.getId(), member3.getNickname());
+                int player4Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam2.getId(), member4.getNickname());
+                int player5Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam2.getId(), member5.getNickname());
+                int player6Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam3.getId(), member6.getNickname());
+                int player7Id = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(record2PlayerTeam4.getId(), member7.getNickname());
+
+                String strategyCategoryName = strategy.getCategoryName();
+
+                /*
+                PlayerSkillRatingChange playerSkillRatingChange = new PlayerSkillRatingChange(player1Id, strategyCategoryName, 1550.00, 20.34);
+                playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                playerSkillRatingChange = new PlayerSkillRatingChange(player2Id, strategyCategoryName, 1242.35, 20.34);
+                playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                //playerSkillRatingChange = new PlayerSkillRatingChange(player3Id, strategyCategoryName, 1750.72, 13.37);
+                //playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                playerSkillRatingChange = new PlayerSkillRatingChange(player4Id, strategyCategoryName, 1683.91, 13.37);
+                playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                playerSkillRatingChange = new PlayerSkillRatingChange(player5Id, strategyCategoryName, 1712.12, 13.37);
+                playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                playerSkillRatingChange = new PlayerSkillRatingChange(player6Id, strategyCategoryName, 1173.41, -4.07);
+                playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                playerSkillRatingChange = new PlayerSkillRatingChange(player7Id, strategyCategoryName, 1472.64, -10.30);
+                playerSkillRatingChangeDao.insert(playerSkillRatingChange);
+
+                 */
+
+                List<PlayerSkillRatingChange> strategySkillRatingChanges = new ArrayList<>();
+
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player1Id, strategyCategoryName, 1550.00, 20.34));
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player2Id, strategyCategoryName, 1242.35, 20.34));
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player3Id, strategyCategoryName, 1750.72, 13.37));
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player4Id, strategyCategoryName, 1683.91, 13.37));
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player5Id, strategyCategoryName, 1712.12, 13.37));
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player6Id, strategyCategoryName, 1173.41, -4.07));
+                strategySkillRatingChanges.add(new PlayerSkillRatingChange(player7Id, strategyCategoryName, 1472.64, -10.30));
+
+                playerSkillRatingChangeDao.insertAll(strategySkillRatingChanges.toArray(new PlayerSkillRatingChange[strategySkillRatingChanges.size()]));
+
+                String luckCategoryName = luck.getCategoryName();
+
+                List<PlayerSkillRatingChange> luckSkillRatingChanges = new ArrayList<>();
+
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player1Id, luckCategoryName, 1721.14, 7.41));
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player2Id, luckCategoryName, 1607.00, 7.41));
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player3Id, luckCategoryName, 942.17, 10.19));
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player4Id, luckCategoryName, 1234.92, 10.19));
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player5Id, luckCategoryName, 1500.00, 10.19));
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player6Id, luckCategoryName, 1343.40, -8.42));
+                luckSkillRatingChanges.add(new PlayerSkillRatingChange(player7Id, luckCategoryName, 1400.72, -9.1));
+
+                playerSkillRatingChangeDao.insertAll(luckSkillRatingChanges.toArray(new PlayerSkillRatingChange[luckSkillRatingChanges.size()]));
             });
         }
     };

@@ -9,6 +9,7 @@ import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.views.fragments.BgCategoryListFragment;
 import com.floatingpanda.scoreboard.views.fragments.BoardGameListFragment;
 import com.floatingpanda.scoreboard.views.fragments.GameRecordScoresListFragment;
+import com.floatingpanda.scoreboard.views.fragments.GameRecordSkillRatingsListFragment;
 import com.floatingpanda.scoreboard.views.fragments.GroupListFragment;
 import com.floatingpanda.scoreboard.views.fragments.MemberListFragment;
 
@@ -28,7 +29,7 @@ public class GameRecordActivityAdapter extends FragmentStateAdapter {
         if (position == 0) {
             return new GameRecordScoresListFragment(gameRecord);
         } else {
-            return new GameRecordScoresListFragment(gameRecord);
+            return new GameRecordSkillRatingsListFragment(gameRecord);
         }
     }
 

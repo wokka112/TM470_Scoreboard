@@ -9,11 +9,14 @@ import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.calculators.Calculator;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayersAndRatingChanges;
+import com.floatingpanda.scoreboard.data.relations.PlayerWithRatingChanges;
 import com.floatingpanda.scoreboard.repositories.GameRecordRepository;
 import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameRecordViewModel extends AndroidViewModel {
@@ -47,12 +50,26 @@ public class GameRecordViewModel extends AndroidViewModel {
         return groupsGameRecordsWithTeamsAndPlayers;
     }
 
+    public LiveData<List<PlayerTeamWithPlayers>> getPlayerTeamsWithPlayers(int recordId) {
+        return gameRecordRepository.getPlayerTeamsWithPlayersViaRecordId(recordId);
+    }
+
+    public LiveData<List<PlayerTeamWithPlayersAndRatingChanges>> getPlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId) {
+        return gameRecordRepository.getPlayerTeamsWithPlayersAndRatingChangesByRecordId(recordId);
+    }
+
+    public List<PlayerWithRatingChanges> extractPlayersWithRatingChanges(List<PlayerTeamWithPlayersAndRatingChanges> playerTeamsWithPlayersAndRatingChanges) {
+        List<PlayerWithRatingChanges> playersWithRatingChanges = new ArrayList<>();
+
+        for (PlayerTeamWithPlayersAndRatingChanges playerTeamWithPlayersAndRatingChanges : playerTeamsWithPlayersAndRatingChanges) {
+            playersWithRatingChanges.addAll(playerTeamWithPlayersAndRatingChanges.getPlayersWithRatingChanges());
+        }
+
+        return playersWithRatingChanges;
+    }
+
     public void addGameRecordAndPlayers(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
         //Add game record, player team and players, then assign skill rating changes and score changes
         gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
-    }
-
-    public LiveData<List<PlayerTeamWithPlayers>> getPlayerTeamsWithPlayers(int recordId) {
-        return gameRecordRepository.getPlayerTeamsWithPlayersViaRecordId(recordId);
     }
 }

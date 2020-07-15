@@ -10,6 +10,7 @@ import androidx.room.Transaction;
 
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayersAndRatingChanges;
 
 import java.util.List;
 
@@ -29,6 +30,10 @@ public interface PlayerTeamDao {
 
     @Query("SELECT * FROM player_teams WHERE team_number LIKE :teamNumber AND record_id LIKE :recordId")
     PlayerTeam findNonLiveDataPlayerTeamByTeamNumberAndRecordId(int teamNumber, int recordId);
+
+    //TODO make test
+    @Query("SELECT player_team_id FROM player_teams WHERE team_number LIKE :teamNumber AND record_id LIKE :recordId")
+    int getNonLivePlayerTeamIdByTeamNumberAndRecordId(int teamNumber, int recordId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(PlayerTeam... playerTeams);
@@ -53,4 +58,16 @@ public interface PlayerTeamDao {
     @Transaction
     @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId")
     public LiveData<List<PlayerTeamWithPlayers>> findPlayerTeamsWithPlayersByRecordId(int recordId);
+
+    @Transaction
+    @Query("SELECT * FROM player_teams")
+    LiveData<List<PlayerTeamWithPlayersAndRatingChanges>> getAllPlayerTeamsWithPlayersAndRatingChanges();
+
+    @Transaction
+    @Query("SELECT * FROM player_teams WHERE player_team_id LIKE :playerTeamId ORDER BY position ASC, team_number ASC")
+    LiveData<PlayerTeamWithPlayersAndRatingChanges> getPlayerTeamWithPlayersAndRatingChangesByPlayerTeamId(int playerTeamId);
+
+    @Transaction
+    @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId ORDER BY position ASC, team_number ASC")
+    LiveData<List<PlayerTeamWithPlayersAndRatingChanges>> getPlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId);
 }

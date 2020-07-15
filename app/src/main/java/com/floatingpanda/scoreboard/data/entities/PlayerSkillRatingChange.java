@@ -7,6 +7,9 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 @Entity(tableName = "player_skill_rating_changes",
         foreignKeys = {@ForeignKey(entity = Player.class,
                 parentColumns = "player_id",
@@ -17,7 +20,7 @@ import androidx.room.PrimaryKey;
                         childColumns = "category_name",
                         onDelete = ForeignKey.SET_NULL,
                         onUpdate = ForeignKey.CASCADE)})
-public class PlayerSkillRatingChange {
+public class PlayerSkillRatingChange implements Comparable<PlayerSkillRatingChange>{
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "player_skill_rating_change_id")
@@ -61,6 +64,12 @@ public class PlayerSkillRatingChange {
 
     public double getNewRating() { return oldRating + ratingChange; }
 
+    public double get2DpRoundedNewRating() {
+        double newRating = getNewRating();
+        BigDecimal bigDecimal = new BigDecimal(newRating).setScale(2, RoundingMode.HALF_UP);
+        return bigDecimal.doubleValue();
+    }
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
@@ -73,5 +82,10 @@ public class PlayerSkillRatingChange {
                 && playerSkillRatingChange.getCategoryName().equals(this.getCategoryName())
                 && playerSkillRatingChange.getOldRating() == this.getOldRating()
                 && playerSkillRatingChange.getRatingChange() == this.getRatingChange();
+    }
+
+    @Override
+    public int compareTo(PlayerSkillRatingChange o) {
+        return this.getCategoryName().compareTo(o.getCategoryName());
     }
 }

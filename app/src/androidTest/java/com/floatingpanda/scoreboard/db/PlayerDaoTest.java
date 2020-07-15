@@ -10,6 +10,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
+import com.floatingpanda.scoreboard.data.daos.PlayerSkillRatingChangeDao;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
@@ -20,8 +23,10 @@ import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.daos.PlayerDao;
+import com.floatingpanda.scoreboard.data.entities.PlayerSkillRatingChange;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.daos.PlayerTeamDao;
+import com.floatingpanda.scoreboard.data.relations.PlayerWithRatingChanges;
 
 import org.junit.After;
 import org.junit.Before;
@@ -55,6 +60,8 @@ public class PlayerDaoTest {
     private PlayerTeamDao playerTeamDao;
     private PlayerDao playerDao;
     private MemberDao memberDao;
+    private BgCategoryDao bgCategoryDao;
+    private PlayerSkillRatingChangeDao playerSkillRatingChangeDao;
 
     @Before
     public void createDb() throws InterruptedException {
@@ -68,6 +75,8 @@ public class PlayerDaoTest {
         playerTeamDao = db.playerTeamDao();
         playerDao = db.playerDao();
         memberDao = db.memberDao();
+        bgCategoryDao = db.bgCategoryDao();
+        playerSkillRatingChangeDao = db.playerSkillRatingChangeDao();
 
         boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
         groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
@@ -273,5 +282,39 @@ public class PlayerDaoTest {
 
         assertThat(players.size(), is(TestData.PLAYERS.size() - 3));
         assertFalse(players.contains(TestData.PLAYER_1));
+    }
+
+    @Test
+    public void getAllPlayersWithRatingChangesWhenAllInserted() throws InterruptedException {
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        //3 Players have skill rating changes - 1 has 2, and the other 2 have 1 each. So should be 3 in the list.
+        List<PlayerWithRatingChanges> playersWithRatingChanges = LiveDataTestUtil.getValue(playerDao.getAllPlayersWithRatingChanges());
+        assertThat(playersWithRatingChanges.size(), is(TestData.PLAYERS.size()));
+    }
+
+    @Test
+    public void getPlayerWithRatingChangesByPlayerIdWhenAllInserted() throws InterruptedException {
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        //Player 1 has 2 skill rating changes
+        PlayerWithRatingChanges playerWithRatingChanges = LiveDataTestUtil.getValue(playerDao.getPlayerWithRatingChangesByPlayerId(TestData.PLAYER_1.getId()));
+        assertThat(playerWithRatingChanges.getPlayerSkillRatingChanges().size(), is(2));
+
+        //Player 5 has 0 skill rating changes
+        playerWithRatingChanges = LiveDataTestUtil.getValue(playerDao.getPlayerWithRatingChangesByPlayerId(TestData.PLAYER_5.getId()));
+        assertTrue(playerWithRatingChanges.getPlayerSkillRatingChanges().isEmpty());
+    }
+
+    @Test
+    public void getPlayerIdByPlayerTeamIdAndMemberNicknameWhenAllInserted() throws InterruptedException {
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        int playerId = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(TestData.PLAYER_1.getPlayerTeamId(), TestData.PLAYER_1.getMemberNickname());
+
+        assertThat(playerId, is(TestData.PLAYER_1.getId()));
     }
 }

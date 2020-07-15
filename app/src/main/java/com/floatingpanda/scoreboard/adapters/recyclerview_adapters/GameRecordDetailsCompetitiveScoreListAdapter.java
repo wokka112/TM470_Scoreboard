@@ -60,10 +60,10 @@ public class GameRecordDetailsCompetitiveScoreListAdapter extends RecyclerView.A
             }
 
             if (teams) {
-                holder.teamTextView.setVisibility(View.INVISIBLE);
-            } else {
                 holder.teamTextView.setVisibility(View.VISIBLE);
                 holder.teamTextView.setText("Team " + current.getPlayerTeam().getTeamNumber());
+            } else {
+                holder.teamTextView.setVisibility(View.VISIBLE);
             }
 
             holder.playersTextView.setText(sb.toString());

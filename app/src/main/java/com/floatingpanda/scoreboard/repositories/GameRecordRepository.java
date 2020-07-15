@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -8,9 +9,12 @@ import com.floatingpanda.scoreboard.GroupCategoryRatingChange;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.calculators.Calculator;
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
 import com.floatingpanda.scoreboard.data.daos.GroupCategorySkillRatingDao;
+import com.floatingpanda.scoreboard.data.daos.PlayerSkillRatingChangeDao;
 import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.data.entities.PlayerSkillRatingChange;
 import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.daos.AssignedCategoryDao;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
@@ -24,6 +28,8 @@ import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayersAndRatingChanges;
+import com.floatingpanda.scoreboard.data.relations.PlayerWithRatingChanges;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,8 +45,10 @@ public class GameRecordRepository {
     private GroupMonthlyScoreDao groupMonthlyScoreDao;
     private ScoreDao scoreDao;
     private BoardGameDao boardGameDao;
+    private BgCategoryDao bgCategoryDao;
     private AssignedCategoryDao assignedCategoryDao;
     private GroupCategorySkillRatingDao groupCategorySkillRatingDao;
+    private PlayerSkillRatingChangeDao playerSkillRatingChangeDao;
     private LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> allGameRecordsWithTeamsAndPlayers;
 
     public GameRecordRepository(Application application) {
@@ -52,8 +60,10 @@ public class GameRecordRepository {
         groupMonthlyScoreDao = db.groupMonthlyScoreDao();
         scoreDao = db.scoreDao();
         boardGameDao = db.boardGameDao();
+        bgCategoryDao = db.bgCategoryDao();
         assignedCategoryDao = db.assignedCategoryDao();
         groupCategorySkillRatingDao = db.groupCategorySkillRatingDao();
+        playerSkillRatingChangeDao = db.playerSkillRatingChangeDao();
 
         allGameRecordsWithTeamsAndPlayers = gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers();
     }
@@ -66,8 +76,10 @@ public class GameRecordRepository {
         groupMonthlyScoreDao = db.groupMonthlyScoreDao();
         scoreDao = db.scoreDao();
         boardGameDao = db.boardGameDao();
+        bgCategoryDao = db.bgCategoryDao();
         assignedCategoryDao = db.assignedCategoryDao();
         groupCategorySkillRatingDao = db.groupCategorySkillRatingDao();
+        playerSkillRatingChangeDao = db.playerSkillRatingChangeDao();
 
         allGameRecordsWithTeamsAndPlayers = gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers();
     }
@@ -84,11 +96,16 @@ public class GameRecordRepository {
         return playerTeamDao.findPlayerTeamsWithPlayersByRecordId(recordId);
     }
 
+    public LiveData<List<PlayerTeamWithPlayersAndRatingChanges>> getPlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId) {
+        return playerTeamDao.getPlayerTeamsWithPlayersAndRatingChangesByRecordId(recordId);
+    }
+
     public void addGameRecordAndPlayerTeams(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
         //TODO make this work as a transaction.
         AppDatabase.getExecutorService().execute(() -> {
             //Insert game record and get id
             int recordId = (int) gameRecordDao.insert(gameRecord);
+            gameRecord.setId(recordId);
 
             //Calculate scores
             calculateScores(gameRecord, teamsOfPlayers);
@@ -161,7 +178,11 @@ public class GameRecordRepository {
 
         int groupId = gameRecord.getGroupId();
         for (TeamOfPlayers teamOfPlayers : teamsOfPlayers) {
+            int playerTeamId = playerTeamDao.getNonLivePlayerTeamIdByTeamNumberAndRecordId(teamOfPlayers.getTeamNo(), gameRecord.getId());
             for (Member member : teamOfPlayers.getMembers()) {
+                int playerId = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(playerTeamId, member.getNickname());
+
+                recordMemberSkillRatingChanges(groupId, member.getId(), playerId, teamOfPlayers.getGroupCategoryRatingChanges());
                 updateMemberSkillRatings(groupId, member.getId(), teamOfPlayers.getGroupCategoryRatingChanges());
             }
         }
@@ -176,12 +197,14 @@ public class GameRecordRepository {
         int groupId = gameRecord.getGroupId();
         //Get each category
         for (int categoryId : associatedCategoryIds) {
+            String categoryName = bgCategoryDao.getNonLiveCategoryNameByCategoryId(categoryId);
+
             //Calculate each teams avg elo rating from their players' ratings
             for (TeamOfPlayers teamOfPlayers : teamsOfPlayers) {
                 double avgRating = calculateTeamAverageRating(groupId, categoryId, teamOfPlayers.getMembers());
 
                 //Add the elo rating change with the team's avg elo rating to the category's list of elo rating changes
-                GroupCategoryRatingChange groupCategoryRatingChange = new GroupCategoryRatingChange(teamOfPlayers.getTeamNo(), categoryId, teamOfPlayers.getPosition(), avgRating);
+                GroupCategoryRatingChange groupCategoryRatingChange = new GroupCategoryRatingChange(teamOfPlayers.getTeamNo(), categoryId, categoryName, teamOfPlayers.getPosition(), avgRating);
                 teamOfPlayers.addGroupCategoryRatingChange(groupCategoryRatingChange);
             }
         }
@@ -207,19 +230,34 @@ public class GameRecordRepository {
     public double calculateTeamAverageRating(int groupId, int categoryId, List<Member> members) {
         double totalRating = 0.0;
         for (Member member : members) {
-            double eloRating;
-            if (!groupCategorySkillRatingDao.containsGroupCategorySkillRating(groupId, categoryId, member.getId())) {
-                eloRating = 1500.0;
-                groupCategorySkillRatingDao.insert(new GroupCategorySkillRating(groupId, member.getId(), categoryId, eloRating));
-            } else {
-                eloRating = groupCategorySkillRatingDao.getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId(groupId, categoryId, member.getId());
-            }
-
+            double eloRating = getMemberCategorySkillRating(groupId, categoryId, member.getId());
             totalRating += eloRating;
-
-            //Add elorating as player's original rating to database here.
         }
         return totalRating / members.size();
+    }
+
+    public double getMemberCategorySkillRating(int groupId, int categoryId, int memberId) {
+        double eloRating;
+        if (!groupCategorySkillRatingDao.containsGroupCategorySkillRating(groupId, categoryId, memberId)) {
+            eloRating = 1500.0;
+            groupCategorySkillRatingDao.insert(new GroupCategorySkillRating(groupId, memberId, categoryId, eloRating));
+        } else {
+            eloRating = groupCategorySkillRatingDao.getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId(groupId, categoryId, memberId);
+        }
+
+        return eloRating;
+    }
+
+    public void recordMemberSkillRatingChanges(int groupId, int memberId, int playerId, List<GroupCategoryRatingChange> groupCategoryRatingChanges) {
+        for (GroupCategoryRatingChange groupCategoryRatingChange : groupCategoryRatingChanges) {
+            String categoryName = groupCategoryRatingChange.getCategoryName();
+            double oldRating = getMemberCategorySkillRating(groupId, groupCategoryRatingChange.getCategoryId(), memberId);
+            double ratingChange = groupCategoryRatingChange.getEloRatingChange();
+
+            Log.w("GameRecordRepository.java", "PlayerId: " + playerId + " Category Name: " + categoryName);
+
+            playerSkillRatingChangeDao.insert(new PlayerSkillRatingChange(playerId, categoryName, oldRating, ratingChange));
+        }
     }
 
     public void updateMemberSkillRatings(int groupId, int memberId, List<GroupCategoryRatingChange> groupCategoryRatingChanges) {
@@ -230,43 +268,4 @@ public class GameRecordRepository {
             groupCategorySkillRatingDao.addSkillRatingFromSingleGame(groupId, categoryId, memberId, addSkillRating);
         }
     }
-
-    /*
-    public Map<Integer, List<GroupCategoryRatingChange>> createCategoryRatingChangesMap(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
-        //Get board game id
-        int bgId = boardGameDao.findBoardGameIdByBoardGameName(gameRecord.getBoardGameName());
-        //Get associated categories
-        List<Integer> associatedCategoryIds = assignedCategoryDao.getAllCategoryIdsByBoardGameId(bgId);
-
-        //Create rating lists for each category.
-        //Category id map
-        Map<Integer, List<GroupCategoryRatingChange>> groupCategoryRatingChangeMap = new HashMap<>();
-
-        int groupId = gameRecord.getGroupId();
-        //Get each category
-        for (int categoryId : associatedCategoryIds) {
-            //Make a list of elo rating changes with avg ratings for each team for the category
-            List<GroupCategoryRatingChange> groupCategoryRatingChanges = new ArrayList<>();
-
-            //Calculate each teams avg elo rating from their players' ratings
-            for (TeamOfPlayers teamOfPlayers : teamsOfPlayers) {
-                double avgRating = calculateTeamAverageRating(groupId, categoryId, teamOfPlayers.getMembers());
-
-                //Add the elo rating change with the team's avg elo rating to the category's list of elo rating changes
-                GroupCategoryRatingChange groupCategoryRatingChange = new GroupCategoryRatingChange(teamOfPlayers.getTeamNo(), categoryId, teamOfPlayers.getPosition(), avgRating);
-                groupCategoryRatingChanges.add(groupCategoryRatingChange);
-
-                //TODO this is switching the focus for this method, think on how to sort this out so this method isn't focusing on too much.
-                // Then write this into tests.
-                teamOfPlayers.addGroupCategoryRatingChange(groupCategoryRatingChange);
-            }
-
-            //Add the list of elo rating changes to the map for that category
-            groupCategoryRatingChangeMap.put(categoryId, groupCategoryRatingChanges);
-        }
-
-        return groupCategoryRatingChangeMap;
-    }
-
-     */
 }

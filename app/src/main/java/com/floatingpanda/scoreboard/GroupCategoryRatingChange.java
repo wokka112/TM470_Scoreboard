@@ -13,20 +13,22 @@ public class GroupCategoryRatingChange implements Parcelable, EloRateable {
 
     private int teamNo;
     private int categoryId;
+    private String categoryName;
     private int finishingPosition;
     private double avgEloRating;
     private double eloRatingChange;
 
-    public GroupCategoryRatingChange(int teamNo, int categoryId, int finishingPosition, double avgEloRating) {
+    public GroupCategoryRatingChange(int teamNo, int categoryId, String categoryName, int finishingPosition, double avgEloRating) {
         this.teamNo = teamNo;
         this.categoryId = categoryId;
+        this.categoryName = categoryName;
         this.finishingPosition = finishingPosition;
         this.avgEloRating = avgEloRating;
         this.eloRatingChange = 0.0;
     }
 
-    public GroupCategoryRatingChange(int teamNo, int categoryId, int finishingPosition) {
-        this(teamNo, categoryId, finishingPosition, 0.0);
+    public GroupCategoryRatingChange(int teamNo, int categoryId, String categoryName, int finishingPosition) {
+        this(teamNo, categoryId, categoryName, finishingPosition, 0.0);
     }
 
     public GroupCategoryRatingChange(Parcel source) {
@@ -42,6 +44,9 @@ public class GroupCategoryRatingChange implements Parcelable, EloRateable {
 
     public int getCategoryId() { return categoryId; }
     public void setCategoryId(int categoryId) { this.categoryId = categoryId; }
+
+    public String getCategoryName() { return categoryName; }
+    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
 
     @Override
     public int getFinishingPosition() { return finishingPosition; }

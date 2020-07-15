@@ -316,7 +316,7 @@ public class GameRecordDaoTest {
 
                 List<Player> players = playerTeamsWithPlayers.get(0).getPlayers();
                 assertThat(players.get(0), is(TestData.PLAYER_5));
-            } else if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_4.getId()) {
+            } else if (gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId() == TestData.GAME_RECORD_5.getId()) {
                 playerTeamsWithPlayers = gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers();
                 assertTrue(playerTeamsWithPlayers.isEmpty());
             }
@@ -362,9 +362,9 @@ public class GameRecordDaoTest {
             }
         }
 
-        gameRecordWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordWithPlayerTeamsAndPlayersByRecordId(TestData.GAME_RECORD_4.getId()));
+        gameRecordWithPlayerTeamsAndPlayers = LiveDataTestUtil.getValue(gameRecordDao.findGameRecordWithPlayerTeamsAndPlayersByRecordId(TestData.GAME_RECORD_5.getId()));
 
-        assertThat(gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId(), is(TestData.GAME_RECORD_4.getId()));
+        assertThat(gameRecordWithPlayerTeamsAndPlayers.getGameRecord().getId(), is(TestData.GAME_RECORD_5.getId()));
         assertTrue(gameRecordWithPlayerTeamsAndPlayers.getPlayerTeamsWithPlayers().isEmpty());
     }
 

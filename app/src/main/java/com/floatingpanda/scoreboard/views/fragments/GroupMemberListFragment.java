@@ -49,7 +49,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.recyclerview_layout_main, container, false);
+        View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
