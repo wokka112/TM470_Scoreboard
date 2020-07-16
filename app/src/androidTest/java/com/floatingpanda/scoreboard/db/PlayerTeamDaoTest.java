@@ -359,4 +359,14 @@ public class PlayerTeamDaoTest {
         assertThat(playerWithRatingChanges.getPlayer(), is(TestData.PLAYER_1));
         assertThat(playerWithRatingChanges.getPlayerSkillRatingChanges().size(), is(2));
     }
+
+    @Test
+    public void getPlayerTeamIdByTeamNumberAndRecordId() throws InterruptedException {
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+
+        int playerTeamId = playerTeamDao.getNonLivePlayerTeamIdByTeamNumberAndRecordId(TestData.PLAYER_TEAM_1.getTeamNumber(), TestData.PLAYER_TEAM_1.getRecordId());
+        assertThat(playerTeamId, is(TestData.PLAYER_TEAM_1.getId()));
+    }
 }

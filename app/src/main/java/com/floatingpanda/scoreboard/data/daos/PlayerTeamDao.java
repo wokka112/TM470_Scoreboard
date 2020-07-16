@@ -70,4 +70,9 @@ public interface PlayerTeamDao {
     @Transaction
     @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId ORDER BY position ASC, team_number ASC")
     LiveData<List<PlayerTeamWithPlayersAndRatingChanges>> getPlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId);
+
+    //TODO write test
+    @Transaction
+    @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId ORDER BY position ASC, team_number ASC")
+    List<PlayerTeamWithPlayersAndRatingChanges> getNonLivePlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId);
 }

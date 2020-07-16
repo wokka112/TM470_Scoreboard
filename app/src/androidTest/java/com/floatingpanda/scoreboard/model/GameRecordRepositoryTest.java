@@ -629,6 +629,360 @@ public class GameRecordRepositoryTest {
         assertThat(insertedGameRecords.get(TestData.GAME_RECORDS.size()).getDateTime(), is(gameRecord.getDateTime()));
     }
 
+    @Test
+    public void removeGameRecordWithPlayersAndCheckGameRecordAndPlayersAreRemoved() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        TeamOfPlayers team1 = new TeamOfPlayers(1, 1);
+        List<Member> team1Members = new ArrayList<>();
+        team1Members.add(TestData.MEMBER_1);
+        team1Members.add(TestData.MEMBER_4);
+        team1.setMembers(team1Members);
+
+        TeamOfPlayers team2 = new TeamOfPlayers(2, 1);
+        List<Member> team2Members = new ArrayList<>();
+        team2Members.add(TestData.MEMBER_5);
+        team2Members.add(TestData.MEMBER_6);
+        team2.setMembers(team2Members);
+
+        List<TeamOfPlayers> teamsOfPlayers = new ArrayList<>();
+        teamsOfPlayers.add(team1);
+        teamsOfPlayers.add(team2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2019);
+        calendar.set(Calendar.MONTH, 8 - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 14);
+
+        GameRecord gameRecord = new GameRecord(TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), 5, calendar.getTime(), true, PlayMode.PlayModeEnum.COMPETITIVE, 2);
+
+        gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        List<GameRecord> gameRecords = LiveDataTestUtil.getValue(gameRecordDao.getAll());
+        assertThat(gameRecords.size(), is(TestData.GAME_RECORDS.size() + 1));
+
+        List<PlayerTeam> playerTeams = LiveDataTestUtil.getValue(playerTeamDao.getAll());
+        assertThat(playerTeams.size(), is (TestData.PLAYER_TEAMS.size() + teamsOfPlayers.size()));
+
+        List<Player> players = LiveDataTestUtil.getValue(playerDao.getAll());
+        int noOfNewPlayers = team1.getMembers().size() + team2.getMembers().size();
+        assertThat(players.size(), is(TestData.PLAYERS.size() + noOfNewPlayers));
+
+        List<PlayerSkillRatingChange> playerSkillRatingChanges = LiveDataTestUtil.getValue(playerSkillRatingChangeDao.getAll());
+        List<Integer> assignedCategoryIds = assignedCategoryDao.getAllCategoryIdsByBoardGameId(TestData.BOARD_GAME_1.getId());
+
+        int noOfNewSkillRatingChanges = assignedCategoryIds.size() * noOfNewPlayers;
+        assertThat(playerSkillRatingChanges.size(), is(TestData.PLAYER_SKILL_RATING_CHANGES.size() + noOfNewSkillRatingChanges));
+
+        gameRecord = gameRecordDao.findNonLiveDataGameRecordByRecordId(TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), gameRecord.getDateTime().getTime());
+        gameRecordRepository.deleteGameRecord(gameRecord);
+        TimeUnit.MILLISECONDS.sleep(100);
+
+        GameRecord daoGameRecord = LiveDataTestUtil.getValue(gameRecordDao.findLiveDataGameRecordByRecordId(gameRecord.getId()));
+        assertNull(daoGameRecord);
+
+        gameRecords = LiveDataTestUtil.getValue(gameRecordDao.getAll());
+        assertThat(gameRecords.size(), is(TestData.GAME_RECORDS.size()));
+
+        playerTeams = LiveDataTestUtil.getValue(playerTeamDao.getAll());
+        assertThat(playerTeams.size(), is (TestData.PLAYER_TEAMS.size()));
+
+        players = LiveDataTestUtil.getValue(playerDao.getAll());
+        assertThat(players.size(), is(TestData.PLAYERS.size()));
+
+        playerSkillRatingChanges = LiveDataTestUtil.getValue(playerSkillRatingChangeDao.getAll());
+        assertThat(playerSkillRatingChanges.size(), is(TestData.PLAYER_SKILL_RATING_CHANGES.size()));
+    }
+
+    @Test
+    public void removeGameRecordWithPlayersAndCheckScoresAreReverted() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        TeamOfPlayers team1 = new TeamOfPlayers(1, 1);
+        List<Member> team1Members = new ArrayList<>();
+        team1Members.add(TestData.MEMBER_1);
+        team1Members.add(TestData.MEMBER_4);
+        team1.setMembers(team1Members);
+
+        TeamOfPlayers team2 = new TeamOfPlayers(2, 1);
+        List<Member> team2Members = new ArrayList<>();
+        team2Members.add(TestData.MEMBER_5);
+        team2Members.add(TestData.MEMBER_6);
+        team2.setMembers(team2Members);
+
+        List<TeamOfPlayers> teamsOfPlayers = new ArrayList<>();
+        teamsOfPlayers.add(team1);
+        teamsOfPlayers.add(team2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2019);
+        calendar.set(Calendar.MONTH, 8 - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 14);
+
+        GameRecord gameRecord = new GameRecord(TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), 5, calendar.getTime(), true, PlayMode.PlayModeEnum.COMPETITIVE, 2);
+
+        // FOR SCORE TESTS //
+
+        Score member1OldScore = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getId(), TestData.MEMBER_1.getId()));
+        //int member1OldScoreInt = member1OldScore.getScore();
+        assertThat(member1OldScore, is(TestData.SCORE_1));
+        assertThat(member1OldScore.getScore(), is(TestData.SCORE_1.getScore()));
+
+        Score member4OldScore = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getId(), TestData.MEMBER_4.getId()));
+        //int member4OldScoreInt = member4OldScore.getScore();
+        assertThat(member4OldScore, is(TestData.SCORE_2));
+        assertThat(member4OldScore.getScore(), is(TestData.SCORE_2.getScore()));
+
+        gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        // SCORE TESTS //
+
+        int addScore = team1.getScore();
+
+        Score member1NewScore = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getId(), TestData.MEMBER_1.getId()));
+        assertThat(member1NewScore.getScore(), is(member1OldScore.getScore() + addScore));
+
+        Score member4NewScore = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getId(), TestData.MEMBER_4.getId()));
+        assertThat(member4NewScore.getScore(), is(member4OldScore.getScore() + addScore));
+
+        gameRecordRepository.deleteGameRecord(gameRecord);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        member1NewScore = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getId(), TestData.MEMBER_1.getId()));
+        assertThat(member1NewScore.getScore(), is(member1OldScore.getScore()));
+
+        member4NewScore = LiveDataTestUtil.getValue(scoreDao.getGroupMembersMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getId(), TestData.MEMBER_4.getId()));
+        assertThat(member4NewScore.getScore(), is(member4OldScore.getScore()));
+    }
+
+    @Test
+    public void removeGameRecordWithPlayersAndCheckSkillRatingsAreReverted() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        TeamOfPlayers team1 = new TeamOfPlayers(1, 1);
+        List<Member> team1Members = new ArrayList<>();
+        team1Members.add(TestData.MEMBER_1);
+        team1Members.add(TestData.MEMBER_4);
+        team1.setMembers(team1Members);
+
+        TeamOfPlayers team2 = new TeamOfPlayers(2, 1);
+        List<Member> team2Members = new ArrayList<>();
+        team2Members.add(TestData.MEMBER_5);
+        team2Members.add(TestData.MEMBER_6);
+        team2.setMembers(team2Members);
+
+        List<TeamOfPlayers> teamsOfPlayers = new ArrayList<>();
+        teamsOfPlayers.add(team1);
+        teamsOfPlayers.add(team2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2019);
+        calendar.set(Calendar.MONTH, 8 - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 14);
+
+        GameRecord gameRecord = new GameRecord(TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), 5, calendar.getTime(), true, PlayMode.PlayModeEnum.COMPETITIVE, 2);
+
+        // FOR SKILL RATING TESTS //
+
+        List<Integer> bg1AssignedCategoryIds = assignedCategoryDao.getAllCategoryIdsByBoardGameId(TestData.BOARD_GAME_1.getId());
+        Map<Integer, Double> member1Ratings = new HashMap<>();
+        Map<Integer, Double> member4Ratings = new HashMap<>();
+        for (int assignedCategoryId : bg1AssignedCategoryIds) {
+            for (Member member : team1Members) {
+                int memberId = member.getId();
+                double eloRating = groupCategorySkillRatingDao.getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId(gameRecord.getGroupId(), assignedCategoryId, memberId);
+
+                if (memberId == TestData.MEMBER_1.getId()) {
+                    member1Ratings.put(assignedCategoryId, eloRating);
+                } else if (memberId == TestData.MEMBER_4.getId()) {
+                    member4Ratings.put(assignedCategoryId, eloRating);
+                } else {
+                    fail("Member id that doesn't belong in team1 detected.");
+                }
+            }
+        }
+
+        // METHOD RUN //
+
+        //Runs on background thread, so sleep to give it time.
+        gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        // METHOD FINISH RUN //
+
+        // SKILL RATING TESTS //
+
+        for (GroupCategoryRatingChange groupCategoryRatingChange : team1.getGroupCategoryRatingChanges()) {
+            int categoryId = groupCategoryRatingChange.getCategoryId();
+            double eloRatingChange = groupCategoryRatingChange.getEloRatingChange();
+
+            for (Member member : team1.getMembers()) {
+                int memberId = member.getId();
+                double newEloRating = groupCategorySkillRatingDao.getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId(gameRecord.getGroupId(), categoryId, member.getId());
+                double oldEloRating = -999999.99;
+
+                if (memberId == TestData.MEMBER_1.getId()) {
+                    oldEloRating = member1Ratings.get(categoryId);
+                } else if (memberId == TestData.MEMBER_4.getId()) {
+                    oldEloRating = member4Ratings.get(categoryId);
+                } else {
+                    fail("Member id that doesn't belong in team1 detected.");
+                }
+
+                assertThat(newEloRating - eloRatingChange, is(oldEloRating));
+            }
+        }
+
+        gameRecord = gameRecordDao.findNonLiveDataGameRecordByRecordId(gameRecord.getGroupId(), gameRecord.getBoardGameName(), gameRecord.getDateTime().getTime());
+        gameRecordRepository.deleteGameRecord(gameRecord);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        for (GroupCategoryRatingChange groupCategoryRatingChange : team1.getGroupCategoryRatingChanges()) {
+            int categoryId = groupCategoryRatingChange.getCategoryId();
+            double eloRatingChange = groupCategoryRatingChange.getEloRatingChange();
+
+            for (Member member : team1.getMembers()) {
+                int memberId = member.getId();
+                double newEloRating = groupCategorySkillRatingDao.getNonLiveSkillRatingValueViaGroupIdAndCategoryIdAndMemberId(gameRecord.getGroupId(), categoryId, member.getId());
+                double oldEloRating = -999999.99;
+
+                if (memberId == TestData.MEMBER_1.getId()) {
+                    oldEloRating = member1Ratings.get(categoryId);
+                } else if (memberId == TestData.MEMBER_4.getId()) {
+                    oldEloRating = member4Ratings.get(categoryId);
+                } else {
+                    fail("Member id that doesn't belong in team1 detected.");
+                }
+
+                assertThat(newEloRating, is(oldEloRating));
+            }
+        }
+    }
+
+    @Test
+    public void removeGameRecordWithPlayersAndCheckPlayerSkillRatingChangeRemovalIsCorrect() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        TeamOfPlayers team1 = new TeamOfPlayers(1, 1);
+        List<Member> team1Members = new ArrayList<>();
+        team1Members.add(TestData.MEMBER_1);
+        team1Members.add(TestData.MEMBER_4);
+        team1.setMembers(team1Members);
+
+        TeamOfPlayers team2 = new TeamOfPlayers(2, 1);
+        List<Member> team2Members = new ArrayList<>();
+        team2Members.add(TestData.MEMBER_5);
+        team2Members.add(TestData.MEMBER_6);
+        team2.setMembers(team2Members);
+
+        List<TeamOfPlayers> teamsOfPlayers = new ArrayList<>();
+        teamsOfPlayers.add(team1);
+        teamsOfPlayers.add(team2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2019);
+        calendar.set(Calendar.MONTH, 8 - 1);
+        calendar.set(Calendar.DAY_OF_MONTH, 14);
+
+        GameRecord gameRecord = new GameRecord(TestData.GROUP_1.getId(), TestData.BOARD_GAME_1.getBgName(), 5, calendar.getTime(), true, PlayMode.PlayModeEnum.COMPETITIVE, 2);
+
+        // FOR SKILL RATING CHANGE INSERTION TESTS //
+
+        List<Integer> assignedCategoryIds = assignedCategoryDao.getAllCategoryIdsByBoardGameId(TestData.BOARD_GAME_1.getId());
+
+        int groupId = TestData.GROUP_1.getId();
+        int memberId = team1.getMembers().get(0).getId();
+        int categoryId = assignedCategoryIds.get(0);
+
+        GroupCategorySkillRating oldGroupCategorySkillRating = LiveDataTestUtil.getValue(
+                groupCategorySkillRatingDao.getGroupCategorySkillRatingByGroupIdAndCategoryIdAndMemberId(TestData.GROUP_1.getId(), categoryId, memberId));
+
+        // METHOD RUN //
+
+        //Runs on background thread, so sleep to give it time.
+        gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        // METHOD FINISH RUN //
+
+        // SKILL RATING CHANGE INSERTION TESTS //
+        int noOfPlayers = team1.getMembers().size() + team2.getMembers().size();
+        int noOfNewSkillRatingChanges = assignedCategoryIds.size() * noOfPlayers;
+
+        List<PlayerSkillRatingChange> playerSkillRatingChanges = LiveDataTestUtil.getValue(playerSkillRatingChangeDao.getAll());
+
+        assertThat(playerSkillRatingChanges.size(), is(TestData.PLAYER_SKILL_RATING_CHANGES.size() + noOfNewSkillRatingChanges));
+
+        GroupCategorySkillRating newGroupCategorySkillRating = LiveDataTestUtil.getValue(
+                groupCategorySkillRatingDao.getGroupCategorySkillRatingByGroupIdAndCategoryIdAndMemberId(TestData.GROUP_1.getId(), categoryId, memberId));
+
+        GameRecord gameRecordFromDao = gameRecordDao.findNonLiveDataGameRecordByRecordId(groupId, TestData.BOARD_GAME_1.getBgName(), calendar.getTimeInMillis());
+
+        int playerTeamId = playerTeamDao.getNonLivePlayerTeamIdByTeamNumberAndRecordId(team1.getTeamNo(), gameRecordFromDao.getId());
+        int playerId = playerDao.getPlayerIdByPlayerTeamIdAndMemberNickname(playerTeamId, team1.getMembers().get(0).getNickname());
+        String categoryName = bgCategoryDao.getNonLiveCategoryNameByCategoryId(categoryId);
+        PlayerSkillRatingChange playerSkillRatingChange = LiveDataTestUtil.getValue(playerSkillRatingChangeDao.getPlayerSkillRatingChangeByPlayerIdAndCategoryName(playerId, categoryName));
+
+        // Calculate the change that should have occurred and round to 2 decimal places, rounded up, to match how it is stored in the database.
+        double calculatedRatingChange = newGroupCategorySkillRating.getSkillRating() - playerSkillRatingChange.getOldRating();
+        BigDecimal calculatedRatingChangeBigDecimal = new BigDecimal(calculatedRatingChange).setScale(2, RoundingMode.HALF_UP);
+
+        assertThat(playerSkillRatingChange.getOldRating(), is(oldGroupCategorySkillRating.getSkillRating()));
+        assertThat(playerSkillRatingChange.getRatingChange(), is(calculatedRatingChangeBigDecimal.doubleValue()));
+
+        gameRecordRepository.deleteGameRecord(gameRecordFromDao);
+        TimeUnit.MILLISECONDS.sleep(300);
+
+        playerSkillRatingChange = LiveDataTestUtil.getValue(playerSkillRatingChangeDao.getPlayerSkillRatingChangeByPlayerIdAndCategoryName(playerId, categoryName));
+        assertNull(playerSkillRatingChange);
+    }
+
     // TESTS FOR THE HELPER METHODS. NEED TO MAKE THE HELPER METHODS PUBLIC BEFORE UNCOMMENTING THESE //
 
     @Test

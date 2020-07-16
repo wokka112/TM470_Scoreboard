@@ -47,6 +47,9 @@ public interface BgCategoryDao {
     @Query("SELECT category_name FROM bg_categories WHERE category_id LIKE :categoryId")
     String getNonLiveCategoryNameByCategoryId(int categoryId);
 
+    @Query("SELECT category_id FROM bg_categories WHERE category_name LIKE :categoryName")
+    int getCategoryIdByCategoryName(String categoryName);
+
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     void insertAll(BgCategory... bgCategories);
 

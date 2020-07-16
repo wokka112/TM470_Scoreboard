@@ -39,6 +39,9 @@ public interface ScoreDao {
     @Query("UPDATE scores SET score = score + :addScore WHERE group_monthly_score_id LIKE :groupMonthlyScoreId AND member_id LIKE :memberId")
     void addScore(int groupMonthlyScoreId, int memberId, int addScore);
 
+    @Query("UPDATE scores SET score = score - :removeScore WHERE group_monthly_score_id LIKE :groupMonthlyScoreId AND member_id LIKE :memberId")
+    void removeScore(int groupMonthlyScoreId, int memberId, int removeScore);
+
     @Transaction
     @Query("SELECT * FROM scores ORDER BY score DESC")
     public LiveData<List<ScoreWithMemberDetails>> getAllScoresWithMemberDetails();

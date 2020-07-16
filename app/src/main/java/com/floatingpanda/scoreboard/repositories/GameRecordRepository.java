@@ -11,6 +11,7 @@ import com.floatingpanda.scoreboard.calculators.Calculator;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
 import com.floatingpanda.scoreboard.data.daos.GroupCategorySkillRatingDao;
+import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerSkillRatingChangeDao;
 import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
@@ -49,6 +50,7 @@ public class GameRecordRepository {
     private AssignedCategoryDao assignedCategoryDao;
     private GroupCategorySkillRatingDao groupCategorySkillRatingDao;
     private PlayerSkillRatingChangeDao playerSkillRatingChangeDao;
+    private MemberDao memberDao;
     private LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> allGameRecordsWithTeamsAndPlayers;
 
     public GameRecordRepository(Application application) {
@@ -64,6 +66,7 @@ public class GameRecordRepository {
         assignedCategoryDao = db.assignedCategoryDao();
         groupCategorySkillRatingDao = db.groupCategorySkillRatingDao();
         playerSkillRatingChangeDao = db.playerSkillRatingChangeDao();
+        memberDao = db.memberDao();
 
         allGameRecordsWithTeamsAndPlayers = gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers();
     }
@@ -80,6 +83,7 @@ public class GameRecordRepository {
         assignedCategoryDao = db.assignedCategoryDao();
         groupCategorySkillRatingDao = db.groupCategorySkillRatingDao();
         playerSkillRatingChangeDao = db.playerSkillRatingChangeDao();
+        memberDao = db.memberDao();
 
         allGameRecordsWithTeamsAndPlayers = gameRecordDao.getAllGameRecordsWithPlayerTeamsAndPlayers();
     }
@@ -133,6 +137,51 @@ public class GameRecordRepository {
             if (gameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
                 calculateAndAssignSkillRatingChanges(gameRecord, teamsOfPlayers);
             }
+        });
+    }
+
+    public void deleteGameRecord(GameRecord gameRecord) {
+        AppDatabase.getExecutorService().execute(() -> {
+            //Get skill rating changes
+            List<PlayerTeamWithPlayersAndRatingChanges> playerTeamsWithPlayersAndRatingChanges =
+                    playerTeamDao.getNonLivePlayerTeamsWithPlayersAndRatingChangesByRecordId(gameRecord.getId());
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(gameRecord.getDateTime());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+
+            //SCORE STUFF
+            for (PlayerTeamWithPlayersAndRatingChanges playerTeamWithPlayersAndRatingChanges : playerTeamsWithPlayersAndRatingChanges) {
+                int groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(gameRecord.getGroupId(), year, month);
+                int score = playerTeamWithPlayersAndRatingChanges.getPlayerTeam().getScore();
+                for (PlayerWithRatingChanges playerWithRatingChanges : playerTeamWithPlayersAndRatingChanges.getPlayersWithRatingChanges()) {
+                    String memberNickname = playerWithRatingChanges.getPlayer().getMemberNickname();
+                    int memberId = memberDao.getMemberIdByMemberNickname(memberNickname);
+                    scoreDao.removeScore(groupMonthlyScoreId, memberId, score);
+                }
+            }
+
+            //SKILL RATING STUFF
+
+            //Undo skill rating changes
+            List<PlayerWithRatingChanges> playersWithRatingChanges = new ArrayList<>();
+            for(PlayerTeamWithPlayersAndRatingChanges playerTeamWithPlayersAndRatingChanges : playerTeamsWithPlayersAndRatingChanges) {
+                playersWithRatingChanges.addAll(playerTeamWithPlayersAndRatingChanges.getPlayersWithRatingChanges());
+            }
+
+            for (PlayerWithRatingChanges playerWithRatingChanges : playersWithRatingChanges) {
+                String memberNickname = playerWithRatingChanges.getPlayer().getMemberNickname();
+                int memberId = memberDao.getMemberIdByMemberNickname(memberNickname);
+                for (PlayerSkillRatingChange playerSkillRatingChange : playerWithRatingChanges.getPlayerSkillRatingChanges()) {
+                    int categoryId = bgCategoryDao.getCategoryIdByCategoryName(playerSkillRatingChange.getCategoryName());
+                    double ratingChange = playerSkillRatingChange.getRatingChange();
+                    groupCategorySkillRatingDao.removeSkillRatingFromSingleGame(gameRecord.getGroupId(), categoryId, memberId, ratingChange);
+                }
+            }
+
+            //Delete everything.
+            gameRecordDao.delete(gameRecord);
         });
     }
 

@@ -1,9 +1,12 @@
 package com.floatingpanda.scoreboard.views.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +22,8 @@ import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
+import com.floatingpanda.scoreboard.views.activities.GameRecordActivity;
+import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 
 import java.util.Calendar;
 import java.util.List;
@@ -31,6 +36,7 @@ public class GameRecordScoresListFragment extends Fragment {
     private TextView boardGameNameTextView, dateTextView, timeTextView, playModeTextView, wonLostTextView, difficultyOutputTextView,
             playerCountHeaderTextView, playerCountOutputTextView;
     private RecyclerView recyclerView;
+    private Button deleteButton;
 
     public GameRecordScoresListFragment(GameRecord gameRecord) {
         this.gameRecord = gameRecord;
@@ -53,6 +59,8 @@ public class GameRecordScoresListFragment extends Fragment {
 
         recyclerView = rootView.findViewById(R.id.activity_game_record_details_recyclerview);
 
+        deleteButton = rootView.findViewById(R.id.activity_game_record_details_delete_button);
+
         setViews(gameRecord);
 
         gameRecordViewModel.getPlayerTeamsWithPlayers(gameRecord.getId()).observe(getViewLifecycleOwner(), new Observer<List<PlayerTeamWithPlayers>>() {
@@ -62,19 +70,42 @@ public class GameRecordScoresListFragment extends Fragment {
             }
         });
 
-        /*
-        Button deleteButton;
-
-        deleteButton = findViewById(R.id.memberact_delete_button);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startDeleteActivity(member);
+                startDeleteActivity(gameRecord);
             }
         });
-         */
 
         return rootView;
+    }
+
+    private void startDeleteActivity(GameRecord gameRecord) {
+        //TODO refactor this popup window into a method and find somewhere better to put it.
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Delete Game Record?")
+                .setMessage("Are you sure you want to delete this record?\n" +
+                        "This will change player skill ratings and may decrease the accuracy of the " +
+                        "skill rating system if this is not the latest record.")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteGameRecord(gameRecord);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        return;
+                    }
+                })
+                .create()
+                .show();
+    }
+
+    private void deleteGameRecord(GameRecord gameRecord) {
+        gameRecordViewModel.deleteGameRecord(gameRecord);
+        getActivity().finish();
     }
 
     private void setViews(GameRecord gameRecord) {
@@ -187,36 +218,4 @@ public class GameRecordScoresListFragment extends Fragment {
     private String getTimeString(Calendar calendar) {
         return calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
-
-    /*
-    private void startDeleteActivity(Member member) {
-        //TODO refactor this popup window into a method and find somewhere better to put it.
-        AlertDialog.Builder builder = new AlertDialog.Builder(MemberActivity.this);
-        builder.setTitle("Delete Member?")
-                .setMessage("Are you sure you want to delete " + member.getNickname() + "?\n" +
-                        "The member will be removed from winner lists, groups and game records, and " +
-                        "their skill ratings will be deleted.\n" +
-                        "This operation is irreversible.")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteMember(member);
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        return;
-                    }
-                })
-                .create()
-                .show();
-    }
-
-    private void deleteMember(Member member) {
-        memberViewModel.deleteMember(member);
-        finish();
-    }
-
-     */
 }

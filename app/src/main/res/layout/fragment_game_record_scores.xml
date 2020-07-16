@@ -97,10 +97,20 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_game_record_details_recyclerview"
         app:layout_constraintTop_toBottomOf="@id/activity_game_record_details_won_lost"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/activity_game_record_details_delete_button"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"/>
+
+    <Button
+        android:text="Delete Record"
+        android:id="@+id/activity_game_record_details_delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

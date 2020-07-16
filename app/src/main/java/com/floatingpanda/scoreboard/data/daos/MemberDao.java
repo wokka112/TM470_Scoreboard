@@ -44,6 +44,9 @@ public interface MemberDao {
     @Query("SELECT * FROM members WHERE nickname LIKE :nickname")
     Member findNonLiveDataByNickname(String nickname);
 
+    @Query("SELECT member_id FROM members WHERE nickname LIKE :nickname")
+    int getMemberIdByMemberNickname(String nickname);
+
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     void insertAll(Member... members);
 

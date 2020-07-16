@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -71,5 +72,9 @@ public class GameRecordViewModel extends AndroidViewModel {
     public void addGameRecordAndPlayers(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
         //Add game record, player team and players, then assign skill rating changes and score changes
         gameRecordRepository.addGameRecordAndPlayerTeams(gameRecord, teamsOfPlayers);
+    }
+
+    public void deleteGameRecord(GameRecord gameRecord) {
+        gameRecordRepository.deleteGameRecord(gameRecord);
     }
 }

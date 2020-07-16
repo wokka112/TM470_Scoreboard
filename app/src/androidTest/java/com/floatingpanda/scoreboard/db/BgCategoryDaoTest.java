@@ -3,6 +3,7 @@ package com.floatingpanda.scoreboard.db;
 import android.content.Context;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.room.Query;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -250,4 +251,13 @@ public class BgCategoryDaoTest {
 
         assertThat(updatedBgCategory.getCategoryName(), is(newCategoryName));
     }
+
+    @Test
+    public void getCategoryNameByCategoryId() throws InterruptedException {
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+
+        String categoryName = bgCategoryDao.getNonLiveCategoryNameByCategoryId(TestData.BG_CATEGORY_1.getId());
+        assertThat(categoryName, is(TestData.BG_CATEGORY_1.getCategoryName()));
+    }
+
 }

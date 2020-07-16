@@ -49,6 +49,10 @@ public interface GroupCategorySkillRatingDao {
             "WHERE group_id LIKE :groupId AND category_id LIKE :categoryId AND member_id LIKE :memberId")
     void addSkillRatingFromSingleGame(int groupId, int categoryId, int memberId, double addSkillRating);
 
+    @Query("UPDATE group_category_skill_ratings SET skill_rating = ROUND(skill_rating - :removeSkillRating, 2), games_rated = games_rated - 1 " +
+            "WHERE group_id LIKE :groupId AND category_id LIKE :categoryId AND member_id LIKE :memberId")
+    void removeSkillRatingFromSingleGame(int groupId, int categoryId, int memberId, double removeSkillRating);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(GroupCategorySkillRating... groupCategorySkillRatings);
 
