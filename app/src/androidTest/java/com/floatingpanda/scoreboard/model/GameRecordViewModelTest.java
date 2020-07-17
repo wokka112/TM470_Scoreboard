@@ -11,11 +11,17 @@ import com.floatingpanda.scoreboard.LiveDataTestUtil;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.TestData;
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.daos.BgCategoryDao;
+import com.floatingpanda.scoreboard.data.daos.PlayerSkillRatingChangeDao;
+import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
+import com.floatingpanda.scoreboard.data.entities.PlayerSkillRatingChange;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayersAndRatingChanges;
+import com.floatingpanda.scoreboard.data.relations.PlayerWithRatingChanges;
 import com.floatingpanda.scoreboard.repositories.GameRecordRepository;
 import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.Group;
@@ -59,6 +65,8 @@ public class GameRecordViewModelTest {
     private PlayerTeamDao playerTeamDao;
     private PlayerDao playerDao;
     private MemberDao memberDao;
+    private BgCategoryDao bgCategoryDao;
+    private PlayerSkillRatingChangeDao playerSkillRatingChangeDao;
 
     private GameRecordRepository gameRecordRepository;
     private GameRecordViewModel gameRecordViewModel;
@@ -76,6 +84,8 @@ public class GameRecordViewModelTest {
         playerTeamDao = db.playerTeamDao();
         playerDao = db.playerDao();
         memberDao = db.memberDao();
+        bgCategoryDao = db.bgCategoryDao();
+        playerSkillRatingChangeDao = db.playerSkillRatingChangeDao();
 
         gameRecordRepository = new GameRecordRepository(db);
         gameRecordViewModel = new GameRecordViewModel(ApplicationProvider.getApplicationContext(), db);
@@ -128,6 +138,31 @@ public class GameRecordViewModelTest {
 
         assertThat(gameRecordsWithPlayerTeamsAndPlayers.size(), is(3));
         assertThat(gameRecordsWithPlayerTeamsAndPlayers.get(0).getGameRecord().getGroupId(), is(TestData.GROUP_1.getId()));
+    }
+
+    @Test
+    public void extractPlayersWithRatingChangeViews() throws InterruptedException {
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        List<PlayerTeamWithPlayersAndRatingChanges> playerTeamsWithPlayersAndRatingChanges =
+                LiveDataTestUtil.getValue(gameRecordViewModel.getPlayerTeamsWithPlayersAndRatingChangesByRecordId(TestData.GAME_RECORD_1.getId()));
+
+        assertThat(playerTeamsWithPlayersAndRatingChanges.size(), is(4));
+
+        int noOfPlayers = 0;
+
+        for(PlayerTeamWithPlayersAndRatingChanges playerTeamWithPlayersAndRatingChanges : playerTeamsWithPlayersAndRatingChanges) {
+            noOfPlayers += playerTeamWithPlayersAndRatingChanges.getPlayersWithRatingChanges().size();
+        }
+
+        List<PlayerWithRatingChanges> playersWithRatingChangeViews = gameRecordViewModel.extractPlayersWithRatingChanges(playerTeamsWithPlayersAndRatingChanges);
+
+        assertThat(playersWithRatingChangeViews.size(), is(noOfPlayers));
     }
 
     @Test

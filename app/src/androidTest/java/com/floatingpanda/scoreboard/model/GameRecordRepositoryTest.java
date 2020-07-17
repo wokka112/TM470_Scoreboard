@@ -34,6 +34,8 @@ import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
+import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayersAndRatingChanges;
+import com.floatingpanda.scoreboard.data.relations.PlayerWithRatingChanges;
 import com.floatingpanda.scoreboard.repositories.GameRecordRepository;
 import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.entities.Group;
@@ -188,6 +190,40 @@ public class GameRecordRepositoryTest {
         assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_2.getTeamNumber()));
         assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_3.getTeamNumber()));
         assertTrue(playerTeamNos.contains(TestData.PLAYER_TEAM_4.getTeamNumber()));
+    }
+
+    @Test
+    public void getPlayerTeamsWithPlayersAndRatingChangesByRecordId() throws InterruptedException {
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        assignedCategoryDao.insertAll(TestData.ASSIGNED_CATEGORIES.toArray(new AssignedCategory[TestData.ASSIGNED_CATEGORIES.size()]));
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+        groupCategorySkillRatingDao.insertAll(TestData.GROUP_CATEGORY_SKILL_RATINGS.toArray(new GroupCategorySkillRating[TestData.GROUP_CATEGORY_SKILL_RATINGS.size()]));
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+        playerTeamDao.insertAll(TestData.PLAYER_TEAMS.toArray(new PlayerTeam[TestData.PLAYER_TEAMS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        playerDao.insertAll(TestData.PLAYERS.toArray(new Player[TestData.PLAYERS.size()]));
+        playerSkillRatingChangeDao.insertAll(TestData.PLAYER_SKILL_RATING_CHANGES.toArray(new PlayerSkillRatingChange[TestData.PLAYER_SKILL_RATING_CHANGES.size()]));
+
+        List<PlayerTeamWithPlayersAndRatingChanges> playerTeamsWithPlayerAndRatingChanges =
+                LiveDataTestUtil.getValue(gameRecordRepository.getPlayerTeamsWithPlayersAndRatingChangesByRecordId(TestData.GAME_RECORD_1.getId()));
+
+        assertThat(playerTeamsWithPlayerAndRatingChanges.size(), is(4));
+
+        for (PlayerTeamWithPlayersAndRatingChanges playerTeamWithPlayerAndRatingChanges : playerTeamsWithPlayerAndRatingChanges) {
+            if (playerTeamWithPlayerAndRatingChanges.getPlayerTeam().getId() == TestData.PLAYER_TEAM_1.getId()) {
+                List<PlayerWithRatingChanges> playersWithRatingChanges = playerTeamWithPlayerAndRatingChanges.getPlayersWithRatingChanges();
+                assertThat(playersWithRatingChanges.size(), is(1));
+
+                List<PlayerSkillRatingChange> playerSkillRatingChanges = playersWithRatingChanges.get(0).getPlayerSkillRatingChanges();
+                assertThat(playerSkillRatingChanges.size(), is(2));
+
+                assertTrue(playerSkillRatingChanges.contains(TestData.PLAYER_SKILL_RATING_CHANGE_1));
+                assertTrue(playerSkillRatingChanges.contains(TestData.PLAYER_SKILL_RATING_CHANGE_2));
+            }
+        }
     }
 
     @Test
