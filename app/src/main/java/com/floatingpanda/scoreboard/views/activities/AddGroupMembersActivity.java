@@ -27,8 +27,8 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
-    private GroupWithMembers groupWithMembers;
     private MemberViewModel memberViewModel;
+    private List<Member> groupMembers;
     private List<Member> nonGroupMembers;
     private List<Member> selectedMembers;
 
@@ -51,7 +51,7 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
 
         buttonTextView.setText("Create new member");
 
-        groupWithMembers = (GroupWithMembers) getIntent().getExtras().get("GROUP_WITH_MEMBERS");
+        groupMembers = (ArrayList<Member>) getIntent().getExtras().get("GROUP_MEMBERS");
         selectedMembers = new ArrayList<>();
 
         memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
@@ -84,7 +84,7 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
 
     private void setNonGroupMembers(List<Member> nonGroupMembers) {
         this.nonGroupMembers = new ArrayList<>(nonGroupMembers);
-        this.nonGroupMembers.removeAll(groupWithMembers.getMembers());
+        this.nonGroupMembers.removeAll(groupMembers);
     }
 
     public void addSelectedMember(Member member) {

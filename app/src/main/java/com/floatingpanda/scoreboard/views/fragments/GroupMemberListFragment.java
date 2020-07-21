@@ -39,8 +39,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
 
     private GroupMemberViewModel groupMemberViewModel;
     private Group group;
-    private GroupWithMembers groupWithMembers;
-    private List<Member> allMembers;
+    private List<Member> groupMembers;
 
     public GroupMemberListFragment(Group group) {
         this.group = group;
@@ -59,14 +58,11 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         groupMemberViewModel = new ViewModelProvider(this).get(GroupMemberViewModel.class);
-        groupMemberViewModel.initGroupWithMembers(group.getId());
-
-        groupMemberViewModel.getGroupWithMembers().observe(getViewLifecycleOwner(), new Observer<GroupWithMembers>() {
+        groupMemberViewModel.getGroupMembersByGroupId(group.getId()).observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
-            public void onChanged(GroupWithMembers observedGroupWithMembers) {
-                Log.w("GroupMemberListFrg.java", "Got groupWithMembers: " + groupWithMembers);
-                setGroupWithMembers(observedGroupWithMembers);
-                adapter.setGroupMembers(groupWithMembers.getMembers());
+            public void onChanged(List<Member> members) {
+                setGroupMembers(members);
+                adapter.setGroupMembers(members);
             }
         });
 
@@ -125,18 +121,12 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
 
     public void startAddGroupMember() {
         Intent intent = new Intent(getContext(), AddGroupMembersActivity.class);
-        intent.putExtra("GROUP_WITH_MEMBERS", groupWithMembers);
+        intent.putParcelableArrayListExtra("GROUP_MEMBERS", (ArrayList<Member>) groupMembers);
         startActivityForResult(intent, ADD_GROUP_MEMBERS_REQUEST_CODE);
     }
 
-    private void setGroupWithMembers(GroupWithMembers groupWithMembers) {
-        if(groupWithMembers == null) {
-            return;
-        }
-
-        Log.w("GroupMemberListFrg.java", "Set groupWithMembers: " + groupWithMembers);
-        this.groupWithMembers = groupWithMembers;
-        Log.w("GroupMemberListFrg.java", "groupWithMembers set: " + this.groupWithMembers);
+    private void setGroupMembers(List<Member> groupMembers) {
+        this.groupMembers = groupMembers;
     }
 
     @Override

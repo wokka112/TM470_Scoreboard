@@ -45,6 +45,10 @@ public class GroupMemberViewModel extends AndroidViewModel {
 
     public LiveData<GroupWithMembers> getGroupWithMembers() { return groupWithMembers; }
 
+    public LiveData<List<Member>> getGroupMembersByGroupId(int groupId) {
+        return groupRepository.getGroupMembersByGroupId(groupId);
+    }
+
     public LiveData<List<Member>> getAllMembers() { return allMembers; }
 
     // Preconditions: - member does not exist in the database.

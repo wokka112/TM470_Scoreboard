@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
 import com.floatingpanda.scoreboard.data.daos.GroupMemberDao;
@@ -45,6 +46,10 @@ public class GroupRepository {
     public LiveData<Group> getGroupById(int groupId) { return groupDao.findLiveDataById(groupId); }
 
     public LiveData<GroupWithMembers> getGroupWithMembersByGroupId(int groupId) { return groupDao.findGroupWithMembersById(groupId); }
+
+    public LiveData<List<Member>> getGroupMembersByGroupId(int groupId) {
+        return groupMemberDao.findMembersOfASpecificGroupByGroupId(groupId);
+    }
 
     /**
      * Inserts a new Group into the database. If the Group already exists in the database, no new
