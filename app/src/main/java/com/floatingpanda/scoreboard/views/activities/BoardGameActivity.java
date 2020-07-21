@@ -48,8 +48,6 @@ public class BoardGameActivity extends AppCompatActivity {
         imageView = findViewById(R.id.bgact_image);
 
         Button editButton, deleteButton;
-        //TODO replace this with the bgId and then simply find the boardgamewithcategoriesandplaymode via that??
-        // Or maybe use the bg name?
         boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");
 
         boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
@@ -59,8 +57,6 @@ public class BoardGameActivity extends AppCompatActivity {
             public void onChanged(@Nullable final BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
                 bgWithBgCategoriesAndPlayModes = boardGameWithBgCategoriesAndPlayModes;
                 setViews(bgWithBgCategoriesAndPlayModes);
-                //TODO remove observer at this point so it doesn't change again?
-                //Get the live data list, then attach this observer to that list, then call remove observer at this point.
             }
         });
 
@@ -93,7 +89,6 @@ public class BoardGameActivity extends AppCompatActivity {
             return;
         }
 
-        //TODO see if I can make this simpler. Maybe put these methods (getboardgame and getbgcategoriesstring(). in boardgamewithcategoriesandplaymodes.
         BoardGame boardGame = bgWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBoardGame();
 
         nameTextView.setText(boardGame.getBgName());

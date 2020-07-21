@@ -6,7 +6,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.floatingpanda.scoreboard.AlertDialogHelper;
+import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.repositories.BgCategoryRepository;
@@ -76,7 +76,6 @@ public class BgCategoryViewModel extends AndroidViewModel {
      */
     public void deleteBgCategory(BgCategory bgCategory) { bgCategoryRepository.delete(bgCategory); }
 
-    //TODO move this into a validator class??
     public boolean addActivityInputsValid(Activity activity, String categoryName, boolean testing) {
         return editActivityInputsValid(activity, "", categoryName, testing);
     }

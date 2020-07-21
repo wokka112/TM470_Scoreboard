@@ -17,9 +17,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
-
-//TODO remove testing log warnings.
 
 //TODO update layout for member so it reflects the edit/add activity, with large image at top followed by nickname and stuff below.
 // or maybe have nickname at very top centre with image below and everything below that?
@@ -31,8 +30,7 @@ public class MemberActivity extends AppCompatActivity {
     private MemberViewModel memberViewModel;
     private Member member;
 
-    private TextView nicknameTextView, dateCreatedTextView, notesTextView, groupsTextView, viewGroupsLink,
-            bestGameTextView, worstGameTextView;
+    private TextView nicknameTextView, dateCreatedTextView, notesTextView, groupsTextView, viewGroupsLink;
     private ImageView imageView;
 
     @Override
@@ -44,29 +42,16 @@ public class MemberActivity extends AppCompatActivity {
         nicknameTextView = findViewById(R.id.memberact_nickname_output);
         dateCreatedTextView = findViewById(R.id.memberact_date_created_output);
         notesTextView = findViewById(R.id.memberact_notes_output);
-        //TODO implement groupcount in member and functionality to work it out.
         groupsTextView = findViewById(R.id.memberact_groups_output);
         //TODO add listener to link to a list of groups member is part of.
         // also change colour to be blue like a hyperlink (????) Maybe use a button instead. Looks
         // webby otherwise.
         viewGroupsLink = findViewById(R.id.memberact_view_groups);
-        //TODO implement best game in member and functionality to work it out.
-        bestGameTextView = findViewById(R.id.memberact_best_game_output);
-        //TODO implement worst game in member and functionality to work it out.
-        worstGameTextView = findViewById(R.id.memberact_worst_game_output);
         //TODO implement imgfilepath and functionality for it all
         imageView = findViewById(R.id.memberact_image);
 
         member = (Member) getIntent().getExtras().get("MEMBER");
-
-        //TODO change the memberviewmodel to get live data member via id.
-        memberViewModel.getLiveDataMember(member).observe(MemberActivity.this, new Observer<Member>() {
-            @Override
-            public void onChanged(@Nullable final Member liveMember) {
-                setMember(liveMember);
-                setViews(liveMember);
-            }
-        });
+        setViews(member);
 
         Button editButton, deleteButton;
 
@@ -105,32 +90,22 @@ public class MemberActivity extends AppCompatActivity {
      */
     private void setViews(Member member) {
         if (member == null) {
-            //TODO remove log?
             Log.w("MemberActivity.java", "In setViews() method. member is null. This is okay if a " +
                     "result of the delete method.");
             return;
         }
 
-        Log.w("MemberActivity.java", "Setting details: " + member);
         nicknameTextView.setText(member.getNickname());
-        //TODO fix so it presents only day, month, year. Maybe do that via a method in the Member object.
-        dateCreatedTextView.setText(member.getDateCreated().toString());
+
+        DateStringCreator dateStringCreator = new DateStringCreator(member.getDateCreated());
+        String dateString = dateStringCreator.getEnglishMonth3LetterString() + " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
+        dateCreatedTextView.setText(dateString);
+
         notesTextView.setText(member.getNotes());
 
         //TODO implement groupcount in member and functionality to work it out.
-        //member.getGroupCount();
         groupsTextView.setText("TBA");
 
-        //TODO implement best game in member and functionality to work it out.
-        //member.getBestGameName();
-        bestGameTextView.setText("TBA");
-
-        //TODO implement worst game in member and functionality to work it out.
-        //member.getWorstGameName();
-        worstGameTextView.setText("TBA");
-
-        //TODO implement imgfilepath and functionality for it all
-        //member.getImage();
         imageView.setImageResource(R.drawable.ic_launcher_foreground);
     }
 

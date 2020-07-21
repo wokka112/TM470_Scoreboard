@@ -23,15 +23,12 @@ import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO make the groups list sort itself based on date.
 public class AddGroupMembersActivity extends AppCompatActivity implements SelectedMemberInterface {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private GroupWithMembers groupWithMembers;
     private MemberViewModel memberViewModel;
-    //TODO could make a comparator for members and simply sort them alphabetically in this list using that.
-    // Alternatively could make an SQL query that sorts out what order the members ascend in or something.
     private List<Member> nonGroupMembers;
     private List<Member> selectedMembers;
 
@@ -90,7 +87,6 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
         this.nonGroupMembers.removeAll(groupWithMembers.getMembers());
     }
 
-    //TODO move selected members into the viewmodel and then pass that to the adapter?
     public void addSelectedMember(Member member) {
         if (!selectedMembers.contains(member)) {
             this.selectedMembers.add(member);

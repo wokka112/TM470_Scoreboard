@@ -11,10 +11,6 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-//TODO look into refactoring code to use serializable instead of Parcelable.
-// Parcelable should not be used for persistent data, and all of my data is persistent.
-// Hence, I should look into moving to Serializable and what tradeoffs it may involve.
-
 @Entity(tableName = "boardgames", indices = {@Index(value = "bg_name",
         unique = true)})
 public class BoardGame implements Parcelable {
@@ -107,12 +103,24 @@ public class BoardGame implements Parcelable {
 
     public int getDifficulty() { return this.difficulty; }
     //Precondition: difficulty is between 1 - 5 (inclusive).
-    //TODO add defensive programming? if less than 1 set to 1, if greater than 5 set to 5?
-    public void setDifficulty(int difficulty) { this.difficulty = difficulty; }
+    public void setDifficulty(int difficulty) {
+        if (difficulty < 1) {
+            this.difficulty = 1;
+        } else if (difficulty > 5) {
+            this.difficulty = 5;
+        } else {
+            this.difficulty = difficulty;
+        }
+    }
 
     public int getMinPlayers() { return this.minPlayers; }
-    //TODO add defensive programming? if less than 0 set to 1?
-    public void setMinPlayers(int minPlayers) { this.minPlayers = minPlayers; }
+    public void setMinPlayers(int minPlayers) {
+        if (minPlayers < 0 ) {
+            this.minPlayers = 1;
+        } else {
+            this.minPlayers = minPlayers;
+        }
+    }
 
     public int getMaxPlayers() { return this.maxPlayers; }
     public void setMaxPlayers(int maxPlayers) { this.maxPlayers = maxPlayers; }
@@ -209,9 +217,6 @@ public class BoardGame implements Parcelable {
             return new BoardGame(source);
         }
     };
-
-    //TODO add in a TEAMS_ONLY_OR_NO_TEAMS_ONLY and a TEAMS_OR_SOLOS to represent only teams/only solos, decide at start and then play,
-    // or teams, solos or a mix of teams and solos?? Or should I just leave it as is and people can monitor it themselves.
 
     // The team options that a game can be played in - solo, team, or either / a mix.
     public enum TeamOption {

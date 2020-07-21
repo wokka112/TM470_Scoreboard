@@ -36,7 +36,6 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
         if (members != null) {
             Member current = members.get(position);
             holder.nicknameItemView.setText(current.getNickname());
-            holder.groupsItemView.setText("7");
         } else {
             holder.nicknameItemView.setText("No nickname");
         }
@@ -55,12 +54,11 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
     }
 
     class MemberViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nicknameItemView, groupsItemView;
+        private final TextView nicknameItemView;
 
         private MemberViewHolder(View itemView) {
             super(itemView);
             nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
-            groupsItemView = itemView.findViewById(R.id.rmember_groups_output);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

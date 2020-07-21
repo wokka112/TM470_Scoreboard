@@ -15,7 +15,7 @@ import com.floatingpanda.scoreboard.views.fragments.MemberListFragment;
 
 public class GameRecordActivityAdapter extends FragmentStateAdapter {
     private final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "General Details", "Skill Ratings" };
+    private String tabTitles[] = new String[] { "Game Record Details", "Skill Rating Changes" };
     private GameRecord gameRecord;
 
     public GameRecordActivityAdapter(FragmentActivity fragmentActivity, GameRecord gameRecord) {
@@ -36,5 +36,9 @@ public class GameRecordActivityAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return PAGE_COUNT;
+    }
+
+    public String getTabTitle(int position) {
+        return tabTitles[position];
     }
 }

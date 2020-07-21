@@ -17,13 +17,13 @@ public interface BgCategoryDao {
     /**
      * @return live data list of bg categories from database
      */
-    @Query("SELECT * FROM bg_categories")
+    @Query("SELECT * FROM bg_categories ORDER BY category_name")
     LiveData<List<BgCategory>> getAllLive();
 
     /**
      * @return normal list of bg categories from database
      */
-    @Query("SELECT * FROM bg_categories")
+    @Query("SELECT * FROM bg_categories ORDER BY category_name")
     List<BgCategory> getAllNonLive();
 
     @Query("SELECT * FROM bg_categories WHERE category_id LIKE :categoryId")
@@ -43,7 +43,6 @@ public interface BgCategoryDao {
     @Query("SELECT * FROM bg_categories WHERE category_name LIKE :categoryName")
     BgCategory findNonLiveDataByName(String categoryName);
 
-    //TODO make test
     @Query("SELECT category_name FROM bg_categories WHERE category_id LIKE :categoryId")
     String getNonLiveCategoryNameByCategoryId(int categoryId);
 

@@ -98,19 +98,11 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
      */
     @Override
     public void startEditActivity(Object object) {
-        //TODO get rid of defensive programming and put assertions in?
-        BgCategory bgCategory;
+        BgCategory bgCategory = (BgCategory) object;
 
-        if (object.getClass() == BgCategory.class) {
-            bgCategory = (BgCategory) object;
-
-            Intent intent = new Intent(getContext(), BgCategoryEditActivity.class);
-            intent.putExtra("BG_CATEGORY", bgCategory);
-            startActivityForResult(intent, EDIT_CATEGORY_REQUEST_CODE);
-        } else {
-            Log.w("BgCatListFrag.java", "startEditActivity() did not receive BgCategory object.");
-            return;
-        }
+        Intent intent = new Intent(getContext(), BgCategoryEditActivity.class);
+        intent.putExtra("BG_CATEGORY", bgCategory);
+        startActivityForResult(intent, EDIT_CATEGORY_REQUEST_CODE);
     }
 
     // Preconditions: - object is a BgCategory.

@@ -15,8 +15,8 @@ public class EloSkillRatingCalculatorTest {
 
     @Test
     public void testEloSkillRatingWin() {
-        GroupCategoryRatingChange player = new GroupCategoryRatingChange(1, 1, 1500);
-        GroupCategoryRatingChange opponent = new GroupCategoryRatingChange(1, 2, 1500);
+        GroupCategoryRatingChange player = new GroupCategoryRatingChange(1, 1, "Strategy", 1, 1500);
+        GroupCategoryRatingChange opponent = new GroupCategoryRatingChange(1, 1, "Strategy", 2, 1500);
 
         EloSkillRatingCalculator eloSkillRatingCalculator = new EloSkillRatingCalculator();
         int kValue = 30;
@@ -39,8 +39,8 @@ public class EloSkillRatingCalculatorTest {
 
     @Test
     public void testEloSkillRatingDraw() {
-        GroupCategoryRatingChange player = new GroupCategoryRatingChange(1, 1, 1500);
-        GroupCategoryRatingChange opponent = new GroupCategoryRatingChange(1, 1, 1500);
+        GroupCategoryRatingChange player = new GroupCategoryRatingChange(1, 1, "Strategy", 1, 1500);
+        GroupCategoryRatingChange opponent = new GroupCategoryRatingChange(1, 1, "Strategy", 1, 1500);
 
         EloSkillRatingCalculator eloSkillRatingCalculator = new EloSkillRatingCalculator();
         int kValue = 30;
@@ -63,8 +63,8 @@ public class EloSkillRatingCalculatorTest {
 
     @Test
     public void testEloSkillRatingLose() {
-        GroupCategoryRatingChange player = new GroupCategoryRatingChange(1, 2, 1500);
-        GroupCategoryRatingChange opponent = new GroupCategoryRatingChange(1, 1, 1500);
+        GroupCategoryRatingChange player = new GroupCategoryRatingChange(1, 1, "Strategy", 2, 1500);
+        GroupCategoryRatingChange opponent = new GroupCategoryRatingChange(1, 1, "Strategy", 1, 1500);
 
         EloSkillRatingCalculator eloSkillRatingCalculator = new EloSkillRatingCalculator();
         int kValue = 30;

@@ -91,8 +91,6 @@ public class BoardGameEditActivity extends AppCompatActivity {
             public void onChanged(@NonNull final List<BgCategory> bgCategories) {
                 adapter = new ArrayAdapter<BgCategory>(BoardGameEditActivity.this, android.R.layout.simple_spinner_item, bgCategories);
                 multiSpinner.setAdapter(adapter, false, onSelectedListener);
-                //TODO work out where to put this setselected.
-                //(Can I make this a 1 time thing? Like add a boolean and then set it to off once initialised or somein?)
                 setMultiSpinnerSelected(boardGameAddEditViewModel.getSelectedBgCategories());
             }
         });

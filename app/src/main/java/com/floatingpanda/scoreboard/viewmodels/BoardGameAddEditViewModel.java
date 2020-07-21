@@ -6,7 +6,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.floatingpanda.scoreboard.AlertDialogHelper;
+import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
@@ -17,11 +17,6 @@ import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//TODO keep searchable spinner comment stuff for when I make the gamerecord creation. It could be useful for
-// finding and adding board games. Same for players.
-
-//TODO set up something to sort the bgcategory list into alphabetic order.
 
 public class BoardGameAddEditViewModel extends AndroidViewModel {
 
@@ -108,7 +103,6 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
         }
     }
 
-    //TODO move this into a validator class??
     //TODO maybe add enums or some other method for dealing with this so I don't have to make popups in the viewmodel and use a hackey
     // testing boolean to control it for testing.
     public boolean addActivityInputsValid(Activity activity, String bgName, String difficultyString, String minPlayersString,

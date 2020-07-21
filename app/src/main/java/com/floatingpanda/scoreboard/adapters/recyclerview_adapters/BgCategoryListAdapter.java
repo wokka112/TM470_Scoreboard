@@ -30,8 +30,6 @@ public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAd
     public BgCategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.recyclerview_item_bg_category, parent, false);
         itemView.setOnClickListener(new View.OnClickListener() {
-            //TODO change from buttons to a long press popping up the options of delete or edit?
-            // would need to give visual feedback that you are pressing on the text
             @Override
             public void onClick(View v) {
                 Button editButton = v.findViewById(R.id.category_edit_button);

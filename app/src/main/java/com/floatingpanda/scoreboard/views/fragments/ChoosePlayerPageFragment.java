@@ -94,10 +94,6 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
             }
         });
 
-        //TODO Look into whether fragments are destroyed and remade as you move along pager.
-        // If they are then this will reset teams positions, which is a nuisance. Maybe look into setting
-        // this to match the value of the team's position in the teamMembers list.
-        Log.w("ChoosePlayerPageFrag.java", "Triggered " + this.teamNo);
         int currentPosition = choosePlayerSharedViewModel.getTeamPosition(teamNo);
         //Each position is at an index of (position - 1), so we set the spinner to the correct index for
         // the team's position, which is set either at the start of the fragment or when a user sets it.

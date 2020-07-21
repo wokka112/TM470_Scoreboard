@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 import com.floatingpanda.scoreboard.views.activities.GroupEditActivity;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Group;
@@ -22,11 +23,6 @@ import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 import static android.app.Activity.RESULT_OK;
 
-//TODO will need to get a group with game records and members to be able to get member count and
-// game record count. Alternatively, could simply call the DAOs to get the count of how many members
-// are associated with the group...
-
-//TODO add in group edit and delete functionality
 //TODO maybe remove the game record and member counts from here? Could just put them at the top of
 // the member and game record lists, respectively.
 
@@ -101,8 +97,12 @@ public class GroupDetailsFragment extends Fragment {
         }
 
         nameTextView.setText(group.getGroupName());
-        //TODO change so date created comes out as day, month year. Maybe use a function somewhere.
-        dateCreatedTextView.setText(group.getDateCreated().toString());
+
+        DateStringCreator dateStringCreator = new DateStringCreator(group.getDateCreated());
+        String dateString = dateStringCreator.getEnglishMonth3LetterString() + " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
+
+        dateCreatedTextView.setText(dateString);
+        //TODO look into how to use my aggregations here.
         gamesPlayedTextView.setText(Integer.toString(group.getGamesPlayed()));
         membersCountTextView.setText(Integer.toString(group.getMembersCount()));
         descriptionTextView.setText(group.getDescription());

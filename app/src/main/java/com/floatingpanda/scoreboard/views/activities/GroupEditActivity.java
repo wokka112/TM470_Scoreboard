@@ -17,14 +17,12 @@ import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 public class GroupEditActivity extends AppCompatActivity {
 
-    //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private GroupViewModel groupViewModel;
     private Group group;
 
     //TODO remove cancelButton and replace with an up arrow?
-    //TODO implement image taking/picking and filepath saving functionality
     private EditText nameEditText, descriptionEditText, notesEditText;
     private ImageButton imgBrowseButton, imgCameraButton, bannerBrowseButton, bannerCameraButton;
     private Button cancelButton, saveButton;

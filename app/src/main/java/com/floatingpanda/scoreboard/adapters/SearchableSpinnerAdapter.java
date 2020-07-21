@@ -21,8 +21,6 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BoardGameWithBgCatego
         super(context, android.R.layout.simple_spinner_item, boardGamesWithBgCategoriesAndPlayModes);
     }
 
-    //TODO try and get it working with the custom views rather than using boardGamesWithBgCategoriesAndPlayModes toString() method.
-
     @Override
     public View getDropDownView(int position, @Nullable View convertView,
                                 @NonNull ViewGroup parent) {
@@ -30,8 +28,6 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BoardGameWithBgCatego
 
         View view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
         TextView text = view.findViewById(android.R.id.text1);
-        Log.w("SearchableSpinnerAdapt.java", "Boardgame id: " + boardGameWithBgCategoriesAndPlayModes);
-        Log.w("SearchableSpinnerAdapt.java", "Boardgame name: " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
         text.setText(boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
 
         return view;
@@ -44,8 +40,6 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BoardGameWithBgCatego
 
         View view = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);
         TextView text = view.findViewById(android.R.id.text1);
-        Log.w("SearchableSpinnerAdapt.java", "Boardgame id: " + boardGameWithBgCategoriesAndPlayModes);
-        Log.w("SearchableSpinnerAdapt.java", "Boardgame name: " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
         text.setText(boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName());
 
         return view;
@@ -57,7 +51,6 @@ public class SearchableSpinnerAdapter extends ArrayAdapter<BoardGameWithBgCatego
     }
 
     private View getCustomView(int position, View convertView, ViewGroup parent) {
-        // Distinguish "real" spinner items (that can be reused) from initial selection item
         View row = convertView != null && !(convertView instanceof TextView)
                 ? convertView :
                 LayoutInflater.from(getContext()).inflate(android.R.layout.simple_spinner_item, parent, false);

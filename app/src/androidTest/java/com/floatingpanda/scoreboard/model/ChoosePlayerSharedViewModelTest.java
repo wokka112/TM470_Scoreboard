@@ -251,7 +251,6 @@ public class ChoosePlayerSharedViewModelTest {
         assertFalse(potentialPlayers.contains(TestData.MEMBER_1));
         assertTrue(potentialPlayers.contains(TestData.MEMBER_3));
 
-        //TODO sort this out. Potential players changes observable potential players anyway.
         observablePotentialPlayers = LiveDataTestUtil.getValue(choosePlayerSharedViewModel.getObservablePotentialPlayers());
         assertThat(observablePotentialPlayers.size(), is(group3Members.size() - 1));
         assertFalse(observablePotentialPlayers.contains(TestData.MEMBER_1));

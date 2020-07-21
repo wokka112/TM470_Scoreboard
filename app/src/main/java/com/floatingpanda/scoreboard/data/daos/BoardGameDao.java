@@ -17,10 +17,10 @@ import java.util.List;
 
 @Dao
 public interface BoardGameDao {
-    @Query("SELECT * FROM boardgames")
+    @Query("SELECT * FROM boardgames ORDER BY bg_name")
     LiveData<List<BoardGame>> getAllLive();
 
-    @Query("SELECT * FROM boardgames")
+    @Query("SELECT * FROM boardgames ORDER BY bg_name")
     List<BoardGame> getAllNonLive();
 
     @Query("SELECT * FROM boardgames WHERE bg_id LIKE :bgId")
@@ -29,7 +29,6 @@ public interface BoardGameDao {
     @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
     LiveData<BoardGame> findLiveDataByName(String bgName);
 
-    //TODO maybe change this to find by id? Or add that in?
     @Query("SELECT * FROM boardgames WHERE bg_name LIKE :bgName")
     BoardGame findNonLiveDataByName(String bgName);
 
@@ -51,9 +50,8 @@ public interface BoardGameDao {
     @Delete
     void delete(BoardGame boardGame);
 
-
     @Transaction
-    @Query("SELECT * FROM boardgames")
+    @Query("SELECT * FROM boardgames ORDER BY bg_name")
     public LiveData<List<BoardGameWithBgCategories>> getAllBoardGamesWithBgCategories();
 
     @Transaction
@@ -61,7 +59,7 @@ public interface BoardGameDao {
     public LiveData<BoardGameWithBgCategories> findBoardGameWithBgCategoriesById(int bgId);
 
     @Transaction
-    @Query("SELECT * FROM boardgames")
+    @Query("SELECT * FROM boardgames ORDER BY bg_name")
     public LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> getAllBoardGamesWithBgCategoriesAndPlayModes();
 
     @Transaction

@@ -4,10 +4,12 @@ import androidx.room.TypeConverter;
 
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 
-//TODO add in null checks like date type converter?
 public class PlayModeTypeConverter {
     @TypeConverter
     public static PlayMode.PlayModeEnum toPlayMode(String name) {
+        if (name == null) {
+            return PlayMode.PlayModeEnum.ERROR;
+        }
         return PlayMode.PlayModeEnum.valueOf(name);
     }
 

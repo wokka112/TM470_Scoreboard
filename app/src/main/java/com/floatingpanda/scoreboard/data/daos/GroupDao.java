@@ -16,7 +16,7 @@ import java.util.List;
 
 @Dao
 public interface GroupDao {
-    @Query("SELECT * FROM groups")
+    @Query("SELECT * FROM groups ORDER BY group_name")
     LiveData<List<Group>> getAll();
 
     @Query("SELECT * FROM groups WHERE group_id LIKE :groupId")
@@ -43,6 +43,4 @@ public interface GroupDao {
     @Transaction
     @Query("SELECT * FROM groups WHERE group_id LIKE :groupId")
     public LiveData<GroupWithMembers> findGroupWithMembersById(int groupId);
-
-    //TODO add in a groupwithmembers that organises the members list based on name? Or do that programmatically?
 }

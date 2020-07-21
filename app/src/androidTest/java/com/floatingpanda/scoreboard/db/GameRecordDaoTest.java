@@ -393,4 +393,12 @@ public class GameRecordDaoTest {
             }
         }
     }
+
+    @Test
+    public void getGameRecordNumberForGroupWhenAllInserted() throws InterruptedException {
+        gameRecordDao.insertAll(TestData.GAME_RECORDS.toArray(new GameRecord[TestData.GAME_RECORDS.size()]));
+
+        int noOfGameRecords = gameRecordDao.getNoOfGameRecordsByGroupId(TestData.GROUP_1.getId());
+        assertThat(noOfGameRecords, is(3));
+    }
 }

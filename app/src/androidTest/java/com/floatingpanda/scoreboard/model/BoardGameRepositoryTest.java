@@ -301,7 +301,6 @@ public class BoardGameRepositoryTest {
         boolean contains = boardGameRepository.contains(bgName);
     }
 
-    //TODO move these into a utility class holding board game testing methods?
     private BoardGame createEditedBoardGame(BoardGame originalBoardGame) {
         BoardGame editedBoardGame = new BoardGame(originalBoardGame);
 

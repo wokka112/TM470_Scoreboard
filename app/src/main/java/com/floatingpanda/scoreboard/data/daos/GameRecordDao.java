@@ -39,6 +39,9 @@ public interface GameRecordDao {
     @Query ("DELETE FROM game_records")
     void deleteAll();
 
+    @Query("SELECT COUNT(*) FROM game_records WHERE group_id LIKE :groupId")
+    int getNoOfGameRecordsByGroupId(int groupId);
+
     @Delete
     void delete(GameRecord gameRecord);
 

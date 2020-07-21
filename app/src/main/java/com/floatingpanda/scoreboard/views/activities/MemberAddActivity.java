@@ -15,19 +15,15 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
-//TODO put images into the browse and picture buttons
 //TODO add input filters to inputs to ensure first letter capitalised. Do some for other activities.
 // (This can probably be done in the layout file's xml).
 
 public class MemberAddActivity extends AppCompatActivity {
-
-    //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private MemberViewModel memberViewModel;
 
     //TODO remove cancelButton and replace with an up arrow?
-    //TODO implement image taking/picking and filepath saving functionality
     private EditText nicknameEditText, notesEditText;
     private ImageButton browseButton, cameraButton;
     private Button cancelButton, saveButton;

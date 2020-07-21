@@ -30,13 +30,11 @@ public class GameRecordActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         GameRecord gameRecord = (GameRecord) getIntent().getExtras().get("GAME_RECORD");
-        GameRecordActivityAdapter adapter = new GameRecordActivityAdapter(this, gameRecord);
 
+        GameRecordActivityAdapter adapter = new GameRecordActivityAdapter(this, gameRecord);
         viewPager2.setAdapter(adapter);
 
-        //TODO set tab names to correct names
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText("TAB " + (position + 1))
-        ).attach();
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
     }
 
 

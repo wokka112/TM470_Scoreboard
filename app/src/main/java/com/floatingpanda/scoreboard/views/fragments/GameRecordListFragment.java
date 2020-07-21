@@ -79,11 +79,6 @@ public class GameRecordListFragment extends Fragment implements DetailAdapterInt
         startActivityForResult(intent, ADD_GAME_RECORD_REQUEST_CODE);
     }
 
-    private void startDeleteGameRecordActivity() {
-        //TODO add in delete functionality
-        // needs to update scores and skill ratings when deleted.
-    }
-
     @Override
     public void viewDetails(Object object) {
         GameRecordWithPlayerTeamsAndPlayers gameRecordWithPlayerTeamsAndPlayers = (GameRecordWithPlayerTeamsAndPlayers) object;

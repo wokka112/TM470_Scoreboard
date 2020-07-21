@@ -29,13 +29,6 @@ import com.thomashaertel.widget.MultiSpinner;
 
 import java.util.List;
 
-//TODO add in a clear categories button?
-
-//TODO look into if I can get the close chip stuff working with removing the selected elements from the spinner.
-
-//TODO keep searchable spinner comment stuff for when I make the gamerecord creation. It could be useful for
-// finding and adding board games. Same for players.
-
 public class BoardGameAddActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
@@ -85,35 +78,8 @@ public class BoardGameAddActivity extends AppCompatActivity {
             public void onChanged(@NonNull final List<BgCategory> bgCategories) {
                 adapter = new ArrayAdapter<BgCategory>(BoardGameAddActivity.this, android.R.layout.simple_spinner_item, bgCategories);
                 multiSpinner.setAdapter(adapter, false, onSelectedListener);
-                //TODO setup so a change in categories results in spinner being reset and selected categories edited to remove
-                // removed categories. (Unnecessary cause app has no networking?)
             }
         });
-
-        /*
-        //searchableSpinner.setPositiveButton("Ok");
-
-
-        searchableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 0) {
-                    return;
-                }
-
-                Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).getClass());
-                Log.w("BoardGameAddAct.java", "Spinner position " + position + ": " + parent.getItemAtPosition(position).toString());
-                //TODO move this?
-                BgCategory bgCategory = (BgCategory) parent.getItemAtPosition(position);
-                addChip(bgCategory);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        */
 
         browseButton = findViewById(R.id.bgadd_button_browse);
         cameraButton = findViewById(R.id.bgadd_button_camera);
@@ -201,7 +167,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 boardGameAddEditViewModel.removeSelectedBgCategory(bgCategory);
                 chipGroup.removeView(chip);
 
-                //TODO look into making this better? Feels very clunky and long.
                 int position = adapter.getPosition(bgCategory);
                 boolean[] selected = multiSpinner.getSelected();
                 selected[position] = false;
@@ -210,7 +175,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
             }
         });
 
-        //TODO move out of here into the views or somewhere else?
         boardGameAddEditViewModel.addSelectedBgCategory(bgCategory);
 
         return chip;

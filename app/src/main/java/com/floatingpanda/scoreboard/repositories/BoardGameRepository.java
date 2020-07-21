@@ -107,10 +107,11 @@ public class BoardGameRepository {
         });
     }
 
-    //TODO make empty string an illegal argument as well?
     public boolean contains(String bgName) throws IllegalArgumentException {
         if(bgName == null) {
             throw new IllegalArgumentException("null bgName passed to contains method.");
+        } else if (bgName.isEmpty()) {
+            throw new IllegalArgumentException("empty bgName passed to contains method.");
         }
 
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {

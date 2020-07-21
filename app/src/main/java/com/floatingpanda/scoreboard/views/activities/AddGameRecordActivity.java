@@ -38,8 +38,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-//TODO Add in competitive, cooperative or solitaire choice.
-//TODO Add in functionality so teams or no teams choice affects things.
 public class AddGameRecordActivity extends AppCompatActivity {
 
     private final int CHOOSE_PLAYERS_REQUEST_CODE = 1;
@@ -292,7 +290,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
         int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
 
-        //TODO change to use some sort of formatting for the minutes.
         if (minute < 10) {
             timeEditText.setText(hourOfDay + ":0" + minute);
         } else {
@@ -369,7 +366,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
         playerCountEditText.setFocusableInTouchMode(true);
         playerCountEditText.requestFocus();
 
-        //TODO this feels like spaghetti code, look into it.
         if (!teamsRadioButton.isClickable()) {
             noTeamsRadioButton.setChecked(true);
         } else if (!noTeamsRadioButton.isClickable()) {

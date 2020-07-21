@@ -16,7 +16,6 @@ public class TeamOfPlayers implements Parcelable, Comparable<TeamOfPlayers>, Sco
     private int teamNo;
     private int position;
     private int score;
-    //TODO use a hashset instead? Then it limits it so each member has to be unique.
     private List<Member> members;
     private List<GroupCategoryRatingChange> groupCategoryRatingChanges;
 

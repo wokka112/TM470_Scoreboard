@@ -255,7 +255,6 @@ public class BoardGameViewModelTest {
         assertTrue(playModes.isEmpty());
     }
 
-    //TODO move these into a utility class holding board game testing methods?
     private BoardGame createEditedBoardGame(BoardGame originalBoardGame) {
         BoardGame editedBoardGame = new BoardGame(originalBoardGame);
 

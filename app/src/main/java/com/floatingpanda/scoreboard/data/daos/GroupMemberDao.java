@@ -22,8 +22,14 @@ public interface GroupMemberDao {
     List<GroupMember> findNonLiveDataByGroupId(int groupId);
 
     //Used for testing purposes
-    @Query("SELECT * FROM group_members WHERE member_id like :memberId")
+    @Query("SELECT * FROM group_members WHERE member_id LIKE :memberId")
     List<GroupMember> findNonLiveDataByMemberId(int memberId);
+
+    @Query("SELECT COUNT(*) FROM group_members WHERE group_id LIKE :groupId")
+    int getNoOfGroupMembersByGroupId(int groupId);
+
+    @Query("SELECT COUNT(*) FROM group_members WHERE member_id LIKE :memberId")
+    int getNoOfGroupsMemberIsPartOfByMemberId(int memberId);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(GroupMember... groupMembers);

@@ -337,8 +337,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 GameRecordDao gameRecordDao = INSTANCE.gameRecordDao();
                 gameRecordDao.deleteAll();
 
-                //TODO sort game records when pulled from database.
-
                 //group 1 - 3 game records
                 // record 1 - Monopoly, no teams, 1 player per position, 8 players.
                 GameRecord gameRecord1 = new GameRecord(group1.getId(), bg1.getBgName(), bg1.getDifficulty(), new Date(), false, PlayMode.PlayModeEnum.COMPETITIVE,
@@ -356,9 +354,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 GameRecord gameRecord3 = new GameRecord(group1.getId(), bg.getBgName(), bg.getDifficulty(), new Date(), true, PlayMode.PlayModeEnum.COMPETITIVE,
                         4);
                 gameRecordDao.insert(gameRecord3);
-
-                //TODO add in cooperative win/lose to game record.
-                //TODO add in layout for cooperative and solitaire that can be used for coop and solitaire.
 
                 //Can only have 1 team for cooperative and solitaire games.
                 // record 4 - Dawn of Madness, cooperative, 1 team, 4 players, win.

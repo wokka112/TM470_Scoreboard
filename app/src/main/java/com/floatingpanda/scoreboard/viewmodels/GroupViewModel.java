@@ -6,7 +6,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.floatingpanda.scoreboard.AlertDialogHelper;
+import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.repositories.GroupRepository;

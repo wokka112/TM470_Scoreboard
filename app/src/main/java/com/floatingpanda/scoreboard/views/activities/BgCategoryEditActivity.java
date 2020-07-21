@@ -13,11 +13,6 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 
-//TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for edit)
-// then add up arrow to it.
-//TODO add up arrow to toolbar and finish() activity from there. Then remove cancel button.
-// alternatively, put finish() in onclicklistener for cancel button. Do same for add activity.
-
 public class BgCategoryEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";

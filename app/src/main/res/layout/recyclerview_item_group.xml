@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/group_image"
         app:layout_constraintTop_toTopOf="@id/group_image"
+        app:layout_constraintBottom_toBottomOf="@id/group_image"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="22dp"
         android:text="Group Name:"/>
@@ -31,37 +32,4 @@
         app:layout_constraintTop_toTopOf="@id/group_name_header"
         app:layout_constraintLeft_toRightOf="@id/group_name_header"
         android:layout_marginLeft="40dp"/>
-
-    <TextView
-        android:id="@+id/group_members_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/group_name_header"
-        app:layout_constraintTop_toBottomOf="@id/group_name_header"
-        android:text="Members:"
-        android:layout_marginTop="4dp"/>
-
-    <TextView
-        android:id="@+id/group_members_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/group_name_output"
-        app:layout_constraintTop_toTopOf="@id/group_members_header"/>
-
-    <TextView
-        android:id="@+id/group_records_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/group_name_header"
-        app:layout_constraintTop_toBottomOf="@id/group_members_header"
-        android:layout_marginTop="4dp"
-        android:text="Game Records:"/>
-
-    <TextView
-        android:id="@+id/group_records_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/group_name_output"
-        app:layout_constraintTop_toTopOf="@id/group_records_header"/>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

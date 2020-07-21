@@ -151,6 +151,7 @@ public class GameRecordRepository {
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH) + 1;
 
+            //TODO move into helper methods
             //SCORE STUFF
             for (PlayerTeamWithPlayersAndRatingChanges playerTeamWithPlayersAndRatingChanges : playerTeamsWithPlayersAndRatingChanges) {
                 int groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(gameRecord.getGroupId(), year, month);

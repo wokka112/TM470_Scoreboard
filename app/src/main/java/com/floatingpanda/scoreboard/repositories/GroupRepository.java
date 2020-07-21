@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -91,10 +92,11 @@ public class GroupRepository {
         });
     }
 
-    //TODO make empty string an illegal argument as well?
     public boolean contains(String groupName) throws IllegalArgumentException {
         if(groupName == null) {
             throw new IllegalArgumentException("null groupName passed to contains method.");
+        } else if(groupName.isEmpty()) {
+            throw new IllegalArgumentException("empty groupName passed to contains method.");
         }
 
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
@@ -108,6 +110,7 @@ public class GroupRepository {
         try {
             return (Boolean) future.get();
         } catch (Exception e) {
+            Log.e("GroupRepos.java", "Exception: " + e);
             return false;
         }
     }

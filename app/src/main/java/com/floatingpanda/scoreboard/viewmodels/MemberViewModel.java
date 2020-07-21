@@ -6,7 +6,7 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.floatingpanda.scoreboard.AlertDialogHelper;
+import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.repositories.MemberRepository;
@@ -96,13 +96,11 @@ public class MemberViewModel extends AndroidViewModel {
      */
     public void deleteMember(Member member) { memberRepository.delete(member); }
 
-    //TODO move this into a validator class??
     public boolean addActivityInputsValid(Activity activity, String nickname, boolean testing) {
         return editActivityInputsValid(activity, "", nickname, testing);
     }
 
     public boolean editActivityInputsValid(Activity activity, String originalNickname, String nickname, boolean testing) {
-        //TODO sort out popup messages so they sound better.
         //TODO look into removing popup messages and replace with messages that appear next to highlighted edittext that is wrong
         if (nickname.isEmpty()) {
             if(!testing) {

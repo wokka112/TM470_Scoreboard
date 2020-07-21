@@ -11,8 +11,6 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-//TODO potentially refactor to be "skill-based category" rather than just "category" so people don't
-// get confused.
 /**
  * Represents a skill-based board game category such as Strategy, Bluffing, Random Luck, Ameritrash,
  * Eurotrash, etc. This is in contrast to thematic categories, such as Zombies, Post-apocalyptic, etc.

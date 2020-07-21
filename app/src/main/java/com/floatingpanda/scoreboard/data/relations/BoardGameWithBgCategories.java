@@ -69,7 +69,6 @@ public class BoardGameWithBgCategories implements Parcelable {
         this.bgCategories.remove(bgCategory);
     }
 
-    //TODO maybe change this to return a list of strings? Then I could do formatting if I wanted somewhere else.
     /**
      * Returns a string of the categories that the board game fits into. Each category is separated
      * by a comma.

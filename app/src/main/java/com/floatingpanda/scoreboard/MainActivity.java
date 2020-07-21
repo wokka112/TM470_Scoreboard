@@ -20,15 +20,9 @@ public class MainActivity extends AppCompatActivity {
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        viewPager2.setAdapter(createMainActivityListAdapter());
-
-        //TODO set tab names to correct names (Groups, Members, Board Games, Game Categories)
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText("TAB " + (position + 1))
-        ).attach();
-    }
-
-    private MainActivityAdapter createMainActivityListAdapter() {
         MainActivityAdapter adapter = new MainActivityAdapter(this);
-        return adapter;
+        viewPager2.setAdapter(adapter);
+
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
     }
 }

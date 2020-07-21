@@ -36,8 +36,6 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
         if (groups != null) {
             Group current = groups.get(position);
             holder.groupNameItemView.setText(current.getGroupName());
-            holder.membersItemView.setText("7");
-            holder.recordsItemView.setText("7");
         } else {
             holder.groupNameItemView.setText("No name");
         }
@@ -56,13 +54,11 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
     }
 
     class GroupViewHolder extends RecyclerView.ViewHolder {
-        private final TextView groupNameItemView, membersItemView, recordsItemView;
+        private final TextView groupNameItemView;
 
         private GroupViewHolder(View itemView) {
             super(itemView);
             groupNameItemView = itemView.findViewById(R.id.group_name_output);
-            membersItemView = itemView.findViewById(R.id.group_members_output);
-            recordsItemView = itemView.findViewById(R.id.group_records_output);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -17,10 +17,10 @@ public interface MemberDao {
     /**
      * @return live data list of all members from the database.
      */
-    @Query("SELECT * FROM members")
+    @Query("SELECT * FROM members ORDER BY nickname")
     LiveData<List<Member>> getAllLive();
 
-    @Query("SELECT * FROM members")
+    @Query("SELECT * FROM members ORDER BY nickname")
     List<Member> getAllNonLive();
 
     /**

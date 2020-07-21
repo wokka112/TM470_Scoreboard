@@ -235,4 +235,24 @@ public class GroupMemberDaoTest {
         assertTrue(group3Members.contains(TestData.MEMBER_1));
         assertTrue(group3Members.contains(TestData.MEMBER_3));
     }
+
+    @Test
+    public void getNoOfGroupMembersByGroupId() throws InterruptedException {
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        int noOfGroupMembers = groupMemberDao.getNoOfGroupMembersByGroupId(TestData.GROUP_1.getId());
+        assertThat(noOfGroupMembers, is(6));
+    }
+
+    @Test
+    public void getNoOfGroupsMemberIsPartOfByMemberId() throws InterruptedException {
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
+
+        int noOfGroups = groupMemberDao.getNoOfGroupsMemberIsPartOfByMemberId(TestData.MEMBER_1.getId());
+        assertThat(noOfGroups, is(2));
+    }
 }

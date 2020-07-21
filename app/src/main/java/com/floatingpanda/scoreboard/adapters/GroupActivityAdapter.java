@@ -15,7 +15,7 @@ import com.floatingpanda.scoreboard.views.fragments.ScoreWinnerListFragment;
 public class GroupActivityAdapter extends FragmentStateAdapter {
 
     private final int PAGE_COUNT = 5;
-    private String tabTitles[] = new String[] { };
+    private String tabTitles[] = new String[] { "Game Records", "Monthly Scores", "Group Members", "Skill Ratings", "Group Details"};
     private Group group;
 
     public GroupActivityAdapter(FragmentActivity fragmentActivity, Group group) {
@@ -42,5 +42,9 @@ public class GroupActivityAdapter extends FragmentStateAdapter {
     @Override
     public int getItemCount() {
         return PAGE_COUNT;
+    }
+
+    public String getTabTitle(int position) {
+        return tabTitles[position];
     }
 }

@@ -75,10 +75,10 @@ public class CalculatorTest {
     @Test
     public void testCalculateCategoryPairwiseEloRatings() {
         List<GroupCategoryRatingChange> groupCategoryRatingChanges = new ArrayList<>();
-        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, 1500));
-        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, 1400));
-        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 3, 1700));
-        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 4, 1200));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, "Strategy", 1, 1500));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, "Strategy", 1, 1400));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, "Strategy", 3, 1700));
+        groupCategoryRatingChanges.add(new GroupCategoryRatingChange(1, 1, "Strategy", 4, 1200));
 
         Calculator calculator = new Calculator();
         calculator.calculateCategoryPairwiseEloRatings(groupCategoryRatingChanges, 30);
@@ -95,23 +95,4 @@ public class CalculatorTest {
         //Testing player 4 - Rating change should be roughly -4.7
         assertEquals(-4.7, groupCategoryRatingChanges.get(3).getEloRatingChange(), 0.5);
     }
-
-    /*
-    public void calculateCategoryPairwiseEloRatings(List<CategoryPairwiseEloRatingChange> categoryPairwiseEloRatingChanges, int kValue) {
-        for (int i = 0; i < categoryPairwiseEloRatingChanges.size(); i++) {
-            CategoryPairwiseEloRatingChange playerIRating = categoryPairwiseEloRatingChanges.get(i);
-
-            for (int j = i +1; j < categoryPairwiseEloRatingChanges.size(); j++) {
-                CategoryPairwiseEloRatingChange playerJRating = categoryPairwiseEloRatingChanges.get(j);
-
-                //Sort out rating change for i and store it.
-                double iRatingChange = eloSkillRatingCalculator.calculateSkillRatingChange(playerIRating, playerJRating, kValue);
-                playerIRating.increaseEloRatingChange(iRatingChange);
-                //Sort out rating change for j and store it.
-                double jRatingChange = eloSkillRatingCalculator.calculateSkillRatingChange(playerJRating, playerIRating, kValue);
-                playerJRating.increaseEloRatingChange(jRatingChange);
-            }
-        }
-    }
-     */
 }

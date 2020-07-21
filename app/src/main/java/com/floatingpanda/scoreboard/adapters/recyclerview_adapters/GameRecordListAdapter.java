@@ -19,6 +19,7 @@ import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.Player;
 import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 
 import java.util.List;
 
@@ -45,7 +46,16 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             GameRecordWithPlayerTeamsAndPlayers current = gameRecordsWithPlayerTeamsAndPlayers.get(position);
             GameRecord currentGameRecord = current.getGameRecord();
             holder.gameNameTextView.setText(currentGameRecord.getBoardGameName());
-            holder.dateTextView.setText(currentGameRecord.getDateTime().toString());
+
+            DateStringCreator dateStringCreator = new DateStringCreator(currentGameRecord.getDateTime());
+
+            String dateString = dateStringCreator.getDayOfWeek3LetterString() + " " + dateStringCreator.getEnglishMonth3LetterString() +
+                    " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
+            holder.dateTextView.setText(dateString);
+
+            String timeString = dateStringCreator.getHourOfDayString() + ":" + dateStringCreator.getMinuteString();
+            holder.timeTextView.setText(timeString);
+
             holder.playModeTextView.setText(currentGameRecord.getPlayModePlayed().toString());
             holder.difficultyTextView.setText(Integer.toString(currentGameRecord.getDifficulty()));
 
@@ -58,8 +68,6 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             holder.teamCountOutputTextView.setText(Integer.toString(currentGameRecord.getNoOfTeams()));
 
             List<PlayerTeamWithPlayers> currentPlayerTeamsWithPlayers = current.getPlayerTeamsWithPlayers();
-            //TODO this sort requires minimum API level 24 which targets 74% of devices. Look into doing this some other way so I can
-            // reduce to level 18?
             currentPlayerTeamsWithPlayers.sort(new PlayerTeamWithPlayersComparator());
 
             //TODO add padding or margin to wrappers so the text wraps around before it hits the right end of phone.

@@ -40,7 +40,6 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         if (groupMembers != null) {
             Member current = groupMembers.get(position);
             holder.nicknameItemView.setText(current.getNickname());
-            holder.groupsItemView.setText("7");
             holder.removeButton.setVisibility(View.VISIBLE);
 
             holder.removeButton.setOnClickListener(new View.OnClickListener() {
@@ -69,13 +68,12 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
     }
 
     class GroupMemberViewHolder extends RecyclerView.ViewHolder {
-        private final TextView nicknameItemView, groupsItemView;
+        private final TextView nicknameItemView;
         private final ImageButton removeButton;
 
         private GroupMemberViewHolder(View itemView) {
             super(itemView);
             nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
-            groupsItemView = itemView.findViewById(R.id.rmember_groups_output);
             removeButton = itemView.findViewById(R.id.rmember_group_member_remove_button);
 
             itemView.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.floatingpanda.scoreboard;
+package com.floatingpanda.scoreboard.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;

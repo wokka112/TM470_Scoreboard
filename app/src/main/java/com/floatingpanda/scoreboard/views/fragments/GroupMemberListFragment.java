@@ -149,6 +149,8 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
         }
     }
 
+    //TODO implement member add functionality
+
     // Postconditions: - The Member add activity is started.
     /**
      * Starts the MemberAddActivity activity.

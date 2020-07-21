@@ -13,7 +13,7 @@ import com.floatingpanda.scoreboard.views.fragments.MemberListFragment;
 public class MainActivityAdapter extends FragmentStateAdapter {
 
     private final int PAGE_COUNT = 4;
-    private String tabTitles[] = new String[] { "Groups", "Members" };
+    private String tabTitles[] = new String[] { "Groups", "Members", "Board Games", "Board Game Categories" };
 
     public MainActivityAdapter(FragmentActivity fragmentActivity) { super(fragmentActivity); }
 
@@ -36,5 +36,7 @@ public class MainActivityAdapter extends FragmentStateAdapter {
         return PAGE_COUNT;
     }
 
-
+    public String getTabTitle(int position) {
+        return tabTitles[position];
+    }
 }

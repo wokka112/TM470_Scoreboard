@@ -26,8 +26,6 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
-//TODO add in add functionality
-
 public class GroupListFragment extends Fragment implements DetailAdapterInterface {
 
     private final int ADD_GROUP_REQUEST_CODE = 1;

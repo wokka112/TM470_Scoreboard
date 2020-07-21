@@ -17,13 +17,11 @@ import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 public class MemberEditActivity extends AppCompatActivity {
 
-    //TODO maybe remove this EXTRA_REPLY thing and simply change to a string??
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private MemberViewModel memberViewModel;
     private Member member;
 
-    //TODO add imageview and image setting functionality.
     //TODO remove cancelButton and replace with an up arrow?
     private EditText nicknameEditText, notesEditText;
     private ImageButton browseButton, cameraButton;

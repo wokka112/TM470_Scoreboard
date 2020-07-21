@@ -31,7 +31,6 @@ public interface PlayerTeamDao {
     @Query("SELECT * FROM player_teams WHERE team_number LIKE :teamNumber AND record_id LIKE :recordId")
     PlayerTeam findNonLiveDataPlayerTeamByTeamNumberAndRecordId(int teamNumber, int recordId);
 
-    //TODO make test
     @Query("SELECT player_team_id FROM player_teams WHERE team_number LIKE :teamNumber AND record_id LIKE :recordId")
     int getNonLivePlayerTeamIdByTeamNumberAndRecordId(int teamNumber, int recordId);
 
@@ -71,7 +70,6 @@ public interface PlayerTeamDao {
     @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId ORDER BY position ASC, team_number ASC")
     LiveData<List<PlayerTeamWithPlayersAndRatingChanges>> getPlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId);
 
-    //TODO write test
     @Transaction
     @Query("SELECT * FROM player_teams WHERE record_id LIKE :recordId ORDER BY position ASC, team_number ASC")
     List<PlayerTeamWithPlayersAndRatingChanges> getNonLivePlayerTeamsWithPlayersAndRatingChangesByRecordId(int recordId);

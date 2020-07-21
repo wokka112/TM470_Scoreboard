@@ -15,6 +15,7 @@ import com.floatingpanda.scoreboard.data.relations.GroupMonthlyScoreWithScoresAn
 import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 
 import java.util.List;
 
@@ -42,10 +43,10 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
         //TODO make it skip months with no scores. Maybe a condition in the if like (!groupMonthlyScoresAndMemberDetails.get(position).getScoresWithMemberDetails().isEmpty())
         if (groupMonthlyScoresWithScoresAndMemberDetails != null) {
             GroupMonthlyScoreWithScoresAndMemberDetails current = groupMonthlyScoresWithScoresAndMemberDetails.get(position);
-
-            //TODO add logic to turn month integer into a month string - e.g. 1 becomes January
             GroupMonthlyScore currentGroupMonthlyScore = current.getGroupMonthlyScore();
-            holder.dateTextView.setText(currentGroupMonthlyScore.getMonth() + " " + currentGroupMonthlyScore.getYear());
+
+            String dateString = DateStringCreator.convertMonthNumberToEnglishMonthNameString(currentGroupMonthlyScore.getMonth()) + " " + currentGroupMonthlyScore.getYear();
+            holder.dateTextView.setText(dateString);
 
             //TODO move this logic into its own method and refactor it so it's simplified.
             //TODO make all text begin as GONE so that if there's only 2 members with scores, there's not a "third place" with nothing in it.

@@ -41,8 +41,6 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
     public void setPlayModes(List<PlayMode> playModes) { this.playModes = playModes; }
 
     public BoardGame getBoardGame() { return bgWithBgCategories.getBoardGame(); }
-    //TODO change the return to return a new list and then use the add, get and remove category methods?
-    //TODO maybe use interfaces for this relation and the boardgamewithbgcategories relation to restrict access to the lists.
     public List<BgCategory> getBgCategories() { return bgWithBgCategories.getBgCategories(); }
 
     public void addPlayMode(PlayMode playMode) {
@@ -68,7 +66,6 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
         return playModeEnums;
     }
 
-    //TODO maybe change this to return a list of strings? Then I could do formatting if I wanted somewhere else.
     /**
      * Builds a string to represent the potential play modes that the board game can be played in.
      * String is built up based on the PlayModeEnum's that are set for the board game, a substring

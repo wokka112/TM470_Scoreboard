@@ -28,7 +28,6 @@ public interface PlayerDao {
     @Query("SELECT * FROM players WHERE member_nickname LIKE :memberNickname")
     LiveData<List<Player>> findLiveDataPlayersByMemberNickname(String memberNickname);
 
-    //TODO make test??
     @Query("SELECT player_id FROM players WHERE player_team_id LIKE :playerTeamId AND member_nickname LIKE :memberNickname")
     int getPlayerIdByPlayerTeamIdAndMemberNickname(int playerTeamId, String memberNickname);
 

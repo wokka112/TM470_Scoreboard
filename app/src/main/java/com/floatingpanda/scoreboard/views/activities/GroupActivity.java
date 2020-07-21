@@ -29,15 +29,9 @@ public class GroupActivity extends AppCompatActivity {
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
-        viewPager2.setAdapter(createGroupActivityListAdapter());
-
-        //TODO set tab names to correct names (Groups, Members, Board Games, Game Categories)
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText("TAB " + (position + 1))
-        ).attach();
-    }
-
-    private GroupActivityAdapter createGroupActivityListAdapter() {
         GroupActivityAdapter adapter = new GroupActivityAdapter(this, group);
-        return adapter;
+        viewPager2.setAdapter(adapter);
+
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
     }
 }

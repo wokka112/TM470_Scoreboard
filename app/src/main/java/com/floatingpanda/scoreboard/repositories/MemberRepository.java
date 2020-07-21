@@ -54,7 +54,6 @@ public class MemberRepository {
         return memberDao.findLiveDataById(id);
     }
 
-    //TODO move elsewhere??
     public LiveData<List<Member>> getLiveMembersOfAGroupByGroupId(int groupId) { return groupMemberDao.findMembersOfASpecificGroupByGroupId(groupId); }
 
     public List<Member> getNonLiveMembersOfAGroupByGroupId(int groupId) { return groupMemberDao.findNonLiveMembersOfASpecificGroupByGroupId(groupId); }
@@ -126,10 +125,11 @@ public class MemberRepository {
      * @return
      */
     //TODO look into whether this is basically just running on the main thread. I think it may be.
-    ////TODO make empty string an illegal argument as well?
     public boolean contains(String nickname) throws IllegalArgumentException {
         if(nickname == null) {
             throw new IllegalArgumentException("null nickname passed to contains method.");
+        } else if (nickname.isEmpty()) {
+            throw new IllegalArgumentException("empty nickname passed to contains method.");
         }
 
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
