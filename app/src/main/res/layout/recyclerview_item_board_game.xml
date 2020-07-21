@@ -71,6 +71,9 @@
         android:id="@+id/bg_categories_output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_bias="0"
+        android:layout_marginRight="8dp"
         app:layout_constraintLeft_toLeftOf="@id/bg_difficulty_output"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/bg_categories_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>

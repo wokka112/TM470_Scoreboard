@@ -116,6 +116,23 @@ public class MemberRepository {
         });
     }
 
+    public int getNumberOfGroupsMemberIsPartOf(int memberId) {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                int groups = groupMemberDao.getNoOfGroupsMemberIsPartOfByMemberId(memberId);
+                return groups;
+            };
+        });
+
+        try {
+            return (Integer) future.get();
+        } catch (Exception e) {
+            Log.e("MemberRepos.java", "Could not get number of groups member is part of. Exception: " + e);
+            return -1;
+        }
+    }
+
     // Postconditions: - if a member with nickname exists in the database, returns true.
     //                 - if no member with nickname exists in the database, returns false.
     /**
@@ -124,27 +141,7 @@ public class MemberRepository {
      * @param nickname
      * @return
      */
-    //TODO look into whether this is basically just running on the main thread. I think it may be.
     public boolean contains(String nickname) throws IllegalArgumentException {
-        if(nickname == null) {
-            throw new IllegalArgumentException("null nickname passed to contains method.");
-        } else if (nickname.isEmpty()) {
-            throw new IllegalArgumentException("empty nickname passed to contains method.");
-        }
-
-        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Member databaseMember = memberDao.findNonLiveDataByNickname(nickname);
-                return databaseMember != null;
-            };
-        });
-
-        try {
-            return (Boolean) future.get();
-        } catch (Exception e) {
-            Log.e("MemberRepos.java", "Exception: " + e);
-            return false;
-        }
+        return memberDao.containsMember(nickname);
     }
 }

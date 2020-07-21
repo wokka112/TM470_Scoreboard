@@ -96,6 +96,10 @@ public class MemberViewModel extends AndroidViewModel {
      */
     public void deleteMember(Member member) { memberRepository.delete(member); }
 
+    public int getNumberOfGroupsMemberIsPartOf(int memberId) {
+        return memberRepository.getNumberOfGroupsMemberIsPartOf(memberId);
+    }
+
     public boolean addActivityInputsValid(Activity activity, String nickname, boolean testing) {
         return editActivityInputsValid(activity, "", nickname, testing);
     }

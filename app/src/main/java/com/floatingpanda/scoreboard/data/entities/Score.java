@@ -8,9 +8,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "scores",
+@Entity(tableName = "scores", indices = {@Index(value = {"group_monthly_score_id", "member_id"},
+        unique = true)},
         foreignKeys = {@ForeignKey(entity = GroupMonthlyScore.class,
         parentColumns = "group_monthly_score_id",
         childColumns = "group_monthly_score_id",

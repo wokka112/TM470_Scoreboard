@@ -97,7 +97,7 @@ public class BoardGameActivity extends AppCompatActivity {
         String players = boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers();
         playerCountTextView.setText(players);
 
-        categoriesTextView.setText(bgWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategoriesString());
+        categoriesTextView.setText(bgWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getFullBgCategoriesString());
         playModesTextView.setText(bgWithBgCategoriesAndPlayModes.getPlayModesString());
         teamOptionsTextView.setText(boardGame.getTeamOptionsString());
         descriptionTextView.setText(boardGame.getDescription());

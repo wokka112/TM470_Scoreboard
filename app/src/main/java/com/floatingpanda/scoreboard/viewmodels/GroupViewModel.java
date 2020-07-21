@@ -12,6 +12,7 @@ import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.repositories.GroupRepository;
 
 import java.util.List;
+import java.util.concurrent.Future;
 
 public class GroupViewModel extends AndroidViewModel {
 
@@ -36,6 +37,14 @@ public class GroupViewModel extends AndroidViewModel {
     public LiveData<List<Group>> getAllGroups() { return allGroups; }
 
     public LiveData<Group> getLiveDataGroupById(int groupId) { return groupRepository.getGroupById(groupId); }
+
+    public int getGamesPlayedByGroup(int groupId) {
+        return groupRepository.getGamesPlayed(groupId);
+    }
+
+    public int getNoOfMembersInGroup(int groupId) {
+        return groupRepository.getNoOfGroupMembers(groupId);
+    }
 
     // Precondition: Group with group's name or id should not exist in database.
     // Postcondition: new Group exists in the database.

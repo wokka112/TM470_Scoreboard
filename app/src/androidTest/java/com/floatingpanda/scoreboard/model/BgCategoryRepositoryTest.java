@@ -159,16 +159,4 @@ public class BgCategoryRepositoryTest {
         contains = bgCategoryRepository.containsCategoryName(categoryName);
         assertFalse(contains);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testContainsWithNull() throws InterruptedException {
-        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
-
-        List<BgCategory> bgCategories = LiveDataTestUtil.getValue(bgCategoryRepository.getAll());
-
-        assertThat(bgCategories.size(), is(TestData.BG_CATEGORIES.size()));
-
-        String categoryName = null;
-        boolean contains = bgCategoryRepository.containsCategoryName(categoryName);
-    }
 }

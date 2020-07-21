@@ -50,8 +50,15 @@ public class MemberActivity extends AppCompatActivity {
         //TODO implement imgfilepath and functionality for it all
         imageView = findViewById(R.id.memberact_image);
 
+        // LiveData member is gotten instead so that details are automatically updated following member editing.
         member = (Member) getIntent().getExtras().get("MEMBER");
-        setViews(member);
+        memberViewModel.getLiveDataMember(member).observe(this, new Observer<Member>() {
+            @Override
+            public void onChanged(Member member) {
+                setMember(member);
+                setViews(member);
+            }
+        });
 
         Button editButton, deleteButton;
 
@@ -103,8 +110,8 @@ public class MemberActivity extends AppCompatActivity {
 
         notesTextView.setText(member.getNotes());
 
-        //TODO implement groupcount in member and functionality to work it out.
-        groupsTextView.setText("TBA");
+        int noOfGroupsMemberIsPartOf = memberViewModel.getNumberOfGroupsMemberIsPartOf(member.getId());
+        groupsTextView.setText(Integer.toString(noOfGroupsMemberIsPartOf));
 
         imageView.setImageResource(R.drawable.ic_launcher_foreground);
     }

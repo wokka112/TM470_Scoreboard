@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.daos.GameRecordDao;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.daos.GroupDao;
@@ -21,18 +22,21 @@ public class GroupRepository {
 
     private GroupDao groupDao;
     private GroupMemberDao groupMemberDao;
+    private GameRecordDao gameRecordDao;
     private LiveData<List<Group>> allGroups;
 
     public GroupRepository(Application application) {
         AppDatabase db = AppDatabase.getDatabase(application);
         groupDao = db.groupDao();
         groupMemberDao = db.groupMemberDao();
+        gameRecordDao = db.gameRecordDao();
         allGroups = groupDao.getAll();
     }
 
     public GroupRepository(AppDatabase db) {
         groupDao = db.groupDao();
         groupMemberDao = db.groupMemberDao();
+        gameRecordDao = db.gameRecordDao();
         allGroups = groupDao.getAll();
     }
 
@@ -97,26 +101,41 @@ public class GroupRepository {
         });
     }
 
-    public boolean contains(String groupName) throws IllegalArgumentException {
-        if(groupName == null) {
-            throw new IllegalArgumentException("null groupName passed to contains method.");
-        } else if(groupName.isEmpty()) {
-            throw new IllegalArgumentException("empty groupName passed to contains method.");
-        }
-
-        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+    public int getGamesPlayed(int groupId) {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Integer>() {
             @Override
-            public Boolean call() throws Exception {
-                Group databaseGroup = groupDao.findNonLiveDataByName(groupName);
-                return databaseGroup != null;
+            public Integer call() throws Exception {
+                int gamesPlayed = gameRecordDao.getNoOfGameRecordsByGroupId(groupId);
+                return gamesPlayed;
             };
         });
 
-        try {
-            return (Boolean) future.get();
+        try{
+            return (Integer) future.get();
         } catch (Exception e) {
-            Log.e("GroupRepos.java", "Exception: " + e);
-            return false;
+            Log.e("GroupRepo.java", "Error getting games played. Exception: " + e);
+            return -1;
         }
+    }
+
+    public int getNoOfGroupMembers(int groupId) {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Integer>() {
+            @Override
+            public Integer call() throws Exception {
+                int noOfMembers = groupMemberDao.getNoOfGroupMembersByGroupId(groupId);
+                return noOfMembers;
+            };
+        });
+
+        try{
+            return (Integer) future.get();
+        } catch (Exception e) {
+            Log.e("GroupRepo.java", "Error getting number of group members. Exception: " + e);
+            return -1;
+        }
+    }
+
+    public boolean contains(String groupName) {
+        return groupDao.containsGroup(groupName);
     }
 }

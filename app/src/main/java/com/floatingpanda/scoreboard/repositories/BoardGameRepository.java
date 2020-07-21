@@ -107,27 +107,8 @@ public class BoardGameRepository {
         });
     }
 
-    public boolean contains(String bgName) throws IllegalArgumentException {
-        if(bgName == null) {
-            throw new IllegalArgumentException("null bgName passed to contains method.");
-        } else if (bgName.isEmpty()) {
-            throw new IllegalArgumentException("empty bgName passed to contains method.");
-        }
-
-        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                BoardGame databaseBoardGame = boardGameDao.findNonLiveDataByName(bgName);
-                return databaseBoardGame != null;
-            };
-        });
-
-        try {
-            return (Boolean) future.get();
-        } catch (Exception e) {
-            Log.e("BoardGameRepos.java", "Exception: " + e);
-            return false;
-        }
+    public boolean contains(String bgName) {
+        return boardGameDao.containsBoardGame(bgName);
     }
 
     private void insertBoardGameWithoutBgCategories(BoardGame boardGame) {

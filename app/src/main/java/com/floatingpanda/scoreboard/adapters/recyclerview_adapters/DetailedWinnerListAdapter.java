@@ -30,13 +30,12 @@ public class DetailedWinnerListAdapter extends RecyclerView.Adapter<DetailedWinn
     }
 
     //TODO Think this system will break if any views are recycled
-
     @Override
     public void onBindViewHolder(DetailedWinnerListAdapter.DetailedWinnerViewHolder holder, int position) {
         if (scoresWithMemberDetails != null) {
             ScoreWithMemberDetails current = scoresWithMemberDetails.get(position);
 
-            if (position > 0 && current.getScore() == scoresWithMemberDetails.get(position -1).getScore()) {
+            if (position > 0 && current.getScore().getScore() == scoresWithMemberDetails.get(position - 1).getScore().getScore()) {
                 place = place;
             } else {
                 place = position + 1;

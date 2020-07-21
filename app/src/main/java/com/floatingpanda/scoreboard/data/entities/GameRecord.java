@@ -50,10 +50,6 @@ public class GameRecord implements Parcelable {
 
     private boolean won;
 
-    //TODO include a boolean for cooperative/solitaire win/lose.
-    // If the game is competitive, ignore and use the competitive layout.
-    // If the game is cooperative or solitaire, use another layout which says whether you win or lose.
-
     @Ignore
     public GameRecord(int id, int groupId, String boardGameName, int difficulty, Date dateTime, boolean teams, PlayMode.PlayModeEnum playModePlayed,
                       int noOfTeams, boolean won) {

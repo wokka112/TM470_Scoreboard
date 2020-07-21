@@ -318,4 +318,15 @@ public class ScoreDaoTest {
         assertThat(scoreWithMemberDetails.getMember(), is(TestData.MEMBER_1));
         assertThat(scoreWithMemberDetails.getScore(), is(TestData.SCORE_4));
     }
+
+    @Test
+    public void testContainsScore() throws InterruptedException {
+        boolean contains = scoreDao.containsScore(TestData.SCORE_1.getGroupMonthlyScoreId(), TestData.SCORE_1.getMemberId());
+        assertFalse(contains);
+
+        scoreDao.insertAll(TestData.SCORES.toArray(new Score[TestData.SCORES.size()]));
+
+        contains = scoreDao.containsScore(TestData.SCORE_1.getGroupMonthlyScoreId(), TestData.SCORE_1.getMemberId());
+        assertTrue(contains);
+    }
 }

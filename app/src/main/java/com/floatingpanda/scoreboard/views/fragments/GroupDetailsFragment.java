@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +15,19 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.room.Dao;
 
+import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.utils.DateStringCreator;
 import com.floatingpanda.scoreboard.views.activities.GroupEditActivity;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
-import static android.app.Activity.RESULT_OK;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
-//TODO maybe remove the game record and member counts from here? Could just put them at the top of
-// the member and game record lists, respectively.
+import static android.app.Activity.RESULT_OK;
 
 public class GroupDetailsFragment extends Fragment {
 
@@ -102,9 +105,13 @@ public class GroupDetailsFragment extends Fragment {
         String dateString = dateStringCreator.getEnglishMonth3LetterString() + " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
 
         dateCreatedTextView.setText(dateString);
-        //TODO look into how to use my aggregations here.
-        gamesPlayedTextView.setText(Integer.toString(group.getGamesPlayed()));
-        membersCountTextView.setText(Integer.toString(group.getMembersCount()));
+
+        int gamesPlayed = groupViewModel.getGamesPlayedByGroup(group.getId());
+        gamesPlayedTextView.setText(Integer.toString(gamesPlayed));
+
+        int noOfMembers = groupViewModel.getNoOfMembersInGroup(group.getId());
+        membersCountTextView.setText(Integer.toString(noOfMembers));
+
         descriptionTextView.setText(group.getDescription());
         notesTextView.setText(group.getNotes());
     }

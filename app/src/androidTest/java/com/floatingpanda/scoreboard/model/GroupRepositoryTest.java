@@ -243,15 +243,4 @@ public class GroupRepositoryTest {
 
         assertFalse(contains);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testContainsWithNull() throws InterruptedException {
-        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
-        List<Group> groups = LiveDataTestUtil.getValue(groupRepository.getAll());
-
-        assertThat(groups.size(), is(TestData.GROUPS.size()));
-
-        String groupName = null;
-        boolean contains = groupRepository.contains(groupName);
-    }
 }

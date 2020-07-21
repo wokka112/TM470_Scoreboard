@@ -5,10 +5,11 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-//TODO add unique constraint to the combination of the three columns in this entity?
-@Entity(tableName = "players",
+@Entity(tableName = "players", indices = {@Index(value = {"player_team_id", "member_nickname"},
+        unique = true)},
         foreignKeys = {@ForeignKey(entity = PlayerTeam.class,
                 parentColumns = "player_team_id",
                 childColumns = "player_team_id",

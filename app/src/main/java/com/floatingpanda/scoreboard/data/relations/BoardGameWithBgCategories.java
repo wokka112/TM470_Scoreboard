@@ -76,7 +76,7 @@ public class BoardGameWithBgCategories implements Parcelable {
      * If the board game has no categories set, returns "No categories set"
      * @return A string of the categories the board game fills.
      */
-    public String getBgCategoriesString() {
+    public String getFullBgCategoriesString() {
         if (bgCategories.isEmpty()) {
             return "No categories set";
         }
@@ -84,9 +84,30 @@ public class BoardGameWithBgCategories implements Parcelable {
         StringBuilder sb = new StringBuilder();
         sb.append(bgCategories.get(0).getCategoryName());
 
-        for (int i = 1; i < bgCategories.size(); i++) {
+        for (int i = 1; (i < bgCategories.size()) && (i < 3); i++) {
             sb.append(", ");
             sb.append(bgCategories.get(i).getCategoryName());
+        }
+
+        return sb.toString();
+    }
+
+    public String getLimitedBgCategoriesString() {
+        if (bgCategories.isEmpty()) {
+            return "No categories set";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(bgCategories.get(0).getCategoryName());
+
+        for (int i = 1; (i < bgCategories.size()) && (i < 3); i++) {
+            sb.append(", ");
+            sb.append(bgCategories.get(i).getCategoryName());
+        }
+
+        if (bgCategories.size() > 3) {
+            int moreCategories = bgCategories.size() - 3;
+            sb.append(" and " + moreCategories + " more categories.");
         }
 
         return sb.toString();

@@ -254,15 +254,4 @@ public class MemberRepositoryTest {
         contains = memberRepository.contains(nickname);
         assertFalse(contains);
     }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testContainsWithNull() throws InterruptedException {
-        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
-        List<Member> members = LiveDataTestUtil.getValue(memberRepository.getAll());
-
-        assertThat(members.size(), is(TestData.MEMBERS.size()));
-
-        String nickname = null;
-        boolean contains = memberRepository.contains(nickname);
-    }
 }

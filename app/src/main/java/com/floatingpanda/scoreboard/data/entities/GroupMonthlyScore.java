@@ -8,8 +8,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-//TODO make year, quarter, month combos unique via indexing?
-@Entity(tableName = "group_monthly_scores",
+@Entity(tableName = "group_monthly_scores", indices = {@Index(value = {"group_id", "year", "quarter", "month"},
+        unique = true)},
         foreignKeys = {@ForeignKey(entity = Group.class,
                 parentColumns = "group_id",
                 childColumns = "group_id",

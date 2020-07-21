@@ -18,8 +18,6 @@ import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.List;
 
-//TODO maybe change to take a list of members and then just use a simple layout with a textview in it for populating the recyclerview?
-// Might be simpler than this current method.
 public class CoopSoliConfirmPlayersListAdapter extends RecyclerView.Adapter<CoopSoliConfirmPlayersListAdapter.GameRecordPlayerViewHolder> {
 
     private Context context;

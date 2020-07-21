@@ -41,10 +41,7 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
             holder.bgNameItemView.setText(boardGame.getBgName());
             holder.difficultyItemView.setText(Integer.toString(boardGame.getDifficulty()));
             holder.playersItemView.setText(boardGame.getMinPlayers() + " - " + boardGame.getMaxPlayers());
-
-            //TODO make it so that only 2 or 3 categories are shown and then + x more where x is the
-            // number of categories left.
-            holder.categoriesItemView.setText(current.getBgCategoriesString());
+            holder.categoriesItemView.setText(current.getLimitedBgCategoriesString());
         } else {
             holder.bgNameItemView.setText("No board game");
         }

@@ -14,8 +14,10 @@ import com.floatingpanda.scoreboard.data.daos.GroupCategorySkillRatingDao;
 import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.daos.PlayerSkillRatingChangeDao;
 import com.floatingpanda.scoreboard.data.entities.GroupCategorySkillRating;
+import com.floatingpanda.scoreboard.data.entities.GroupMonthlyScore;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.entities.PlayerSkillRatingChange;
+import com.floatingpanda.scoreboard.data.entities.Score;
 import com.floatingpanda.scoreboard.data.relations.GameRecordWithPlayerTeamsAndPlayers;
 import com.floatingpanda.scoreboard.data.daos.AssignedCategoryDao;
 import com.floatingpanda.scoreboard.data.daos.BoardGameDao;
@@ -208,12 +210,30 @@ public class GameRecordRepository {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH) + 1;
 
-        //Get group monthly score id
-        int groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(groupId, year, month);
+        int groupMonthlyScoreId;
+        //TODO write test for non-existent group monthly score (i.e. for a date that doesn't have a group monthly score)
+        if (!groupMonthlyScoreDao.containsGroupMonthlyScore(groupId, year, month)) {
+            //TODO write comments to describe this
+            int quarter = month / 3;
+            int remainder = month % 3;
+            if (remainder != 0) {
+                quarter += 1;
+            }
+
+            groupMonthlyScoreId = (int) groupMonthlyScoreDao.insert(new GroupMonthlyScore(groupId, year, quarter, month));
+        } else {
+            //Get group monthly score id
+            groupMonthlyScoreId = groupMonthlyScoreDao.getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(groupId, year, month);
+        }
+
         //Get member id
         int memberId = member.getId();
         //Update score for group monthly score id and member id with the new score.
-        scoreDao.addScore(groupMonthlyScoreId, memberId, score);
+        if (!scoreDao.containsScore(groupMonthlyScoreId, memberId)) {
+            scoreDao.insert(new Score(groupMonthlyScoreId, memberId, score));
+        } else {
+            scoreDao.addScore(groupMonthlyScoreId, memberId, score);
+        }
     }
 
     public void calculateAndAssignSkillRatingChanges(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {

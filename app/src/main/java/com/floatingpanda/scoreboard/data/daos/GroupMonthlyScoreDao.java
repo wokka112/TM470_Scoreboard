@@ -33,6 +33,9 @@ public interface GroupMonthlyScoreDao {
     @Query("SELECT group_monthly_score_id FROM group_monthly_scores WHERE group_id LIKE :groupId AND year LIKE :year AND month LIKE :month")
     int getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(int groupId, int year, int month);
 
+    @Query("SELECT EXISTS(SELECT * FROM group_monthly_scores WHERE group_id LIKE :groupId AND year LIKE :year AND month LIKE :month)")
+    boolean containsGroupMonthlyScore(int groupId, int year, int month);
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAll(GroupMonthlyScore... groupMonthlyScores);
 

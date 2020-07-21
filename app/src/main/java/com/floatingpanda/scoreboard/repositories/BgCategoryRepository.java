@@ -101,34 +101,13 @@ public class BgCategoryRepository {
 
     // Postconditions: - if a BgCategory with bgCategory's name exists in the database, returns true.
     //                 - if no BgCategory with bgCategory's name exists in the database, returns false.
-    //TODO look into whether this is basically just running on the main thread. I think it may be.
     /**
      * Checks whether the database contains a BgCategory with the name categoryName. If it does,
      * returns true. Otherwise, returns false.
      * @param categoryName
      * @return
      */
-    public boolean containsCategoryName(String categoryName) throws IllegalArgumentException {
-        if(categoryName == null) {
-            throw new IllegalArgumentException("null categoryName passed to contains method.");
-        } else if(categoryName.isEmpty()) {
-            throw new IllegalArgumentException("empty categoryName passed to contains method.");
-        }
-
-        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                // If no category found, returns null.
-                BgCategory databaseCategory = bgCategoryDao.findNonLiveDataByName(categoryName);
-                return databaseCategory != null;
-            };
-        });
-
-        try {
-            return (Boolean) future.get();
-        } catch (Exception e) {
-            Log.e("BgCatRepos.java", "Exception: " + e);
-            return false;
-        }
+    public boolean containsCategoryName(String categoryName) {
+        return bgCategoryDao.containsBgCategory(categoryName);
     }
 }

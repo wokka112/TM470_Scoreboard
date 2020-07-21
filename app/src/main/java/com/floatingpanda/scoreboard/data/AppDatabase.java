@@ -55,7 +55,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class,
         GroupMember.class, Member.class, PlayMode.class, GameRecord.class, Player.class,
         PlayerTeam.class, GroupMonthlyScore.class, Score.class, GroupCategorySkillRating.class,
-        PlayerSkillRatingChange.class}, version = 32, exportSchema = false,
+        PlayerSkillRatingChange.class}, version = 35, exportSchema = false,
         views = {GroupCategorySkillRatingWithMemberDetailsView.class})
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {

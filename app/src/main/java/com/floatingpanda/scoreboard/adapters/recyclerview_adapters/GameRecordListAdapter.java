@@ -70,8 +70,6 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             List<PlayerTeamWithPlayers> currentPlayerTeamsWithPlayers = current.getPlayerTeamsWithPlayers();
             currentPlayerTeamsWithPlayers.sort(new PlayerTeamWithPlayersComparator());
 
-            //TODO add padding or margin to wrappers so the text wraps around before it hits the right end of phone.
-
             if (currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
                 populateCompetitive(holder, currentGameRecord.getTeams(), currentPlayerTeamsWithPlayers);
             } else if (currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COOPERATIVE

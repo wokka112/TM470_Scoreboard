@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.DetailedWinnerListAdapter;
 import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,8 @@ public class GroupMonthlyScoreActivity extends AppCompatActivity {
         int year = (int) getIntent().getExtras().get("YEAR");
         scoresWithMemberDetails = (ArrayList<ScoreWithMemberDetails>) getIntent().getExtras().get("SCORES");
 
-        monthYearTextView.setText(month + " " + year);
+        String monthString = DateStringCreator.convertMonthNumberToEnglishMonthNameString(month);
+        monthYearTextView.setText(monthString + " " + year);
 
         final DetailedWinnerListAdapter adapter = new DetailedWinnerListAdapter(this);
         recyclerView.setAdapter(adapter);

@@ -367,6 +367,19 @@ public class GroupMonthlyScoreDaoTest {
         assertFalse(groupMonthlyScoreId == TestData.GROUP_MONTHLY_SCORE_2.getId());
     }
 
+    @Test
+    public void testContainsGroupMonthlyScore() throws InterruptedException {
+        boolean contains = groupMonthlyScoreDao.containsGroupMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getGroupId(),
+                TestData.GROUP_MONTHLY_SCORE_1.getYear(), TestData.GROUP_MONTHLY_SCORE_1.getMonth());
+        assertFalse(contains);
+
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+
+        contains = groupMonthlyScoreDao.containsGroupMonthlyScore(TestData.GROUP_MONTHLY_SCORE_1.getGroupId(),
+                TestData.GROUP_MONTHLY_SCORE_1.getYear(), TestData.GROUP_MONTHLY_SCORE_1.getMonth());
+        assertTrue(contains);
+    }
+
     private void testGroupMonthlyScoresWithScoresAndMemberDetails(List<GroupMonthlyScoreWithScoresAndMemberDetails> groupMonthlyScoresWithScoresAndMemberDetails) {
         int previousYear = 3000;
         int previousMonth = 12;

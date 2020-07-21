@@ -94,16 +94,6 @@ public class Group implements Parcelable {
     public Date getDateCreated() { return this.dateCreated; }
     public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 
-    //TODO implement proper functionality
-    public int getGamesPlayed() {
-        return 100;
-    }
-
-    //TODO implement proper functionality. Maybe move this elsewhere?
-    public int getMembersCount() {
-        return 30;
-    }
-
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
