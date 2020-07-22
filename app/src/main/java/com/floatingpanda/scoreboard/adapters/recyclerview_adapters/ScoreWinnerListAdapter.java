@@ -40,7 +40,6 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
 
     @Override
     public void onBindViewHolder(ScoreWinnerViewHolder holder, int position) {
-        //TODO make it skip months with no scores. Maybe a condition in the if like (!groupMonthlyScoresAndMemberDetails.get(position).getScoresWithMemberDetails().isEmpty())
         if (groupMonthlyScoresWithScoresAndMemberDetails != null) {
             GroupMonthlyScoreWithScoresAndMemberDetails current = groupMonthlyScoresWithScoresAndMemberDetails.get(position);
             GroupMonthlyScore currentGroupMonthlyScore = current.getGroupMonthlyScore();
@@ -48,38 +47,16 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
             String dateString = DateStringCreator.convertMonthNumberToEnglishMonthNameString(currentGroupMonthlyScore.getMonth()) + " " + currentGroupMonthlyScore.getYear();
             holder.dateTextView.setText(dateString);
 
-            //TODO move this logic into its own method and refactor it so it's simplified.
-            //TODO make all text begin as GONE so that if there's only 2 members with scores, there's not a "third place" with nothing in it.
+            //Hide all places with names and scores. Places with names and scores can be made visible and have text supplied to them in later steps.
+            // This way only places with players will show information. For instance, months with only 2 players with scores will show them in
+            // places 1 and 2 with no place 3 on display, rather than an empty place 3.
+            hideScoreViews(holder);
+
             List<ScoreWithMemberDetails> currentScoresWithMemberDetails = current.getScoresWithMemberDetails();
-            int previousScore = 0;
-            for (int i = 0; i < 3 && i < currentScoresWithMemberDetails.size(); i++) {
-                ScoreWithMemberDetails scoreWithMemberDetails = currentScoresWithMemberDetails.get(i);
-                int currentScore = scoreWithMemberDetails.getScore().getScore();
-
-                Log.w("ScoreWinnerListAdapter.java", "Current Group Month: " + currentGroupMonthlyScore.getMonth() + ", i: " + i + ", previous score: " +
-                        previousScore + ", current score: " + currentScore);
-
-                if (i == 0) {
-                    holder.firstPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
-                    holder.firstPlaceScoreTextView.setText(Integer.toString(currentScore));
-                    previousScore = currentScore;
-                } else if (i == 1) {
-                    if (currentScore == previousScore) {
-                        holder.secondPlaceHeaderTextView.setText(holder.firstPlaceHeaderTextView.getText());
-                    }
-
-                    holder.secondPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
-                    holder.secondPlaceScoreTextView.setText(Integer.toString(currentScore));
-                    previousScore = currentScore;
-                } else if (i == 2) {
-                    if (currentScore == previousScore) {
-                        holder.thirdPlaceHeaderTextView.setText(holder.secondPlaceHeaderTextView.getText());
-                    }
-
-                    holder.thirdPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
-                    holder.thirdPlaceScoreTextView.setText(Integer.toString(currentScore));
-                    previousScore = currentScore;
-                }
+            if (!currentScoresWithMemberDetails.isEmpty()) {
+                populateScores(holder, currentScoresWithMemberDetails);
+            } else {
+                displayNoScoresText(holder);
             }
         } else {
 
@@ -96,6 +73,78 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
         if (groupMonthlyScoresWithScoresAndMemberDetails != null)
             return groupMonthlyScoresWithScoresAndMemberDetails.size();
         else return 0;
+    }
+
+    private void populateScores(ScoreWinnerViewHolder holder, List<ScoreWithMemberDetails> currentScoresWithMemberDetails) {
+        int previousScore = 0;
+        for (int i = 0; i < 3 && i < currentScoresWithMemberDetails.size(); i++) {
+            ScoreWithMemberDetails scoreWithMemberDetails = currentScoresWithMemberDetails.get(i);
+            int currentScore = scoreWithMemberDetails.getScore().getScore();
+
+            if (i == 0) {
+                displayFirstPlaceViews(holder);
+
+                holder.firstPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
+                holder.firstPlaceScoreTextView.setText(Integer.toString(currentScore));
+                previousScore = currentScore;
+            } else if (i == 1) {
+                displaySecondPlaceViews(holder);
+
+                if (currentScore == previousScore) {
+                    holder.secondPlaceHeaderTextView.setText(holder.firstPlaceHeaderTextView.getText());
+                }
+
+                holder.secondPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
+                holder.secondPlaceScoreTextView.setText(Integer.toString(currentScore));
+                previousScore = currentScore;
+            } else if (i == 2) {
+                displayThirdPlaceViews(holder);
+
+                if (currentScore == previousScore) {
+                    holder.thirdPlaceHeaderTextView.setText(holder.secondPlaceHeaderTextView.getText());
+                }
+
+                holder.thirdPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
+                holder.thirdPlaceScoreTextView.setText(Integer.toString(currentScore));
+                previousScore = currentScore;
+            }
+        }
+    }
+
+    private void displayNoScoresText(ScoreWinnerViewHolder holder) {
+        displayFirstPlaceViews(holder);
+        holder.firstPlaceHeaderTextView.setVisibility(View.INVISIBLE);
+        holder.firstPlaceNameTextView.setText("No scores for this month");
+    }
+
+    private void displayFirstPlaceViews(ScoreWinnerViewHolder holder) {
+        holder.firstPlaceHeaderTextView.setVisibility(View.VISIBLE);
+        holder.firstPlaceNameTextView.setVisibility(View.VISIBLE);
+        holder.firstPlaceScoreTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void displaySecondPlaceViews(ScoreWinnerViewHolder holder) {
+        holder.secondPlaceHeaderTextView.setVisibility(View.VISIBLE);
+        holder.secondPlaceNameTextView.setVisibility(View.VISIBLE);
+        holder.secondPlaceScoreTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void displayThirdPlaceViews(ScoreWinnerViewHolder holder) {
+        holder.thirdPlaceHeaderTextView.setVisibility(View.VISIBLE);
+        holder.thirdPlaceNameTextView.setVisibility(View.VISIBLE);
+        holder.thirdPlaceScoreTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideScoreViews(ScoreWinnerViewHolder holder) {
+        holder.firstPlaceHeaderTextView.setVisibility(View.GONE);
+        holder.firstPlaceNameTextView.setVisibility(View.GONE);
+        holder.firstPlaceScoreTextView.setVisibility(View.GONE);
+        holder.secondPlaceHeaderTextView.setVisibility(View.GONE);
+        holder.secondPlaceNameTextView.setVisibility(View.GONE);
+        holder.secondPlaceScoreTextView.setVisibility(View.GONE);
+        holder.thirdPlaceHeaderTextView.setVisibility(View.GONE);
+        holder.thirdPlaceNameTextView.setVisibility(View.GONE);
+        holder.thirdPlaceScoreTextView.setVisibility(View.GONE);
     }
 
     class ScoreWinnerViewHolder extends RecyclerView.ViewHolder {

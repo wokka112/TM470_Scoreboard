@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -39,6 +40,8 @@ public class ChoosePlayersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_players);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         backButton = findViewById(R.id.back_button);
         nextButton = findViewById(R.id.next_button);
@@ -149,5 +152,18 @@ public class ChoosePlayersActivity extends AppCompatActivity {
             setResult(RESULT_OK, replyIntent);
             finish();
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

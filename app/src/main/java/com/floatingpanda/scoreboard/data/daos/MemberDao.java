@@ -47,7 +47,6 @@ public interface MemberDao {
     @Query("SELECT member_id FROM members WHERE nickname LIKE :nickname")
     int getMemberIdByMemberNickname(String nickname);
 
-    //TODO add test
     @Query("SELECT EXISTS(SELECT * FROM members WHERE nickname LIKE :nickname)")
     boolean containsMember(String nickname);
 

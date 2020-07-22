@@ -74,7 +74,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="8dp"
-            android:hint="Group Name" />
+            android:hint="Group Name"
+            android:inputType="textCapWords"/>
 
         <EditText
             android:id="@+id/groupadd_description_edittext"
@@ -85,7 +86,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Description (Optional)" />
+            android:hint="Description (Optional)"
+            android:inputType="textCapSentences"/>
 
         <EditText
             android:id="@+id/groupadd_notes_edittext"
@@ -96,7 +98,8 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Notes (Optional)" />
+            android:hint="Notes (Optional)"
+            android:inputType="textCapSentences"/>
 
         <ImageView
             android:id="@+id/groupadd_banner"

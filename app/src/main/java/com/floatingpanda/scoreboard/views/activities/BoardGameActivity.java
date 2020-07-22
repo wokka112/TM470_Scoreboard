@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
+import com.floatingpanda.scoreboard.interfaces.PopupConfirmDialogInterface;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 
 public class BoardGameActivity extends AppCompatActivity {
@@ -35,6 +37,8 @@ public class BoardGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_game);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nameTextView = findViewById(R.id.bgact_name);
         difficultyTextView = findViewById(R.id.bgact_difficulty_output);
@@ -117,7 +121,6 @@ public class BoardGameActivity extends AppCompatActivity {
      * @param boardGameWithBgCategoriesAndPlayModes a BoardGame with bg categories and play modes that exists in the database
      */
     private void startDeleteActivity(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
-        //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(BoardGameActivity.this);
         builder.setTitle("Delete Board Game?")
                 .setMessage("Are you sure you want to delete " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName() +
@@ -173,5 +176,18 @@ public class BoardGameActivity extends AppCompatActivity {
 
             boardGameViewModel.editBoardGameWithBgCategoriesAndPlayModes(originalBoardGameWithBgCategoriesAndPlayModes, editedBoardGameWithBgCategoriesAndPlayModes);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

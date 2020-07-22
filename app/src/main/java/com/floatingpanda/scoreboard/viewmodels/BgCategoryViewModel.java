@@ -81,8 +81,6 @@ public class BgCategoryViewModel extends AndroidViewModel {
     }
 
     public boolean editActivityInputsValid(Activity activity, String originalCategoryName, String categoryName, boolean testing) {
-        //TODO remove popup warnings and instead direct people to the edit text in error and
-        // inform them what they need to do to fix it?
         if (categoryName.isEmpty()) {
             if (!testing) {
                 AlertDialogHelper.popupWarning("You must enter a name for the category.", activity);
@@ -101,7 +99,4 @@ public class BgCategoryViewModel extends AndroidViewModel {
 
         return true;
     }
-
-    //TODO maybe put enums here for invalidity and simply return them. Then the enum determines what popup to create in the view?
-    // then get rid of testing boolean?
 }

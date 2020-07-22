@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -39,13 +40,13 @@ public class MemberActivity extends AppCompatActivity {
         setContentView(R.layout.activity_member);
         memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         nicknameTextView = findViewById(R.id.memberact_nickname_output);
         dateCreatedTextView = findViewById(R.id.memberact_date_created_output);
         notesTextView = findViewById(R.id.memberact_notes_output);
         groupsTextView = findViewById(R.id.memberact_groups_output);
-        //TODO add listener to link to a list of groups member is part of.
-        // also change colour to be blue like a hyperlink (????) Maybe use a button instead. Looks
-        // webby otherwise.
+        //TODO add button with listener to link to a list of groups member is part of
         viewGroupsLink = findViewById(R.id.memberact_view_groups);
         //TODO implement imgfilepath and functionality for it all
         imageView = findViewById(R.id.memberact_image);
@@ -143,7 +144,6 @@ public class MemberActivity extends AppCompatActivity {
      * @param member a member that exists in the database
      */
     private void startDeleteActivity(Member member) {
-        //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(MemberActivity.this);
         builder.setTitle("Delete Member?")
                 .setMessage("Are you sure you want to delete " + member.getNickname() + "?\n" +
@@ -193,5 +193,18 @@ public class MemberActivity extends AppCompatActivity {
             Member editedMember = (Member) data.getExtras().get(MemberEditActivity.EXTRA_REPLY);
             memberViewModel.editMember(editedMember);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

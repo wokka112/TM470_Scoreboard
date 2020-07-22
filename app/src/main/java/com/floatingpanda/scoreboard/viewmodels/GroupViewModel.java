@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Activity;
 import android.app.Application;
+import android.widget.EditText;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -12,7 +13,6 @@ import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.repositories.GroupRepository;
 
 import java.util.List;
-import java.util.concurrent.Future;
 
 public class GroupViewModel extends AndroidViewModel {
 
@@ -64,22 +64,26 @@ public class GroupViewModel extends AndroidViewModel {
 
     public void deleteGroup(Group group) { groupRepository.delete(group); }
 
-    public boolean addActivityInputsValid(Activity activity, String groupName, boolean testing) {
-        return editActivityInputsValid(activity, "", groupName, testing);
+    //TODO update tests to use edittexts instead of strings.
+    public boolean addActivityInputsValid(EditText groupNameEditText, boolean testing) {
+        return editActivityInputsValid("", groupNameEditText, testing);
     }
 
-    public boolean editActivityInputsValid(Activity activity, String originalGroupName, String groupName, boolean testing) {
+    public boolean editActivityInputsValid(String originalGroupName, EditText groupNameEditText, boolean testing) {
+        String groupName = groupNameEditText.getText().toString();
         if (groupName.isEmpty()) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("You must enter a name for the group.", activity);
+                groupNameEditText.setError("You must enter a name.");
+                groupNameEditText.requestFocus();
             }
             return false;
         }
 
         if (!groupName.equals(originalGroupName)
-                && groupRepository.contains(groupName)) {
+                && groupRepository.containsGroupName(groupName)) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("You must enter a unique name for the group", activity);
+                groupNameEditText.setError("A group with this name already exists in the app. You must enter a unique name");
+                groupNameEditText.requestFocus();
             }
             return false;
         }

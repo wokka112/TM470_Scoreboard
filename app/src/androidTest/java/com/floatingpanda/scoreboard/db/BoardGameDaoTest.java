@@ -366,4 +366,14 @@ public class BoardGameDaoTest {
         assertNotNull(boardGameWithBgCategoriesAndPlayModes);
         assertThat(boardGameWithBgCategoriesAndPlayModes, is(TestData.BOARD_GAME_WITH_BG_CATEGORIES_AND_PLAY_MODES_3));
     }
+
+    @Test
+    public void testContains() throws InterruptedException {
+        boolean contains = boardGameDao.containsBoardGame(TestData.BOARD_GAME_1.getBgName());
+        assertFalse(contains);
+
+        boardGameDao.insertAll(TestData.BOARD_GAMES.toArray(new BoardGame[TestData.BOARD_GAMES.size()]));
+        contains = boardGameDao.containsBoardGame(TestData.BOARD_GAME_1.getBgName());
+        assertTrue(contains);
+    }
 }

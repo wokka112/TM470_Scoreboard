@@ -81,7 +81,6 @@ public class GameRecordScoresListFragment extends Fragment {
     }
 
     private void startDeleteActivity(GameRecord gameRecord) {
-        //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Game Record?")
                 .setMessage("Are you sure you want to delete this record?\n" +

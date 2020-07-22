@@ -227,19 +227,19 @@ public class GroupRepositoryTest {
 
         //Test Case 1: Contains - group name that exists in database entered.
         String groupName = TestData.GROUP_1.getGroupName();
-        boolean contains = groupRepository.contains(groupName);
+        boolean contains = groupRepository.containsGroupName(groupName);
 
         assertTrue(contains);
 
         //Test Case 2: Does not contain - group name that doesn't exist in database entered.
         groupName = "Test group name";
-        contains = groupRepository.contains(groupName);
+        contains = groupRepository.containsGroupName(groupName);
 
         assertFalse(contains);
 
         //Test Case 3: Does not contain - empty group name entered.
         groupName = "";
-        contains = groupRepository.contains(groupName);
+        contains = groupRepository.containsGroupName(groupName);
 
         assertFalse(contains);
     }

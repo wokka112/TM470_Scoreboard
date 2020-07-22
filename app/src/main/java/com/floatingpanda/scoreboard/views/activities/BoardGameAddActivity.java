@@ -2,12 +2,14 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -38,16 +40,17 @@ public class BoardGameAddActivity extends AppCompatActivity {
         notesEditText, houseRulesEditText;
     private CheckBox competitiveCheckBox, cooperativeCheckBox, solitaireCheckBox;
     private RadioGroup teamOptionsRadioGroup;
+    private RadioButton teamsOnlyRadioButton;
     private ChipGroup chipGroup;
     private MultiSpinner multiSpinner;
     private ArrayAdapter<BgCategory> adapter;
-
-    //private SearchableSpinner searchableSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_board_game);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         boardGameAddEditViewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
 
@@ -64,6 +67,7 @@ public class BoardGameAddActivity extends AppCompatActivity {
         solitaireCheckBox = findViewById(R.id.bgadd_checkbox_solitaire);
 
         teamOptionsRadioGroup = findViewById(R.id.bgadd_team_options_radiogroup);
+        teamsOnlyRadioButton = findViewById(R.id.bgadd_teams_only_radiobutton);
 
         chipGroup = findViewById(R.id.bgadd_categories_chip_group);
 
@@ -118,8 +122,9 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 BoardGame.TeamOption teamOption = getTeamOption();
                 List<PlayMode.PlayModeEnum> playModeEnums = getPlayModeEnums();
 
-                if (!boardGameAddEditViewModel.addActivityInputsValid(BoardGameAddActivity.this, bgName, difficultyString,
-                        minPlayersString, maxPlayersString, teamOption, playModeEnums, false)) {
+                if (!boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText,
+                        minPlayersEditText, maxPlayersEditText, teamOption, teamsOnlyRadioButton, playModeEnums,
+                        solitaireCheckBox,false)) {
                     return;
                 }
 
@@ -231,9 +236,16 @@ public class BoardGameAddActivity extends AppCompatActivity {
         }
     };
 
-     /*
-    private void setSearchableSpinnerList() {
-        searchableSpinner.setAdapter(viewModel.getSpinnerListAdapter(this));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
-    */
 }

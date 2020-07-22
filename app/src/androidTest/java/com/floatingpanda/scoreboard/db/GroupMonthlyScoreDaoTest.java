@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
+import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
@@ -201,6 +202,21 @@ public class GroupMonthlyScoreDaoTest {
         GroupMonthlyScore groupMonthlyScore = LiveDataTestUtil.getValue(groupMonthlyScoreDao.getGroupMonthlyScoreByGroupIdAndYearAndMonth(TestData.GROUP_1.getId(), year, month));
 
         assertThat(groupMonthlyScore, is(TestData.GROUP_MONTHLY_SCORE_2));
+    }
+
+    @Test
+    public void getGroupMonthlyScoreByGroupMonthlyScoreIdWhenNoneInserted() throws InterruptedException {
+        GroupMonthlyScore groupMonthlyScore = LiveDataTestUtil.getValue(groupMonthlyScoreDao.getGroupMonthlyScoreByGroupMonthlyScoreId(TestData.GROUP_MONTHLY_SCORE_1.getId()));
+
+        assertNull(groupMonthlyScore);
+    }
+
+    @Test
+    public void getGroupMonthlyScoreByGroupMonthlyScoreIdWhenAllInserted() throws InterruptedException {
+        groupMonthlyScoreDao.insertAll(TestData.GROUP_MONTHLY_SCORES.toArray(new GroupMonthlyScore[TestData.GROUP_MONTHLY_SCORES.size()]));
+        GroupMonthlyScore groupMonthlyScore = LiveDataTestUtil.getValue(groupMonthlyScoreDao.getGroupMonthlyScoreByGroupMonthlyScoreId(TestData.GROUP_MONTHLY_SCORE_1.getId()));
+
+        assertThat(groupMonthlyScore, is(TestData.GROUP_MONTHLY_SCORE_1));
     }
 
     @Test

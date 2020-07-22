@@ -108,6 +108,18 @@ public class BgCategoryRepository {
      * @return
      */
     public boolean containsCategoryName(String categoryName) {
-        return bgCategoryDao.containsBgCategory(categoryName);
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return bgCategoryDao.containsBgCategory(categoryName);
+            }
+        });
+
+        try {
+            return (Boolean) future.get();
+        } catch (Exception e) {
+            Log.e("BgCategoryRepos.java", "Could not get future for contains. Exception: " + e);
+            return true;
+        }
     }
 }

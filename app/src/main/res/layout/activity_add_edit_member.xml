@@ -53,7 +53,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        android:hint="Nickname"/>
+        android:hint="Nickname"
+        android:inputType="textCapWords"/>
 
     <TextView
         android:id="@+id/memberadd_notes_textview"
@@ -72,7 +73,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:hint="Notes (Optional)"/>
+        android:hint="Notes (Optional)"
+        android:inputType="textCapSentences"/>
 
     <Button
         android:id="@+id/memberadd_button_save"

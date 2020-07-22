@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.views.activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +27,8 @@ public class GameRecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
@@ -37,5 +40,16 @@ public class GameRecordActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
 
+        return super.onOptionsItemSelected(item);
+    }
 }

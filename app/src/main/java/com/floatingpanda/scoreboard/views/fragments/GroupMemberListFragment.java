@@ -78,7 +78,6 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
 
     @Override
     public void removeGroupMember(Member member) {
-        //TODO move this elsewhere.
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Remove Group Member?")
                 .setMessage("Are you sure you want to remove " + member.getNickname() + " from the " +
@@ -138,29 +137,4 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
             groupMemberViewModel.addGroupMembers(group, members);
         }
     }
-
-    //TODO implement member add functionality
-
-    // Postconditions: - The Member add activity is started.
-    /**
-     * Starts the MemberAddActivity activity.
-     */
-    /*
-    public void startAddActivity() {
-        Intent addMemberIntent = new Intent(getContext(), MemberAddActivity.class);
-        startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ADD_MEMBER_REQUEST_CODE && resultCode == RESULT_OK) {
-            Member member = (Member) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
-            memberViewModel.addMember(member);
-        }
-    }
-
-     */
-
 }

@@ -49,7 +49,6 @@ public interface BgCategoryDao {
     @Query("SELECT category_id FROM bg_categories WHERE category_name LIKE :categoryName")
     int getCategoryIdByCategoryName(String categoryName);
 
-    //TODO add test
     @Query("SELECT EXISTS(SELECT * FROM bg_categories WHERE category_name LIKE :categoryName)")
     boolean containsBgCategory(String categoryName);
 

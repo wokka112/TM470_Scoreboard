@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.KeyListener;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,6 +31,7 @@ import com.floatingpanda.scoreboard.data.entities.BoardGame;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
@@ -66,6 +68,8 @@ public class AddGameRecordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_game_record);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         addPlayersButton = findViewById(R.id.add_game_record_add_players_button);
 
@@ -180,9 +184,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
     }
 
     private void startChoosePlayersActivity() {
-        int numOfTeams = Integer.parseInt(playerCountEditText.getText().toString());
-        boolean solitaire = isSolitaire();
-
         GameRecord gameRecord = createGameRecord();
 
         Intent intent = new Intent(this, ChoosePlayersActivity.class);
@@ -207,6 +208,34 @@ public class AddGameRecordActivity extends AppCompatActivity {
         }
     }
 
+    //TODO update tests to use edittexts instead of strings.
+    public boolean inputsValid() {
+        if (playerCountEditText.getText().toString().isEmpty()) {
+            playerCountEditText.setError("You must set the number of players or teams that played.");
+            playerCountEditText.requestFocus();
+            return false;
+        }
+
+        if (getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
+            if (Integer.parseInt(playerCountEditText.getText().toString()) < 2) {
+                playerCountEditText.setError("You must set the number of players or teams to 2 or more when playing competitively.");
+                playerCountEditText.requestFocus();
+                return false;
+            }
+        }
+
+        if (getPlayModePlayed() == PlayMode.PlayModeEnum.COOPERATIVE
+                || getPlayModePlayed() == PlayMode.PlayModeEnum.SOLITAIRE) {
+            if (winLoseRadioGroup.getCheckedRadioButtonId() == -1) {
+                lostRadioButton.setError("You must set whether you won or lost the game.");
+                lostRadioButton.requestFocus();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private GameRecord createGameRecord() {
         int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
         Date date = calendar.getTime();
@@ -229,24 +258,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         GameRecord gameRecord = new GameRecord(group.getId(), boardGameName, difficulty, date, teams, playModePlayed, noOfTeams, won);
         return gameRecord;
-    }
-
-    public boolean inputsValid() {
-        //TODO add in validity tests - empty string, players chosen, win/loss chosen if necessary, player count greater than 2 if competitive selected.
-        if (playerCountEditText.getText().toString().isEmpty()) {
-            Log.w("AddGameRecordAct.java", "Player count is empty.");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isSolitaire() {
-        if (playModeRadioGroup.getCheckedRadioButtonId() == R.id.add_game_record_radio_button_solitaire) {
-            return true;
-        }
-
-        return false;
     }
 
     private void openDatePickerDialog() {
@@ -355,30 +366,23 @@ public class AddGameRecordActivity extends AppCompatActivity {
         }
     }
 
-    //TODO maybe move "disabling" entities (setting to alpha and making non-clickable) into its own helper method?
-
     private void setToCompetitive() {
-        //Unlock everything.
-        teamsRadioGroup.setClickable(true);
-        playerCountEditText.setKeyListener(editTextKeyListener);
-        playerCountEditText.setText("2");
-        playerCountEditText.setFocusable(true);
-        playerCountEditText.setFocusableInTouchMode(true);
-        playerCountEditText.requestFocus();
+        //Enable everything
+        enableTeamsRadioGroup();
+        makePlayerCountEditTextEditable();
 
+        // Set teams radio button to correct one based on which is clickable
         if (!teamsRadioButton.isClickable()) {
             noTeamsRadioButton.setChecked(true);
         } else if (!noTeamsRadioButton.isClickable()) {
             teamsRadioButton.setChecked(true);
         }
 
-        //Visually represent this
-        teamsRadioGroup.setAlpha(1.0f);
-        playerCountEditText.setAlpha(1.0f);
+        //Set player count to minimum number
+        playerCountEditText.setText("2");
 
         //Hide win lose options.
-        winLoseRadioGroupHeader.setVisibility(View.GONE);
-        winLoseRadioGroup.setVisibility(View.GONE);
+        hideWinLoseRadioGroup();
     }
 
     private void setToCooperative() {
@@ -386,46 +390,63 @@ public class AddGameRecordActivity extends AppCompatActivity {
         teamsRadioButton.setChecked(true);
 
         //Lock so only teams can be chosen
-        teamsRadioGroup.setClickable(false);
-
-        //Visually represent this
-        teamsRadioGroup.setAlpha(0.5f);
+        disableTeamsRadioGroup();
 
         //Set teams to 1
         playerCountEditText.setText("1");
-        playerCountEditText.setKeyListener(null);
-        playerCountEditText.setFocusable(false);
-        playerCountEditText.clearFocus();
-        playerCountEditText.setAlpha(0.5f);
+        makePlayerCountEditTextUneditable();
 
         //Show win lose options
-        winLoseRadioGroupHeader.setVisibility(View.VISIBLE);
-        winLoseRadioGroup.setVisibility(View.VISIBLE);
-        winLoseRadioGroup.clearCheck();
+        displayWinLoseRadioGroup();
     }
 
     private void setToSolitaire() {
         //Check no teams as chosen
         noTeamsRadioButton.setChecked(true);
-
-        //Lock so only no teams can be chosen
-        teamsRadioGroup.setClickable(false);
-
-        //Visually represent this
-        teamsRadioGroup.setAlpha(0.5f);
+        disableTeamsRadioGroup();
 
         //Set players to 1 and lock it
         playerCountEditText.setText("1");
+        makePlayerCountEditTextUneditable();
+
+        //Show win lose options
+        displayWinLoseRadioGroup();
+    }
+
+    private void makePlayerCountEditTextEditable() {
+        playerCountEditText.setKeyListener(editTextKeyListener);
+        playerCountEditText.setFocusable(true);
+        playerCountEditText.setFocusableInTouchMode(true);
+        playerCountEditText.requestFocus();
+        playerCountEditText.setAlpha(1.0f);
+    }
+
+    private void makePlayerCountEditTextUneditable() {
         playerCountEditText.setKeyListener(null);
         playerCountEditText.setFocusable(false);
         playerCountEditText.clearFocus();
-
         playerCountEditText.setAlpha(0.5f);
+    }
 
-        //Show win lose options
+    private void hideWinLoseRadioGroup() {
         winLoseRadioGroupHeader.setVisibility(View.VISIBLE);
         winLoseRadioGroup.setVisibility(View.VISIBLE);
         winLoseRadioGroup.clearCheck();
+    }
+
+    private void displayWinLoseRadioGroup() {
+        winLoseRadioGroupHeader.setVisibility(View.GONE);
+        winLoseRadioGroup.setVisibility(View.GONE);
+    }
+
+    private void enableTeamsRadioGroup() {
+        teamsRadioGroup.setClickable(true);
+        teamsRadioGroup.setAlpha(1.0f);
+    }
+
+    private void disableTeamsRadioGroup() {
+        teamsRadioGroup.setClickable(false);
+        teamsRadioGroup.setAlpha(0.5f);
     }
 
     private PlayMode.PlayModeEnum getPlayModePlayed() {
@@ -485,4 +506,17 @@ public class AddGameRecordActivity extends AppCompatActivity {
             setTimeEditText();
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

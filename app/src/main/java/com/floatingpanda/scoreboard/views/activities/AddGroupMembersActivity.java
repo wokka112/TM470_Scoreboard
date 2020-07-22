@@ -2,11 +2,13 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,6 +28,7 @@ import java.util.List;
 public class AddGroupMembersActivity extends AppCompatActivity implements SelectedMemberInterface {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
+    public final int ADD_MEMBER_REQUEST_CODE = 1;
 
     private MemberViewModel memberViewModel;
     private List<Member> groupMembers;
@@ -36,6 +39,8 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_members);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Button cancelButton, saveButton;
         TextView buttonTextView = findViewById(R.id.dialog_button_textview);
@@ -61,6 +66,13 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
             public void onChanged(List<Member> memberList) {
                 setNonGroupMembers(memberList);
                 adapter.setMembers(nonGroupMembers);
+            }
+        });
+
+        addMemberButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAddMemberActivity();
             }
         });
 
@@ -95,5 +107,33 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
 
     public void removeSelectedMember(Member member) {
         selectedMembers.remove(member);
+    }
+
+    public void startAddMemberActivity() {
+        Intent addMemberIntent = new Intent(this, MemberAddActivity.class);
+        startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_MEMBER_REQUEST_CODE && resultCode == RESULT_OK) {
+            Member member = (Member) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
+            memberViewModel.addMember(member);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

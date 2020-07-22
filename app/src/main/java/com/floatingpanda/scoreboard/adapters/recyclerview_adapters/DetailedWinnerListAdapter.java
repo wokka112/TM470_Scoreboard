@@ -29,7 +29,8 @@ public class DetailedWinnerListAdapter extends RecyclerView.Adapter<DetailedWinn
         return new DetailedWinnerListAdapter.DetailedWinnerViewHolder(itemView);
     }
 
-    //TODO Think this system will break if any views are recycled
+    //TODO Think this system will break if any views are recycled. Unless a group has 100s of members
+    // this shouldn't be a problem...
     @Override
     public void onBindViewHolder(DetailedWinnerListAdapter.DetailedWinnerViewHolder holder, int position) {
         if (scoresWithMemberDetails != null) {

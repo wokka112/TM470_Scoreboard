@@ -231,4 +231,14 @@ public class GroupDaoTest {
         assertTrue(memberIds.contains(TestData.MEMBER_1.getId()));
         assertTrue(memberIds.contains(TestData.MEMBER_3.getId()));
     }
+
+    @Test
+    public void testContains() throws InterruptedException {
+        boolean contains = groupDao.containsGroup(TestData.GROUP_1.getGroupName());
+        assertFalse(contains);
+
+        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
+        contains = groupDao.containsGroup(TestData.GROUP_1.getGroupName());
+        assertTrue(contains);
+    }
 }

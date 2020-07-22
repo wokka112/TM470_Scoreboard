@@ -95,6 +95,4 @@ public class GroupMemberViewModel extends AndroidViewModel {
         GroupMember groupMember = new GroupMember(group.getId(), member.getId());
         groupRepository.removeGroupMember(groupMember);
     }
-
-
 }

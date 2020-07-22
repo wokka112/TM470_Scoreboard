@@ -276,29 +276,18 @@ public class BoardGameRepositoryTest {
 
         //Test Case 1: Contains - bgName that exists in database.
         String bgName = TestData.BOARD_GAME_1.getBgName();
-        boolean contains = boardGameRepository.contains(bgName);
+        boolean contains = boardGameRepository.containsBoardGameName(bgName);
         assertTrue(contains);
 
         //Test Case 2: Does not contain - bgName that doesn't exist in database.
         bgName = "Non existent";
-        contains = boardGameRepository.contains(bgName);
+        contains = boardGameRepository.containsBoardGameName(bgName);
         assertFalse(contains);
 
         //Test Case 3: Does not contain - empty bgName.
         bgName = "";
-        contains = boardGameRepository.contains(bgName);
+        contains = boardGameRepository.containsBoardGameName(bgName);
         assertFalse(contains);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testContainsWithNull() throws InterruptedException {
-        boardGameDao.insert(TestData.BOARD_GAME_1);
-        BoardGame boardGame = LiveDataTestUtil.getValue(boardGameDao.findLiveDataById(TestData.BOARD_GAME_1.getId()));
-
-        assertNotNull(boardGame);
-
-        String bgName = null;
-        boolean contains = boardGameRepository.contains(bgName);
     }
 
     private BoardGame createEditedBoardGame(BoardGame originalBoardGame) {

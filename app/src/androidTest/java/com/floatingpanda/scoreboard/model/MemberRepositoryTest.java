@@ -241,17 +241,17 @@ public class MemberRepositoryTest {
 
         //Test case 1: Contains - nickname exists in database.
         String nickname = TestData.MEMBER_1.getNickname();
-        boolean contains = memberRepository.contains(nickname);
+        boolean contains = memberRepository.containsMemberNickname(nickname);
         assertTrue(contains);
 
         //Test case 2: Does not contain - nickname does not exist in database.
         nickname = "Non-existent name";
-        contains = memberRepository.contains(nickname);
+        contains = memberRepository.containsMemberNickname(nickname);
         assertFalse(contains);
 
         //Test case 3: Does not contain - empty nickname does not exist in database.
         nickname = "";
-        contains = memberRepository.contains(nickname);
+        contains = memberRepository.containsMemberNickname(nickname);
         assertFalse(contains);
     }
 }

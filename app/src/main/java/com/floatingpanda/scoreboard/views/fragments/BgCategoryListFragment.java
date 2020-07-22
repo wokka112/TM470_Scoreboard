@@ -128,7 +128,6 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     public void startDeleteActivity(Object object) {
         BgCategory bgCategory = (BgCategory) object;
 
-        //TODO refactor this popup window into a method and find somewhere better to put it.
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Category?")
                 .setMessage("Are you sure you want to delete " + bgCategory.getCategoryName() + "?\n" +

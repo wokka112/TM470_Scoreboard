@@ -135,7 +135,19 @@ public class GroupRepository {
         }
     }
 
-    public boolean contains(String groupName) {
-        return groupDao.containsGroup(groupName);
+    public boolean containsGroupName(String groupName) {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return groupDao.containsGroup(groupName);
+            }
+        });
+
+        try {
+            return (Boolean) future.get();
+        } catch (Exception e) {
+            Log.e("GroupRepos.java", "Could not get future for contains. Exception: " + e);
+            return true;
+        }
     }
 }

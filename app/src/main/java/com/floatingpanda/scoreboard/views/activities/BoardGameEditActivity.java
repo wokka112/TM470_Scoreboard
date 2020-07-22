@@ -3,6 +3,7 @@ package com.floatingpanda.scoreboard.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -52,6 +53,8 @@ public class BoardGameEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_board_game);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         boardGameAddEditViewModel = new ViewModelProvider(this).get(BoardGameAddEditViewModel.class);
 
@@ -133,8 +136,9 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 List<PlayMode.PlayModeEnum> playModeEnums = getPlayModeEnums();
                 BoardGame.TeamOption teamOption = getTeamOption();
 
-                if(!boardGameAddEditViewModel.editActivityInputsValid(BoardGameEditActivity.this, originalBgName, bgName,
-                        difficultyString, minPlayersString, maxPlayersString, teamOption, playModeEnums, false)) {
+                if(!boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText,
+                        difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, teamsOnlyRadioButton, playModeEnums,
+                        solitaireCheckBox, false)) {
                     return;
                 }
 
@@ -264,7 +268,6 @@ public class BoardGameEditActivity extends AppCompatActivity {
         chipGroup.addView(createChip(bgCategory));
     }
 
-    //TODO should I move this into a factory sort of thing??
     private Chip createChip(BgCategory bgCategory) {
         Chip chip = new Chip(chipGroup.getContext());
         chip.setText((bgCategory.getCategoryName()));
@@ -276,7 +279,6 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 boardGameAddEditViewModel.removeSelectedBgCategory(bgCategory);
                 chipGroup.removeView(chip);
 
-                //TODO look into making this better? Feels very clunky and long.
                 int position = adapter.getPosition(bgCategory);
                 boolean[] selected = multiSpinner.getSelected();
                 selected[position] = false;
@@ -284,9 +286,6 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 multiSpinner.setSelected(selected);
             }
         });
-
-        //TODO move out of here into the views or somewhere else?
-        boardGameAddEditViewModel.addSelectedBgCategory(bgCategory);
 
         return chip;
     }
@@ -335,6 +334,7 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 if (selected[i] == true) {
                     BgCategory bgCategory = adapter.getItem(i);
                     addChip(bgCategory);
+                    boardGameAddEditViewModel.addSelectedBgCategory(bgCategory);
                 }
             }
 
@@ -342,4 +342,17 @@ public class BoardGameEditActivity extends AppCompatActivity {
             multiSpinner.setAllText("Choose categories");
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

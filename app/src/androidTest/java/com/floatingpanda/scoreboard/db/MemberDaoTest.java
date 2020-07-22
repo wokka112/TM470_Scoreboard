@@ -259,4 +259,14 @@ public class MemberDaoTest {
         assertThat(updatedMember.getNotes(), is(newNotes));
         assertThat(updatedMember.getImgFilePath(), is(newImgFilePath));
     }
+
+    @Test
+    public void testContains() throws InterruptedException {
+        boolean contains = memberDao.containsMember(TestData.MEMBER_1.getNickname());
+        assertFalse(contains);
+
+        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
+        contains = memberDao.containsMember(TestData.MEMBER_1.getNickname());
+        assertTrue(contains);
+    }
 }

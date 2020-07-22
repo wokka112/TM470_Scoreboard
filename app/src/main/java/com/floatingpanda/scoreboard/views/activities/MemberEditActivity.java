@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,6 @@ public class MemberEditActivity extends AppCompatActivity {
     private MemberViewModel memberViewModel;
     private Member member;
 
-    //TODO remove cancelButton and replace with an up arrow?
     private EditText nicknameEditText, notesEditText;
     private ImageButton browseButton, cameraButton;
     private Button cancelButton, saveButton;
@@ -31,6 +31,8 @@ public class MemberEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_member);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
 
@@ -71,9 +73,7 @@ public class MemberEditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nickname = nicknameEditText.getText().toString();
-
-                if(!memberViewModel.editActivityInputsValid(MemberEditActivity.this, member.getNickname(), nickname, false)) {
+                if(!memberViewModel.editActivityInputsValid(member.getNickname(), nicknameEditText, false)) {
                     return;
                 }
 
@@ -93,5 +93,18 @@ public class MemberEditActivity extends AppCompatActivity {
     private void setViews(Member member) {
         nicknameEditText.setText(member.getNickname());
         notesEditText.setText(member.getNotes());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

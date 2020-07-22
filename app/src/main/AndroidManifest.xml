@@ -23,7 +23,6 @@
         <activity android:name=".views.activities.AddGroupMembersActivity" />
         <activity android:name=".views.activities.AddGameRecordActivity" />
         <activity android:name=".views.activities.ChoosePlayersActivity" />
-        <activity android:name=".views.activities.ConfirmPlayersActivity" />
         <activity android:name=".views.activities.ConfirmGameRecordActivity" />
         <activity android:name=".views.activities.GroupMonthlyScoreActivity" />
         <activity android:name=".views.activities.GameRecordActivity" />

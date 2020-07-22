@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +27,8 @@ public class BgCategoryEditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_bg_category);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bgCategoryViewModel = new ViewModelProvider(this).get(BgCategoryViewModel.class);
 
@@ -66,5 +69,18 @@ public class BgCategoryEditActivity extends AppCompatActivity {
 
     private void setViews(BgCategory bgCategory) {
         categoryEditText.setText(bgCategory.getCategoryName());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -62,19 +62,12 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
             @Override
             public void onChanged(List<Member> potentialPlayers) {
                 List<Member> teamPlayers = choosePlayerSharedViewModel.getTeamMemberList(teamNo);
-                /*
-                Log.w("ChoosePlayerPageFrag.java", "Got team players for team " + teamNo);
-                for (Member member : teamPlayers) {
-                    Log.w("ChoosePlayerPageFrag.java", "Team Player: " + member);
-                }
-                 */
                 adapter.setTeamAndPotentialPlayers(teamPlayers, potentialPlayers);
             }
         });
 
         int initialPosition = teamNo;
         choosePlayerSharedViewModel.createEmptyTeam(teamNo, initialPosition);
-        //TODO style the area where the teamTextView is so it's a different colour to the viewpager of players.
         teamTextView.setText("Team " + teamNo);
 
         spinner.setAdapter(createPositionSpinnerAdapter());

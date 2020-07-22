@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,8 +23,7 @@ public class GroupEditActivity extends AppCompatActivity {
     private GroupViewModel groupViewModel;
     private Group group;
 
-    //TODO remove cancelButton and replace with an up arrow?
-    private EditText nameEditText, descriptionEditText, notesEditText;
+    private EditText groupNameEditText, descriptionEditText, notesEditText;
     private ImageButton imgBrowseButton, imgCameraButton, bannerBrowseButton, bannerCameraButton;
     private Button cancelButton, saveButton;
 
@@ -32,9 +32,11 @@ public class GroupEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_group);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         groupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
-        nameEditText = findViewById(R.id.groupadd_name_edittext);
+        groupNameEditText = findViewById(R.id.groupadd_name_edittext);
         descriptionEditText = findViewById(R.id.groupadd_description_edittext);
         notesEditText = findViewById(R.id.groupadd_notes_edittext);
 
@@ -90,13 +92,12 @@ public class GroupEditActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = nameEditText.getText().toString();
-
-                if(!groupViewModel.editActivityInputsValid(GroupEditActivity.this, group.getGroupName(), name, false)) {
+                if(!groupViewModel.editActivityInputsValid(group.getGroupName(), groupNameEditText, false)) {
                     return;
                 }
 
-                group.setGroupName(name);
+                String groupName = groupNameEditText.getText().toString();
+                group.setGroupName(groupName);
                 group.setDescription(descriptionEditText.getText().toString());
                 group.setNotes(notesEditText.getText().toString());
                 //TODO implement image taking/picking and banner taking/picking and filepath saving functionality
@@ -112,10 +113,21 @@ public class GroupEditActivity extends AppCompatActivity {
     }
 
     private void setViews(Group group) {
-        nameEditText.setText(group.getGroupName());
+        groupNameEditText.setText(group.getGroupName());
         descriptionEditText.setText(group.getDescription());
         notesEditText.setText(group.getNotes());
+    }
 
-        //TODO sort out setting img and banner.
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

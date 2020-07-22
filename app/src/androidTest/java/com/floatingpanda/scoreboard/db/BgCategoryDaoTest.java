@@ -260,4 +260,14 @@ public class BgCategoryDaoTest {
         assertThat(categoryName, is(TestData.BG_CATEGORY_1.getCategoryName()));
     }
 
+    @Test
+
+    public void testContains() throws InterruptedException {
+        boolean contains = bgCategoryDao.containsBgCategory(TestData.BG_CATEGORY_1.getCategoryName());
+        assertFalse(contains);
+
+        bgCategoryDao.insertAll(TestData.BG_CATEGORIES.toArray(new BgCategory[TestData.BG_CATEGORIES.size()]));
+        contains = bgCategoryDao.containsBgCategory(TestData.BG_CATEGORY_1.getCategoryName());
+        assertTrue(contains);
+    }
 }

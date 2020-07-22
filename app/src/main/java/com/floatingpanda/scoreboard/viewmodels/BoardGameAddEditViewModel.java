@@ -2,6 +2,10 @@ package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Activity;
 import android.app.Application;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -103,33 +107,40 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
         }
     }
 
-    //TODO maybe add enums or some other method for dealing with this so I don't have to make popups in the viewmodel and use a hackey
-    // testing boolean to control it for testing.
-    public boolean addActivityInputsValid(Activity activity, String bgName, String difficultyString, String minPlayersString,
-                                          String maxPlayersString, BoardGame.TeamOption teamOption, List<PlayMode.PlayModeEnum> playModeEnums, boolean testing) {
-        return editActivityInputsValid(activity, "", bgName, difficultyString, minPlayersString, maxPlayersString, teamOption, playModeEnums, testing);
+    //TODO update tests to use edittexts instead of strings.
+    public boolean addActivityInputsValid(EditText bgNameEditText, EditText difficultyEditText, EditText minPlayersEditText,
+                                          EditText maxPlayersEditText, BoardGame.TeamOption teamOption, RadioButton rightmostTeamOptionRadioButton,
+                                          List<PlayMode.PlayModeEnum> playModeEnums, CheckBox rightmostPlayModeCheckBox, boolean testing) {
+        return editActivityInputsValid("", bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption,
+                rightmostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, testing);
     }
 
-    public boolean editActivityInputsValid(Activity activity, String originalBgName, String bgName, String difficultyString, String minPlayersString,
-                                           String maxPlayersString, BoardGame.TeamOption teamOption, List<PlayMode.PlayModeEnum> playModeEnums, boolean testing) {
+    public boolean editActivityInputsValid(String originalBgName, EditText bgNameEditText, EditText difficultyEditText, EditText minPlayersEditText,
+                                           EditText maxPlayersEditText, BoardGame.TeamOption teamOption, RadioButton rightmostTeamOptionRadioButton,
+                                           List<PlayMode.PlayModeEnum> playModeEnums, CheckBox rightmostPlayModeCheckBox, boolean testing) {
+        String bgName = bgNameEditText.getText().toString();
         if (bgName.isEmpty()) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", activity);
+                bgNameEditText.setError("You must enter a board game name.");
+                bgNameEditText.requestFocus();
             }
             return false;
         }
 
         if (!bgName.equals(originalBgName)
-                && boardGameRepository.contains(bgName)) {
+                && boardGameRepository.containsBoardGameName(bgName)) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("You must enter a unique name for the board game.", activity);
+                bgNameEditText.setError("A board game with this name already exists in the app. You must enter a unique board game name.");
+                bgNameEditText.requestFocus();
             }
             return false;
         }
 
+        String difficultyString = difficultyEditText.getText().toString();
         if (difficultyString.isEmpty()) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", activity);
+                difficultyEditText.setError("You must enter a difficulty between 1 and 5 (inclusive).");
+                difficultyEditText.requestFocus();
             }
             return false;
         }
@@ -138,14 +149,17 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
 
         if (difficulty < 1 || difficulty >5) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("You must enter a difficulty between 1 and 5 (inclusive).", activity);
+                difficultyEditText.setError("You must enter a difficulty between 1 and 5 (inclusive).");
+                difficultyEditText.requestFocus();
             }
             return false;
         }
 
+        String minPlayersString = minPlayersEditText.getText().toString();
         if (minPlayersString.isEmpty()) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("You must enter a minimum number of players for the game.", activity);
+                minPlayersEditText.setError("You must enter a minimum number of players.");
+                minPlayersEditText.requestFocus();
             }
             return false;
         }
@@ -154,14 +168,17 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
 
         if (minPlayers < 0) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("Minimum players must be greater than 0.", activity);
+                minPlayersEditText.setError("You must enter a number greater than 0.");
+                minPlayersEditText.requestFocus();
             }
             return false;
         }
 
+        String maxPlayersString = maxPlayersEditText.getText().toString();
         if (maxPlayersString.isEmpty()) {
             if (!testing) {
-                AlertDialogHelper.popupWarning("You must enter a maximum number of players for the game.", activity);
+                maxPlayersEditText.setError("You must enter a maximum number of players.");
+                maxPlayersEditText.requestFocus();
             }
             return false;
         }
@@ -170,69 +187,30 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
 
         if (maxPlayers < minPlayers || maxPlayers < 0) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("Maximum players must be greater than 0 and greater than minimum players.", activity);
+                maxPlayersEditText.setError("You must enter a number greater than 0 and greater than the minimum number of players.");
+                maxPlayersEditText.requestFocus();
             }
             return false;
         }
 
         if (teamOption.equals(BoardGame.TeamOption.ERROR)) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("You must select a team option.", activity);
+                rightmostTeamOptionRadioButton.setError("You must select a team option.");
+                rightmostTeamOptionRadioButton.requestFocus();
+                //AlertDialogHelper.popupWarning("You must select a team option.", activity);
             }
             return false;
         }
 
         if (playModeEnums.contains(PlayMode.PlayModeEnum.ERROR)) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("You must select at least one possible play mode.", activity);
+                rightmostPlayModeCheckBox.setError("You must select at least one possible play mode");
+                rightmostPlayModeCheckBox.requestFocus();
+                //AlertDialogHelper.popupWarning("You must select at least one possible play mode.", activity);
             }
             return false;
         }
 
         return true;
     }
-
-    //Stuff for the searchable spinner list. This could be useful for when I'm making the board game
-    // selection element in the game record creation/editing activity.
-
-    /*
-    private void setupAdapter(Context context) {
-        List<BgCategory> bgCategories = new ArrayList<BgCategory>(getAllBgCategoriesNotLive());
-        bgCategories.removeAll(getSelectedBgCategories());
-
-        adapter = new SpinnerAdapter(context, bgCategories);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    }
-
-    public SpinnerAdapter getSpinnerListAdapter(Context context) {
-        if (adapter == null) {
-            setupAdapter(context);
-        }
-
-        return adapter;
-    }
-     */
-
-    /*
-    private void setupAdapter(Context context) {
-        List<BgCategory> bgCategories = new ArrayList<BgCategory>(getAllBgCategoriesNotLive());
-        bgCategories.removeAll(getSelectedBgCategories());
-
-        adapter = new ArrayAdapter<BgCategory> (
-                context, android.R.layout.simple_spinner_item, bgCategories
-        );
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    }
-
-    public ArrayAdapter<BgCategory> getSpinnerListAdapter(Context context) {
-        if (adapter == null) {
-            setupAdapter(context);
-        }
-
-        return adapter;
-    }
-
-     */
 }

@@ -2,9 +2,12 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -12,11 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
-
-//TODO add toolbar to activity layout (Maybe make a toolbar and simply <include> it in the activity layout for add)
-// then edit up arrow to it.
-//TODO add up arrow to toolbar and finish() activity from there. Then remove cancel button.
-// alternatively, put finish() in onclicklistener for cancel button. Do same for edit activity.
 
 public class BgCategoryAddActivity extends AppCompatActivity {
 
@@ -29,6 +27,8 @@ public class BgCategoryAddActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_bg_category);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         bgCategoryViewModel = new ViewModelProvider(this).get(BgCategoryViewModel.class);
 
@@ -59,5 +59,18 @@ public class BgCategoryAddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

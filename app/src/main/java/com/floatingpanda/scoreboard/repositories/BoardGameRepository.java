@@ -107,8 +107,20 @@ public class BoardGameRepository {
         });
     }
 
-    public boolean contains(String bgName) {
-        return boardGameDao.containsBoardGame(bgName);
+    public boolean containsBoardGameName(String bgName) {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return boardGameDao.containsBoardGame(bgName);
+            }
+        });
+
+        try {
+            return (Boolean) future.get();
+        } catch (Exception e) {
+            Log.e("BoardGameRepos.java", "Could not get future for contains. Exception: " + e);
+            return true;
+        }
     }
 
     private void insertBoardGameWithoutBgCategories(BoardGame boardGame) {

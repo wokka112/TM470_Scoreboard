@@ -30,6 +30,9 @@ public interface GroupMonthlyScoreDao {
     @Query("SELECT * FROM group_monthly_scores WHERE group_id LIKE :groupId AND year LIKE :year AND month LIKE :month")
     LiveData<GroupMonthlyScore> getGroupMonthlyScoreByGroupIdAndYearAndMonth(int groupId, int year, int month);
 
+    @Query("SELECT * FROM group_monthly_scores WHERE group_monthly_score_id LIKE :groupMonthlyScoreId")
+    LiveData<GroupMonthlyScore> getGroupMonthlyScoreByGroupMonthlyScoreId(int groupMonthlyScoreId);
+
     @Query("SELECT group_monthly_score_id FROM group_monthly_scores WHERE group_id LIKE :groupId AND year LIKE :year AND month LIKE :month")
     int getGroupMonthlyScoreIdByGroupIdAndYearAndMonth(int groupId, int year, int month);
 

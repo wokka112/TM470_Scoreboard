@@ -35,7 +35,6 @@ public interface BoardGameDao {
     @Query("SELECT bg_id FROM boardgames WHERE bg_name LIKE :bgName")
     int findBoardGameIdByBoardGameName(String bgName);
 
-    //TODO add test
     @Query("SELECT EXISTS(SELECT * FROM boardgames WHERE bg_name LIKE :bgName)")
     boolean containsBoardGame(String bgName);
 

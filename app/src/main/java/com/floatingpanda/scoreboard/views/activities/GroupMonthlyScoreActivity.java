@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.views.activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,8 @@ public class GroupMonthlyScoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winner_list);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         monthYearTextView = findViewById(R.id.activity_winner_list_month_year);
         recyclerView = findViewById(R.id.activity_winner_list_recyclerview);
 
@@ -42,5 +45,18 @@ public class GroupMonthlyScoreActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter.setScoresWithMemberDetails(scoresWithMemberDetails);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

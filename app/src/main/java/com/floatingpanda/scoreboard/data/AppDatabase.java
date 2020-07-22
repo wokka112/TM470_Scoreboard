@@ -80,7 +80,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    //TODO implement proper migrating method, not fallbacktodestructivemigration()
+    //TODO implement proper migrating method when releasing rather than using fallbackToDestructiveMigration()
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -104,7 +104,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return databaseWriteExecutor;
     }
 
-    //TODO remove once done testing
+    //TODO comment out once done testing
     private static Callback sRoomDatabaseCallback = new Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {

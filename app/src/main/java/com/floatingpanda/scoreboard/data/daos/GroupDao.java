@@ -25,7 +25,6 @@ public interface GroupDao {
     @Query("SELECT * FROM groups WHERE group_name LIKE :groupName")
     Group findNonLiveDataByName(String groupName);
 
-    //TODO add test
     @Query("SELECT EXISTS(SELECT * FROM groups WHERE group_name LIKE :groupName)")
     boolean containsGroup(String groupName);
 

@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.viewmodels;
 
 import android.app.Activity;
 import android.app.Application;
+import android.widget.EditText;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -100,23 +101,26 @@ public class MemberViewModel extends AndroidViewModel {
         return memberRepository.getNumberOfGroupsMemberIsPartOf(memberId);
     }
 
-    public boolean addActivityInputsValid(Activity activity, String nickname, boolean testing) {
-        return editActivityInputsValid(activity, "", nickname, testing);
+    //TODO update tests to use edittexts instead of strings.
+    public boolean addActivityInputsValid(EditText nicknameEditText, boolean testing) {
+        return editActivityInputsValid("", nicknameEditText, testing);
     }
 
-    public boolean editActivityInputsValid(Activity activity, String originalNickname, String nickname, boolean testing) {
-        //TODO look into removing popup messages and replace with messages that appear next to highlighted edittext that is wrong
+    public boolean editActivityInputsValid(String originalNickname, EditText nicknameEditText, boolean testing) {
+        String nickname = nicknameEditText.getText().toString();
         if (nickname.isEmpty()) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("You must enter a nickname for the member.", activity);
+                nicknameEditText.setError("You must enter a nickname.");
+                nicknameEditText.requestFocus();
             }
             return false;
         }
 
         if (!nickname.equals(originalNickname)
-                && memberRepository.contains(nickname)) {
+                && memberRepository.containsMemberNickname(nickname)) {
             if(!testing) {
-                AlertDialogHelper.popupWarning("You must enter a unique nickname for the member.", activity);
+                nicknameEditText.setError("A member with this nickname already exists in the app. You must enter a unique nickname.");
+                nicknameEditText.requestFocus();
             }
             return false;
         }

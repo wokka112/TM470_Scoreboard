@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.views.activities;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,8 @@ public class GroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         group = (Group) getIntent().getExtras().get("GROUP");
 
         TextView groupNameTextView = findViewById(R.id.banner_group_name);
@@ -33,5 +36,18 @@ public class GroupActivity extends AppCompatActivity {
         viewPager2.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

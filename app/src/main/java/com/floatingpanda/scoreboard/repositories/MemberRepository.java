@@ -141,7 +141,19 @@ public class MemberRepository {
      * @param nickname
      * @return
      */
-    public boolean contains(String nickname) throws IllegalArgumentException {
-        return memberDao.containsMember(nickname);
+    public boolean containsMemberNickname(String nickname) throws IllegalArgumentException {
+        Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return memberDao.containsMember(nickname);
+            }
+        });
+
+        try {
+            return (Boolean) future.get();
+        } catch (Exception e) {
+            Log.e("MemberRepos.java", "Could not get future for contains. Exception: " + e);
+            return true;
+        }
     }
 }

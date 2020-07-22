@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,15 +16,11 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
-//TODO add input filters to inputs to ensure first letter capitalised. Do some for other activities.
-// (This can probably be done in the layout file's xml).
-
 public class MemberAddActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private MemberViewModel memberViewModel;
 
-    //TODO remove cancelButton and replace with an up arrow?
     private EditText nicknameEditText, notesEditText;
     private ImageButton browseButton, cameraButton;
     private Button cancelButton, saveButton;
@@ -32,6 +29,8 @@ public class MemberAddActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_member);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
 
@@ -69,12 +68,11 @@ public class MemberAddActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String nickname = nicknameEditText.getText().toString();
-
-                if (!memberViewModel.addActivityInputsValid(MemberAddActivity.this, nickname, false)) {
+                if (!memberViewModel.addActivityInputsValid(nicknameEditText, false)) {
                     return;
                 }
 
+                String nickname = nicknameEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 //TODO implement image taking/picking and filepath saving functionality
                 String imgFilePath = "TBA";
@@ -87,5 +85,18 @@ public class MemberAddActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
