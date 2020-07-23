@@ -2,6 +2,9 @@ package com.floatingpanda.scoreboard.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
@@ -249,71 +252,98 @@ public class BoardGameAddEditViewModelTest {
     public void addActivityInputsValid() {
         boardGameDao.insert(TestData.BOARD_GAME_1);
 
+        Context context = ApplicationProvider.getApplicationContext();
+
+        EditText bgNameEditText = new EditText(context);
+        EditText difficultyEditText = new EditText(context);
+        EditText minPlayersEditText = new EditText(context);
+        EditText maxPlayersEditText = new EditText(context);
+        RadioButton rightMostTeamOptionRadioButton = new RadioButton(context);
+        CheckBox rightmostPlayModeCheckBox = new CheckBox(context);
+
         //Test Case 1: Invalid - bgName empty
         String bgName = "";
         String difficultyString = "3";
         String minPlayersString = "1";
         String maxPlayersString = "8";
+
+        bgNameEditText.setText(bgName);
+        difficultyEditText.setText(difficultyString);
+        minPlayersEditText.setText(minPlayersString);
+        maxPlayersEditText.setText(maxPlayersString);
+
         BoardGame.TeamOption teamOption = BoardGame.TeamOption.NO_TEAMS;
         List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>();
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
-        boolean isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        boolean isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 2: Invalid - bgName contained in database
         bgName = TestData.BOARD_GAME_1.getBgName();
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        bgNameEditText.setText(bgName);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 3: Invalid - difficulty below 1
         bgName = "Valid name";
+        bgNameEditText.setText(bgName);
         difficultyString = "0";
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        difficultyEditText.setText(difficultyString);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 4: Invalid - difficulty above 5
         difficultyString = "6";
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        difficultyEditText.setText(difficultyString);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 5: Invalid - minplayers below 0
         difficultyString = "3";
+        difficultyEditText.setText(difficultyString);
         minPlayersString = "-1";
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        minPlayersEditText.setText(minPlayersString);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 6: Invalid - maxplayers below 0
         minPlayersString = "1";
+        minPlayersEditText.setText(minPlayersString);
         maxPlayersString = "-1";
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        maxPlayersEditText.setText(maxPlayersString);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 7: Invalid - max players below minplayers
         minPlayersString = "3";
+        minPlayersEditText.setText(minPlayersString);
         maxPlayersString = "2";
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        maxPlayersEditText.setText(maxPlayersString);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 8: Invalid - teamOption is set to TeamOption.ERROR
-        maxPlayersString = "1";
+        minPlayersString = "1";
+        minPlayersEditText.setText(minPlayersString);
         maxPlayersString = "8";
+        maxPlayersEditText.setText(maxPlayersString);
         teamOption = BoardGame.TeamOption.ERROR;
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
@@ -321,8 +351,8 @@ public class BoardGameAddEditViewModelTest {
         teamOption = BoardGame.TeamOption.NO_TEAMS;
         playModeEnums.clear();
         playModeEnums.add(PlayMode.PlayModeEnum.ERROR);
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
@@ -330,30 +360,30 @@ public class BoardGameAddEditViewModelTest {
         playModeEnums.clear();
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
         playModeEnums.add(PlayMode.PlayModeEnum.ERROR);
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 11: Valid - everything valid and playModeEnums list has 1 valid play mode enum
         playModeEnums.clear();
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertTrue(isValid);
 
         //Test Case 12: Valid - everything valid and playModeEnums list has multiple valid play mode enums
         playModeEnums.add(PlayMode.PlayModeEnum.COOPERATIVE);
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertTrue(isValid);
 
         //Test Case 13: Valid - everything valid and playModeEnums list is empty
         playModeEnums.clear();
-        isValid = boardGameAddEditViewModel.addActivityInputsValid(activity, bgName, difficultyString, minPlayersString,
-                maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.addActivityInputsValid(bgNameEditText, difficultyEditText, minPlayersEditText, maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton,
+                playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertTrue(isValid);
     }
@@ -365,72 +395,99 @@ public class BoardGameAddEditViewModelTest {
         boardGameDao.insert(TestData.BOARD_GAME_1);
         TimeUnit.MILLISECONDS.sleep(100);
 
+        Context context = ApplicationProvider.getApplicationContext();
+
+        EditText bgNameEditText = new EditText(context);
+        EditText difficultyEditText = new EditText(context);
+        EditText minPlayersEditText = new EditText(context);
+        EditText maxPlayersEditText = new EditText(context);
+        RadioButton rightMostTeamOptionRadioButton = new RadioButton(context);
+        CheckBox rightmostPlayModeCheckBox = new CheckBox(context);
+
         //Test Case 1: Invalid - editedBgName empty
         String originalBgName = "Bloople";
         String editedBgName = "";
         String difficultyString = "3";
         String minPlayersString = "1";
         String maxPlayersString = "8";
+
+        bgNameEditText.setText(editedBgName);
+        difficultyEditText.setText(difficultyString);
+        minPlayersEditText.setText(minPlayersString);
+        maxPlayersEditText.setText(maxPlayersString);
+
         BoardGame.TeamOption teamOption = BoardGame.TeamOption.NO_TEAMS;
         List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>();
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
-        boolean isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        boolean isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 2: Invalid - editedBgName contained in database
         editedBgName = TestData.BOARD_GAME_1.getBgName();
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        bgNameEditText.setText(editedBgName);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 3: Invalid - difficulty below 1
         editedBgName = "Valid name";
+        bgNameEditText.setText(editedBgName);
         difficultyString = "0";
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        difficultyEditText.setText(difficultyString);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 4: Invalid - difficulty above 5
         difficultyString = "6";
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        difficultyEditText.setText(difficultyString);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 5: Invalid - minplayers below 0
         difficultyString = "3";
+        difficultyEditText.setText(difficultyString);
         minPlayersString = "-1";
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        minPlayersEditText.setText(minPlayersString);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 6: Invalid - maxplayers below 0
         minPlayersString = "1";
+        minPlayersEditText.setText(minPlayersString);
         maxPlayersString = "-1";
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        maxPlayersEditText.setText(maxPlayersString);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 7: Invalid - max players below minplayers
         minPlayersString = "3";
+        minPlayersEditText.setText(minPlayersString);
         maxPlayersString = "2";
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        maxPlayersEditText.setText(maxPlayersString);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 8: Invalid - teamOption is set to TeamOption.ERROR
-        maxPlayersString = "1";
+        minPlayersString = "1";
+        minPlayersEditText.setText(minPlayersString);
         maxPlayersString = "8";
+        maxPlayersEditText.setText(maxPlayersString);
         teamOption = BoardGame.TeamOption.ERROR;
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
@@ -438,8 +495,8 @@ public class BoardGameAddEditViewModelTest {
         teamOption = BoardGame.TeamOption.NO_TEAMS;
         playModeEnums.clear();
         playModeEnums.add(PlayMode.PlayModeEnum.ERROR);
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
@@ -447,34 +504,39 @@ public class BoardGameAddEditViewModelTest {
         playModeEnums.clear();
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
         playModeEnums.add(PlayMode.PlayModeEnum.ERROR);
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertFalse(isValid);
 
         //Test Case 11: Valid - everything valid and playModeEnums list has 1 valid play mode enum
         playModeEnums.clear();
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertTrue(isValid);
 
         //Test Case 12: Valid - everything valid and playModeEnums list has multiple valid play mode enums
         playModeEnums.add(PlayMode.PlayModeEnum.COOPERATIVE);
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertTrue(isValid);
 
         //Test Case 13: Valid - everything valid and playModeEnums list is empty
         playModeEnums.clear();
-        isValid = boardGameAddEditViewModel.editActivityInputsValid(activity, originalBgName, editedBgName, difficultyString,
-                minPlayersString, maxPlayersString, teamOption, playModeEnums, true);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
+
+        assertTrue(isValid);
 
         //Test Case 14: Valid - everything valid, editedBgName is same as originalBgName and playModeEnums has 1 valid play mode enum
         editedBgName = "Bloople";
+        bgNameEditText.setText(editedBgName);
         playModeEnums.add(PlayMode.PlayModeEnum.COMPETITIVE);
+        isValid = boardGameAddEditViewModel.editActivityInputsValid(originalBgName, bgNameEditText, difficultyEditText, minPlayersEditText,
+                maxPlayersEditText, teamOption, rightMostTeamOptionRadioButton, playModeEnums, rightmostPlayModeCheckBox, true);
 
         assertTrue(isValid);
     }

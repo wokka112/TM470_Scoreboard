@@ -18,6 +18,7 @@ import com.floatingpanda.scoreboard.adapters.ChoosePlayersPagerAdapter;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
 
 import java.util.ArrayList;
@@ -71,13 +72,6 @@ public class ChoosePlayersActivity extends AppCompatActivity {
 
                 choosePlayerSharedViewModel.updateObservablePotentialPlayers();
 
-
-                if (gameRecord.getTeams() ==  false) {
-                    //TODO add in code to only allow 1 person per team if playing no teams.
-                    // Check if more than 1 person picked
-                    // If so, popup toast and return, don't go to next page.
-                }
-
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
 
                 if (viewPager.getCurrentItem() < (noOfTeams - 1)) {
@@ -89,9 +83,14 @@ public class ChoosePlayersActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!choosePlayerSharedViewModel.isValidTeam(getApplicationContext(), viewPager.getCurrentItem() + 1, gameRecord.getTeams(), false)) {
+                    return;
+                }
+
                 choosePlayerSharedViewModel.updateObservablePotentialPlayers();
+
                 if (viewPager.getCurrentItem() == (noOfTeams - 1)) {
-                    if (checkValidTeams()) {
+                    if (choosePlayerSharedViewModel.areValidTeams(getApplicationContext(), gameRecord.getPlayModePlayed(), false)) {
                         startConfirmGameRecordActivity();
                     }
                 } else {
@@ -108,38 +107,8 @@ public class ChoosePlayersActivity extends AppCompatActivity {
     private void startConfirmGameRecordActivity() {
         Intent intent = new Intent(this, ConfirmGameRecordActivity.class);
         intent.putExtra("GAME_RECORD", gameRecord);
-        intent.putParcelableArrayListExtra("TEAMS_OF_PLAYERS", (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
+        intent.putParcelableArrayListExtra("TEAMS_OF_PLAYERS", (ArrayList) choosePlayerSharedViewModel.getTeamsOfPlayers());
         startActivityForResult(intent, CONFIRM_GAME_RECORD_REQUEST_CODE);
-    }
-
-    private boolean checkValidTeams() {
-        List<TeamOfPlayers> teamsOfMembers = choosePlayerSharedViewModel.getTeamsOfMembers();
-
-        if (teamsOfMembers.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "You need to have at least one team of members.", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if (gameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.SOLITAIRE) {
-            if (teamsOfMembers.size() > 1) {
-                Toast.makeText(getApplicationContext(), "A solitaire game cannot have more than one team.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            if(teamsOfMembers.get(0).getMembers().size() != 1) {
-                Toast.makeText(getApplicationContext(), "A solitaire game can only have one player.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-
-        for (TeamOfPlayers teamOfPlayers : teamsOfMembers) {
-            if (teamOfPlayers.getMembers().size() < 1) {
-                Toast.makeText(getApplicationContext(), "Each team needs to have at least one player.", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }
-
-        return true;
     }
 
     @Override
@@ -148,7 +117,7 @@ public class ChoosePlayersActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK && requestCode == CONFIRM_GAME_RECORD_REQUEST_CODE) {
             Intent replyIntent = new Intent();
-            replyIntent.putExtra(EXTRA_REPLY, (ArrayList) choosePlayerSharedViewModel.getTeamsOfMembers());
+            replyIntent.putExtra(EXTRA_REPLY, (ArrayList) choosePlayerSharedViewModel.getTeamsOfPlayers());
             setResult(RESULT_OK, replyIntent);
             finish();
         }

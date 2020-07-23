@@ -101,7 +101,6 @@ public class MemberViewModel extends AndroidViewModel {
         return memberRepository.getNumberOfGroupsMemberIsPartOf(memberId);
     }
 
-    //TODO update tests to use edittexts instead of strings.
     public boolean addActivityInputsValid(EditText nicknameEditText, boolean testing) {
         return editActivityInputsValid("", nicknameEditText, testing);
     }

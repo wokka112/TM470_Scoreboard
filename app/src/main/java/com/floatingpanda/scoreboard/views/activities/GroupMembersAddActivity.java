@@ -14,26 +14,25 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.OnConflictStrategy;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.AddGroupMembersListAdapter;
 import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
+import com.floatingpanda.scoreboard.viewmodels.GroupMemberAddViewModel;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddGroupMembersActivity extends AppCompatActivity implements SelectedMemberInterface {
+public class GroupMembersAddActivity extends AppCompatActivity implements SelectedMemberInterface {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
     public final int ADD_MEMBER_REQUEST_CODE = 1;
 
-    private MemberViewModel memberViewModel;
-    private List<Member> groupMembers;
-    private List<Member> nonGroupMembers;
-    private List<Member> selectedMembers;
+    private GroupMemberAddViewModel groupMemberAddViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +55,15 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
 
         buttonTextView.setText("Create new member");
 
-        groupMembers = (ArrayList<Member>) getIntent().getExtras().get("GROUP_MEMBERS");
-        selectedMembers = new ArrayList<>();
+        groupMemberAddViewModel.setGroupMembers((ArrayList<Member>) getIntent().getExtras().get("GROUP_MEMBERS"));
 
-        memberViewModel = new ViewModelProvider(this).get(MemberViewModel.class);
+        groupMemberAddViewModel = new ViewModelProvider(this).get(GroupMemberAddViewModel.class);
 
-        memberViewModel.getAllMembers().observe(this, new Observer<List<Member>>() {
+        groupMemberAddViewModel.getAllMembersLiveData().observe(this, new Observer<List<Member>>() {
             @Override
-            public void onChanged(List<Member> memberList) {
-                setNonGroupMembers(memberList);
-                adapter.setMembers(nonGroupMembers);
+            public void onChanged(List<Member> members) {
+                groupMemberAddViewModel.setAllMembers(members);
+                adapter.setMembers(groupMemberAddViewModel.getNonGroupMembers());
             }
         });
 
@@ -86,6 +84,8 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<Member> selectedMembers = groupMemberAddViewModel.getSelectedMembers();
+
                 Intent replyIntent = new Intent();
                 replyIntent.putParcelableArrayListExtra(EXTRA_REPLY, new ArrayList<Member>(selectedMembers));
                 setResult(RESULT_OK, replyIntent);
@@ -94,19 +94,14 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
         });
     }
 
-    private void setNonGroupMembers(List<Member> nonGroupMembers) {
-        this.nonGroupMembers = new ArrayList<>(nonGroupMembers);
-        this.nonGroupMembers.removeAll(groupMembers);
-    }
-
+    @Override
     public void addSelectedMember(Member member) {
-        if (!selectedMembers.contains(member)) {
-            this.selectedMembers.add(member);
-        }
+        groupMemberAddViewModel.addSelectedMember(member);
     }
 
+    @Override
     public void removeSelectedMember(Member member) {
-        selectedMembers.remove(member);
+        groupMemberAddViewModel.removeSelectedMember(member);
     }
 
     public void startAddMemberActivity() {
@@ -120,7 +115,7 @@ public class AddGroupMembersActivity extends AppCompatActivity implements Select
 
         if (requestCode == ADD_MEMBER_REQUEST_CODE && resultCode == RESULT_OK) {
             Member member = (Member) data.getExtras().get(MemberAddActivity.EXTRA_REPLY);
-            memberViewModel.addMember(member);
+            groupMemberAddViewModel.addMemberToDatabase(member);
         }
     }
 

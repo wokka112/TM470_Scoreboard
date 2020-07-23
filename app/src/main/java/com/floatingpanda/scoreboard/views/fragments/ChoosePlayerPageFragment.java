@@ -61,7 +61,7 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
         choosePlayerSharedViewModel.getObservablePotentialPlayers().observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
             public void onChanged(List<Member> potentialPlayers) {
-                List<Member> teamPlayers = choosePlayerSharedViewModel.getTeamMemberList(teamNo);
+                List<Member> teamPlayers = choosePlayerSharedViewModel.getTeamOfPlayersMemberList(teamNo);
                 adapter.setTeamAndPotentialPlayers(teamPlayers, potentialPlayers);
             }
         });

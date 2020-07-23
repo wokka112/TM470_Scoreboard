@@ -64,7 +64,6 @@ public class GroupViewModel extends AndroidViewModel {
 
     public void deleteGroup(Group group) { groupRepository.delete(group); }
 
-    //TODO update tests to use edittexts instead of strings.
     public boolean addActivityInputsValid(EditText groupNameEditText, boolean testing) {
         return editActivityInputsValid("", groupNameEditText, testing);
     }

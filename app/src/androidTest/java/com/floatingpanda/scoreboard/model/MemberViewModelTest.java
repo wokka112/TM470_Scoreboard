@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.EditText;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
@@ -177,14 +178,23 @@ public class MemberViewModelTest {
 
     @Test
     public void testAddActivityInputsValid() throws InterruptedException {
+        Context context = ApplicationProvider.getApplicationContext();
+        EditText nicknameEditText = new EditText(context);
+
         //Test Case 1: Valid input
         String nickname = "Nickname";
-        boolean isValid = memberViewModel.addActivityInputsValid(activity, nickname, true);
+        nicknameEditText.setText(nickname);
+        boolean isValid = memberViewModel.addActivityInputsValid(nicknameEditText, true);
         assertTrue(isValid);
+
+        /*
+        EditText nicknameEditText, boolean testing
+         */
 
         //Test Case 2: Invalid empty String input
         nickname = "";
-        isValid = memberViewModel.addActivityInputsValid(activity, nickname, true);
+        nicknameEditText.setText(nickname);
+        isValid = memberViewModel.addActivityInputsValid(nicknameEditText, true);
         assertFalse(isValid);
 
         //Test Case 3: Invalid String input that already exists in category database
@@ -195,30 +205,37 @@ public class MemberViewModelTest {
         assertTrue(member != null);
 
         nickname = TestData.MEMBER_1.getNickname();
-        isValid = memberViewModel.addActivityInputsValid(activity, nickname, true);
+        nicknameEditText.setText(nickname);
+        isValid = memberViewModel.addActivityInputsValid(nicknameEditText, true);
         assertFalse(isValid);
     }
 
     @Test
     public void testEditActivityInputsValid() throws InterruptedException {
-        //Test Case 1: Valid input - originalNickname and nickname are same.
+        Context context = ApplicationProvider.getApplicationContext();
+        EditText nicknameEditText = new EditText(context);
+
+        //Test Case 1: Valid input - originalNickname and editedNickname are same.
         String originalNickname = "Original";
-        String nickname = "Original";
-        boolean isValid = memberViewModel.editActivityInputsValid(activity, originalNickname, nickname, true);
+        String editedNickname = "Original";
+        nicknameEditText.setText(editedNickname);
+        boolean isValid = memberViewModel.editActivityInputsValid(originalNickname, nicknameEditText, true);
         assertTrue(isValid);
 
-        //Test Case 2: Valid input - originalNickname and nickname are different, and nickname is valid.
-        nickname = "Valid name";
-        isValid = memberViewModel.editActivityInputsValid(activity, originalNickname, nickname, true);
+        //Test Case 2: Valid input - originalNickname and editedNickname are different, and editedNickname is valid.
+        editedNickname = "Valid name";
+        nicknameEditText.setText(editedNickname);
+        isValid = memberViewModel.editActivityInputsValid(originalNickname, nicknameEditText, true);
         assertTrue(isValid);
 
-        //Test Case 3: Invalid input - originalNickname and nickname are different, and nickname is an
+        //Test Case 3: Invalid input - originalNickname and editedNickname are different, and editedNickname is an
         // empty String.
-        nickname = "";
-        isValid = memberViewModel.editActivityInputsValid(activity, originalNickname, nickname, true);
+        editedNickname = "";
+        nicknameEditText.setText(editedNickname);
+        isValid = memberViewModel.editActivityInputsValid(originalNickname, nicknameEditText, true);
         assertFalse(isValid);
 
-        //Test Case 4: Invalid input - originalNickname and nickname are different, and nickname is a
+        //Test Case 4: Invalid input - originalNickname and editedNickname are different, and editedNickname is a
         // String that already exists in the database.
         memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
         // Waiting for background thread to finish.
@@ -227,8 +244,9 @@ public class MemberViewModelTest {
         Member member = memberDao.findNonLiveDataByNickname(TestData.MEMBER_1.getNickname());
         assertTrue(member != null);
 
-        nickname = TestData.MEMBER_1.getNickname();
-        isValid = memberViewModel.editActivityInputsValid(activity, originalNickname, nickname, true);
+        editedNickname = TestData.MEMBER_1.getNickname();
+        nicknameEditText.setText(editedNickname);
+        isValid = memberViewModel.editActivityInputsValid(originalNickname, nicknameEditText, true);
         assertFalse(isValid);
     }
 }

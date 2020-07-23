@@ -17,6 +17,7 @@ import com.floatingpanda.scoreboard.data.daos.MemberDao;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.GroupMember;
 import com.floatingpanda.scoreboard.data.entities.Member;
+import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
 
 import org.junit.After;
@@ -108,7 +109,7 @@ public class ChoosePlayerSharedViewModelTest {
     @Test
     public void getTeamOfMembersBeforeSettingOne() {
         int teamNo = 1;
-        TeamOfPlayers teamOfPlayers = choosePlayerSharedViewModel.getTeamOfMembers(teamNo);
+        TeamOfPlayers teamOfPlayers = choosePlayerSharedViewModel.getTeamOfPlayers(teamNo);
 
         assertNotNull(teamOfPlayers);
         assertThat(teamOfPlayers.getTeamNo(), is(teamNo));
@@ -119,7 +120,7 @@ public class ChoosePlayerSharedViewModelTest {
     @Test
     public void getTeamMemberListBeforeSettingOne() {
         int teamNo = 1;
-        List<Member> teamMemberList = choosePlayerSharedViewModel.getTeamMemberList(1);
+        List<Member> teamMemberList = choosePlayerSharedViewModel.getTeamOfPlayersMemberList(1);
 
         assertTrue(teamMemberList.isEmpty());
     }
@@ -146,7 +147,7 @@ public class ChoosePlayerSharedViewModelTest {
         int teamNo = 1;
         choosePlayerSharedViewModel.addPlayerToTeam(1, TestData.MEMBER_1);
 
-        List<Member> team1MemberList = choosePlayerSharedViewModel.getTeamMemberList(1);
+        List<Member> team1MemberList = choosePlayerSharedViewModel.getTeamOfPlayersMemberList(1);
         assertThat(team1MemberList.size(), is(1));
         assertThat(team1MemberList.get(0), is(TestData.MEMBER_1));
 
@@ -168,7 +169,7 @@ public class ChoosePlayerSharedViewModelTest {
         int teamNo = 1;
         choosePlayerSharedViewModel.addPlayerToTeam(1, TestData.MEMBER_1);
 
-        List<Member> team1MemberList = choosePlayerSharedViewModel.getTeamMemberList(1);
+        List<Member> team1MemberList = choosePlayerSharedViewModel.getTeamOfPlayersMemberList(1);
         assertThat(team1MemberList.size(), is(1));
         assertThat(team1MemberList.get(0), is(TestData.MEMBER_1));
 
@@ -178,7 +179,7 @@ public class ChoosePlayerSharedViewModelTest {
 
         choosePlayerSharedViewModel.removePlayerFromTeam(1, TestData.MEMBER_1);
 
-        team1MemberList = choosePlayerSharedViewModel.getTeamMemberList(1);
+        team1MemberList = choosePlayerSharedViewModel.getTeamOfPlayersMemberList(1);
         assertTrue(team1MemberList.isEmpty());
 
         potentialPlayers = choosePlayerSharedViewModel.getPotentialPlayers();
@@ -268,5 +269,119 @@ public class ChoosePlayerSharedViewModelTest {
         assertThat(observablePotentialPlayers.size(), is(group3Members.size() - 1));
         assertFalse(observablePotentialPlayers.contains(TestData.MEMBER_1));
         assertTrue(observablePotentialPlayers.contains(TestData.MEMBER_3));
+    }
+
+    @Test
+    public void testIsValidTeam() {
+        int teamNo = 1;
+        int position = 1;
+        boolean teams = true;
+
+        Context context = ApplicationProvider.getApplicationContext();
+
+        //Test 1 - Invalid, no members in team 1.
+        choosePlayerSharedViewModel.createEmptyTeam(teamNo, position);
+
+        boolean isValid = choosePlayerSharedViewModel.isValidTeam(context, teamNo, teams, true);
+        assertFalse(isValid);
+
+        //Test 2 - Invalid, team 2 does not exist, it hence has no members.
+        teamNo = 2;
+
+        isValid = choosePlayerSharedViewModel.isValidTeam(context, teamNo, teams, true);
+        assertFalse(isValid);
+
+        //Test 3 - Invalid, playing solitaire and team has more than 1 member.
+        teamNo = 1;
+        teams = false;
+        choosePlayerSharedViewModel.addPlayerToTeam(teamNo, TestData.MEMBER_1);
+        choosePlayerSharedViewModel.addPlayerToTeam(teamNo, TestData.MEMBER_2);
+
+        isValid = choosePlayerSharedViewModel.isValidTeam(context, teamNo, teams, true);
+        assertFalse(isValid);
+
+        //Test 4 - Valid, team 1 has 1 member and is playing solitaire.
+        choosePlayerSharedViewModel.removePlayerFromTeam(teamNo, TestData.MEMBER_2);
+
+        isValid = choosePlayerSharedViewModel.isValidTeam(context, teamNo, teams, true);
+        assertTrue(isValid);
+
+        //Test 5 - Valid, team 1 has 1 member and is playing with teams (coop or competitive)
+        teams = true;
+
+        isValid = choosePlayerSharedViewModel.isValidTeam(context, teamNo, teams, true);
+        assertTrue(isValid);
+
+        //Test 6 - Valid, team 1 has 2 members and is playing with teams
+        choosePlayerSharedViewModel.addPlayerToTeam(teamNo, TestData.MEMBER_2);
+
+        isValid = choosePlayerSharedViewModel.isValidTeam(context, teamNo, teams, true);
+        assertTrue(isValid);
+    }
+
+    @Test
+    public void testAreValidTeams() {
+        int teamNo1 = 1;
+        int position1 = 1;
+        int teamNo2 = 2;
+        int position2 = 2;
+        PlayMode.PlayModeEnum playModePlayed = PlayMode.PlayModeEnum.COMPETITIVE;
+
+        Context context = ApplicationProvider.getApplicationContext();
+
+        //Test 1 - Invalid, competitive and no teams.
+        boolean isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertFalse(isValid);
+
+        //Test 2 - Invalid, cooperative and no teams.
+        playModePlayed = PlayMode.PlayModeEnum.COOPERATIVE;
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertFalse(isValid);
+
+        //Test 3 - Invalid, solitaire and no teams.
+        playModePlayed = PlayMode.PlayModeEnum.SOLITAIRE;
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertFalse(isValid);
+
+        //Test 4 - Invalid, competitive and only 1 team.
+        playModePlayed = PlayMode.PlayModeEnum.COMPETITIVE;
+        choosePlayerSharedViewModel.createEmptyTeam(teamNo1, position1);
+        choosePlayerSharedViewModel.addPlayerToTeam(teamNo1, TestData.MEMBER_1);
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertFalse(isValid);
+
+        //Test 5 - Valid, cooperative and only 1 team.
+        playModePlayed = PlayMode.PlayModeEnum.COOPERATIVE;
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertTrue(isValid);
+
+        //Test 6 - Valid, solitaire and only 1 team.
+        playModePlayed = PlayMode.PlayModeEnum.SOLITAIRE;
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertTrue(isValid);
+
+        //Test 7 - Invalid, solitaire and more than 1 team.
+        choosePlayerSharedViewModel.createEmptyTeam(teamNo2, position2);
+        choosePlayerSharedViewModel.addPlayerToTeam(teamNo2, TestData.MEMBER_2);
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertFalse(isValid);
+
+        //Test 8 - Invalid, cooperative and more than 1 team.
+        playModePlayed = PlayMode.PlayModeEnum.COOPERATIVE;
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertFalse(isValid);
+
+        //Test 9 - Valid, competitive and more than 1 team.
+        playModePlayed = PlayMode.PlayModeEnum.COMPETITIVE;
+
+        isValid = choosePlayerSharedViewModel.areValidTeams(context, playModePlayed, true);
+        assertTrue(isValid);
     }
 }

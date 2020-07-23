@@ -107,7 +107,6 @@ public class BoardGameAddEditViewModel extends AndroidViewModel {
         }
     }
 
-    //TODO update tests to use edittexts instead of strings.
     public boolean addActivityInputsValid(EditText bgNameEditText, EditText difficultyEditText, EditText minPlayersEditText,
                                           EditText maxPlayersEditText, BoardGame.TeamOption teamOption, RadioButton rightmostTeamOptionRadioButton,
                                           List<PlayMode.PlayModeEnum> playModeEnums, CheckBox rightmostPlayModeCheckBox, boolean testing) {

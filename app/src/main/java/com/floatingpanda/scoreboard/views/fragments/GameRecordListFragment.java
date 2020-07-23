@@ -21,7 +21,7 @@ import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
-import com.floatingpanda.scoreboard.views.activities.AddGameRecordActivity;
+import com.floatingpanda.scoreboard.views.activities.GameRecordAddActivity;
 import com.floatingpanda.scoreboard.views.activities.GameRecordActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -74,7 +74,7 @@ public class GameRecordListFragment extends Fragment implements DetailAdapterInt
     }
 
     private void startAddGameRecordActivity() {
-        Intent intent = new Intent(getContext(), AddGameRecordActivity.class);
+        Intent intent = new Intent(getContext(), GameRecordAddActivity.class);
         intent.putExtra("GROUP", group);
         startActivityForResult(intent, ADD_GAME_RECORD_REQUEST_CODE);
     }
@@ -93,8 +93,8 @@ public class GameRecordListFragment extends Fragment implements DetailAdapterInt
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_GAME_RECORD_REQUEST_CODE && resultCode == RESULT_OK) {
-            GameRecord gameRecord = (GameRecord) data.getExtras().get(AddGameRecordActivity.EXTRA_REPLY_GAME_RECORD);
-            List<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(AddGameRecordActivity.EXTRA_REPLY_PLAYERS);
+            GameRecord gameRecord = (GameRecord) data.getExtras().get(GameRecordAddActivity.EXTRA_REPLY_GAME_RECORD);
+            List<TeamOfPlayers> teamsOfPlayers = (ArrayList) data.getExtras().get(GameRecordAddActivity.EXTRA_REPLY_PLAYERS);
 
             gameRecordViewModel.addGameRecordAndPlayers(gameRecord, teamsOfPlayers);
         }

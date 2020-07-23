@@ -33,6 +33,8 @@ import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
+import com.floatingpanda.scoreboard.viewmodels.GameRecordAddViewModel;
+import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
@@ -40,7 +42,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class AddGameRecordActivity extends AppCompatActivity {
+//TODO refactor to follow MVVM architecture. Put most logic into GameRecordAddViewModel.
+// May need to switch to using data binding in XML to support MVVM architecture here.
+public class GameRecordAddActivity extends AppCompatActivity {
 
     private final int CHOOSE_PLAYERS_REQUEST_CODE = 1;
 
@@ -57,7 +61,7 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
     private Calendar calendar = Calendar.getInstance();
 
-    private BoardGameViewModel boardGameViewModel;
+    private GameRecordAddViewModel gameRecordAddViewModel;
 
     private Group group;
     private String boardGameName;
@@ -104,9 +108,8 @@ public class AddGameRecordActivity extends AppCompatActivity {
 
         group = (Group) getIntent().getExtras().get("GROUP");
 
-        //Populate board game spinner
-        boardGameViewModel = new ViewModelProvider(this).get(BoardGameViewModel.class);
-        boardGameViewModel.getAllBoardGamesWithBgCategoriesAndPlayModes().observe(this, new Observer<List<BoardGameWithBgCategoriesAndPlayModes>>() {
+        gameRecordAddViewModel = new ViewModelProvider(this).get(GameRecordAddViewModel.class);
+        gameRecordAddViewModel.getAllBoardGamesWithBgCategoriesAndPlayModes().observe(this, new Observer<List<BoardGameWithBgCategoriesAndPlayModes>>() {
             @Override
             public void onChanged(List<BoardGameWithBgCategoriesAndPlayModes> boardGamesWithBgCategoriesAndPlayModes) {
                 boardGameSpinner.setAdapter(new SearchableSpinnerAdapter(getApplicationContext(), boardGamesWithBgCategoriesAndPlayModes));
@@ -144,7 +147,12 @@ public class AddGameRecordActivity extends AppCompatActivity {
         addPlayersButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!inputsValid()) {
+                boolean winLoseRadioGroupChecked = true;
+                if (winLoseRadioGroup.getCheckedRadioButtonId() == -1) {
+                    winLoseRadioGroupChecked = false;
+                }
+
+                if(!gameRecordAddViewModel.inputsValid(getApplicationContext(), playerCountEditText, getPlayModePlayed(), winLoseRadioGroupChecked, false)) {
                     return;
                 }
 
@@ -208,40 +216,11 @@ public class AddGameRecordActivity extends AppCompatActivity {
         }
     }
 
-    //TODO update tests to use edittexts instead of strings.
-    public boolean inputsValid() {
-        if (playerCountEditText.getText().toString().isEmpty()) {
-            playerCountEditText.setError("You must set the number of players or teams that played.");
-            playerCountEditText.requestFocus();
-            return false;
-        }
-
-        if (getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
-            if (Integer.parseInt(playerCountEditText.getText().toString()) < 2) {
-                playerCountEditText.setError("You must set the number of players or teams to 2 or more when playing competitively.");
-                playerCountEditText.requestFocus();
-                return false;
-            }
-        }
-
-        if (getPlayModePlayed() == PlayMode.PlayModeEnum.COOPERATIVE
-                || getPlayModePlayed() == PlayMode.PlayModeEnum.SOLITAIRE) {
-            if (winLoseRadioGroup.getCheckedRadioButtonId() == -1) {
-                lostRadioButton.setError("You must set whether you won or lost the game.");
-                lostRadioButton.requestFocus();
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     private GameRecord createGameRecord() {
         int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
         Date date = calendar.getTime();
-        Log.w("AddGameRecordAct.java", "Date: " + date.toString());
-        PlayMode.PlayModeEnum playModePlayed = getPlayModePlayed();
 
+        PlayMode.PlayModeEnum playModePlayed = getPlayModePlayed();
         if (playModePlayed == PlayMode.PlayModeEnum.ERROR) {
             Toast.makeText(this, "Playmode ERROR returned", Toast.LENGTH_SHORT).show();
         }
@@ -250,7 +229,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
         if (playModePlayed == PlayMode.PlayModeEnum.COOPERATIVE
                 || playModePlayed == PlayMode.PlayModeEnum.SOLITAIRE) {
             won = getWon();
-            Log.w("AddGameRecordAct.java", "Got won: " + won);
         }
 
         boolean teams = getTeams();
@@ -308,64 +286,6 @@ public class AddGameRecordActivity extends AppCompatActivity {
         }
     }
 
-    private void setPotentialPlayModes(List<PlayMode.PlayModeEnum> potentialPlayModes) {
-        playModeRadioGroup.clearCheck();
-        soliRadioButton.setClickable(false);
-        soliRadioButton.setAlpha(0.5f);
-        coopRadioButton.setClickable(false);
-        coopRadioButton.setAlpha(0.5f);
-        compRadioButton.setClickable(false);
-        compRadioButton.setAlpha(0.5f);
-
-        if (potentialPlayModes.contains(PlayMode.PlayModeEnum.SOLITAIRE)) {
-            soliRadioButton.setClickable(true);
-            soliRadioButton.setAlpha(1.0f);
-            soliRadioButton.setChecked(true);
-        }
-
-        if (potentialPlayModes.contains(PlayMode.PlayModeEnum.COOPERATIVE)) {
-            coopRadioButton.setClickable(true);
-            coopRadioButton.setAlpha(1.0f);
-            coopRadioButton.setChecked(true);
-        }
-
-        if (potentialPlayModes.contains(PlayMode.PlayModeEnum.COMPETITIVE)) {
-            compRadioButton.setClickable(true);
-            compRadioButton.setAlpha(1.0f);
-            compRadioButton.setChecked(true);
-        }
-    }
-
-    private void setPotentialTeamSettings(BoardGame.TeamOption potentialTeamSettings) {
-        teamsRadioGroup.clearCheck();
-        teamsRadioButton.setClickable(false);
-        teamsRadioButton.setAlpha(0.5f);
-        noTeamsRadioButton.setClickable(false);
-        noTeamsRadioButton.setAlpha(0.5f);
-
-        switch (potentialTeamSettings) {
-            case NO_TEAMS:
-                noTeamsRadioButton.setChecked(true);
-                noTeamsRadioButton.setClickable(true);
-                noTeamsRadioButton.setAlpha(1.0f);
-                break;
-            case TEAMS_ONLY:
-                teamsRadioButton.setChecked(true);
-                teamsRadioButton.setClickable(true);
-                teamsRadioButton.setAlpha(1.0f);
-                break;
-            case TEAMS_AND_SOLOS_ALLOWED:
-                teamsRadioButton.setChecked(true);
-                teamsRadioButton.setClickable(true);
-                noTeamsRadioButton.setClickable(true);
-                teamsRadioButton.setAlpha(1.0f);
-                noTeamsRadioButton.setAlpha(1.0f);
-                break;
-            default:
-                break;
-        }
-    }
-
     private void setToCompetitive() {
         //Enable everything
         enableTeamsRadioGroup();
@@ -413,40 +333,48 @@ public class AddGameRecordActivity extends AppCompatActivity {
         displayWinLoseRadioGroup();
     }
 
-    private void makePlayerCountEditTextEditable() {
-        playerCountEditText.setKeyListener(editTextKeyListener);
-        playerCountEditText.setFocusable(true);
-        playerCountEditText.setFocusableInTouchMode(true);
-        playerCountEditText.requestFocus();
-        playerCountEditText.setAlpha(1.0f);
+    private void setPotentialPlayModes(List<PlayMode.PlayModeEnum> potentialPlayModes) {
+        playModeRadioGroup.clearCheck();
+        disablePlaymodeRadioButtons();
+
+        if (potentialPlayModes.contains(PlayMode.PlayModeEnum.SOLITAIRE)) {
+            enableSolitaireRadioButton();
+            soliRadioButton.setChecked(true);
+        }
+
+        if (potentialPlayModes.contains(PlayMode.PlayModeEnum.COOPERATIVE)) {
+            enableCooperativeRadioButton();
+            coopRadioButton.setChecked(true);
+        }
+
+        if (potentialPlayModes.contains(PlayMode.PlayModeEnum.COMPETITIVE)) {
+            enableCompetitiveRadioButton();
+            compRadioButton.setChecked(true);
+        }
     }
 
-    private void makePlayerCountEditTextUneditable() {
-        playerCountEditText.setKeyListener(null);
-        playerCountEditText.setFocusable(false);
-        playerCountEditText.clearFocus();
-        playerCountEditText.setAlpha(0.5f);
-    }
+    private void setPotentialTeamSettings(BoardGame.TeamOption potentialTeamSettings) {
+        teamsRadioGroup.clearCheck();
+        disableTeamsRadioButton();
+        disableNoTeamsRadioButton();
 
-    private void hideWinLoseRadioGroup() {
-        winLoseRadioGroupHeader.setVisibility(View.VISIBLE);
-        winLoseRadioGroup.setVisibility(View.VISIBLE);
-        winLoseRadioGroup.clearCheck();
-    }
-
-    private void displayWinLoseRadioGroup() {
-        winLoseRadioGroupHeader.setVisibility(View.GONE);
-        winLoseRadioGroup.setVisibility(View.GONE);
-    }
-
-    private void enableTeamsRadioGroup() {
-        teamsRadioGroup.setClickable(true);
-        teamsRadioGroup.setAlpha(1.0f);
-    }
-
-    private void disableTeamsRadioGroup() {
-        teamsRadioGroup.setClickable(false);
-        teamsRadioGroup.setAlpha(0.5f);
+        switch (potentialTeamSettings) {
+            case NO_TEAMS:
+                noTeamsRadioButton.setChecked(true);
+                enableNoTeamsRadioButton();
+                break;
+            case TEAMS_ONLY:
+                teamsRadioButton.setChecked(true);
+                enableTeamsRadioButton();
+                break;
+            case TEAMS_AND_SOLOS_ALLOWED:
+                teamsRadioButton.setChecked(true);
+                enableTeamsRadioButton();
+                enableNoTeamsRadioButton();
+                break;
+            default:
+                break;
+        }
     }
 
     private PlayMode.PlayModeEnum getPlayModePlayed() {
@@ -484,6 +412,98 @@ public class AddGameRecordActivity extends AppCompatActivity {
                 Log.w("AddGameRecordAct.java", "Failed to return proper result when getting won.");
                 return false;
         }
+    }
+
+    private void enableSolitaireRadioButton() {
+        soliRadioButton.setClickable(true);
+        soliRadioButton.setAlpha(1.0f);
+    }
+
+    private void enableCooperativeRadioButton() {
+        coopRadioButton.setClickable(true);
+        coopRadioButton.setAlpha(1.0f);
+    }
+
+    private void enableCompetitiveRadioButton() {
+        compRadioButton.setClickable(true);
+        compRadioButton.setAlpha(1.0f);
+    }
+
+    private void disablePlaymodeRadioButtons() {
+        disableSolitaireRadioButton();
+        disableCooperativeRadioButton();
+        disableCompetitiveRadioButton();
+    }
+
+    private void disableSolitaireRadioButton() {
+        soliRadioButton.setClickable(false);
+        soliRadioButton.setAlpha(0.5f);
+    }
+
+    private void disableCooperativeRadioButton() {
+        coopRadioButton.setClickable(false);
+        coopRadioButton.setAlpha(0.5f);
+    }
+
+    private void disableCompetitiveRadioButton() {
+        compRadioButton.setClickable(false);
+        compRadioButton.setAlpha(0.5f);
+    }
+
+    private void enableTeamsRadioButton() {
+        teamsRadioButton.setClickable(true);
+        teamsRadioButton.setAlpha(1.0f);
+    }
+
+    private void enableNoTeamsRadioButton() {
+        noTeamsRadioButton.setClickable(true);
+        noTeamsRadioButton.setAlpha(1.0f);
+    }
+
+    private void disableTeamsRadioButton() {
+        teamsRadioButton.setClickable(false);
+        teamsRadioButton.setAlpha(0.5f);
+    }
+
+    private void disableNoTeamsRadioButton() {
+        noTeamsRadioButton.setClickable(false);
+        noTeamsRadioButton.setAlpha(0.5f);
+    }
+
+    private void makePlayerCountEditTextEditable() {
+        playerCountEditText.setKeyListener(editTextKeyListener);
+        playerCountEditText.setFocusable(true);
+        playerCountEditText.setFocusableInTouchMode(true);
+        playerCountEditText.requestFocus();
+        playerCountEditText.setAlpha(1.0f);
+    }
+
+    private void makePlayerCountEditTextUneditable() {
+        playerCountEditText.setKeyListener(null);
+        playerCountEditText.setFocusable(false);
+        playerCountEditText.clearFocus();
+        playerCountEditText.setAlpha(0.5f);
+    }
+
+    private void hideWinLoseRadioGroup() {
+        winLoseRadioGroupHeader.setVisibility(View.GONE);
+        winLoseRadioGroup.setVisibility(View.GONE);
+    }
+
+    private void displayWinLoseRadioGroup() {
+        winLoseRadioGroupHeader.setVisibility(View.VISIBLE);
+        winLoseRadioGroup.setVisibility(View.VISIBLE);
+        winLoseRadioGroup.clearCheck();
+    }
+
+    private void enableTeamsRadioGroup() {
+        teamsRadioGroup.setClickable(true);
+        teamsRadioGroup.setAlpha(1.0f);
+    }
+
+    private void disableTeamsRadioGroup() {
+        teamsRadioGroup.setClickable(false);
+        teamsRadioGroup.setAlpha(0.5f);
     }
 
     DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {

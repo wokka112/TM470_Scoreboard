@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +15,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.floatingpanda.scoreboard.views.activities.AddGroupMembersActivity;
+import com.floatingpanda.scoreboard.views.activities.GroupMembersAddActivity;
 import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.GroupMemberListAdapter;
 import com.floatingpanda.scoreboard.data.entities.Group;
-import com.floatingpanda.scoreboard.data.relations.GroupWithMembers;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.interfaces.RemoveGroupMemberInterface;
@@ -119,7 +117,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
     }
 
     public void startAddGroupMember() {
-        Intent intent = new Intent(getContext(), AddGroupMembersActivity.class);
+        Intent intent = new Intent(getContext(), GroupMembersAddActivity.class);
         intent.putParcelableArrayListExtra("GROUP_MEMBERS", (ArrayList<Member>) groupMembers);
         startActivityForResult(intent, ADD_GROUP_MEMBERS_REQUEST_CODE);
     }
@@ -133,7 +131,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == ADD_GROUP_MEMBERS_REQUEST_CODE && resultCode == RESULT_OK) {
-            List<Member> members = (ArrayList<Member>) data.getExtras().get(AddGroupMembersActivity.EXTRA_REPLY);
+            List<Member> members = (ArrayList<Member>) data.getExtras().get(GroupMembersAddActivity.EXTRA_REPLY);
             groupMemberViewModel.addGroupMembers(group, members);
         }
     }

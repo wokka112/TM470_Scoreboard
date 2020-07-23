@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.EditText;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
@@ -156,15 +157,20 @@ public class GroupViewModelTest {
 
     @Test
     public void testAddActivityInputsValid() throws InterruptedException {
+        Context context = ApplicationProvider.getApplicationContext();
+        EditText groupNameEditText = new EditText(context);
+
         //Test Case 1: Valid - String input that doesn't exist in database and is not empty
         String groupName = "Group name";
-        boolean isValid = groupViewModel.addActivityInputsValid(activity, groupName, true);
+        groupNameEditText.setText(groupName);
+        boolean isValid = groupViewModel.addActivityInputsValid(groupNameEditText, true);
 
         assertTrue(isValid);
 
         //Test Case 2: Invalid - empty String input
         groupName = "";
-        isValid = groupViewModel.addActivityInputsValid(activity, groupName, true);
+        groupNameEditText.setText(groupName);
+        isValid = groupViewModel.addActivityInputsValid(groupNameEditText, true);
 
         assertFalse(isValid);
 
@@ -177,29 +183,36 @@ public class GroupViewModelTest {
         assertTrue(group != null);
 
         groupName = TestData.GROUP_2.getGroupName();
-        isValid = groupViewModel.addActivityInputsValid(activity, groupName, true);
+        groupNameEditText.setText(groupName);
+        isValid = groupViewModel.addActivityInputsValid(groupNameEditText, true);
 
         assertFalse(isValid);
     }
 
     @Test
     public void testEditActivityInputsValid() throws InterruptedException {
+        Context context = ApplicationProvider.getApplicationContext();
+        EditText groupNameEditText = new EditText(context);
+
         //Test Case 1: Valid - String input that is the same as the original group name
         String originalGroupName = "Original";
-        String groupName = "Original";
-        boolean isValid = groupViewModel.editActivityInputsValid(activity, originalGroupName, groupName, true);
+        String editedGroupName = "Original";
+        groupNameEditText.setText(editedGroupName);
+        boolean isValid = groupViewModel.editActivityInputsValid(originalGroupName, groupNameEditText, true);
 
         assertTrue(isValid);
 
         //Test Case 2: Valid - String input that doesn't exist in database and is not empty
-        groupName = "Group name";
-        isValid = groupViewModel.editActivityInputsValid(activity, originalGroupName, groupName, true);
+        editedGroupName = "Group name";
+        groupNameEditText.setText(editedGroupName);
+        isValid = groupViewModel.editActivityInputsValid(originalGroupName, groupNameEditText, true);
 
         assertTrue(isValid);
 
         //Test Case 3: Invalid - empty String input
-        groupName = "";
-        isValid = groupViewModel.editActivityInputsValid(activity, originalGroupName, groupName, true);
+        editedGroupName = "";
+        groupNameEditText.setText(editedGroupName);
+        isValid = groupViewModel.editActivityInputsValid(originalGroupName, groupNameEditText, true);
 
         assertFalse(isValid);
 
@@ -211,8 +224,9 @@ public class GroupViewModelTest {
 
         assertTrue(group != null);
 
-        groupName = TestData.GROUP_2.getGroupName();
-        isValid = groupViewModel.editActivityInputsValid(activity, originalGroupName, groupName, true);
+        editedGroupName = TestData.GROUP_2.getGroupName();
+        groupNameEditText.setText(editedGroupName);
+        isValid = groupViewModel.editActivityInputsValid(originalGroupName, groupNameEditText, true);
 
         assertFalse(isValid);
     }

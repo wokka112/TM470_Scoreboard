@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData;
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.calculators.Calculator;
 import com.floatingpanda.scoreboard.data.AppDatabase;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategories;
+import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayersAndRatingChanges;
 import com.floatingpanda.scoreboard.data.relations.PlayerWithRatingChanges;
