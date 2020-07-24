@@ -16,6 +16,9 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
+/**
+ * View for editing groups in the database.
+ */
 public class GroupEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
@@ -118,6 +121,11 @@ public class GroupEditActivity extends AppCompatActivity {
         notesEditText.setText(group.getNotes());
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

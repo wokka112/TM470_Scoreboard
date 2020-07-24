@@ -8,6 +8,10 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.floatingpanda.scoreboard.views.fragments.ChoosePlayerPageFragment;
 
+/**
+ * Adapter for the choose players activity. Creates a page per team based on how many teams there are
+ * in the game.
+ */
 public class ChoosePlayersPagerAdapter extends FragmentStateAdapter {
     int numOfTeams;
 

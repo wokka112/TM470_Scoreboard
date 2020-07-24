@@ -21,6 +21,10 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+/**
+ * A repository for accessing the board games table, assigned categories table, and play modes table
+ * in the database.
+ */
 public class BoardGameRepository {
 
     private AssignedCategoryDao assignedCategoryDao;
@@ -49,37 +53,91 @@ public class BoardGameRepository {
         allBoardGamesWithCategoriesAndPlayModes = boardGameDao.getAllBoardGamesWithBgCategoriesAndPlayModes();
     }
 
+    /**
+     * Returns all board games in the database along with their assigned categories.
+     * @return
+     */
     public LiveData<List<BoardGameWithBgCategories>> getAllBoardGamesWithBgCategories() {
         return allBoardGamesWithCategories;
     }
 
+    /**
+     * Returns a livedata list of all the board games in the database along with their assigned
+     * categories and potential playmodes.
+     * @return
+     */
     public LiveData<List<BoardGameWithBgCategoriesAndPlayModes>> getAllBoardGamesWithBgCategoriesAndPlayModes() {
         return allBoardGamesWithCategoriesAndPlayModes;
     }
 
+    /**
+     * Returns a livedata board game with id bgId from the database, along with its assigned
+     * categories and potential playmodes.
+     * @param bgId
+     * @return
+     */
     public LiveData<BoardGameWithBgCategoriesAndPlayModes> getLiveDataBoardGameWithBgCategoriesAndPlayModes(int bgId) {
         return boardGameDao.findBoardGameWithBgCategoriesAndPlayModesById(bgId);
     }
 
-    //Preconditions: playmodes is not empty.
+    /**
+     * Inserts a new board game, boardGame, into the database.
+     *
+     * boardGame should have an id of 0, because the database autogenerates ids.
+     * boardGame should have a unique game name, otherwise it will not insert.
+     * @param boardGame
+     */
     public void insert(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             insertBoardGameWithoutBgCategories(boardGame);
         });
     }
 
+    /**
+     * Inserts a new board game with assigned categories into the database.
+     *
+     * The board game should have an id of 0, because the database autogenerates ids.
+     * The board game should have a unique game name, otherwise it will not insert.
+     * The assigned categories should already exist in the database and the correct id for each
+     * category should be provided in the list of assigned categories.
+     * @param boardGameWithBgCategories
+     */
     public void insert(BoardGameWithBgCategories boardGameWithBgCategories) {
         AppDatabase.getExecutorService().execute(() -> {
             insertBoardGameWithBgCategories(boardGameWithBgCategories);
         });
     }
 
+    /**
+     * Inserts a new board game with assigned categories and potential playmodes into the database.
+     *
+     * The board game should have an id of 0, because the database autogenerates ids.
+     * The board game should have a unique game name, otherwise it will not insert.
+     * The assigned categories should already exist in the database and the correct id for each
+     * category should be provided in the list of assigned categories.
+     * The playmodes list should have at least one potential playmode in it.
+     * @param boardGameWithBgCategoriesAndPlayModes
+     */
     public void insert(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         AppDatabase.getExecutorService().execute(() -> {
             insertBoardGameWithBgCategoriesAndPlayModes(boardGameWithBgCategoriesAndPlayModes);
         });
     }
 
+    /**
+     * Updates a board game that already exists in the database, as well as its assigned categories
+     * and potential playmodes.
+     *
+     * The updated board game should have the original board game's id, ids cannot be updated.
+     * The updated board game should have the original board game's name, or a unique name.
+     * The assigned categories should already exist in the database.
+     *
+     * Any assigned categories or playmodes that have been removed from the updated version of the
+     * board game will result in entries in the assigned categories and play modes tables being
+     * deleted.
+     * @param originalBoardGameWithBgCategoriesAndPlayModes the original board game with assigned categories and potential play modes
+     * @param editedBoardGameWithBgCategoriesAndPlayModes the updated board game with updated lists of assigned categories and potential play modes.
+     */
     public void update(BoardGameWithBgCategoriesAndPlayModes originalBoardGameWithBgCategoriesAndPlayModes,
                        BoardGameWithBgCategoriesAndPlayModes editedBoardGameWithBgCategoriesAndPlayModes) {
         AppDatabase.getExecutorService().execute(() -> {
@@ -101,12 +159,24 @@ public class BoardGameRepository {
         });
     }
 
+    /**
+     * Deletes the board game, boardGame, from the database, along with any assigned categories table
+     * entries and play modes table entries it is a part of. Any game record referring to the board
+     * game's name will have the name turned to null.
+     * @param boardGame
+     */
     public void delete(BoardGame boardGame) {
         AppDatabase.getExecutorService().execute(() -> {
             boardGameDao.delete(boardGame);
         });
     }
 
+    /**
+     * Tests whether the database contains a board game with the name bgName. If it does, returns
+     * true. Otherwise, returns false.
+     * @param bgName
+     * @return
+     */
     public boolean containsBoardGameName(String bgName) {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override
@@ -127,13 +197,11 @@ public class BoardGameRepository {
         boardGameDao.insert(boardGame);
     }
 
-    // Preconditions: - boardGame does not exist in database.
-    //                - boardGame has categories assigned to it.
-    //                - the categories stored in boardGame's categories list exist in the database and have
-    //                   the correct id assigned to them from the database.
-    // Postconditions: - boardGame will exist in database.
-    //                 - a set of assigned_categories tables linking boardGame with its categories will exist
-    //                    in the table.
+    /**
+     * Inserts a new board game then inserts a new set of assigned category table entries to represent
+     * the categories the board game belongs to.
+     * @param boardGameWithBgCategories
+     */
     private void insertBoardGameWithBgCategories(BoardGameWithBgCategories boardGameWithBgCategories) {
         insertBoardGameWithoutBgCategories(boardGameWithBgCategories.getBoardGame());
 
@@ -147,6 +215,12 @@ public class BoardGameRepository {
         assignedCategoryDao.insertAll(assignedCategories.toArray(new AssignedCategory[assignedCategories.size()]));
     }
 
+    /**
+     * Inserts a new board game, then inserts a new set of assigned category table entries to
+     * represent the categories the board game belongs to, and then inserts a new set of play mode
+     * table entries to represent the play modes the board game can be played int.
+     * @param boardGameWithBgCategoriesAndPlayModes
+     */
     private void insertBoardGameWithBgCategoriesAndPlayModes(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
         insertBoardGameWithBgCategories(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories());
 
@@ -173,13 +247,19 @@ public class BoardGameRepository {
         List<AssignedCategory> assignedCategories = new ArrayList<>();
         for (BgCategory bgCategory : bgCategories) {
             //if boardGame holds categories then they must have ids, or else this won't work.
-            Log.w("BoardGameRepo.java", "bgCategory id: " + bgCategory.getId());
             assignedCategories.add(new AssignedCategory(bgId, bgCategory.getId()));
         }
 
         assignedCategoryDao.insertAll(assignedCategories.toArray(new AssignedCategory[assignedCategories.size()]));
     }
 
+    /**
+     * Takes the play modes that exist in the list of original play modes but not in the edited list
+     * of play modes, and creates a list of PlayModes to delete from the database.
+     * @param originalPlayModes the board game to be updated's original play modes
+     * @param editedPlayModes the board game to be updated's new play modes
+     * @return a list of PlayModes ready to delete from the database
+     */
     private List<PlayMode> getPlayModesToDelete(List<PlayMode> originalPlayModes, List<PlayMode> editedPlayModes) {
         List<PlayMode> playModesToDelete = new ArrayList<>(originalPlayModes);
         playModesToDelete.removeAll(editedPlayModes);
@@ -187,6 +267,14 @@ public class BoardGameRepository {
         return playModesToDelete;
     }
 
+    /**
+     * Takes the categories that exist in the list of original bg categories but not in edited list
+     * of bg categories, and creates a list of assigned categories to delete from the database.
+     * @param bgId the board game to be updated's id
+     * @param originalBgCategories the board game to be updated's original bg categories
+     * @param editedBgCategories the board game to be updated's new bg categories
+     * @return a list of assigned categories ready to delete from the database
+     */
     private List<AssignedCategory> getAssignedCategoriesToDelete(int bgId, List<BgCategory> originalBgCategories, List<BgCategory> editedBgCategories) {
         // Compare and delete ones in original but not in edited
         List<BgCategory> bgCategories = new ArrayList<>(originalBgCategories);

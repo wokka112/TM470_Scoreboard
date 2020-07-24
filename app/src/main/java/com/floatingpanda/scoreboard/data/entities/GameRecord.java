@@ -12,6 +12,17 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+/**
+ * Represents a record of a game played, including the group the game was played by, which board
+ * game was played, in what play mode (competitively, cooperatively or solitaire), whether it was
+ * won or lost (coop or soli only), and whether it was played in teams or not.
+ *
+ * The group who played the game is linked from the groups table (Group class) via the group_id
+ * (groupId attribute) foreign key.
+ *
+ * The board game played is linked from the board_games table (BoardGame class) via the bg_name
+ * (boardGameName attribute) foreign key.
+ */
 @Entity(tableName = "game_records",
         foreignKeys = {@ForeignKey(entity = Group.class,
                 parentColumns = "group_id",

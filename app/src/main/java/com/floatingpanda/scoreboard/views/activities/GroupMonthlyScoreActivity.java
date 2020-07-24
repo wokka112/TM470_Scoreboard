@@ -16,6 +16,10 @@ import com.floatingpanda.scoreboard.utils.DateStringCreator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * View for viewing a group's monthly scores. This view gives all the scores for the month, for
+ * every member that played a game in that month and got a score.
+ */
 public class GroupMonthlyScoreActivity extends AppCompatActivity {
 
     private TextView monthYearTextView;
@@ -47,6 +51,11 @@ public class GroupMonthlyScoreActivity extends AppCompatActivity {
         adapter.setScoresWithMemberDetails(scoresWithMemberDetails);
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

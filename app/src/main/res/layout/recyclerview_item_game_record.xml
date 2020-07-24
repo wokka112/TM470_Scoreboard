@@ -43,7 +43,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/records_difficulty_header"
-        tools:text="Competitive"/>
+        tools:text="@string/competitive"/>
 
     <TextView
         android:id="@+id/records_difficulty_header"
@@ -53,7 +53,7 @@
         app:layout_constraintLeft_toLeftOf="@id/records_won_lost"
         app:layout_constraintRight_toRightOf="@id/records_won_lost"
         android:layout_marginRight="16dp"
-        android:text="Difficulty:"/>
+        android:text="@string/difficulty_colon_header"/>
 
     <TextView
         android:id="@+id/records_difficulty_output"
@@ -71,7 +71,7 @@
         app:layout_constraintLeft_toRightOf="@id/records_difficulty_output"
         app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="Players:"/>
+        android:text="@string/players_colon_header"/>
 
     <TextView
         android:id="@+id/records_player_count_output"

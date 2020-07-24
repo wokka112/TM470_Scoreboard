@@ -3,6 +3,15 @@ package com.floatingpanda.scoreboard.data.database_views;
 import androidx.room.ColumnInfo;
 import androidx.room.DatabaseView;
 
+/**
+ * A database view that combines information from the group_category_skill_ratings table
+ * (GroupCategorySkillRatingClass) with information about the member the skill rating is for taken
+ * from the members (Member class) table via the group_members (GroupMember class) table.
+ *
+ * The information taken includes the category id, the group id, the member's nickname, the category
+ * skill rating, and the number of games rated (i.e. games with that category played competitively)
+ * in this group for the member in question.
+ */
 @DatabaseView(
         "SELECT group_category_skill_ratings.category_id AS category_id, group_members.group_id AS group_id, " +
                 "members.nickname AS nickname, group_category_skill_ratings.skill_rating AS skill_rating, group_category_skill_ratings.games_rated AS games_rated " +

@@ -14,6 +14,9 @@ import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
 
+/**
+ * Adapter that takes a list of groups and displays them.
+ */
 public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.GroupViewHolder> {
 
     private final LayoutInflater inflater;
@@ -41,6 +44,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
         }
     }
 
+    /**
+     * Sets the list of groups which the adapter will display.
+     *
+     * Must be called before the adapter will display anything.
+     * @param groups
+     */
     public void setGroups(List<Group> groups) {
         this.groups = groups;
         notifyDataSetChanged();

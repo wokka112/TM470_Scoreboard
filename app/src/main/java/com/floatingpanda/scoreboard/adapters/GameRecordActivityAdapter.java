@@ -13,6 +13,14 @@ import com.floatingpanda.scoreboard.views.fragments.GameRecordSkillRatingsListFr
 import com.floatingpanda.scoreboard.views.fragments.GroupListFragment;
 import com.floatingpanda.scoreboard.views.fragments.MemberListFragment;
 
+//TODO update fragments so they provide empty argument constructors. See favourited thing talking about
+// solution for it.
+
+/**
+ * ViewPager adapter for the game record activity. Provides 2 fragments - one for general game record
+ * details (date, time, game played, teams, scores, etc.), and one for skill rating changes (players
+ * and how much their skills changed based on the game, if competitive).
+ */
 public class GameRecordActivityAdapter extends FragmentStateAdapter {
     private final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Game Record Details", "Skill Rating Changes" };

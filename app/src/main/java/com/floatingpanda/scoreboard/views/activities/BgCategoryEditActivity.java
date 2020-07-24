@@ -14,6 +14,9 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 
+/**
+ * View for editing bg categories in the database.
+ */
 public class BgCategoryEditActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
@@ -46,7 +49,7 @@ public class BgCategoryEditActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String categoryName = categoryEditText.getText().toString();
 
-                if (!bgCategoryViewModel.editActivityInputsValid(BgCategoryEditActivity.this, bgCategory.getCategoryName(), categoryName, false)) {
+                if (!bgCategoryViewModel.editActivityInputsValid(bgCategory.getCategoryName(), categoryEditText, false)) {
                     return;
                 }
 
@@ -71,6 +74,11 @@ public class BgCategoryEditActivity extends AppCompatActivity {
         categoryEditText.setText(bgCategory.getCategoryName());
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

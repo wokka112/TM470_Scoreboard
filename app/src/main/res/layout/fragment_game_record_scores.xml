@@ -45,13 +45,13 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/activity_game_record_details_difficulty_header"
         android:layout_marginTop="8dp"
-        tools:text="COMPETITIVE"/>
+        tools:text="Competitive"/>
 
     <TextView
         android:id="@+id/activity_game_record_details_won_lost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="WON"
+        tools:text="Won"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activity_game_record_details_difficulty_header"
@@ -65,7 +65,7 @@
         app:layout_constraintLeft_toLeftOf="@id/activity_game_record_details_won_lost"
         app:layout_constraintRight_toRightOf="@id/activity_game_record_details_won_lost"
         android:layout_marginRight="16dp"
-        android:text="Difficulty"/>
+        android:text="@string/difficulty_header"/>
 
     <TextView
         android:id="@+id/activity_game_record_details_difficulty_output"
@@ -83,7 +83,7 @@
         app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_difficulty_output"
         app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="Players:"/>
+        android:text="@string/players_colon_header"/>
 
     <TextView
         android:id="@+id/activity_game_record_details_player_count_output"
@@ -104,7 +104,7 @@
         android:layout_marginTop="8dp"/>
 
     <Button
-        android:text="Delete Record"
+        android:text="@string/delete"
         android:id="@+id/activity_game_record_details_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

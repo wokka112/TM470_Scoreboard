@@ -1,5 +1,6 @@
 package com.floatingpanda.scoreboard.adapters;
 
+//TODO look into how to quote the licence for Pithadiya's work.
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,12 @@ import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndP
 
 import java.util.List;
 
+/**
+ * Searchable spinner adapter that uses Mitesh Pithadiya's (2016) searchable spinner to display a
+ * searchable list of board games with bg categories for the user to choose from.
+ *
+ * Pithadiya, 2016 - https://github.com/miteshpithadiya/SearchableSpinner
+ */
 public class SearchableSpinnerAdapter extends ArrayAdapter<BoardGameWithBgCategoriesAndPlayModes> {
 
     public SearchableSpinnerAdapter(Context context, List<BoardGameWithBgCategoriesAndPlayModes> boardGamesWithBgCategoriesAndPlayModes) {

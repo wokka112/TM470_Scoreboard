@@ -15,6 +15,9 @@ import com.floatingpanda.scoreboard.data.entities.BgCategory;
 
 import java.util.List;
 
+/**
+ * Recyclerview adapter for displaying a list of board game categories (bgCategories).
+ */
 public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAdapter.BgCategoryViewHolder> {
 
     private final LayoutInflater inflater;
@@ -57,6 +60,12 @@ public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAd
         }
     }
 
+    /**
+     * Sets the list of board game categories that will be displayed by the adapter.
+     *
+     * Must be called before adapter will display anything.
+     * @param bgCategories a list of BgCategory objects
+     */
     public void setBgCategories(List<BgCategory> bgCategories) {
         this.bgCategories = bgCategories;
         notifyDataSetChanged();

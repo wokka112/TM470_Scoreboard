@@ -33,6 +33,7 @@
         app:layout_constraintRight_toRightOf="parent"
         android:src="@drawable/ic_photo_camera_black_24dp"/>
 
+    <!--TODO look into adding headers to each edittext? Otherwise when editing it's confusing?-->
     <TextView
         android:id="@+id/memberadd_nickname_textview"
         android:layout_width="wrap_content"
@@ -41,7 +42,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:text="Nickname:"
+        android:text="@string/nickname_colon_header"
         android:visibility="gone"/>
 
     <EditText
@@ -53,7 +54,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        android:hint="Nickname"
+        android:hint="@string/member_nickname_hint"
         android:inputType="textCapWords"/>
 
     <TextView
@@ -73,7 +74,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:hint="Notes (Optional)"
+        android:hint="@string/notes_hint"
         android:inputType="textCapSentences"/>
 
     <Button
@@ -84,7 +85,7 @@
         android:layout_marginTop="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/memberadd_button_cancel"
-        android:text="Save"/>
+        android:text="@string/save"/>
 
     <Button
         android:id="@+id/memberadd_button_cancel"
@@ -93,6 +94,6 @@
         app:layout_constraintTop_toTopOf="@id/memberadd_button_save"
         app:layout_constraintRight_toLeftOf="@id/memberadd_button_save"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:text="Cancel"/>
+        android:text="@string/cancel"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

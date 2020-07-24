@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+/**
+ * A repository for accessing the bg_categories table in the database.
+ */
 public class BgCategoryRepository {
 
     private BgCategoryDao bgCategoryDao;
@@ -27,7 +30,6 @@ public class BgCategoryRepository {
         bgCategoryDao = db.bgCategoryDao();
         allBgCategories = bgCategoryDao.getAllLive();
 
-        //Used for testing
         assignedCategoryDao = db.assignedCategoryDao();
     }
 
@@ -41,14 +43,12 @@ public class BgCategoryRepository {
     }
 
     /**
-     * @return live data list of all bg categories from database
+     * Returns a livedata list of all the bg categories in the database.
      */
     public LiveData<List<BgCategory>> getAll() {
         return allBgCategories;
     }
 
-    // Precondition: BgCategory with bgCategory's name or id should not exist in database.
-    // Postcondition: new BgCategory exists in the database.
     /**
      * Inserts a new Bgcategory into the database. If the BgCategory already exists in the database,
      * no new category is inserted.
@@ -65,9 +65,6 @@ public class BgCategoryRepository {
         });
     }
 
-    // Precondition: - a BgCategory with bgCategory's id (primary key) exists in database.
-    // Postcondition: - the BgCategory in the database will be updated to have the details of bgCategory.
-    //                - edits will cascade, so foreign keys of bgCategory (such as in assigned_categories) will be updated as well.
     /**
      * Updates a BgCategory in the database to match the data of bgCategory. A BgCategory with
      * bgCategory's id should already exist in the database for this to work.
@@ -85,12 +82,9 @@ public class BgCategoryRepository {
         });
     }
 
-    // Precondition: - bgCategory should exist in the database.
-    // Postconditions: - bgCategory will no longer exist in the database.
-    //                 - assigned_categories tables with bgCategory in will have been deleted.
-    //                 - skill ratings for players for this category will have been deleted.
     /**
-     * Deletes bgCategory from the database.
+     * Deletes bgCategory from the database. This also deletes any related assigned categories
+     * tables and skill rating tables.
      * @param bgCategory a BgCategory that exists in the database
      */
     public void delete(BgCategory bgCategory) {
@@ -99,8 +93,6 @@ public class BgCategoryRepository {
         });
     }
 
-    // Postconditions: - if a BgCategory with bgCategory's name exists in the database, returns true.
-    //                 - if no BgCategory with bgCategory's name exists in the database, returns false.
     /**
      * Checks whether the database contains a BgCategory with the name categoryName. If it does,
      * returns true. Otherwise, returns false.

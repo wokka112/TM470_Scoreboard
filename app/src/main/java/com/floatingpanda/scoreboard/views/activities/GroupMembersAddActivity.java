@@ -27,6 +27,10 @@ import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * View for adding group members to a group. Only members that don't already belong to the group
+ * are shown in this view.
+ */
 public class GroupMembersAddActivity extends AppCompatActivity implements SelectedMemberInterface {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
@@ -55,10 +59,9 @@ public class GroupMembersAddActivity extends AppCompatActivity implements Select
 
         buttonTextView.setText("Create new member");
 
-        groupMemberAddViewModel.setGroupMembers((ArrayList<Member>) getIntent().getExtras().get("GROUP_MEMBERS"));
-
         groupMemberAddViewModel = new ViewModelProvider(this).get(GroupMemberAddViewModel.class);
 
+        groupMemberAddViewModel.setGroupMembers((ArrayList<Member>) getIntent().getExtras().get("GROUP_MEMBERS"));
         groupMemberAddViewModel.getAllMembersLiveData().observe(this, new Observer<List<Member>>() {
             @Override
             public void onChanged(List<Member> members) {
@@ -94,16 +97,28 @@ public class GroupMembersAddActivity extends AppCompatActivity implements Select
         });
     }
 
+    /**
+     * Adds the member to a list of selected members, which is later used to add members to the
+     * group in a batch.
+     * @param member
+     */
     @Override
     public void addSelectedMember(Member member) {
         groupMemberAddViewModel.addSelectedMember(member);
     }
 
+    /**
+     * Removes the member from a list of selected members.
+     * @param member
+     */
     @Override
     public void removeSelectedMember(Member member) {
         groupMemberAddViewModel.removeSelectedMember(member);
     }
 
+    /**
+     * Starts the activity to add a member to the database.
+     */
     public void startAddMemberActivity() {
         Intent addMemberIntent = new Intent(this, MemberAddActivity.class);
         startActivityForResult(addMemberIntent, ADD_MEMBER_REQUEST_CODE);
@@ -119,6 +134,11 @@ public class GroupMembersAddActivity extends AppCompatActivity implements Select
         }
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

@@ -40,6 +40,10 @@ public class GameRecordAddViewModel extends AndroidViewModel {
         return boardGameRepository.getAllBoardGamesWithBgCategoriesAndPlayModes();
     }
 
+    //TODO maybe split into different validity tests. Then in view I can do a full validity test and call each individual test. If one is wrong I can create
+    // an error to show the user. This will greatly reduce coupling.
+    // e.g. isPlayerCountEmpty, isCompetitivePlayerCountCorrect, etc.
+    // Although at that point is it better to simply include the validity test in the view?
     public boolean inputsValid(Context applicationContext, EditText playerCountEditText, PlayMode.PlayModeEnum playModePlayed, boolean winLoseRadioGroupChecked,
                                boolean testing) {
         if (playerCountEditText.getText().toString().trim().isEmpty()) {

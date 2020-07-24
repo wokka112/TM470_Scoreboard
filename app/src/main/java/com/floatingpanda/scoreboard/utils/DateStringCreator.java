@@ -3,6 +3,13 @@ package com.floatingpanda.scoreboard.utils;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Takes a date and can be used to get different string representations of the date in English.
+ *
+ * Also provides a static method for some strings.
+ *
+ * All day and month names are given in English.
+ */
 public class DateStringCreator {
     private Calendar calendar;
 

@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Save" />
+            android:text="@string/save" />
 
         <Button
             android:id="@+id/groupadd_button_cancel"
@@ -63,7 +63,7 @@
             app:layout_constraintTop_toTopOf="@id/groupadd_button_save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:text="@string/cancel" />
 
         <EditText
             android:id="@+id/groupadd_name_edittext"
@@ -74,7 +74,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="8dp"
-            android:hint="Group Name"
+            android:hint="@string/group_name_hint"
             android:inputType="textCapWords"/>
 
         <EditText
@@ -86,7 +86,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Description (Optional)"
+            android:hint="@string/description_hint"
             android:inputType="textCapSentences"/>
 
         <EditText
@@ -98,7 +98,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Notes (Optional)"
+            android:hint="@string/notes_hint"
             android:inputType="textCapSentences"/>
 
         <ImageView

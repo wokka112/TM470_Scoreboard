@@ -5,6 +5,10 @@ import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
 import java.util.Comparator;
 
+/**
+ * Sorts a list of PlayerTeamWithPlayers objects into ascending order based on the teams' finishing
+ * positions (i.e. 1st place before 2nd, 2nd before 3rd, etc.).
+ */
 public class PlayerTeamWithPlayersComparator implements Comparator {
     @Override
     public int compare(Object o1, Object o2) {

@@ -6,6 +6,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 
+/**
+ * Represents the board game categories a board game belongs to. This is a table that displays
+ * many-to-many relations between board games and board game categories. The bgId attribute is a
+ * foreign key linking to the board_games table (BoardGame class), and the categoryId attribute is
+ * a foreign key linking to the bg_categories table (BgCategory class).
+ */
 @Entity(tableName = "assigned_categories", primaryKeys = {"bg_id", "category_id"},
     foreignKeys = {@ForeignKey(entity = BoardGame.class,
             parentColumns = "bg_id",

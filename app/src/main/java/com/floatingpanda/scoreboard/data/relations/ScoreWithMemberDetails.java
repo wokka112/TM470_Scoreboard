@@ -9,6 +9,9 @@ import androidx.room.Relation;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.data.entities.Score;
 
+/**
+ * A relation that combines a single score with the member who earned that score.
+ */
 public class ScoreWithMemberDetails implements Comparable<ScoreWithMemberDetails>, Parcelable {
     @Embedded
     public Score score;

@@ -15,6 +15,10 @@ import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A relation that combines a single board game with assigned categories and a list of the play
+ * modes the board game can be played in.
+ */
 public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
     @Embedded
     public BoardGameWithBgCategories bgWithBgCategories;
@@ -43,20 +47,11 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
     public BoardGame getBoardGame() { return bgWithBgCategories.getBoardGame(); }
     public List<BgCategory> getBgCategories() { return bgWithBgCategories.getBgCategories(); }
 
-    public void addPlayMode(PlayMode playMode) {
-        if (!playModes.contains(playMode)) {
-            playModes.add(playMode);
-        }
-    }
-
-    public PlayMode getPlayMode(int index) {
-        return playModes.get(index);
-    }
-
-    public void removePlayMode(PlayMode playMode) {
-        playModes.remove(playMode);
-    }
-
+    /**
+     * Creates a list of PlayModeEnum's from the list of PlayMode objects and returns said list of
+     * enums.
+     * @return
+     */
     public List<PlayMode.PlayModeEnum> getPlayModeEnums() {
         List<PlayMode.PlayModeEnum> playModeEnums = new ArrayList<>();
         for (PlayMode playMode : playModes) {
@@ -94,6 +89,10 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
 
         StringBuilder sb = new StringBuilder();
 
+        //TODO look into how to change this so I can pull strings from the strings file. I don't
+        // want this class holding context, but I don't know how else to deal with this other than
+        // move the enums and provide them with specific strings or move this method somewhere
+        // else. Such as do it in the code somewhere.
         if (playModeEnums.contains(PlayMode.PlayModeEnum.COMPETITIVE)) {
             sb.append("Competitive");
         }
@@ -113,16 +112,6 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
         }
 
         return sb.toString();
-    }
-
-    public static BoardGameWithBgCategoriesAndPlayModes createUsingPlayModeEnumList(BoardGameWithBgCategories bgWithBgCategories,
-                                                                                    List<PlayMode.PlayModeEnum> playModeEnums) {
-        List<PlayMode> playModes = new ArrayList<>();
-        for (PlayMode.PlayModeEnum playModeEnum :playModeEnums) {
-            playModes.add(new PlayMode(bgWithBgCategories.getBoardGame().getId(), playModeEnum));
-        }
-
-        return new BoardGameWithBgCategoriesAndPlayModes(bgWithBgCategories, playModes);
     }
 
     @Override
@@ -170,5 +159,15 @@ public class BoardGameWithBgCategoriesAndPlayModes implements Parcelable {
     @Override
     public String toString() {
         return getBoardGame().getBgName();
+    }
+
+    public static BoardGameWithBgCategoriesAndPlayModes createUsingPlayModeEnumList(BoardGameWithBgCategories bgWithBgCategories,
+                                                                                    List<PlayMode.PlayModeEnum> playModeEnums) {
+        List<PlayMode> playModes = new ArrayList<>();
+        for (PlayMode.PlayModeEnum playModeEnum :playModeEnums) {
+            playModes.add(new PlayMode(bgWithBgCategories.getBoardGame().getId(), playModeEnum));
+        }
+
+        return new BoardGameWithBgCategoriesAndPlayModes(bgWithBgCategories, playModes);
     }
 }

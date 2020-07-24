@@ -14,9 +14,6 @@ import androidx.room.PrimaryKey;
 /**
  * Represents a skill-based board game category such as Strategy, Bluffing, Random Luck, Ameritrash,
  * Eurotrash, etc. This is in contrast to thematic categories, such as Zombies, Post-apocalyptic, etc.
- *
- * A fabricated integer id primary key is used instead of the category name because the category name
- * can be readily edited and is thus not very stable.
  */
 @Entity(tableName = "bg_categories", indices = {@Index(value = "category_name",
         unique = true)})
@@ -36,13 +33,6 @@ public class BgCategory implements Parcelable {
         this.categoryName = categoryName;
     }
 
-    /**
-     * Simple constructor for bg categories that takes a name for the category.
-     *
-     * The category's id is set to 0 so Room will autogenerate a value for it when adding it to the
-     * database.
-     * @param categoryName the name of the category
-     */
     public BgCategory(String categoryName) {
         this(0, categoryName);
     }
@@ -87,11 +77,6 @@ public class BgCategory implements Parcelable {
         }
     };
 
-    /**
-     * A BgCategory is equal to another BgCategory if they have the same category name.
-     * @param obj
-     * @return
-     */
     @Override
     public boolean equals(@Nullable Object obj) {
         if (obj == null || obj.getClass() != this.getClass()) {
@@ -103,10 +88,6 @@ public class BgCategory implements Parcelable {
         return other.getCategoryName().equals(this.getCategoryName());
     }
 
-    /**
-     * Returns the bg category's name.
-     * @return returns bg category's name string.
-     */
     @NonNull
     @Override
     public String toString() {

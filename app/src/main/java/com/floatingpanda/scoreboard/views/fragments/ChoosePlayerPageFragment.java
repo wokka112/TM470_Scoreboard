@@ -21,16 +21,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.ChoosePlayersListAdapter;
 import com.floatingpanda.scoreboard.data.entities.Member;
-import com.floatingpanda.scoreboard.interfaces.ChoosePlayerInterface;
+import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
 import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerInterface {
+public class ChoosePlayerPageFragment extends Fragment implements SelectedMemberInterface {
 
     private Spinner spinner;
-    private TextView teamTextView;
+    private TextView teamOutputTextView;
 
     private ChoosePlayerSharedViewModel choosePlayerSharedViewModel;
 
@@ -49,11 +49,11 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
         View rootView = inflater.inflate(R.layout.recyclerview_layout_choose_players, container, false);
 
         spinner = rootView.findViewById(R.id.viewpager_layout_position_spinner);
-        teamTextView = rootView.findViewById(R.id.viewpager_layout_team_textview);
+        teamOutputTextView = rootView.findViewById(R.id.viewpager_layout_team_output_textview);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.choose_players_recyclerview);
 
-        final ChoosePlayersListAdapter adapter = new ChoosePlayersListAdapter(getContext(), this, teamNo);
+        final ChoosePlayersListAdapter adapter = new ChoosePlayersListAdapter(getContext(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -68,7 +68,7 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
 
         int initialPosition = teamNo;
         choosePlayerSharedViewModel.createEmptyTeam(teamNo, initialPosition);
-        teamTextView.setText("Team " + teamNo);
+        teamOutputTextView.setText(Integer.toString(teamNo));
 
         spinner.setAdapter(createPositionSpinnerAdapter());
         spinner.setDropDownWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -95,18 +95,22 @@ public class ChoosePlayerPageFragment extends Fragment implements ChoosePlayerIn
         return rootView;
     }
 
+    @Override
+    public void addSelectedMember(Member member) {
+        addPlayerToTeam(member);
+    }
+
+    @Override
+    public void removeSelectedMember(Member member) {
+        removePlayerFromTeam(member);
+    }
+
     public void addPlayerToTeam(Member member) {
-        //Log.w("ChoosePlayerPageFrag.java", "Adding member to team: " + member);
         choosePlayerSharedViewModel.addPlayerToTeam(teamNo, member);
     }
 
     public void removePlayerFromTeam(Member member) {
-        //Log.w("ChoosePlayerPageFrag.java", "Removing member from team: " + member);
         choosePlayerSharedViewModel.removePlayerFromTeam(teamNo, member);
-    }
-
-    public void updatePosition() {
-
     }
 
     private ArrayAdapter<Integer> createPositionSpinnerAdapter() {

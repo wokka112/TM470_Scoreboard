@@ -21,6 +21,7 @@ import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.GameRecordDet
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 import com.floatingpanda.scoreboard.viewmodels.GameRecordViewModel;
 import com.floatingpanda.scoreboard.views.activities.GameRecordActivity;
 import com.floatingpanda.scoreboard.views.activities.MemberActivity;
@@ -113,32 +114,31 @@ public class GameRecordScoresListFragment extends Fragment {
         String playModeString = getPlayModeString(gameRecord.getPlayModePlayed());
         playModeTextView.setText(playModeString);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(gameRecord.getDateTime());
+        DateStringCreator dateStringCreator = new DateStringCreator(gameRecord.getDateTime());
 
-        String date = getDateString(calendar);
+        String date = dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getEnglishMonthNameString() + " " + dateStringCreator.getYearString();
         dateTextView.setText(date);
 
-        String time = getTimeString(calendar);
+        String time = dateStringCreator.getHourOfDayString() + ":" + dateStringCreator.getMinuteString();
         timeTextView.setText(time);
 
         if (gameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
             wonLostTextView.setVisibility(View.GONE);
         } else {
-            if (gameRecord.getWon()) {
-                wonLostTextView.setText("WON");
-            } else {
-                wonLostTextView.setText("LOST");
+            String wonLostString = getString(R.string.won);
+            if (!gameRecord.getWon()) {
+                wonLostString = getString(R.string.lost);
             }
+            wonLostTextView.setText(wonLostString);
         }
 
         difficultyOutputTextView.setText(Integer.toString(gameRecord.getDifficulty()));
 
+        String playerCountHeaderText = getString(R.string.players_colon_header);
         if (gameRecord.getTeams()) {
-            playerCountHeaderTextView.setText("Teams:");
-        } else {
-            playerCountHeaderTextView.setText("Players:");
+            playerCountHeaderText = getString(R.string.teams_colon_header);
         }
+        playerCountHeaderTextView.setText(playerCountHeaderText);
 
         playerCountOutputTextView.setText(Integer.toString(gameRecord.getNoOfTeams()));
     }
@@ -163,58 +163,13 @@ public class GameRecordScoresListFragment extends Fragment {
     private String getPlayModeString(PlayMode.PlayModeEnum playModeEnum) {
         switch (playModeEnum) {
             case COMPETITIVE:
-                return "Competitive";
+                return getString(R.string.competitive);
             case COOPERATIVE:
-                return "Cooperative";
+                return getString(R.string.cooperative);
             case SOLITAIRE:
-                return "Solitaire";
+                return getString(R.string.solitaire);
             default:
-                return "PLAYMODE ERROR";
+                return getString(R.string.play_mode_error);
         }
-    }
-
-    private String getDateString(Calendar calendar) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(calendar.get(Calendar.DAY_OF_MONTH) + " ");
-        sb.append(getMonthString(calendar) + " ");
-        sb.append(calendar.get(Calendar.YEAR));
-
-        return sb.toString();
-    }
-
-    private String getMonthString(Calendar calendar) {
-        switch (calendar.get(Calendar.MONTH)) {
-            case Calendar.JANUARY:
-                return "January";
-            case Calendar.FEBRUARY:
-                return "February";
-            case Calendar.MARCH:
-                return "March";
-            case Calendar.APRIL:
-                return "April";
-            case Calendar.MAY:
-                return "May";
-            case Calendar.JUNE:
-                return "June";
-            case Calendar.JULY:
-                return "July";
-            case Calendar.AUGUST:
-                return "August";
-            case Calendar.SEPTEMBER:
-                return "September";
-            case Calendar.OCTOBER:
-                return "October";
-            case Calendar.NOVEMBER:
-                return "November";
-            case Calendar.DECEMBER:
-                return "December";
-            default:
-                return "MONTH ERROR";
-        }
-    }
-
-    private String getTimeString(Calendar calendar) {
-        return calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE);
     }
 }

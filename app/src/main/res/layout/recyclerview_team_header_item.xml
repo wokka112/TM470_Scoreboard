@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--TODO maybe turn this into a layout with 2 textviews, one for the output and one to read team-->
 <TextView android:id="@+id/recyclerview_linear_team_header_item"
     android:layout_height="wrap_content"
     android:layout_marginLeft="16dp"

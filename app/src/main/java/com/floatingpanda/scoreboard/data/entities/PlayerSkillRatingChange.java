@@ -10,6 +10,17 @@ import androidx.room.PrimaryKey;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Represents the skill rating changes in a specific board game category earned by a player in a
+ * game. The player the skill rating changes apply to, and the game it was earned in, are accessible
+ * through the players table (Player class), which is linked to via the attribute playerId, a
+ * foreign key to the players table. The category the skill rating has been earned in is stored in
+ * the bg_categories table (BgCategory class) and linked to via the categoryName attribute, which is
+ * a foreign key to the bg_categories table.
+ *
+ * The pre-game rating and the rating change from the game are both stored, and the new, post-game
+ * rating can be derived from these via the getNewRating() method.
+ */
 @Entity(tableName = "player_skill_rating_changes",
         foreignKeys = {@ForeignKey(entity = Player.class,
                 parentColumns = "player_id",
@@ -18,7 +29,7 @@ import java.math.RoundingMode;
                 @ForeignKey(entity = BgCategory.class,
                         parentColumns = "category_name",
                         childColumns = "category_name",
-                        onDelete = ForeignKey.SET_NULL,
+                        onDelete = ForeignKey.CASCADE,
                         onUpdate = ForeignKey.CASCADE)})
 public class PlayerSkillRatingChange implements Comparable<PlayerSkillRatingChange>{
 
@@ -64,6 +75,10 @@ public class PlayerSkillRatingChange implements Comparable<PlayerSkillRatingChan
 
     public double getNewRating() { return oldRating + ratingChange; }
 
+    /**
+     * Returns the new rating rounded up to 2 decimal places.
+     * @return
+     */
     public double get2DpRoundedNewRating() {
         double newRating = getNewRating();
         BigDecimal bigDecimal = new BigDecimal(newRating).setScale(2, RoundingMode.HALF_UP);

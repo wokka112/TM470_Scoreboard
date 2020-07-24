@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="@id/next_button"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginLeft="16dp"
-            android:text="Back"/>
+            android:text="@string/back"/>
 
         <Button
             android:id="@+id/next_button"
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:text="Next Team"/>
+            android:text="@string/next_team"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

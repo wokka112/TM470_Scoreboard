@@ -8,6 +8,13 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a player in a game record. Players belong to teams, even if it is only a team of one.
+ * This is a simple table displaying many-to-many relationships between player teams, and through
+ * them game records and members. The members are linked to from the members table (Member class)
+ * via the memberNickname attribute, and the player team is linked to from the player_teams table
+ * (PlayerTeam class) via the playerTeamId attribute.
+ */
 @Entity(tableName = "players", indices = {@Index(value = {"player_team_id", "member_nickname"},
         unique = true)},
         foreignKeys = {@ForeignKey(entity = PlayerTeam.class,
@@ -17,6 +24,7 @@ import androidx.room.PrimaryKey;
                 @ForeignKey(entity = Member.class,
                 parentColumns = "nickname",
                 childColumns = "member_nickname",
+                onUpdate = ForeignKey.CASCADE,
                 onDelete = ForeignKey.SET_NULL)})
 public class Player {
 

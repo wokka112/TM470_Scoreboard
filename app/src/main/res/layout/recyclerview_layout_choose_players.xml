@@ -5,15 +5,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Make top part (textviews and spinner above recyclerview) have a different background colour? -->
+    <!--TODO Make top part (textviews and spinner above recyclerview) have a different background colour? -->
     <TextView
-        android:id="@+id/viewpager_layout_team_textview"
+        android:id="@+id/viewpage_layout_team_header_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="@id/viewpager_layout_position_textview"
         android:layout_marginLeft="16dp"
+        android:text="@string/team_header"/>
+
+    <TextView
+        android:id="@+id/viewpager_layout_team_output_textview"
+        app:layout_constraintLeft_toRightOf="@id/viewpage_layout_team_header_textview"
+        app:layout_constraintTop_toTopOf="@id/viewpage_layout_team_header_textview"
+        android:layout_marginLeft="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Team 1"/>
+        tools:text="1"/>
 
     <TextView
         android:id="@+id/viewpager_layout_position_textview"
@@ -22,7 +31,7 @@
         app:layout_constraintRight_toLeftOf="@id/viewpager_layout_position_spinner"
         app:layout_constraintTop_toTopOf="@id/viewpager_layout_position_spinner"
         app:layout_constraintBottom_toBottomOf="@id/viewpager_layout_position_spinner"
-        android:text="Position"
+        android:text="@string/position_header"
         android:layout_marginRight="4dp"/>
 
     <Spinner

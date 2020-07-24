@@ -14,7 +14,8 @@ import androidx.room.PrimaryKey;
 import java.util.Date;
 
 /**
- * Represents a member of board game groups. The member may belong to zero, one or more groups.
+ * Represents a member of a board game group, which may belong to zero, one or more groups. The
+ * groups a member is a part of are stored in the group_members table (GroupMember class).
  */
 @Entity(tableName = "members", indices = {@Index(value = "nickname",
         unique = true)})

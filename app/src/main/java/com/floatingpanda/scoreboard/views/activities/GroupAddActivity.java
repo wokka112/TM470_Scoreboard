@@ -16,6 +16,9 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
+/**
+ * View for adding groups to the database.
+ **/
 public class GroupAddActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
@@ -109,6 +112,11 @@ public class GroupAddActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

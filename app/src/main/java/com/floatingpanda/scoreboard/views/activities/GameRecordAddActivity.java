@@ -44,6 +44,10 @@ import java.util.List;
 
 //TODO refactor to follow MVVM architecture. Put most logic into GameRecordAddViewModel.
 // May need to switch to using data binding in XML to support MVVM architecture here.
+
+/**
+ * View for adding game records to the database.
+ */
 public class GameRecordAddActivity extends AppCompatActivity {
 
     private final int CHOOSE_PLAYERS_REQUEST_CODE = 1;
@@ -180,13 +184,11 @@ public class GameRecordAddActivity extends AppCompatActivity {
         teamsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                String playerCountText = getString(R.string.players_colon_header);
                 if (checkedId == teamsRadioButton.getId()) {
-                    playerCountTextView.setText("Teams:");
+                    playerCountText = getString(R.string.teams_colon_header);
                 }
-
-                if (checkedId == noTeamsRadioButton.getId()) {
-                    playerCountTextView.setText("Players:");
-                }
+                playerCountTextView.setText(playerCountText);
             }
         });
     }
@@ -216,6 +218,11 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Returns a new game record with details from the view's edittexts and an id of 0, ready for
+     * insertion into the database.
+     * @return
+     */
     private GameRecord createGameRecord() {
         int difficulty = Integer.parseInt(difficultyTextView.getText().toString());
         Date date = calendar.getTime();
@@ -286,12 +293,16 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the views to what should be interactable for competitive games.
+     */
     private void setToCompetitive() {
         //Enable everything
         enableTeamsRadioGroup();
         makePlayerCountEditTextEditable();
 
         // Set teams radio button to correct one based on which is clickable
+        // This is based on what the board game selected allows - teams only, no teams, either.
         if (!teamsRadioButton.isClickable()) {
             noTeamsRadioButton.setChecked(true);
         } else if (!noTeamsRadioButton.isClickable()) {
@@ -305,6 +316,9 @@ public class GameRecordAddActivity extends AppCompatActivity {
         hideWinLoseRadioGroup();
     }
 
+    /**
+     * Sets the views to what should be interactable for cooperative games.
+     */
     private void setToCooperative() {
         //Check teams as chosen
         teamsRadioButton.setChecked(true);
@@ -320,6 +334,9 @@ public class GameRecordAddActivity extends AppCompatActivity {
         displayWinLoseRadioGroup();
     }
 
+    /**
+     * Sets the views to what should be interactable for solitaire games.
+     */
     private void setToSolitaire() {
         //Check no teams as chosen
         noTeamsRadioButton.setChecked(true);
@@ -333,6 +350,11 @@ public class GameRecordAddActivity extends AppCompatActivity {
         displayWinLoseRadioGroup();
     }
 
+    /**
+     * Sets the potential play modes - competitive, cooperative and solitaire - that can be chosen
+     * by the user, and makes their relevant radio buttons interactable.
+     * @param potentialPlayModes
+     */
     private void setPotentialPlayModes(List<PlayMode.PlayModeEnum> potentialPlayModes) {
         playModeRadioGroup.clearCheck();
         disablePlaymodeRadioButtons();
@@ -353,6 +375,11 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the potential team settings that can be selected by the user - no teams or teams - and
+     * makes their relevant radio buttons interactable.
+     * @param potentialTeamSettings
+     */
     private void setPotentialTeamSettings(BoardGame.TeamOption potentialTeamSettings) {
         teamsRadioGroup.clearCheck();
         disableTeamsRadioButton();
@@ -377,6 +404,11 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Returns a playmode enum based on which playmode button is selected - competitive, cooperative
+     * or solitaire.
+     * @return
+     */
     private PlayMode.PlayModeEnum getPlayModePlayed() {
         switch (playModeRadioGroup.getCheckedRadioButtonId()) {
             case R.id.add_game_record_radio_button_competitive:
@@ -390,6 +422,13 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Returns true or false depending on whether the no teams or the teams button is checked. If
+     * teams is checked, returns true. If no teams is checked returns false.
+     *
+     * In the case there is an error and neither are checked, returns false and logs an error message.
+     * @return
+     */
     private boolean getTeams() {
         switch (teamsRadioGroup.getCheckedRadioButtonId()) {
             case R.id.add_game_record_radio_button_teams:
@@ -397,11 +436,18 @@ public class GameRecordAddActivity extends AppCompatActivity {
             case R.id.add_game_record_radio_button_no_teams:
                 return false;
             default:
-                Log.w("AddGameRecordAct.java", "Failed to return proper result when getting teams.");
+                Log.e("AddGameRecordAct.java", "Failed to return proper result when getting teams.");
                 return false;
         }
     }
 
+    /**
+     * Returns a boolean representing whether the team in a cooperative or solitaire game lost or
+     * won. If the team won, returns true. If the team lost, returns false.
+     *
+     * If neither option is selected, which is possible, returns false and logs a warning.
+     * @return
+     */
     private boolean getWon() {
         switch (winLoseRadioGroup.getCheckedRadioButtonId()) {
             case R.id.add_game_record_radio_button_won:
@@ -506,6 +552,10 @@ public class GameRecordAddActivity extends AppCompatActivity {
         teamsRadioGroup.setAlpha(0.5f);
     }
 
+    /**
+     * Used for picking dates in the date edit text, which brings up a date picker dialog with this
+     * listener attached when tapped.
+     */
     DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -517,6 +567,10 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Used for picking times in the time edit text, which brings up a time picker dialog with this
+     * listener attached when tapped.
+     */
     TimePickerDialog.OnTimeSetListener timeListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -527,6 +581,11 @@ public class GameRecordAddActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

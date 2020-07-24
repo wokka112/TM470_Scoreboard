@@ -12,6 +12,13 @@ import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.views.fragments.GroupSkillRatingListFragment;
 import com.floatingpanda.scoreboard.views.fragments.ScoreWinnerListFragment;
 
+//TODO update fragments so they provide empty argument constructors. See favourited thing talking about
+// solution for it. This will stop the crash when turning horizontal.
+
+/**
+ * Viewpager adapter for group activity which provides 5 fragments - game records, monthly scores,
+ * group members, skill ratings and group details.
+ */
 public class GroupActivityAdapter extends FragmentStateAdapter {
 
     private final int PAGE_COUNT = 5;

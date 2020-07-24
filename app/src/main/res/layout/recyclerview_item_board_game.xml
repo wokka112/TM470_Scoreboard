@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="88dp">
+    android:layout_height="88dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
         android:id="@+id/bg_image"
@@ -21,7 +22,8 @@
         app:layout_constraintTop_toTopOf="@id/bg_image"
         app:layout_constraintLeft_toRightOf="@id/bg_image"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="11dp"/>
+        android:layout_marginBottom="11dp"
+        tools:text="Dawn of Madness"/>
 
     <TextView
         android:id="@+id/bg_difficulty_header"
@@ -29,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
         android:layout_marginTop="22dp"
-        android:text="Difficulty:"
+        android:text="@string/difficulty_colon_header"
         app:layout_constraintLeft_toRightOf="@id/bg_image"
         app:layout_constraintTop_toTopOf="@id/bg_image" />
 
@@ -39,7 +41,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         app:layout_constraintLeft_toRightOf="@id/bg_difficulty_header"
-        app:layout_constraintTop_toTopOf="@id/bg_difficulty_header" />
+        app:layout_constraintTop_toTopOf="@id/bg_difficulty_header"
+        tools:text="4"/>
 
     <TextView
         android:id="@+id/bg_players_header"
@@ -48,7 +51,7 @@
         app:layout_constraintLeft_toRightOf="@id/bg_difficulty_output"
         app:layout_constraintTop_toTopOf="@id/bg_difficulty_output"
         android:layout_marginLeft="30dp"
-        android:text="Players:"/>
+        android:text="@string/players_colon_header"/>
 
     <TextView
         android:id="@+id/bg_players_output"
@@ -56,17 +59,19 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/bg_players_header"
         app:layout_constraintTop_toTopOf="@id/bg_players_header"
-        android:layout_marginLeft="30dp"/>
+        android:layout_marginLeft="30dp"
+        tools:text="3 - 8"/>
 
     <TextView
         android:id="@+id/bg_categories_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:text="Categories:"
+        android:text="@string/categories_colon_header"
         app:layout_constraintLeft_toLeftOf="@id/bg_difficulty_header"
         app:layout_constraintTop_toBottomOf="@id/bg_difficulty_header" />
 
+    <!--TODO make the text wrap round so it doesn't go offscreen -->
     <TextView
         android:id="@+id/bg_categories_output"
         android:layout_width="wrap_content"
@@ -75,5 +80,6 @@
         android:layout_marginRight="8dp"
         app:layout_constraintLeft_toLeftOf="@id/bg_difficulty_output"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/bg_categories_header" />
+        app:layout_constraintTop_toTopOf="@id/bg_categories_header"
+        tools:text="Strategy, Luck, Gambling + 2 more"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

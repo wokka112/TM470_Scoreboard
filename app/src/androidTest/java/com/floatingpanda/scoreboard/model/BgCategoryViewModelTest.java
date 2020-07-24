@@ -2,6 +2,7 @@ package com.floatingpanda.scoreboard.model;
 
 import android.app.Activity;
 import android.content.Context;
+import android.widget.EditText;
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
@@ -140,14 +141,19 @@ public class BgCategoryViewModelTest {
 
     @Test
     public void testAddActivityInputsValid() {
+        Context context = ApplicationProvider.getApplicationContext();
+        EditText categoryEditText = new EditText(context);
+
         //Test Case 1: Valid input
         String categoryName = "Name";
-        boolean isValid = bgCategoryViewModel.addActivityInputsValid(activity, categoryName, true);
+        categoryEditText.setText(categoryName);
+        boolean isValid = bgCategoryViewModel.addActivityInputsValid(categoryEditText, true);
         assertTrue(isValid);
 
         //Test Case 2: Invalid empty String input
         categoryName = "";
-        isValid = bgCategoryViewModel.addActivityInputsValid(activity, categoryName, true);
+        categoryEditText.setText(categoryName);
+        isValid = bgCategoryViewModel.addActivityInputsValid(categoryEditText, true);
         assertFalse(isValid);
 
         //Test Case 3: Invalid String input that already exists in category database
@@ -156,27 +162,34 @@ public class BgCategoryViewModelTest {
         assertTrue(bgCategory != null);
 
         categoryName = TestData.BG_CATEGORY_1.getCategoryName();
-        isValid = bgCategoryViewModel.addActivityInputsValid(activity, categoryName, true);
+        categoryEditText.setText(categoryName);
+        isValid = bgCategoryViewModel.addActivityInputsValid(categoryEditText, true);
         assertFalse(isValid);
     }
 
     @Test
     public void testEditActivityInputsValid() {
+        Context context = ApplicationProvider.getApplicationContext();
+        EditText categoryEditText = new EditText(context);
+
         //Test Case 1: Valid input - originalCategoryName and categoryName are same.
         String originalCategoryName = "Original";
-        String categoryName = "Original";
-        boolean isValid = bgCategoryViewModel.editActivityInputsValid(activity, originalCategoryName, categoryName, true);
+        String editedCategoryName = "Original";
+        categoryEditText.setText(editedCategoryName);
+        boolean isValid = bgCategoryViewModel.editActivityInputsValid(originalCategoryName, categoryEditText, true);
         assertTrue(isValid);
 
         //Test Case 2: Valid input - originalCategoryName and categoryName are different, and categoryName is valid.
-        categoryName = "Valid name";
-        isValid = bgCategoryViewModel.editActivityInputsValid(activity, originalCategoryName, categoryName, true);
+        editedCategoryName = "Valid name";
+        categoryEditText.setText(editedCategoryName);
+        isValid = bgCategoryViewModel.editActivityInputsValid(originalCategoryName, categoryEditText, true);
         assertTrue(isValid);
 
         //Test Case 3: Invalid input - originalCategoryName and categoryName are different, and categoryName is an
         // empty String.
-        categoryName = "";
-        isValid = bgCategoryViewModel.editActivityInputsValid(activity, originalCategoryName, categoryName, true);
+        editedCategoryName = "";
+        categoryEditText.setText(editedCategoryName);
+        isValid = bgCategoryViewModel.editActivityInputsValid(originalCategoryName, categoryEditText, true);
         assertFalse(isValid);
 
         //Test Case 4: Invalid input - originalCategoryName and categoryName are different, and categoryName is a
@@ -185,8 +198,9 @@ public class BgCategoryViewModelTest {
         BgCategory bgCategory = bgCategoryDao.findNonLiveDataByName(TestData.BG_CATEGORY_1.getCategoryName());
         assertTrue(bgCategory != null);
 
-        categoryName = TestData.BG_CATEGORY_1.getCategoryName();
-        isValid = bgCategoryViewModel.editActivityInputsValid(activity, originalCategoryName, categoryName, true);
+        editedCategoryName = TestData.BG_CATEGORY_1.getCategoryName();
+        categoryEditText.setText(editedCategoryName);
+        isValid = bgCategoryViewModel.editActivityInputsValid(originalCategoryName, categoryEditText, true);
         assertFalse(isValid);
     }
 }

@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="@id/group_image"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="22dp"
-        android:text="Group Name:"/>
+        android:text="@string/group_name_colon_header"/>
 
     <TextView
         android:id="@+id/group_name_output"

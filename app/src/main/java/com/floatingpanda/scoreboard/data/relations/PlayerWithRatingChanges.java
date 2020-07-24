@@ -11,6 +11,10 @@ import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A relation that combines a single player with a list of the category skill rating changes they
+ * earned from playing in the game record they were a player in.
+ */
 public class PlayerWithRatingChanges {
     @Embedded
     public Player player;

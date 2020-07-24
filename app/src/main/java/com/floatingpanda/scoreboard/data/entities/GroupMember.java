@@ -7,6 +7,12 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 
+/**
+ * Represents group members, i.e. members in the app who belong to a group. This is a simple table
+ * that holds many-to-many relationships between groups and members, representing which members are
+ * parts of which groups. The group is linked to via the groupId attribute, which is a foreign key.
+ * The members are linked to via the memberId attribute, which is a foreign key.
+ */
 @Entity(tableName = "group_members", primaryKeys = {"group_id", "member_id"},
         foreignKeys = {@ForeignKey(entity = Group.class,
                 parentColumns = "group_id",

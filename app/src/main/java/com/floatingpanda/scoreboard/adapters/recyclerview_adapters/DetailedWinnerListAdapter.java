@@ -13,12 +13,26 @@ import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 
 import java.util.List;
 
+/**
+ * This adapter takes a list of scores with member details (ScoreWithMemberDetail) objects and
+ * displays the members, their scores, and their places relative to one another based on said scores.
+ *
+ * So 3 players with 100, 75, and 50 points, respectively, will be displayed as
+ * 1st Place name 100pts
+ * 2nd Place name 75pts
+ * 3rd Place name 50pts
+ *
+ * Precondition: the list of scores with member details must be ordered into descending order based
+ * on score.
+ */
 public class DetailedWinnerListAdapter extends RecyclerView.Adapter<DetailedWinnerListAdapter.DetailedWinnerViewHolder> {
+    private Context context;
     private final LayoutInflater inflater;
     private List<ScoreWithMemberDetails> scoresWithMemberDetails;
     private int place;
 
     public DetailedWinnerListAdapter(Context context) {
+        this.context = context;
         inflater = LayoutInflater.from(context);
         place = 0;
     }
@@ -37,27 +51,12 @@ public class DetailedWinnerListAdapter extends RecyclerView.Adapter<DetailedWinn
             ScoreWithMemberDetails current = scoresWithMemberDetails.get(position);
 
             if (position > 0 && current.getScore().getScore() == scoresWithMemberDetails.get(position - 1).getScore().getScore()) {
-                place = place;
+                //Nothing to do here.
             } else {
                 place = position + 1;
             }
 
-            String placeString;
-            switch (place) {
-                case 1:
-                    placeString = place + "st Place";
-                    break;
-                case 2:
-                    placeString = place + "nd Place";
-                    break;
-                case 3:
-                    placeString = place + "rd Place";
-                    break;
-                default:
-                    placeString = place + "th Place";
-                    break;
-            }
-
+            String placeString = createPlaceString(place);
             holder.placeTextView.setText(placeString);
             holder.nameTextView.setText(current.getMember().getNickname());
             holder.scoreTextView.setText(Integer.toString(current.getScore().getScore()));
@@ -66,9 +65,43 @@ public class DetailedWinnerListAdapter extends RecyclerView.Adapter<DetailedWinn
         }
     }
 
+    /**
+     * Sets the scores and their member details (i.e. the details about the member who attained the
+     * score) from which data is drawn to make a list of scores, members and the relative places
+     * they have placed based on their scores.
+     *
+     * Must be called before adapter will display anything.
+     * @param scoresWithMemberDetails
+     */
     public void setScoresWithMemberDetails(List<ScoreWithMemberDetails> scoresWithMemberDetails) {
         this.scoresWithMemberDetails = scoresWithMemberDetails;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Takes a finishing place integer (1, 2, 3, 4, etc.) and returns its String representation
+     * (1st Place, 2nd Place, 3rd Place, 4th Place, etc.).
+     * @param place the finishing place of a player or team
+     * @return
+     */
+    private String createPlaceString(int place) {
+        String placeString;
+        switch (place) {
+            case 1:
+                placeString = context.getString(R.string.first_place_header);
+                break;
+            case 2:
+                placeString = context.getString(R.string.second_place_header);
+                break;
+            case 3:
+                placeString = context.getString(R.string.third_place_header);
+                break;
+            default:
+                placeString = Integer.toString(place) + context.getString(R.string.generic_place_ending);
+                break;
+        }
+
+        return placeString;
     }
 
     @Override

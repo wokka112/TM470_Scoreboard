@@ -8,6 +8,13 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a set of scores for a month for a group. The group the monthly scores are for is stored
+ * in the groups table (Group class) and linked to via the groupId attribute, which is a foreign key
+ * to the groups table. The scores scored by the group members for the month, including the members
+ * who have scored them, are stored in the scores table (Score class) and linked to via a foreign
+ * key in the scores table pointing to this table.
+ */
 @Entity(tableName = "group_monthly_scores", indices = {@Index(value = {"group_id", "year", "quarter", "month"},
         unique = true)},
         foreignKeys = {@ForeignKey(entity = Group.class,

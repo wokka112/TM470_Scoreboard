@@ -10,6 +10,11 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 
+/**
+ * Represents the play modes - competitive, cooperative and solitaire - a board game can be played
+ * in. The board game the play modes are viable for is stored in the board_games table (BoardGame
+ * class) and linked to via the bgId attribute, which is a foreign key to the board_games table.
+ */
 @Entity(tableName = "play_modes", primaryKeys = {"bg_id", "play_mode_enum"},
         foreignKeys = {@ForeignKey(entity = BoardGame.class,
                 parentColumns = "bg_id",

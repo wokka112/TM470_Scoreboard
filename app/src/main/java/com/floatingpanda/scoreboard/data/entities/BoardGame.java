@@ -11,6 +11,11 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a board game. Board games have board game categories, which are shown as relations
+ * in the assigned_categories table (AssignedCategory class), and play modes which are shown as
+ * foreign keys in the play_modes table (PlayMode class).
+ */
 @Entity(tableName = "boardgames", indices = {@Index(value = "bg_name",
         unique = true)})
 public class BoardGame implements Parcelable {
@@ -102,7 +107,12 @@ public class BoardGame implements Parcelable {
     public void setBgName(String bgName) { this.bgName = bgName; }
 
     public int getDifficulty() { return this.difficulty; }
-    //Precondition: difficulty is between 1 - 5 (inclusive).
+
+    /**
+     * If difficulty is less than 1, sets this.difficulty to 1.
+     * If difficulty is greater than 5, sets this.difficulty to 5.
+     * @param difficulty
+     */
     public void setDifficulty(int difficulty) {
         if (difficulty < 1) {
             this.difficulty = 1;
@@ -114,8 +124,13 @@ public class BoardGame implements Parcelable {
     }
 
     public int getMinPlayers() { return this.minPlayers; }
+
+    /**
+     * If minPlayers is less than 1, sets this.minPlayers to 1.
+     * @param minPlayers
+     */
     public void setMinPlayers(int minPlayers) {
-        if (minPlayers < 0 ) {
+        if (minPlayers < 1 ) {
             this.minPlayers = 1;
         } else {
             this.minPlayers = minPlayers;

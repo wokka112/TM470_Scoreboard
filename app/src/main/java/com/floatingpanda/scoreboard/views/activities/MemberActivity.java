@@ -24,6 +24,9 @@ import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 //TODO update layout for member so it reflects the edit/add activity, with large image at top followed by nickname and stuff below.
 // or maybe have nickname at very top centre with image below and everything below that?
 
+/**
+ * View for viewing a member from the database.
+ */
 public class MemberActivity extends AppCompatActivity {
 
     private final int EDIT_MEMBER_REQUEST_CODE = 1;
@@ -87,9 +90,6 @@ public class MemberActivity extends AppCompatActivity {
 
         this.member = member;
     }
-
-    // Postconditions: - The text and imageviews in this member activity are updated to match the member
-    //                    passed as a parameter.
     /**
      * Sets the views in the MemberActivity to the details of member.
      *
@@ -117,8 +117,6 @@ public class MemberActivity extends AppCompatActivity {
         imageView.setImageResource(R.drawable.ic_launcher_foreground);
     }
 
-    // Preconditions: - member exists in database.
-    // Postconditions: - Member edit activity is started to edit object in the database.
     /**
      * Starts the MemberEditActivity activity to edit member.
      * @param member a member
@@ -129,11 +127,6 @@ public class MemberActivity extends AppCompatActivity {
         startActivityForResult(intent, EDIT_MEMBER_REQUEST_CODE);
     }
 
-    // Preconditions: - member exists in the database.
-    // Postconditions: - A popup is displayed warning the user of what deleting the member will result in
-    //                      and offering the user the options to delete the member or cancel the deletion.
-    //                 - if user hits delete on the delete popup, the Member is removed from the database.
-    //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
     /**
      * Displays a popup informing the user of what deleting a Member results in and warning them
      * that it is irreversible. If the user presses the "Delete" button on the popup, then member
@@ -166,18 +159,10 @@ public class MemberActivity extends AppCompatActivity {
                 .show();
     }
 
-    // Precondition: - member should exist in the database.
-    // Postconditions: - member will no longer exist in the database.
-    //                 - group_members tables with bgCategory in will have been deleted.
-    //                 - category_skill_rating, group_category_skill_rating and board_game_skill_rating
-    //                    tables for this member will have been deleted.
-    //                 - monthly_scores, quarterly_scores and yearly_scores tables for this member will
-    //                    have been deleted.
-    //                 - game_records which this member is registered on will have the member turned into an
-    //                    anonymous member (i.e. the record will no longer have a foreign key linking to the
-    //                    member's table in the members tables).
     /**
-     * Deletes member from the database.
+     * Deletes member from the database. This results in entries related to member being deleted
+     * from the group members, skill ratings and group monthly scores tables. It also results in the
+     * member's nickname in the game records table being turned to null.
      * @param member a member that exists in the database
      */
     private void deleteMember(Member member) {
@@ -195,6 +180,11 @@ public class MemberActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

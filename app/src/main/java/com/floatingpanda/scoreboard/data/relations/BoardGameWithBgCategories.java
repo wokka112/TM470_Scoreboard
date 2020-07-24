@@ -14,6 +14,10 @@ import com.floatingpanda.scoreboard.data.entities.BoardGame;
 
 import java.util.List;
 
+/**
+ * A relation that combines a single board game drawn from the database with a list of board game
+ * categories that are applicable for said board game.
+ */
 public class BoardGameWithBgCategories implements Parcelable {
     @Embedded
     public BoardGame boardGame;
@@ -41,35 +45,6 @@ public class BoardGameWithBgCategories implements Parcelable {
     public void setBgCategories(List<BgCategory> bgCategories) { this.bgCategories = bgCategories; }
 
     /**
-     * Adds a category to the list of board game categories.
-     *
-     * If the list already contains the category, nothing happens.
-     * @param bgCategory a BgCategory to add to the list
-     */
-    public void addBgCategory(BgCategory bgCategory) {
-        if (!bgCategories.contains(bgCategory)) {
-            this.bgCategories.add(bgCategory);
-        }
-    }
-
-    /**
-     * Gets the category at a specific index from the list of categories.
-     * @param index the index of the desired category
-     * @return a BgCategory for the category at the index
-     */
-    public BgCategory getBgCategory(int index) {
-        return this.bgCategories.get(index);
-    }
-
-    /**
-     * Removes a category from the list of board game categories.
-     * @param bgCategory a board game category
-     */
-    public void removeBgCategory(BgCategory bgCategory) {
-        this.bgCategories.remove(bgCategory);
-    }
-
-    /**
      * Returns a string of the categories that the board game fits into. Each category is separated
      * by a comma.
      *
@@ -92,6 +67,13 @@ public class BoardGameWithBgCategories implements Parcelable {
         return sb.toString();
     }
 
+    /**
+     * Returns a string of the categories that the board game fits into, limited to the first 3
+     * categories followed by '+x more categories". Each category is separated by a comma.
+     *
+     * If the board game has no categories set, returns "No categories set"
+     * @return A string of the categories the board game fills.
+     */
     public String getLimitedBgCategoriesString() {
         if (bgCategories.isEmpty()) {
             return "No categories set";
@@ -107,7 +89,7 @@ public class BoardGameWithBgCategories implements Parcelable {
 
         if (bgCategories.size() > 3) {
             int moreCategories = bgCategories.size() - 3;
-            sb.append(" and " + moreCategories + " more categories.");
+            sb.append(" +" + moreCategories + " more categories.");
         }
 
         return sb.toString();

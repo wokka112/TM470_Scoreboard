@@ -24,6 +24,9 @@ import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * View for selecting players for teams in a game record.
+ */
 public class ChoosePlayersActivity extends AppCompatActivity {
 
     private final int CONFIRM_GAME_RECORD_REQUEST_CODE = 1;
@@ -123,6 +126,11 @@ public class ChoosePlayersActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

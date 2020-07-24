@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginRight="16dp"
-            android:text="Edit"
+            android:text="@string/edit"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/group_fragment_notes_output" />
 
@@ -24,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:text="Delete"
+            android:text="@string/delete"
             app:layout_constraintRight_toLeftOf="@id/group_fragment_edit_button"
             app:layout_constraintTop_toTopOf="@id/group_fragment_edit_button" />
 
@@ -33,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
-            android:text="Reset"
+            android:text="@string/reset"
             app:layout_constraintRight_toLeftOf="@id/group_fragment_delete_button"
             app:layout_constraintTop_toTopOf="@id/group_fragment_edit_button" />
 
@@ -43,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="8dp"
-            android:text="Name: "
+            android:text="@string/name_colon_header"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,14 +53,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
-            app:layout_constraintTop_toTopOf="@id/group_fragment_name_header" />
+            app:layout_constraintTop_toTopOf="@id/group_fragment_name_header"
+            tools:text="Ragnarok"/>
 
         <TextView
             android:id="@+id/group_fragment_date_created_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Date Created:"
+            android:text="@string/date_created_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_name_header"
             app:layout_constraintTop_toBottomOf="@id/group_fragment_name_header" />
 
@@ -68,14 +70,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
-            app:layout_constraintTop_toTopOf="@id/group_fragment_date_created_header" />
+            app:layout_constraintTop_toTopOf="@id/group_fragment_date_created_header"
+            tools:text="25 July 2020"/>
 
         <TextView
             android:id="@+id/group_fragment_games_played_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Games Played:"
+            android:text="@string/games_played_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_date_created_header"
             app:layout_constraintTop_toBottomOf="@id/group_fragment_date_created_header" />
 
@@ -85,14 +88,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toRightOf="@id/group_fragment_games_played_header"
-            app:layout_constraintTop_toTopOf="@id/group_fragment_games_played_header" />
+            app:layout_constraintTop_toTopOf="@id/group_fragment_games_played_header"
+            tools:text="7"/>
 
         <TextView
             android:id="@+id/group_fragment_member_count_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Members:"
+            android:text="@string/members_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_header"
             app:layout_constraintTop_toBottomOf="@id/group_fragment_games_played_header" />
 
@@ -101,14 +105,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
-            app:layout_constraintTop_toTopOf="@id/group_fragment_member_count_header" />
+            app:layout_constraintTop_toTopOf="@id/group_fragment_member_count_header"
+            tools:text="11"/>
 
         <TextView
             android:id="@+id/group_fragment_description_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Description:"
+            android:text="@string/description_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_member_count_header"
             app:layout_constraintTop_toBottomOf="@id/group_fragment_member_count_header" />
 
@@ -124,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Notes:"
+            android:text="@string/notes_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_description_header"
             app:layout_constraintTop_toBottomOf="@id/group_fragment_description_output" />
 

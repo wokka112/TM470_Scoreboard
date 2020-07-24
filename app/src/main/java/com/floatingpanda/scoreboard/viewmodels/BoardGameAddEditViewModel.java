@@ -22,6 +22,10 @@ import com.floatingpanda.scoreboard.data.entities.PlayMode;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO comments
+/**
+ * ViewModel providing data to the views for adding and editing board games in the database.
+ */
 public class BoardGameAddEditViewModel extends AndroidViewModel {
 
     private BoardGameRepository boardGameRepository;

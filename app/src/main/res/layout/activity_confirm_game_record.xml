@@ -82,7 +82,7 @@
         android:layout_marginBottom="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm"/>
+        android:text="@string/confirm"/>
 
     <Button
         android:id="@+id/activity_confirm_record_cancel_button"
@@ -91,6 +91,6 @@
         android:layout_marginRight="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"/>
+        android:text="@string/cancel"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

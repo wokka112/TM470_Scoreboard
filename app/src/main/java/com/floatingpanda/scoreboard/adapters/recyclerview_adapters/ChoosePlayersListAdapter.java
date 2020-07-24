@@ -12,29 +12,34 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Member;
-import com.floatingpanda.scoreboard.interfaces.ChoosePlayerInterface;
+import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO remove and replace with addgroupmemberslistadapter? Or vice versa??
+/**
+ * Recyclerview adapter for displaying a list of players to choose from for a team. Members are
+ * displayed with checkboxes next to them for selecting them, which in turn triggers methods in the
+ * object implementing SelectedMemberInterface which is stored as "listener". When a box is checked,
+ * addSelectedMember() is called, and when it is unchecked, removeSelectedMember() is called.
+ *
+ * This is similar to the MemberListAdapter except for the addition of checkboxes and the listener.
+ */
 public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayersListAdapter.ChoosePlayersDialogViewHolder> {
     private final LayoutInflater inflater;
     private List<Member> teamAndPotentialPlayers;
-    private List<Member> potentialPlayers;
     private List<Member> teamPlayers;
-    private ChoosePlayerInterface listener;
+    private SelectedMemberInterface listener;
 
-    private int teamNo;
-
-    public ChoosePlayersListAdapter(Context context, ChoosePlayerInterface listener, int teamNo) {
+    public ChoosePlayersListAdapter(Context context, SelectedMemberInterface listener) {
         inflater = LayoutInflater.from(context);
         this.listener = listener;
-        this.teamNo = teamNo;
     }
 
     @Override
     public ChoosePlayersListAdapter.ChoosePlayersDialogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recyclerview_dialog_item, parent, false);
+        View itemView = inflater.inflate(R.layout.recyclerview_checkbox_member_item, parent, false);
         return new ChoosePlayersListAdapter.ChoosePlayersDialogViewHolder(itemView);
     }
 
@@ -43,14 +48,12 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
         if (teamAndPotentialPlayers != null) {
             Member current = teamAndPotentialPlayers.get(position);
             holder.nicknameItemView.setText(current.getNickname());
-            holder.groupsItemView.setText("7");
 
             if(position < teamPlayers.size()) {
-                //Log.w("ChoosePlayersListAdapter.java", "Team " + teamNo + ", checking position " + position + " player: " + current);
                 holder.checkBoxItemView.setChecked(true);
             } else {
-                //A bug occurs when selecting boxes and hitting the back button - multiple boxes become checked even though some of them aren't
-                // team members. This else clause solves that.
+                //Without this else clause a bug occurs when selecting boxes and hitting the back button - multiple boxes
+                // become checked even though some of them aren't team members.
                 holder.checkBoxItemView.setChecked(false);
             }
 
@@ -61,51 +64,33 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
                 @Override
                 public void onClick(View v) {
                     if (holder.checkBoxItemView.isChecked()) {
-                        //Log.w("ChoosePlayerListAdapt.java", "Box checked, adding player to team " + teamNo + ": " + current);
-                        listener.addPlayerToTeam(current);
+                        listener.addSelectedMember(current);
                     } else {
-                        //Log.w("ChoosePlayerListAdapt.java", "Box unchecked, removing player from team " + teamNo + ": " + current);
-                        listener.removePlayerFromTeam(current);
+                        listener.removeSelectedMember(current);
                     }
                 }
             });
         } else {
-            holder.nicknameItemView.setText("No nickname");
+            holder.nicknameItemView.setText("No Players");
         }
     }
 
+    //TODO change teamandpotentialplayers to all players and remove potential players.
+    /**
+     * Sets the list of teamplayers for this team as well as the list of potential players that can
+     * be added to the team (i.e. do not belong to this team or any other team yet).
+     *
+     * Must be called before adapter will display anything.
+     * @param teamPlayers list of members that belong to this team
+     * @param potentialPlayers list of members that do not belong to this team or any other team
+     */
     public void setTeamAndPotentialPlayers(List<Member> teamPlayers, List<Member> potentialPlayers) {
         this.teamPlayers = teamPlayers;
-        this.potentialPlayers = potentialPlayers;
-
-        /*
-        Log.w("ChoosePlayerListAdapt.java", "Team Players");
-        for (Member member : teamPlayers) {
-            Log.w("ChoosePlayerListAdapt.java", "Team Player: " + member);
-        }
-
-        Log.w("ChoosePlayerListAdapt.java", "Potential Players");
-        for (Member member : potentialPlayers) {
-            Log.w("ChoosePlayerListAdapt.java", "Potential Player: " + member);
-        }
-
-         */
 
         teamAndPotentialPlayers = new ArrayList<>();
         teamAndPotentialPlayers.addAll(this.teamPlayers);
-        teamAndPotentialPlayers.addAll(this.potentialPlayers);
+        teamAndPotentialPlayers.addAll(potentialPlayers);
 
-        /*
-        Log.w("ChoosePlayerListAdapt.java", "Team and Potential Players for team " + teamNo);
-        for (int i = 0; i < teamAndPotentialPlayers.size(); i++) {
-            if (i < teamPlayers.size()) {
-                Log.w("ChoosePlayerListAdapt.java", "Team Player: " + teamAndPotentialPlayers.get(i));
-            } else {
-                Log.w("ChoosePlayerListAdapt.java", "Potential Player: " + teamAndPotentialPlayers.get(i));
-            }
-        }
-
-         */
         notifyDataSetChanged();
     }
 
@@ -118,7 +103,7 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
 
     class ChoosePlayersDialogViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBoxItemView;
-        TextView nicknameItemView, groupsItemView;
+        TextView nicknameItemView;
         ImageView imageItemView;
 
         private ChoosePlayersDialogViewHolder(View itemView) {
@@ -126,7 +111,6 @@ public class ChoosePlayersListAdapter extends RecyclerView.Adapter<ChoosePlayers
 
             checkBoxItemView = itemView.findViewById(R.id.checkbox);
             nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
-            groupsItemView = itemView.findViewById(R.id.rmember_groups_output);
             imageItemView = itemView.findViewById(R.id.rmember_image);
         }
     }

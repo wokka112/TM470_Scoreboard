@@ -2,6 +2,9 @@ package com.floatingpanda.scoreboard.calculators;
 
 import com.floatingpanda.scoreboard.interfaces.EloRateable;
 
+/**
+ * Calculator that calculates Elo skill rating changes using Elo's system.
+ */
 public class EloSkillRatingCalculator {
 
     /**
@@ -41,6 +44,16 @@ public class EloSkillRatingCalculator {
         return ratingChange;
     }
 
+    /**
+     * Calculates the score of player in relation to opponent.
+     *
+     * If player did better than opponent, 1 is returned.
+     * If player drew with opponent, 0.5 is returned.
+     * If player lost to opponent, 0 is returned.
+     * @param player
+     * @param opponent
+     * @return
+     */
     private double calculateSValue(EloRateable player, EloRateable opponent) {
         if (player.getFinishingPosition() < opponent.getFinishingPosition()) {
             return 1.0;

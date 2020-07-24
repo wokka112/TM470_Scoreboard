@@ -1,12 +1,144 @@
 <resources>
     <string name="app_name">ScoreBoard</string>
     <string name="title_activity_board_game">BoardGameActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Strings used for buttons -->
+    <string name="add_members">Add Members</string>
+    <string name="add_players">Add Players</string>
+    <string name="back">Back</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="reset">Reset</string>
+    <string name="save">Save</string>
+    <string name="next_team">Next Team</string>
+    <string name="no">No</string>
+    <string name="view_groups">View Groups</string>
+    <string name="yes">Yes</string>
+
+    <!-- Strings used for page titles -->
+    <string name="confirm_players_title">Are you happy with these teams\n and finishing places?</string>
+
+    <!-- Strings with colons used for header textviews (i.e. textviews that precede some output or
+    appear at the top of a column of output or values) -->
+    <string name="board_game_colon_header">Board Game:</string>
+    <string name="categories_colon_header">Categories:</string>
+    <string name="date_colon_header">Date:</string>
+    <string name="date_created_colon_header">Date Created:</string>
+    <string name="description_colon_header">Description:</string>
+    <string name="difficulty_colon_header">Difficulty:</string>
+    <string name="games_played_colon_header">Games Played:</string>
+    <string name="groups_colon_header">Groups:</string>
+    <string name="group_name_colon_header">Group Name:</string>
+    <string name="house_rules_colon_header">House Rules:</string>
+    <string name="members_colon_header">Members:</string>
+    <string name="name_colon_header">Name:</string>
+    <string name="nickname_colon_header">Nickname:</string>
+    <string name="notes_colon_header">Notes:</string>
+    <string name="play_modes_colon_header">Play Modes:</string>
+    <string name="players_colon_header">Players:</string>
+    <string name="team_options_colon_header">Team Options:</string>
+    <string name="teams_colon_header">Teams:</string>
+    <string name="time_colon_header">Time:</string>
+
+    <!-- Strings used for header textviews (i.e. textviews that precede some output or appear at
+    the top of a column of output or values) -->
+    <string name="categories_header">Categories</string>
+    <string name="difficulty_header">Difficulty</string>
+    <string name="first_place_header">1st Place</string>
+    <string name="games_played_header">Games Played</string>
+    <string name="lost_or_won_header">Lost or won?</string>
+    <string name="nickname_header">Nickname</string>
+    <string name="play_mode_header">Play Mode</string>
+    <string name="position_header">Position</string>
+    <string name="score_header">Score</string>
+    <string name="second_place_header">2nd Place</string>
+    <string name="skill_rating_header">Skill Rating</string>
+    <string name="team_header">Team</string>
+    <string name="teams_setting_header">Teams Setting</string>
+    <string name="third_place_header">3rd Place</string>
+
+    <!-- Strings used for hints mainly in edittexts -->
+    <string name="board_game_category_name_hint">New category name...</string>
+    <string name="board_game_name_hint">New game name...</string>
+    <string name="board_game_difficulty_hint">Difficulty (1 - 5)</string>
+    <string name="board_game_minimum_players_hint">Minimum players</string>
+    <string name="board_game_maximum_players_hint">Maximum players</string>
+    <string name="board_game_house_rules_hint">House rules (optional)</string>
+    <string name="board_game_play_modes_header_hint">"Play Modes (pick as many as are viable)</string>
+    <string name="board_game_team_options_header_hint">Possible Team Options</string>
+    <string name="board_game_multi_spinner_hint">Choose categories</string>
+    <string name="group_name_hint">New group name...</string>
+    <string name="member_nickname_hint">New member nickname...</string>
+    <string name="description_hint">Description (optional)</string>
+    <string name="notes_hint">Notes (optional)</string>
+
+    <!-- String used as the ending for any place from 4th onwards. This is used in code along with
+    a number in the form of a string e.g. 4 + @string/generic_place_ending -->
+    <string name="generic_place_ending">th Place</string>
+
+    <!-- Strings used for representing playmodes in text -->
+    <string name="competitive">Competitive</string>
+    <string name="cooperative">Cooperative</string>
+    <string name="solitaire">Solitaire</string>
+
+    <!-- Strings used for representing team options in text -->
+    <string name="no_teams">No Teams</string>
+    <string name="teams_allowed">Teams or No Teams Allowed</string>
+    <string name="teams_only">Teams Only</string>
+    <string name="team">Team</string>
+    <string name="teams">Teams</string>
+
+    <!-- Strings for representing won or lost in text -->
+    <string name="lost">Lost</string>
+    <string name="won">Won</string>
+
+    <!-- Strings for each month of the year -->
+    <string name="january">January</string>
+    <string name="jan">Jan</string>
+    <string name="february">February</string>
+    <string name="feb">Feb</string>
+    <string name="march">March</string>
+    <string name="mar">Mar</string>
+    <string name="april">April</string>
+    <string name="apr">Apr</string>
+    <string name="may">May</string>
+    <string name="june">June</string>
+    <string name="jun">Jun</string>
+    <string name="july">July</string>
+    <string name="jul">Jul</string>
+    <string name="august">August</string>
+    <string name="aug">Aug</string>
+    <string name="september">September</string>
+    <string name="sep">Sep</string>
+    <string name="october">October"</string>
+    <string name="oct">Oct"</string>
+    <string name="november">November</string>
+    <string name="nov">Nov</string>
+    <string name="december">December</string>
+    <string name="dec">Dec</string>
+    <string name="month_error">MONTH ERROR</string>
+
+    <!-- Strings for each day of the week -->
+    <string name="sunday">Sunday</string>
+    <string name="sun">Sun</string>
+    <string name="monday">Monday</string>
+    <string name="mon">Mon</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="tues">Tues</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="weds">Weds</string>
+    <string name="thursday">Thursday</string>
+    <string name="thurs">Thurs</string>
+    <string name="friday">Friday</string>
+    <string name="fri">Fri</string>
+    <string name="saturday">Saturday</string>
+    <string name="sat">Sat</string>
+
+    <!-- General strings for use in code -->
+    <string name="score_measurement_marker">pts</string>
+    <string name="play_mode_error">PLAY MODE ERROR</string>
+    <string name="no_scores_this_month">No scores for this month</string>
+
 </resources>

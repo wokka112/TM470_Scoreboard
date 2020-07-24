@@ -32,6 +32,9 @@ import com.thomashaertel.widget.MultiSpinner;
 
 import java.util.List;
 
+/**
+ * View for editing board games in the database.
+ */
 public class BoardGameEditActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY_ORIGINAL = "com.floatingpanda.scoreboard.REPLY_ORIGINAL";
     public static final String EXTRA_REPLY_EDITED = "com.floatingpanda.scoreboard.REPLY_EDITED";
@@ -170,7 +173,8 @@ public class BoardGameEditActivity extends AppCompatActivity {
     }
 
     /**
-     * Sets the views to the details from boardGame.
+     * Sets the views to the details from boardGame, including setting up the chips for the bg
+     * categories.
      * @param boardGameWithBgCategoriesAndPlayModes a BoardGame with bg categories and play modes
      */
     private void setViews(BoardGameWithBgCategoriesAndPlayModes boardGameWithBgCategoriesAndPlayModes) {
@@ -189,12 +193,26 @@ public class BoardGameEditActivity extends AppCompatActivity {
         setChipGroupChips(boardGameWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getBgCategories());
     }
 
+    /**
+     * Sets the multispinner to show the bg categories in the selectedBgCategories as selected. This
+     * is reflected in the multispinner with a tick in a checkbox next to the appropriate categories,
+     * and behind the scenes as an array of booleans with "true" in any positions where a selected
+     * bgCategory is.
+     * @param selectedBgCategories
+     */
     private void setMultiSpinnerSelected(List<BgCategory> selectedBgCategories) {
-        boolean[] selected = getMultiSpinnerSelected(selectedBgCategories);
+        boolean[] selected = getMultiSpinnerSelectedForSelectedBgCategories(selectedBgCategories);
         multiSpinner.setSelected(selected);
     }
 
-    private boolean[] getMultiSpinnerSelected(List<BgCategory> selectedBgCategories) {
+    /**
+     * Returns a list of booleans the size of the multispinner's bg categories list. This list of
+     * booleans contains "true" in the positions where a bg category from the selectedBgCategories
+     * list exists.
+     * @param selectedBgCategories a list of bg categories selected for the board game
+     * @return
+     */
+    private boolean[] getMultiSpinnerSelectedForSelectedBgCategories(List<BgCategory> selectedBgCategories) {
         boolean[] selected = new boolean[adapter.getCount()];
 
         for (int i = 0; i < selectedBgCategories.size(); i++) {
@@ -268,6 +286,11 @@ public class BoardGameEditActivity extends AppCompatActivity {
         chipGroup.addView(createChip(bgCategory));
     }
 
+    /**
+     * Creates a chip to add to the view for the BgCategory, bgCategory.
+     * @param bgCategory
+     * @return
+     */
     private Chip createChip(BgCategory bgCategory) {
         Chip chip = new Chip(chipGroup.getContext());
         chip.setText((bgCategory.getCategoryName()));
@@ -343,6 +366,11 @@ public class BoardGameEditActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

@@ -23,8 +23,19 @@ import com.floatingpanda.scoreboard.utils.DateStringCreator;
 
 import java.util.List;
 
+/**
+ * Adapter that populates a list with game records and their details, including what game was played,
+ * when, and how many players were in it.
+ *
+ * For cooperative or solitaire games, this includes a list of the players and whether or not the
+ * game was won.
+ *
+ * For competitive games, this includes the first three teams of players and the scores they earned
+ * in the game.
+ */
 public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAdapter.GameRecordViewHolder> {
 
+    private Context context;
     private final LayoutInflater inflater;
     private List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers;
     private DetailAdapterInterface listener;
@@ -32,6 +43,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
     public GameRecordListAdapter(Context context, DetailAdapterInterface listener) {
         inflater = LayoutInflater.from(context);
         this.listener = listener;
+        this.context = context;
     }
 
     @Override
@@ -45,36 +57,17 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         if (gameRecordsWithPlayerTeamsAndPlayers != null) {
             GameRecordWithPlayerTeamsAndPlayers current = gameRecordsWithPlayerTeamsAndPlayers.get(position);
             GameRecord currentGameRecord = current.getGameRecord();
-            holder.gameNameTextView.setText(currentGameRecord.getBoardGameName());
 
-            DateStringCreator dateStringCreator = new DateStringCreator(currentGameRecord.getDateTime());
-
-            String dateString = dateStringCreator.getDayOfWeek3LetterString() + " " + dateStringCreator.getEnglishMonth3LetterString() +
-                    " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
-            holder.dateTextView.setText(dateString);
-
-            String timeString = dateStringCreator.getHourOfDayString() + ":" + dateStringCreator.getMinuteString();
-            holder.timeTextView.setText(timeString);
-
-            holder.playModeTextView.setText(currentGameRecord.getPlayModePlayed().toString());
-            holder.difficultyTextView.setText(Integer.toString(currentGameRecord.getDifficulty()));
-
-            if(currentGameRecord.getTeams()) {
-                holder.teamCountHeaderTextView.setText("Teams: ");
-            } else {
-                holder.teamCountHeaderTextView.setText("Players: ");
-            }
-
-            holder.teamCountOutputTextView.setText(Integer.toString(currentGameRecord.getNoOfTeams()));
+            setStaticViews(holder, currentGameRecord);
 
             List<PlayerTeamWithPlayers> currentPlayerTeamsWithPlayers = current.getPlayerTeamsWithPlayers();
             currentPlayerTeamsWithPlayers.sort(new PlayerTeamWithPlayersComparator());
 
             if (currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
-                populateCompetitive(holder, currentGameRecord.getTeams(), currentPlayerTeamsWithPlayers);
+                populateWrapperWithCompetitiveViews(holder, currentGameRecord.getTeams(), currentPlayerTeamsWithPlayers);
             } else if (currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COOPERATIVE
                     || currentGameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.SOLITAIRE){
-                populateCooperative(holder, currentGameRecord.getWon(), currentPlayerTeamsWithPlayers);
+                populateWrapperWithCooperativeViews(holder, currentGameRecord.getWon(), currentPlayerTeamsWithPlayers);
             } else {
                 Log.w("GameRecordListAdapt.java", "Current game record is neither competitive, coop or solitaire.");
             }
@@ -84,12 +77,62 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         }
     }
 
+    /**
+     * Sets the list of game records with player teams and their players from which the adapter
+     * populates the view.
+     *
+     * Must be called before adapter will display anything.
+     * @param gameRecordsWithPlayerTeamsAndPlayers
+     */
     public void setGameRecordsWithPlayerTeamsAndPlayers(List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers) {
         this.gameRecordsWithPlayerTeamsAndPlayers = gameRecordsWithPlayerTeamsAndPlayers;
         notifyDataSetChanged();
     }
 
-    private void populateCompetitive(GameRecordViewHolder holder, boolean teams, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
+    /**
+     * Sets the static views in the layout to information taken from the game record, as opposed to
+     * populating the more dynamic linear layout which acts as a wrapper holding manually inflated
+     * views.
+     * @param holder
+     * @param gameRecord
+     */
+    private void setStaticViews(GameRecordViewHolder holder, GameRecord gameRecord) {
+        holder.gameNameTextView.setText(gameRecord.getBoardGameName());
+
+        DateStringCreator dateStringCreator = new DateStringCreator(gameRecord.getDateTime());
+
+        String dateString = dateStringCreator.getDayOfWeek3LetterString() + " " + dateStringCreator.getEnglishMonth3LetterString() +
+                " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
+        holder.dateTextView.setText(dateString);
+
+        String timeString = dateStringCreator.getHourOfDayString() + ":" + dateStringCreator.getMinuteString();
+        holder.timeTextView.setText(timeString);
+
+        holder.playModeTextView.setText(gameRecord.getPlayModePlayed().toString());
+        holder.difficultyTextView.setText(Integer.toString(gameRecord.getDifficulty()));
+
+        if(gameRecord.getTeams()) {
+            holder.teamCountHeaderTextView.setText(context.getString(R.string.teams_colon_header));
+        } else {
+            holder.teamCountHeaderTextView.setText(context.getString(R.string.players_colon_header));
+        }
+
+        holder.teamCountOutputTextView.setText(Integer.toString(gameRecord.getNoOfTeams()));
+    }
+
+    /**
+     * Takes a list of player teams with players and a boolean showing whether the game was played
+     * in teams. Using this, the method populates the linear layout wrapper with the players and, if
+     * played in teams, their teams, as well as their finishing positions and the scores they earned
+     * from the game.
+     *
+     * Precondition: list of player teams with players must be sorted into ascending order based on
+     * teams' finishing positions.
+     * @param holder
+     * @param teams
+     * @param playerTeamsWithPlayers
+     */
+    private void populateWrapperWithCompetitiveViews(GameRecordViewHolder holder, boolean teams, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
         holder.wonLostTextView.setVisibility(View.GONE);
         holder.firstPlaceWrapper.removeAllViews();
 
@@ -102,7 +145,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
             }
 
             if (playerTeam.getPosition() <= 3) {
-                View view = createCompetitiveTeamTextView(playerTeam, players, teams);
+                View view = createCompetitiveTeamView(playerTeam, players, teams);
                 holder.firstPlaceWrapper.addView(view);
             } else {
                 break;
@@ -110,7 +153,16 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         }
     }
 
-    private void populateCooperative(GameRecordViewHolder holder, boolean won, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
+    /**
+     * Takes a list of player teams with players and a boolean showing whether or not the game was
+     * won. Using this, the method populates the linear layout wrapper with whether or not the game
+     * was won, followed by a list of the players who played in the game and the score they earned
+     * from it.
+     * @param holder
+     * @param won
+     * @param playerTeamsWithPlayers
+     */
+    private void populateWrapperWithCooperativeViews(GameRecordViewHolder holder, boolean won, List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
         holder.firstPlaceWrapper.removeAllViews();
         holder.wonLostTextView.setVisibility(View.VISIBLE);
 
@@ -128,59 +180,101 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
                 continue;
             }
 
-            View view = createCooperativeTeamOrSolitaireTextView(playerTeam, players, false);
+            View view = createCooperativeTeamOrSolitaireView(playerTeam, players);
             holder.firstPlaceWrapper.addView(view);
         }
     }
 
-    private View createCompetitiveTeamTextView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
+    /**
+     * Takes a player team, list of players and boolean showing whether the game was played in teams
+     * or alone, and creates a view showing the players in the game as well as the positions they
+     * finished in and the scores they earned.
+     * @param playerTeam
+     * @param players
+     * @return
+     */
+    private View createCompetitiveTeamView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
         View view = inflater.inflate(R.layout.recyclerview_item_game_record_competitive_team, null);
         TextView placeTextView = view.findViewById(R.id.place);
-        TextView teamTextView = view.findViewById(R.id.team);
+        TextView teamTextView = view.findViewById(R.id.team_textview);
         TextView playersTextView = view.findViewById(R.id.players);
-        TextView scoreTextView = view.findViewById(R.id.score);
+        TextView scoreOutputTextView = view.findViewById(R.id.score_output);
 
-        switch (playerTeam.getPosition()) {
-            case 1 :
-                placeTextView.setText("1st Place");
-                break;
-            case 2:
-                placeTextView.setText("2nd Place");
-                break;
-            case 3:
-                placeTextView.setText("3rd Place");
-                break;
-            default:
-                placeTextView.setText("ERROR");
-        }
+        String placeString = createPlaceString(playerTeam.getPosition());
+        placeTextView.setText(placeString);
 
         if (!teams) {
             teamTextView.setVisibility(View.GONE);
         } else {
-            teamTextView.setText("Team " + playerTeam.getTeamNumber());
+            String teamString = context.getString(R.string.team) + playerTeam.getTeamNumber();
+
+            teamTextView.setText(teamString);
             teamTextView.setVisibility(View.VISIBLE);
         }
 
-        StringBuilder sb = new StringBuilder();
-        for (Player player : players) {
-            if (sb.length() > 0) {
-                sb.append(", ");
-            }
+        String playersString = createPlayersString(players);
+        playersTextView.setText(playersString);
 
-            sb.append(player.getMemberNickname());
-        }
-
-        playersTextView.setText(sb.toString());
-        scoreTextView.setText(playerTeam.getScore() + "pts");
+        scoreOutputTextView.setText(Integer.toString(playerTeam.getScore()));
 
         return view;
     }
 
-    private View createCooperativeTeamOrSolitaireTextView(PlayerTeam playerTeam, List<Player> players, boolean teams) {
+    /**
+     * Takes a player team and list of players and creates a view showing the players in the team,
+     * as well as the score they earned.
+     * @param playerTeam
+     * @param players
+     * @return
+     */
+    private View createCooperativeTeamOrSolitaireView(PlayerTeam playerTeam, List<Player> players) {
         View view = inflater.inflate(R.layout.recyclerview_item_game_record_cooperative_solitaire_team, null);
         TextView playersTextView = view.findViewById(R.id.players);
-        TextView scoreTextView = view.findViewById(R.id.score);
+        TextView scoreOutputTextView = view.findViewById(R.id.score_output);
 
+        String playersString = createPlayersString(players);
+        playersTextView.setText(playersString);
+
+        scoreOutputTextView.setText(Integer.toString(playerTeam.getScore()));
+
+        return view;
+    }
+
+    /**
+     * Takes a finishing place integer (1, 2, 3, 4, etc.) and returns its String representation
+     * (1st Place, 2nd Place, 3rd Place, 4th Place, etc.).
+     * @param finishingPlace the finishing place of a player or team
+     * @return
+     */
+    private String createPlaceString(int finishingPlace) {
+        String placeString;
+        switch (finishingPlace) {
+            case 1:
+                Log.w("GameRecordPlayListAdapt.java", "Creating 1st place.");
+                placeString = context.getString(R.string.first_place_header);
+                break;
+            case 2:
+                Log.w("GameRecordPlayListAdapt.java", "Creating 2nd place.");
+                placeString = context.getString(R.string.second_place_header);
+                break;
+            case 3:
+                Log.w("GameRecordPlayListAdapt.java", "Creating 3rd place.");
+                placeString = context.getString(R.string.third_place_header);
+                break;
+            default:
+                Log.w("GameRecordPlayListAdapt.java", "Creating " + finishingPlace + "th place.");
+                placeString = Integer.toString(finishingPlace) + context.getString(R.string.generic_place_ending);
+        }
+
+        return placeString;
+    }
+
+    /**
+     * Takes a list of players and creates a player string in the format 'name, name, name'.
+     * @param players
+     * @return
+     */
+    private String createPlayersString(List<Player> players) {
         StringBuilder sb = new StringBuilder();
         for (Player player : players) {
             if (sb.length() > 0) {
@@ -189,11 +283,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
             sb.append(player.getMemberNickname());
         }
-
-        playersTextView.setText(sb.toString());
-        scoreTextView.setText(playerTeam.getScore() + "pts");
-
-        return view;
+        return sb.toString();
     }
 
     @Override

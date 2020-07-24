@@ -14,6 +14,9 @@ import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
 
+/**
+ * Adapter that displays a list of members.
+ */
 public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.MemberViewHolder> {
 
     private final LayoutInflater inflater;
@@ -41,6 +44,12 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
         }
     }
 
+    /**
+     * Sets the list of members the adapter will display.
+     *
+     * Must be called before the adapter will display anything.
+     * @param members
+     */
     public void setMembers(List<Member> members) {
         this.members = members;
         notifyDataSetChanged();

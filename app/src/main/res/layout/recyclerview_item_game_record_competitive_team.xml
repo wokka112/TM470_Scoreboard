@@ -6,13 +6,22 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <TextView
-        android:id="@+id/team"
+        android:id="@+id/team_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/place"
         app:layout_constraintTop_toTopOf="@id/place"
         android:layout_marginLeft="16dp"
-        tools:text="Team 1"/>
+        android:text="@string/team"/>
+
+    <TextView
+        android:id="@+id/team_output"
+        app:layout_constraintLeft_toRightOf="@id/team_textview"
+        app:layout_constraintTop_toTopOf="@id/team_textview"
+        android:layout_marginLeft="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="1"/>
 
     <TextView
         android:id="@+id/place"
@@ -28,18 +37,26 @@
         android:id="@+id/players"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintLeft_toRightOf="@id/team"
-        app:layout_constraintTop_toTopOf="@id/team"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintLeft_toRightOf="@id/team_output"
+        app:layout_constraintTop_toTopOf="@id/team_textview"
         tools:text="Bailey, Theo, Adam" />
 
     <TextView
-        android:id="@+id/score"
+        android:id="@+id/score_output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/team"
+        app:layout_constraintTop_toTopOf="@id/team_textview"
+        app:layout_constraintRight_toLeftOf="@id/score_ending"
+        tools:text="30"/>
+
+    <TextView
+        android:id="@+id/score_ending"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/team_textview"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
-        tools:text="30pts"/>
+        android:layout_marginRight="12dp"
+        android:text="@string/score_measurement_marker"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

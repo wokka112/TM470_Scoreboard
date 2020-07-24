@@ -32,7 +32,7 @@
         app:layout_constraintHorizontal_bias="0.15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nickname"/>
+        android:text="@string/nickname_header"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -41,7 +41,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        android:text="Skill Rating"/>
+        android:text="@string/skill_rating_header"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.85"
-        android:text="Games Played"/>
+        android:text="@string/games_played_header"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_skill_rating_recyclerview"

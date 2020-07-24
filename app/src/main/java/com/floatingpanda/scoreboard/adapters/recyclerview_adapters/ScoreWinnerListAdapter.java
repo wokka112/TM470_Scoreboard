@@ -19,6 +19,15 @@ import com.floatingpanda.scoreboard.utils.DateStringCreator;
 
 import java.util.List;
 
+/**
+ * Adapter that takes a list of group monthly scores with scores and member details (i.e. name of
+ * the member who has the score) and then displays each group monthly score along with the 3 top
+ * scores and the details of the member that got the score.
+ *
+ * Preconditions: Group monthly scores must be sorted into descending order based on year followed
+ * by month.
+ * Scores with member details must be sorted into descending order based on score values.
+ */
 public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerListAdapter.ScoreWinnerViewHolder> {
 
     private final LayoutInflater inflater;
@@ -63,6 +72,13 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
         }
     }
 
+    /**
+     * Sets the list of group monthly scores with scores and member details that the adapter uses to
+     * populate the list.
+     *
+     * Must be called before the adapter will display anything.
+     * @param groupMonthlyScoresWithScoresAndMemberDetails
+     */
     public void setGroupMonthlyScoresWithScoresAndMemberDetails(List<GroupMonthlyScoreWithScoresAndMemberDetails> groupMonthlyScoresWithScoresAndMemberDetails) {
         this.groupMonthlyScoresWithScoresAndMemberDetails = groupMonthlyScoresWithScoresAndMemberDetails;
         notifyDataSetChanged();
@@ -75,6 +91,13 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
         else return 0;
     }
 
+    /**
+     * Sets the views for the first three positions for the month, including who attained them and
+     * what scores they got. If there are not 3 players with scores for the month then it shows
+     * details only for as many players as have scores.
+     * @param holder
+     * @param currentScoresWithMemberDetails
+     */
     private void populateScores(ScoreWinnerViewHolder holder, List<ScoreWithMemberDetails> currentScoresWithMemberDetails) {
         int previousScore = 0;
         for (int i = 0; i < 3 && i < currentScoresWithMemberDetails.size(); i++) {
@@ -106,15 +129,19 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
 
                 holder.thirdPlaceNameTextView.setText(scoreWithMemberDetails.getMember().getNickname());
                 holder.thirdPlaceScoreTextView.setText(Integer.toString(currentScore));
-                previousScore = currentScore;
             }
         }
     }
 
+    /**
+     * Hides the first place header and displays a message informing the user that there are no
+     * scores for this month.
+     * @param holder
+     */
     private void displayNoScoresText(ScoreWinnerViewHolder holder) {
         displayFirstPlaceViews(holder);
         holder.firstPlaceHeaderTextView.setVisibility(View.INVISIBLE);
-        holder.firstPlaceNameTextView.setText("No scores for this month");
+        holder.firstPlaceNameTextView.setText(context.getString(R.string.no_scores_this_month));
     }
 
     private void displayFirstPlaceViews(ScoreWinnerViewHolder holder) {
@@ -135,6 +162,10 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
         holder.thirdPlaceScoreTextView.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Hides the first, second and third place header, nickname and score textviews.
+     * @param holder
+     */
     private void hideScoreViews(ScoreWinnerViewHolder holder) {
         holder.firstPlaceHeaderTextView.setVisibility(View.GONE);
         holder.firstPlaceNameTextView.setVisibility(View.GONE);

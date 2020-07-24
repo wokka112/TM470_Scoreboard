@@ -10,6 +10,10 @@ import com.floatingpanda.scoreboard.views.fragments.BgCategoryListFragment;
 import com.floatingpanda.scoreboard.views.fragments.GroupListFragment;
 import com.floatingpanda.scoreboard.views.fragments.MemberListFragment;
 
+/**
+ * ViewPager adapter for the main activity. Provides 4 fragments - groups, members, board games, and
+ * board game categories.
+ */
 public class MainActivityAdapter extends FragmentStateAdapter {
 
     private final int PAGE_COUNT = 4;

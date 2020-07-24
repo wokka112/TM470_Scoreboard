@@ -17,6 +17,16 @@ import com.floatingpanda.scoreboard.interfaces.SelectedMemberInterface;
 
 import java.util.List;
 
+/**
+ * Recyclerview adapter that displays a list of members to add to a group with checkboxes next to each.
+ * The supplied object implementing the SelectedMemberInterface then has the relevant interface method
+ * triggered in response to each box being checked or unchecked - that is, if a box is checked,
+ * addSelectedMember() is called, and if a box is unchecked, removeSelectedMember() is called.
+ *
+ * This adapter is very similar to the MemberListAdapter, except for the addition of checkboxes and
+ * the SelectedMemberInterface to allow members to be selected from the list and used by the object
+ * passed as the SelectedMemberInterface parameter.
+ */
 public class AddGroupMembersListAdapter extends RecyclerView.Adapter<AddGroupMembersListAdapter.AddGroupMemberDialogViewHolder> {
     private final LayoutInflater inflater;
     private SelectedMemberInterface listener;
@@ -29,7 +39,7 @@ public class AddGroupMembersListAdapter extends RecyclerView.Adapter<AddGroupMem
 
     @Override
     public AddGroupMembersListAdapter.AddGroupMemberDialogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recyclerview_dialog_item, parent, false);
+        View itemView = inflater.inflate(R.layout.recyclerview_checkbox_member_item, parent, false);
         return new AddGroupMembersListAdapter.AddGroupMemberDialogViewHolder(itemView);
     }
 
@@ -38,7 +48,6 @@ public class AddGroupMembersListAdapter extends RecyclerView.Adapter<AddGroupMem
         if (members != null) {
             Member current = members.get(position);
             holder.nicknameItemView.setText(current.getNickname());
-            holder.groupsItemView.setText("7");
 
             holder.checkBoxItemView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -55,6 +64,12 @@ public class AddGroupMembersListAdapter extends RecyclerView.Adapter<AddGroupMem
         }
     }
 
+    /**
+     * Sets the list of members to display.
+     *
+     * Must be called before adapter will display anything.
+     * @param members a list of members
+     */
     public void setMembers(List<Member> members) {
         this.members = members;
         notifyDataSetChanged();
@@ -69,7 +84,7 @@ public class AddGroupMembersListAdapter extends RecyclerView.Adapter<AddGroupMem
 
     class AddGroupMemberDialogViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBoxItemView;
-        TextView nicknameItemView, groupsItemView;
+        TextView nicknameItemView;
         ImageView imageItemView;
 
         private AddGroupMemberDialogViewHolder(View itemView) {
@@ -77,7 +92,6 @@ public class AddGroupMembersListAdapter extends RecyclerView.Adapter<AddGroupMem
 
             checkBoxItemView = itemView.findViewById(R.id.checkbox);
             nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
-            groupsItemView = itemView.findViewById(R.id.rmember_groups_output);
             imageItemView = itemView.findViewById(R.id.rmember_image);
         }
     }

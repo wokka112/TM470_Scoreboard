@@ -14,6 +14,17 @@ import com.floatingpanda.scoreboard.data.relations.PlayerTeamWithPlayers;
 
 import java.util.List;
 
+/**
+ * Recyclerview adapter that takes a list of player teams with players and displays the teams of
+ * players in a list format for cooperative and solitaire games, including whether the players won
+ * or lost the game.
+ *
+ * The following precondition exists because it is simpler where this adapter is used to keep
+ * playerTeams as a list rather than extract a single playerTeam and plug it into the adapter.
+ *
+ * Precondition: list of PlayerTeamWithPlayer objects should only hold 1 TeamOfPlayer objects, no
+ * more or less.
+ */
 public class GameRecordDetailsCooperativeScoreListAdapter extends RecyclerView.Adapter<GameRecordDetailsCooperativeScoreListAdapter.GameRecordDetailsCooperativeScoreViewHolder> {
 
     private final LayoutInflater inflater;
@@ -33,26 +44,42 @@ public class GameRecordDetailsCooperativeScoreListAdapter extends RecyclerView.A
     public void onBindViewHolder(GameRecordDetailsCooperativeScoreListAdapter.GameRecordDetailsCooperativeScoreViewHolder holder, int position) {
         if (playerTeamsWithPlayers != null) {
             PlayerTeamWithPlayers current = playerTeamsWithPlayers.get(position);
-            StringBuilder sb = new StringBuilder();
 
-            for (Player player : current.getPlayers()) {
-                if (sb.length() > 0) {
-                    sb.append(", ");
-                }
+            String playersString = createPlayersString(current.getPlayers());
 
-                sb.append(player.getMemberNickname());
-            }
-
-            holder.playersTextView.setText(sb.toString());
-            holder.scoreTextView.setText(current.getPlayerTeam().getScore() + "pts");
+            holder.playersTextView.setText(playersString);
+            holder.scoreOutputTextView.setText(Integer.toString(current.getPlayerTeam().getScore()));
         } else {
 
         }
     }
 
+    /**
+     * Sets the list of player teams with players that will be displayed by the adapter.
+     *
+     * Must be called before adapter will display anything.
+     * @param playerTeamsWithPlayers list of player teams and their players to display
+     */
     public void setPlayerTeamsWithPlayers(List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
         this.playerTeamsWithPlayers = playerTeamsWithPlayers;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Takes a list of players and creates a player string in the format 'name, name, name'.
+     * @param players
+     * @return
+     */
+    private String createPlayersString(List<Player> players) {
+        StringBuilder sb = new StringBuilder();
+        for (Player player : players) {
+            if (sb.length() > 0) {
+                sb.append(", ");
+            }
+
+            sb.append(player.getMemberNickname());
+        }
+        return sb.toString();
     }
 
     @Override
@@ -63,13 +90,13 @@ public class GameRecordDetailsCooperativeScoreListAdapter extends RecyclerView.A
     }
 
     class GameRecordDetailsCooperativeScoreViewHolder extends RecyclerView.ViewHolder {
-        private final TextView playersTextView, scoreTextView;
+        private final TextView playersTextView, scoreOutputTextView;
 
         private GameRecordDetailsCooperativeScoreViewHolder(View itemView) {
             super(itemView);
 
             playersTextView = itemView.findViewById(R.id.players);
-            scoreTextView = itemView.findViewById(R.id.score);
+            scoreOutputTextView = itemView.findViewById(R.id.score_output);
         }
     }
 }

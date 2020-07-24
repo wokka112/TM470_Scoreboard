@@ -15,6 +15,9 @@ import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 
 import java.util.List;
 
+/**
+ * Recyclerview adapter for displaying a list of board games with their board game categories.
+ */
 public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdapter.BoardGameViewHolder> {
 
     private final LayoutInflater inflater;
@@ -47,6 +50,12 @@ public class BoardGameListAdapter extends RecyclerView.Adapter<BoardGameListAdap
         }
     }
 
+    /**
+     * Sets the list of board games with board game categories that will be displayed by the adapter.
+     *
+     * Must be called before adapter will display anything.
+     * @param boardGamesWithBgCategories a list of BoardGameWithBgCategory objects
+     */
     public void setBoardGamesWithBgCategories(List<BoardGameWithBgCategories> boardGamesWithBgCategories) {
         this.boardGamesWithBgCategories = boardGamesWithBgCategories;
         notifyDataSetChanged();

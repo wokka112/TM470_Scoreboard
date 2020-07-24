@@ -18,9 +18,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.relations.BoardGameWithBgCategoriesAndPlayModes;
 import com.floatingpanda.scoreboard.data.entities.BoardGame;
-import com.floatingpanda.scoreboard.interfaces.PopupConfirmDialogInterface;
 import com.floatingpanda.scoreboard.viewmodels.BoardGameViewModel;
 
+/**
+ * View for viewing details about a board game in the database.
+ */
 public class BoardGameActivity extends AppCompatActivity {
     private final int EDIT_BOARDGAME_REQUEST_CODE = 1;
 
@@ -109,8 +111,6 @@ public class BoardGameActivity extends AppCompatActivity {
         notesTextView.setText(boardGame.getNotes());
     }
 
-    // Preconditions: boardGame exists in database.
-    // Postconditions: boardGame is removed from database.
     /**
      * Displays a popup informing the user of what deleting a Board Game results in and warning them
      * that it is irreversible. If the user presses the "Delete" button on the popup, then boardGame
@@ -142,8 +142,6 @@ public class BoardGameActivity extends AppCompatActivity {
                 .show();
     }
 
-    // Preconditions: boardGame should exist in database.
-    // Postconditions: boardGame will not longer exist in database.
     /**
      * Deletes boardGame from database and finishes activity.
      * @param boardGameWithBgCategoriesAndPlayModes a BoardGame with categories and play modes which exists in the db.
@@ -178,6 +176,11 @@ public class BoardGameActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

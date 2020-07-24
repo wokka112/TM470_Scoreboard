@@ -20,6 +20,11 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.List;
 
+/**
+ * View for viewing details about a game record. Includes a ViewPager that goes through fragments
+ * to display the general details (teams, positions, scores) for a game record, and to display the
+ * skill rating changes for the players in the game record.
+ */
 public class GameRecordActivity extends AppCompatActivity {
 
     @Override
@@ -40,6 +45,11 @@ public class GameRecordActivity extends AppCompatActivity {
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

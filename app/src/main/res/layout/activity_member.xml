@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="@id/memberact_image"
         android:layout_marginTop="11dp"
         android:layout_marginLeft="11dp"
-        android:text="Nickname:"/>
+        android:text="@string/nickname_colon_header"/>
 
     <TextView
         android:id="@+id/memberact_nickname_output"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/memberact_nickname_header"
         app:layout_constraintLeft_toLeftOf="@id/memberact_nickname_header"
-        android:text="Date created:"
+        android:text="@string/date_created_colon_header"
         android:layout_marginTop="8dp"/>
 
     <TextView
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@id/memberact_image"
         android:layout_marginTop="8dp"
         android:layout_marginLeft="4dp"
-        android:text="Notes:"/>
+        android:text="@string/notes_colon_header"/>
 
     <TextView
         android:id="@+id/memberact_notes_output"
@@ -72,7 +72,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="@id/memberact_notes_header"
         app:layout_constraintTop_toBottomOf="@id/memberact_notes_output"
-        android:text="Groups:"
+        android:text="@string/groups_colon_header"
         android:layout_marginTop="16dp"/>
 
     <TextView
@@ -83,6 +83,7 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintTop_toTopOf="@id/memberact_groups_header"/>
 
+    <!--TODO Replace with smallish button -->
     <TextView
         android:id="@+id/memberact_view_groups"
         android:layout_width="wrap_content"
@@ -90,7 +91,7 @@
         app:layout_constraintLeft_toLeftOf="@id/memberact_groups_output"
         app:layout_constraintTop_toTopOf="@id/memberact_groups_output"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="View Groups"/>
+        android:text="@string/view_groups"/>
 
     <Button
         android:id="@+id/memberact_edit_button"
@@ -100,7 +101,7 @@
         app:layout_constraintRight_toLeftOf="@id/memberact_delete_button"
         app:layout_constraintTop_toBottomOf="@id/memberact_groups_header"
         android:layout_marginTop="20dp"
-        android:text="Edit"/>
+        android:text="@string/edit"/>
 
     <Button
         android:id="@+id/memberact_delete_button"
@@ -109,6 +110,6 @@
         app:layout_constraintLeft_toRightOf="@id/memberact_edit_button"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/memberact_edit_button"
-        android:text="Delete"/>
+        android:text="@string/delete"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

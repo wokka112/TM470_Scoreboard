@@ -13,6 +13,9 @@ import com.floatingpanda.scoreboard.data.entities.Member;
 
 import java.util.List;
 
+/**
+ * A relation that combines a single group with a list of members who are part of that group.
+ */
 public class GroupWithMembers implements Parcelable {
     @Embedded
     public Group group;

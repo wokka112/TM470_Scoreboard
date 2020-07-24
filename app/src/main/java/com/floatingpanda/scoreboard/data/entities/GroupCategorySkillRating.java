@@ -7,6 +7,15 @@ import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+/**
+ * Represents a group member's skill rating in that group for a particular board game category. The
+ * category the rating is for is stored in the bg_categories table (BgCategory class) and linked via
+ * the categoryId attribute, which is a foreign key to the bg_categories table. The group the rating
+ * is for is stored in the groups table (Group class) and linked via the groupId attribute, which is
+ * a foreign key to the groups table.
+ *
+ * Skill ratings are represented by doubles and calculated using a variant of Elo's rating system.
+ */
 @Entity(tableName = "group_category_skill_ratings",
         foreignKeys = {@ForeignKey(entity = Group.class,
                 parentColumns = "group_id",

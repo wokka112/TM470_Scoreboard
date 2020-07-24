@@ -16,6 +16,9 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
 
+/**
+ * View for adding members to the database.
+ */
 public class MemberAddActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
@@ -87,6 +90,11 @@ public class MemberAddActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

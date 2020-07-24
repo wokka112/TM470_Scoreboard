@@ -24,6 +24,9 @@ import java.util.List;
 
 import static com.floatingpanda.scoreboard.data.entities.PlayMode.PlayModeEnum.COMPETITIVE;
 
+/**
+ * View for confirming game record details when creating a new game record.
+ */
 public class ConfirmGameRecordActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
@@ -105,6 +108,11 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets the play mode textView to the correct value for the playmode that the game record was
+     * played in.
+     * @param playModePlayed
+     */
     private void setPlayModePlayedTextView(PlayMode.PlayModeEnum playModePlayed) {
         switch (playModePlayed) {
             case COMPETITIVE:
@@ -121,6 +129,11 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

@@ -16,6 +16,10 @@ import com.floatingpanda.scoreboard.interfaces.RemoveGroupMemberInterface;
 
 import java.util.List;
 
+/**
+ * Adapter that displays a list of group members and provides buttons to remove said group members
+ * from the group.
+ */
 public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberListAdapter.GroupMemberViewHolder> {
 
     private final LayoutInflater inflater;
@@ -55,6 +59,12 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         }
     }
 
+    /**
+     * Sets the list of group members that the adapter will display.
+     *
+     * Must be called before the adapter will display anything.
+     * @param groupMembers
+     */
     public void setGroupMembers(List<Member> groupMembers) {
         this.groupMembers = groupMembers;
         notifyDataSetChanged();

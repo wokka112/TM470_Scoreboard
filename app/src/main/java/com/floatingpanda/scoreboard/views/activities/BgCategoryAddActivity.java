@@ -16,6 +16,9 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.viewmodels.BgCategoryViewModel;
 
+/**
+ * View for adding bg categories to the database.
+ */
 public class BgCategoryAddActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
@@ -39,11 +42,11 @@ public class BgCategoryAddActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                String categoryName = categoryEditText.getText().toString();
-                if (!bgCategoryViewModel.addActivityInputsValid(BgCategoryAddActivity.this, categoryName, false)) {
+                if (!bgCategoryViewModel.addActivityInputsValid(categoryEditText, false)) {
                     return;
                 }
 
+                String categoryName = categoryEditText.getText().toString();
                 BgCategory bgCategory = new BgCategory(categoryName);
 
                 Intent replyIntent = new Intent();
@@ -61,6 +64,11 @@ public class BgCategoryAddActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

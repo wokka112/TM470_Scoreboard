@@ -13,6 +13,13 @@ import com.floatingpanda.scoreboard.data.database_views.GroupCategorySkillRating
 
 import java.util.List;
 
+/**
+ * Adapter that takes a list of category skill ratings with their member details (i.e. who's ratings
+ * they are) and displays the information.
+ *
+ * Precondition: the list of group category skill ratings should be sorted into descending order
+ * based on skill rating values.
+ */
 public class GroupCategorySkillRatingListAdapter extends RecyclerView.Adapter<GroupCategorySkillRatingListAdapter.GroupCategorySkillRatingViewHolder> {
 
     private final LayoutInflater inflater;
@@ -41,6 +48,12 @@ public class GroupCategorySkillRatingListAdapter extends RecyclerView.Adapter<Gr
         }
     }
 
+    /**
+     * Sets the list of group category skill ratings with member detail database views.
+     *
+     * Must be called before adapter will display anything.
+     * @param groupCategorySkillRatingsWithMemberDetailsViews
+     */
     public void setGroupCategorySkillRatingsWithMemberDetailsViews(List<GroupCategorySkillRatingWithMemberDetailsView> groupCategorySkillRatingsWithMemberDetailsViews) {
         this.groupCategorySkillRatingsWithMemberDetailsViews = groupCategorySkillRatingsWithMemberDetailsViews;
         notifyDataSetChanged();

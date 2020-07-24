@@ -31,6 +31,9 @@ import com.thomashaertel.widget.MultiSpinner;
 
 import java.util.List;
 
+/**
+ * View for adding board games to the database.
+ */
 public class BoardGameAddActivity extends AppCompatActivity {
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
@@ -236,6 +239,11 @@ public class BoardGameAddActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Sets the back arrow in the taskbar to go back to the previous activity.
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {

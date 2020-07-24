@@ -18,6 +18,11 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+/**
+ * A repository primarily for accessing the groups and group members tables in the database, but
+ * also with some minor access to the game records table.
+ *
+ **/
 public class GroupRepository {
 
     private GroupDao groupDao;
@@ -41,16 +46,33 @@ public class GroupRepository {
     }
 
     /**
-     * @return live data list of all groups from the database
+     * Returns a list of all the groups in the database.
      */
     public LiveData<List<Group>> getAll() {
         return allGroups;
     }
 
+    /**
+     * Returns a livedata group from the database, determined by groupId.
+     * @param groupId an int id identifying a group in the database
+     * @return
+     */
     public LiveData<Group> getGroupById(int groupId) { return groupDao.findLiveDataById(groupId); }
 
+    /**
+     * Returns a livedata group from the database along with the members belonging to said group.
+     * The group is determined by groupId.
+     * @param groupId an int id identifying a group in the database
+     * @return
+     */
     public LiveData<GroupWithMembers> getGroupWithMembersByGroupId(int groupId) { return groupDao.findGroupWithMembersById(groupId); }
 
+    /**
+     * Returns a livedata list of members from a specific group from the database. The group is
+     * determined by groupId.
+     * @param groupId an int id identifying a group in the database
+     * @return
+     */
     public LiveData<List<Member>> getGroupMembersByGroupId(int groupId) {
         return groupMemberDao.findMembersOfASpecificGroupByGroupId(groupId);
     }
@@ -71,36 +93,72 @@ public class GroupRepository {
         });
     }
 
+    /**
+     * Updates a group in the database.
+     *
+     * The updated group should have the same id as the original group.
+     * The updated group should either have the same name as the original group, or another unique
+     * name that does not exist in the database.
+     * @param group
+     */
     public void update(Group group) {
         AppDatabase.getExecutorService().execute(() -> {
             groupDao.update(group);
         });
     }
 
+    /**
+     * Deletes a group from the database.
+     *
+     * This also deletes all related group monthly scores, scores, game records, skill ratings,
+     * player teams and players from the database.
+     * @param group
+     */
     public void delete(Group group) {
         AppDatabase.getExecutorService().execute(() -> {
             groupDao.delete(group);
         });
     }
 
+    /**
+     * Adds a member to a group in the database. In other words, adds a new entry to the group
+     * members table in the database, representing a member who belongs to a group.
+     * @param groupMember the group-member relation entry to add to the group members table
+     */
     public void insertGroupMember(GroupMember groupMember) {
         AppDatabase.getExecutorService().execute(() -> {
             groupMemberDao.insert(groupMember);
         });
     }
 
+    /**
+     * Adds a list of members to a group in the database. In other words, a list of new entries to
+     * the group members table in the database, representing a list of members who belong to a group.
+     * @param groupMembers
+     */
     public void insertGroupMembers(List<GroupMember> groupMembers) {
         AppDatabase.getExecutorService().execute(() -> {
             groupMemberDao.insertAll(groupMembers.toArray(new GroupMember[groupMembers.size()]));
         });
     }
 
+    /**
+     * Removes a member from a group in the database. In other words, removes an entry from the
+     * group members table in the database.
+     * @param groupMember
+     */
     public void removeGroupMember(GroupMember groupMember) {
         AppDatabase.getExecutorService().execute(() -> {
             groupMemberDao.delete(groupMember);
         });
     }
 
+    /**
+     * Returns the number of games played by a specific group, i.e. the number of game records
+     * associated with a specific group. The group is determined by groupId.
+     * @param groupId an int id identifying a group in the database.
+     * @return
+     */
     public int getGamesPlayed(int groupId) {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Integer>() {
             @Override
@@ -118,6 +176,13 @@ public class GroupRepository {
         }
     }
 
+    /**
+     * Returns the number of members belonging to a specific group, i.e. the number of entries in
+     * the group members table in the database for that specific group. The group is identified by
+     * groupId.
+     * @param groupId
+     * @return
+     */
     public int getNoOfGroupMembers(int groupId) {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Integer>() {
             @Override
@@ -135,6 +200,12 @@ public class GroupRepository {
         }
     }
 
+    /**
+     * Tests whether a group with the name, groupName, exists in the database already. If it does,
+     * return true. Otherwise, returns false.
+     * @param groupName
+     * @return
+     */
     public boolean containsGroupName(String groupName) {
         Future future = AppDatabase.getExecutorService().submit(new Callable<Boolean>() {
             @Override

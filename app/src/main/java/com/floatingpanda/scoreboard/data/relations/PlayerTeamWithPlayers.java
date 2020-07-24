@@ -9,6 +9,10 @@ import com.floatingpanda.scoreboard.data.entities.PlayerTeam;
 
 import java.util.List;
 
+/**
+ * A relation that combines a single player team with a list of players who played in that player
+ * team.
+ */
 public class PlayerTeamWithPlayers {
     @Embedded
     public PlayerTeam playerTeam;

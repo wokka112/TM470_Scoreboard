@@ -13,6 +13,12 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
+/**
+ * Represents a group which can have group members and game records linked to it. Group members are
+ * linked to the group via many-to-many relations in the group_members table (GroupMember class).
+ * Game records are linked to the group via a foreign key in the game records table (GameRecord
+ * class).
+ */
 @Entity(tableName = "groups", indices = {@Index(value = "group_name",
         unique = true)})
 public class Group implements Parcelable {

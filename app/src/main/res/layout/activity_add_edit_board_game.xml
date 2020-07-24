@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Save"
+            android:text="@string/save"
             app:layout_constraintLeft_toRightOf="@id/bgadd_button_cancel"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bgadd_house_rules_edittext" />
@@ -42,7 +42,7 @@
             android:id="@+id/bgadd_button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/bgadd_button_save"
             app:layout_constraintTop_toTopOf="@id/bgadd_button_save" />
@@ -54,7 +54,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="8dp"
-            android:hint="Game Name"
+            android:hint="@string/board_game_name_hint"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bgadd_button_browse"
             android:inputType="textCapWords"/>
@@ -66,7 +66,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Difficulty (1 - 5)"
+            android:hint="@string/board_game_difficulty_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_name_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_name_edittext"
             android:inputType="number"/>
@@ -78,7 +78,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Minimum players"
+            android:hint="@string/board_game_minimum_players_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_difficulty_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_difficulty_edittext"
             android:inputType="number"/>
@@ -90,7 +90,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Maximum players"
+            android:hint="@string/board_game_maximum_players_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_min_players_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_min_players_edittext"
             android:inputType="number"/>
@@ -102,7 +102,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Description (Optional)"
+            android:hint="@string/description_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_max_players_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_team_options_radiogroup"
             android:inputType="textCapSentences"/>
@@ -114,7 +114,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="Notes (Optional)"
+            android:hint="@string/notes_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_description_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_description_edittext"
             android:inputType="textCapSentences"/>
@@ -126,7 +126,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="House rules (Optional)"
+            android:hint="@string/board_game_house_rules_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_notes_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_notes_edittext"
             android:inputType="textCapSentences"/>
@@ -155,7 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Competitive"
+                android:text="@string/competitive"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_header" />
 
@@ -164,7 +164,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cooperative"
+                android:text="@string/cooperative"
                 app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_competitive"
                 app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive" />
 
@@ -173,12 +173,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Solitaire"
+                android:text="@string/solitaire"
                 app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_cooperative"
                 app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive" />
 
         </LinearLayout>
 
+        <!--TODO need to rethink logic behind teams allowed here.-->
         <RadioGroup
             android:id="@+id/bgadd_team_options_radiogroup"
             android:layout_width="match_parent"
@@ -193,81 +194,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="No Teams" />
+                android:text="@string/no_teams" />
 
             <RadioButton
                 android:id="@+id/bgadd_teams_allowed_radiobutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Teams Allowed" />
+                android:text="@string/teams_allowed" />
 
             <RadioButton
                 android:id="@+id/bgadd_teams_only_radiobutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Teams Only" />
-
+                android:text="@string/teams_only" />
         </RadioGroup>
-
-        <!--
-        <CheckBox
-            android:id="@+id/bgadd_checkbox_competitive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_header"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="8dp"
-            android:text="Competitive"/>
-
-        <CheckBox
-            android:id="@+id/bgadd_checkbox_cooperative"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_competitive"
-            app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive"
-            android:layout_marginLeft="8dp"
-            android:text="Cooperative"/>
-
-        <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/bgadd_checkbox_cooperative"
-            app:layout_constraintTop_toTopOf="@id/bgadd_checkbox_competitive"
-            android:layout_marginLeft="8dp"
-            android:text="Solitaire"/>
-            -->
-
-        <TextView
-            android:id="@+id/bgadd_name_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:text="Nickname:"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_button_browse" />
-
-        <TextView
-            android:id="@+id/bgadd_difficulty_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Real Name:"
-            android:visibility="gone"
-            app:layout_constraintLeft_toLeftOf="@id/bgadd_name_textview"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_name_edittext" />
-
-        <TextView
-            android:id="@+id/bgadd_min_players_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            app:layout_constraintLeft_toLeftOf="@id/bgadd_difficulty_textview"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_difficulty_edittext" />
 
         <TextView
             android:id="@+id/bgadd_categories_header"
@@ -275,7 +217,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:text="Categories"
+            android:text="@string/categories_header"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_max_players_edittext"
             app:layout_constraintTop_toBottomOf="@id/bgadd_max_players_edittext" />
 
@@ -292,23 +234,12 @@
             app:layout_constraintTop_toBottomOf="@id/bgadd_categories_header"
             tools:text="Strategy, Luck, Ameritrash" />
 
-        <!--
-        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-            android:id="@+id/bgAdd_searchable_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_max_players_edittext"
-            android:layout_marginRight="12dp"
-            />
-            -->
-
         <TextView
             android:id="@+id/bgadd_play_modes_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Play Modes (Pick as many as are viable.)"
+            android:text="@string/board_game_play_modes_header_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_header"
             app:layout_constraintTop_toBottomOf="@id/bgadd_categories_chip_group" />
 
@@ -318,7 +249,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:text="Team Options"
+            android:text="@string/board_game_team_options_header_hint"
             app:layout_constraintLeft_toLeftOf="@id/bgadd_categories_output"
             app:layout_constraintTop_toBottomOf="@id/bgadd_play_modes_container"
             app:layout_goneMarginTop="8dp" />
@@ -340,11 +271,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
-            android:hint="Choose categories"
+            android:hint="@string/board_game_multi_spinner_hint"
             android:textColorHint="#000000"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/bgadd_categories_header" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -9,6 +9,10 @@ import com.floatingpanda.scoreboard.data.entities.Score;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A relation that combines a single group monthly score with a list of the group's scores and the
+ * details of the members who got those scores.
+ */
 public class GroupMonthlyScoreWithScoresAndMemberDetails{
     @Embedded
     public GroupMonthlyScore groupMonthlyScore;

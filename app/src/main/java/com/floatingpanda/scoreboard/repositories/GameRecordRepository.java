@@ -40,6 +40,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO write rest of javadoc comments
+/**
+ * A repository primarily for accessing the game records table in the database, but also providing
+ * access to player team tables. Also inserts and deletes players, player teams, scores, group
+ * monthly scores, player skill rating changes and group category skill rating changes into and
+ * from the database.
+ */
 public class GameRecordRepository {
 
     private AppDatabase appDatabase;

@@ -130,30 +130,6 @@ public class MemberRepositoryTest {
         assertTrue(group3Members.contains(TestData.MEMBER_3));
     }
 
-    @Test
-    public void getNonLiveMembersOfAGroupByGroupIdWhenNoneInserted() throws InterruptedException {
-        List<Member> members = memberRepository.getNonLiveMembersOfAGroupByGroupId(TestData.GROUP_3.getId());
-
-        assertTrue(members.isEmpty());
-    }
-
-    @Test
-    public void getNonLiveMembersOfAGroupByGroupIdWhenAllInserted() throws InterruptedException {
-        memberDao.insertAll(TestData.MEMBERS.toArray(new Member[TestData.MEMBERS.size()]));
-        groupDao.insertAll(TestData.GROUPS.toArray(new Group[TestData.GROUPS.size()]));
-        groupMemberDao.insertAll(TestData.GROUP_MEMBERS.toArray(new GroupMember[TestData.GROUP_MEMBERS.size()]));
-
-        //Group 3 has 2 members, member 1 and member 3, associated via groupmember 3 and groupmember 4, respectively.
-        List<GroupMember> groupMembers = LiveDataTestUtil.getValue(groupMemberDao.getAll());
-        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_3));
-        assertTrue(groupMembers.contains(TestData.GROUP_MEMBER_4));
-
-        List<Member> group3Members = memberRepository.getNonLiveMembersOfAGroupByGroupId(TestData.GROUP_3.getId());
-        assertThat(group3Members.size(), is(2));
-
-        assertTrue(group3Members.contains(TestData.MEMBER_1));
-        assertTrue(group3Members.contains(TestData.MEMBER_3));
-    }
 
     @Test
     public void addMemberToDatabase() throws InterruptedException {
