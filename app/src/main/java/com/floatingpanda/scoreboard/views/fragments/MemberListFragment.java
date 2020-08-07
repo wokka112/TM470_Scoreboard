@@ -26,6 +26,10 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * A view fragment showing a list of all the members in the database. This also provides the means
+ * to add, edit or delete members in the database.
+ */
 public class MemberListFragment extends Fragment implements DetailAdapterInterface {
 
     private final int ADD_MEMBER_REQUEST_CODE = 1;
@@ -67,13 +71,10 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
         return rootView;
     }
 
-    // Preconditions: - object is an object of the Member class.
-    //                - the Member object exists in the database.
-    // Postconditions: - The MemberActivity is started to view the details of object.
     /**
-     * Starts the MemberActivity to view object in more detail.
+     * Starts the MemberActivity to view a member, passed as object, in more detail.
      *
-     * object should be an object of the Member class.
+     * object should be an object of the Member class, and the member should exist in the database.
      *
      * Part of the DetailAdapterInterface.
      * @param object a Member object
@@ -87,9 +88,8 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
         startActivity(detailsIntent);
     }
 
-    // Postconditions: - The Member add activity is started.
     /**
-     * Starts the MemberAddActivity activity.
+     * Starts the MemberAddActivity activity to add a new member to the database.
      */
     public void startAddActivity() {
         Intent addMemberIntent = new Intent(getContext(), MemberAddActivity.class);

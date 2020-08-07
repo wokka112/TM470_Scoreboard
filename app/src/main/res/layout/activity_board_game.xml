@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="18dp">
+        android:paddingBottom="8dp">
 
         <Button
             android:id="@+id/bgact_edit_button"
@@ -30,155 +31,192 @@
 
         <ImageView
             android:id="@+id/bgact_image"
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
+            style="@style/DetailImgStyle"
+            android:layout_marginTop="16dp"
             android:src="@drawable/ic_launcher_foreground"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_name"/>
 
         <TextView
             android:id="@+id/bgact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/bgact_image"
-            app:layout_constraintLeft_toRightOf="@id/bgact_image"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            tools:text="Dawn Of Madness"/>
 
         <TextView
             android:id="@+id/bgact_difficulty_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="11dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/difficulty_colon_header"
             app:layout_constraintLeft_toRightOf="@id/bgact_image"
-            app:layout_constraintTop_toTopOf="@id/bgact_image" />
+            app:layout_constraintTop_toTopOf="@id/bgact_image"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_difficulty_output"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toRightOf="@id/bgact_difficulty_header"
-            app:layout_constraintTop_toTopOf="@id/bgact_difficulty_header" />
+            app:layout_constraintTop_toTopOf="@id/bgact_difficulty_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"
+            tools:text="5"/>
 
         <TextView
             android:id="@+id/bgact_players_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:text="@string/players_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_difficulty_header"
-            app:layout_constraintTop_toBottomOf="@id/bgact_difficulty_header" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_difficulty_header"
+            android:layout_marginTop="8dp"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_players_output"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/bgact_difficulty_output"
-            app:layout_constraintTop_toTopOf="@id/bgact_players_header" />
+            app:layout_constraintLeft_toRightOf="@id/bgact_players_header"
+            app:layout_constraintTop_toTopOf="@id/bgact_players_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"
+            android:layout_marginLeft="8dp"
+            tools:text="3 - 8"/>
 
         <TextView
             android:id="@+id/bgact_categories_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/categories_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_image"
-            app:layout_constraintTop_toBottomOf="@id/bgact_image" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_image"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_categories_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/bgact_play_modes_output"
-            app:layout_constraintTop_toTopOf="@id/bgact_categories_header" />
+            app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bgact_categories_header"
+            android:layout_marginRight="8dp"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"
+            tools:text="Strategy, Gambling, Luck, Skill, Social Deduction"/>
 
         <TextView
             android:id="@+id/bgact_play_modes_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/play_modes_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_categories_header"
-            app:layout_constraintTop_toBottomOf="@id/bgact_categories_output" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_categories_output"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_play_modes_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
-            app:layout_constraintTop_toTopOf="@id/bgact_play_modes_header" />
+            app:layout_constraintTop_toTopOf="@id/bgact_play_modes_header"
+            app:layout_constraintRight_toRightOf="parent"
+            tools:text="Competitive, Cooperative or Solitaire"
+            android:layout_marginRight="8dp"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_team_options_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/team_options_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_play_modes_header"
-            app:layout_constraintTop_toBottomOf="@id/bgact_play_modes_output" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_play_modes_output"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_team_options_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             app:layout_constraintLeft_toRightOf="@+id/bgact_team_options_header"
-            app:layout_constraintTop_toTopOf="@id/bgact_team_options_header" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/bgact_team_options_header"
+            tools:text="Solo or Teams Allowed"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_description_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/description_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_header"
-            app:layout_constraintTop_toBottomOf="@id/bgact_team_options_output" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_team_options_output"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <!-- change these to have a height of wrap_content and a width that wraps around once it hits the constraints.
             To go with the constraint wrapping, add some margin to the right and put a constraint to the parent on the right. -->
         <TextView
             android:id="@+id/bgact_description_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
-            app:layout_constraintTop_toTopOf="@id/bgact_description_header" />
+            app:layout_constraintTop_toTopOf="@id/bgact_description_header"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent dignissim volutpat sem. Duis lorem dui, hendrerit ut augue vitae, fermentum tempor metus. Vivamus scelerisque nisi felis, ac ultrices mi bibendum. "/>
 
         <TextView
             android:id="@+id/bgact_house_rules_header"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/house_rules_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_description_header"
-            app:layout_constraintTop_toBottomOf="@id/bgact_description_output" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_description_output"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_house_rules_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/bgact_description_output"
-            app:layout_constraintTop_toTopOf="@id/bgact_house_rules_header" />
+            app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
+            app:layout_constraintTop_toTopOf="@id/bgact_house_rules_header"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            tools:text="1. No rerolls.\n2. No special cards.\n3. No trade victory."
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_notes_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/notes_hint"
+            android:layout_marginTop="8dp"
+            android:text="@string/notes_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/bgact_house_rules_header"
-            app:layout_constraintTop_toBottomOf="@id/bgact_house_rules_output" />
+            app:layout_constraintTop_toBottomOf="@id/bgact_house_rules_output"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_notes_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="@id/bgact_house_rules_output"
-            app:layout_constraintTop_toTopOf="@id/bgact_notes_header" />
+            app:layout_constraintTop_toTopOf="@id/bgact_notes_header"
+            app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent ac."
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

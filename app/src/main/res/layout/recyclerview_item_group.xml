@@ -1,35 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
+    android:layout_height="wrap_content"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
         android:id="@+id/group_image"
-        android:layout_width="66dp"
-        android:layout_height="66dp"
+        style="@style/ListImgStyle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="11dp"
-        android:layout_marginLeft="11dp"
         android:src="@drawable/ic_launcher_foreground"/>
-
-    <TextView
-        android:id="@+id/group_name_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/group_image"
-        app:layout_constraintTop_toTopOf="@id/group_image"
-        app:layout_constraintBottom_toBottomOf="@id/group_image"
-        android:layout_marginTop="4dp"
-        android:layout_marginLeft="22dp"
-        android:text="@string/group_name_colon_header"/>
 
     <TextView
         android:id="@+id/group_name_output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/group_name_header"
-        app:layout_constraintLeft_toRightOf="@id/group_name_header"
-        android:layout_marginLeft="40dp"/>
+        app:layout_constraintLeft_toRightOf="@id/group_image"
+        app:layout_constraintTop_toTopOf="@id/group_image"
+        app:layout_constraintBottom_toBottomOf="@id/group_image"
+        android:layout_marginLeft="16dp"
+        style="@style/TextAppearance.MdcTypographyStyles.Headline6"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,6 @@
 package com.floatingpanda.scoreboard.adapters.recyclerview_adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,7 @@ public class ScoreWinnerListAdapter extends RecyclerView.Adapter<ScoreWinnerList
 
     @Override
     public ScoreWinnerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recyclerview_item_winner_list, parent, false);
+        View itemView = inflater.inflate(R.layout.recyclerview_item_monthly_score_list, parent, false);
         return new ScoreWinnerViewHolder(itemView);
     }
 

@@ -108,7 +108,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         String timeString = dateStringCreator.getHourOfDayString() + ":" + dateStringCreator.getMinuteString();
         holder.timeTextView.setText(timeString);
 
-        holder.playModeTextView.setText(gameRecord.getPlayModePlayed().toString());
+        holder.playModeTextView.setText(getPlayModeString(gameRecord.getPlayModePlayed()));
         holder.difficultyTextView.setText(Integer.toString(gameRecord.getDifficulty()));
 
         if(gameRecord.getTeams()) {
@@ -118,6 +118,25 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         }
 
         holder.teamCountOutputTextView.setText(Integer.toString(gameRecord.getNoOfTeams()));
+    }
+
+    /**
+     * Returns the correct string to represent the playmode the game record was played in - Competitive,
+     * Cooperative or Solitaire.
+     * @param playModePlayed playmode enum representing the playmode played
+     * @return
+     */
+    private String getPlayModeString(PlayMode.PlayModeEnum playModePlayed) {
+        switch (playModePlayed) {
+            case COMPETITIVE:
+                return context.getString(R.string.competitive);
+            case COOPERATIVE:
+                return context.getString(R.string.cooperative);
+            case SOLITAIRE:
+                return context.getString(R.string.solitaire);
+            default:
+                return context.getString(R.string.play_mode_error);
+        }
     }
 
     /**
@@ -197,6 +216,7 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         View view = inflater.inflate(R.layout.recyclerview_item_game_record_competitive_team, null);
         TextView placeTextView = view.findViewById(R.id.place);
         TextView teamTextView = view.findViewById(R.id.team_textview);
+        TextView teamOutputTextView = view.findViewById(R.id.team_output);
         TextView playersTextView = view.findViewById(R.id.players);
         TextView scoreOutputTextView = view.findViewById(R.id.score_output);
 
@@ -205,11 +225,13 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
 
         if (!teams) {
             teamTextView.setVisibility(View.GONE);
+            teamOutputTextView.setVisibility(View.GONE);
         } else {
-            String teamString = context.getString(R.string.team) + playerTeam.getTeamNumber();
-
-            teamTextView.setText(teamString);
+            teamTextView.setText(context.getString(R.string.team));
             teamTextView.setVisibility(View.VISIBLE);
+
+            teamOutputTextView.setText(Integer.toString(playerTeam.getTeamNumber()));
+            teamOutputTextView.setVisibility(View.VISIBLE);
         }
 
         String playersString = createPlayersString(players);

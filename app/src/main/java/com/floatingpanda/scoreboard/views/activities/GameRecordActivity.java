@@ -27,6 +27,8 @@ import java.util.List;
  */
 public class GameRecordActivity extends AppCompatActivity {
 
+    private GameRecordViewModel gameRecordViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +40,9 @@ public class GameRecordActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
 
         GameRecord gameRecord = (GameRecord) getIntent().getExtras().get("GAME_RECORD");
+
+        gameRecordViewModel = new ViewModelProvider(this).get(GameRecordViewModel.class);
+        gameRecordViewModel.setSharedGameRecord(gameRecord);
 
         GameRecordActivityAdapter adapter = new GameRecordActivityAdapter(this, gameRecord);
         viewPager2.setAdapter(adapter);

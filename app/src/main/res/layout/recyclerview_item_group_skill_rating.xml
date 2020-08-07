@@ -5,35 +5,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/group_skill_rating_nickname_start"
+        app:layout_constraintGuide_percent="0.05"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/group_skill_rating_nickname_end"
+        app:layout_constraintGuide_percent="0.35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/group_skill_rating_rating_end"
+        app:layout_constraintGuide_percent="0.54"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"/>
+
     <TextView
         android:id="@+id/group_skill_rating_nickname"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintRight_toLeftOf="@id/group_skill_rating_nickname_end"
+        app:layout_constraintLeft_toRightOf="@+id/group_skill_rating_nickname_start"
         android:layout_marginTop="8dp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="Bailey"/>
+        tools:text="Bailey Von Snailsworth"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 
     <TextView
         android:id="@+id/group_skill_rating_rating"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintRight_toLeftOf="@id/group_skill_rating_rating_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="1754.23"
-        app:layout_constraintTop_toTopOf="@id/group_skill_rating_nickname"/>
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        app:layout_constraintTop_toTopOf="@id/group_skill_rating_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/group_skill_rating_nickname" />
 
     <TextView
         android:id="@+id/group_skill_rating_games_played"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/group_skill_rating_nickname"
+        app:layout_constraintBottom_toBottomOf="@id/group_skill_rating_nickname"
         app:layout_constraintHorizontal_bias="0.85"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="36"/>
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"
+        tools:text="36" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -25,6 +25,7 @@
             android:layout_alignBottom="@id/banner"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="4dp"
+            style="@style/TextAppearance.MaterialComponents.Headline6"
             tools:text="Group Test"/>
     </RelativeLayout>
 

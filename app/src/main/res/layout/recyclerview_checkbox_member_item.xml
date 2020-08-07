@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content">
 
     <CheckBox
         android:id="@+id/checkbox"
@@ -14,57 +13,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/member_layout"
-        android:layout_width="0dp"
+    <ImageButton
+        android:id="@+id/rmember_group_member_remove_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="100"
-        app:layout_constraintLeft_toRightOf="@id/checkbox"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/ic_close_black_12dp"
+        android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/rmember_image"
-            android:layout_width="66dp"
-            android:layout_height="66dp"
-            android:layout_marginLeft="11dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_launcher_foreground"/>
-
-        <TextView
-            android:id="@+id/rmember_name_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="22dp"
-            android:text="@string/nickname_colon_header"
-            app:layout_constraintLeft_toRightOf="@id/rmember_image"
-            app:layout_constraintTop_toTopOf="@id/rmember_image"
-            app:layout_constraintBottom_toBottomOf="@id/rmember_image"/>
-
-        <TextView
-            android:id="@+id/rmember_name_output"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            app:layout_constraintLeft_toRightOf="@id/rmember_name_header"
-            app:layout_constraintTop_toTopOf="@id/rmember_name_header"
-            tools:text="Bailey"/>
-
-        <ImageButton
-            android:id="@+id/rmember_group_member_remove_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_close_black_12dp"
-            android:visibility="gone"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--TODO remove the member stuff in here and replace with include below? -->
-    <!--
     <include
         android:id="@+id/member_layout"
         layout="@layout/recyclerview_item_member"
@@ -74,6 +33,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="100" />
-        -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,6 +29,10 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * The view fragment showing the list of board games in the database, and providing the means to add,
+ * edit or delete board games in the database.
+ */
 public class BoardGameListFragment extends Fragment implements DetailAdapterInterface {
 
     private final int ADD_BOARD_GAME_REQUEST_CODE = 1;
@@ -70,19 +74,19 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
         return rootView;
     }
 
-    // Postconditions: - The Board Game add activity is started.
+    /**
+     * Starts the board game add activity.
+     */
     public void startAddActivity() {
         Intent addBoardGameIntent = new Intent(getContext(), BoardGameAddActivity.class);
         startActivityForResult(addBoardGameIntent, ADD_BOARD_GAME_REQUEST_CODE);
     }
 
-    // Preconditions: - object is an object of the Member class.
-    //                - the Member object exists in the database.
-    // Postconditions: - The MemberActivity is started to view the details of object.
     /**
-     * Starts the BoardGameActivity to view object in more detail.
+     * Starts the BoardGameActivity to view the board game passed as object in more details.
      *
-     * object should be an object of the BoardGame class.
+     * object should be an object of the BoardGame class, and the board game should already exist in
+     * the database.
      *
      * Part of the DetailAdapterInterface.
      * @param object a BoardGame object

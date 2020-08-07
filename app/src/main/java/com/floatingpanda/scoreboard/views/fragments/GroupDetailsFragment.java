@@ -29,6 +29,9 @@ import java.util.concurrent.Future;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * A view fragment showing the details about a group in the database.
+ */
 public class GroupDetailsFragment extends Fragment {
 
     private final int EDIT_GROUP_REQUEST_CODE = 1;
@@ -39,8 +42,8 @@ public class GroupDetailsFragment extends Fragment {
     TextView nameTextView, dateCreatedTextView, gamesPlayedTextView, membersCountTextView, descriptionTextView,
             notesTextView;
 
-    public GroupDetailsFragment(Group group) {
-        this.group = group;
+    public GroupDetailsFragment() {
+
     }
 
     @Override
@@ -55,9 +58,10 @@ public class GroupDetailsFragment extends Fragment {
         descriptionTextView = rootView.findViewById(R.id.group_fragment_description_output);
         notesTextView = rootView.findViewById(R.id.group_fragment_notes_output);
 
-        groupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
+        groupViewModel = new ViewModelProvider(requireActivity()).get(GroupViewModel.class);
+        int groupId = groupViewModel.getSharedGroupId();
 
-        groupViewModel.getLiveDataGroupById(group.getId()).observe(getViewLifecycleOwner(), new Observer<Group>() {
+        groupViewModel.getLiveDataGroupById(groupId).observe(getViewLifecycleOwner(), new Observer<Group>() {
             @Override
             public void onChanged(Group group) {
                 setGroup(group);
@@ -112,22 +116,45 @@ public class GroupDetailsFragment extends Fragment {
         int noOfMembers = groupViewModel.getNoOfMembersInGroup(group.getId());
         membersCountTextView.setText(Integer.toString(noOfMembers));
 
-        descriptionTextView.setText(group.getDescription());
-        notesTextView.setText(group.getNotes());
+        String description = group.getDescription();
+        if (description.trim().isEmpty()) {
+            description = getContext().getString(R.string.no_description);
+        }
+        descriptionTextView.setText(description);
+
+        String notes = group.getNotes();
+        if (notes.trim().isEmpty()) {
+            notes = getContext().getString(R.string.no_notes);
+        }
+        notesTextView.setText(notes);
     }
 
+    /**
+     * Starts the edit activity to edit the Group, group.
+     *
+     * group should already exist in the database.
+     * @param group
+     */
     private void startEditActivity(Group group) {
         Intent intent = new Intent(getActivity(), GroupEditActivity.class);
         intent.putExtra("GROUP", group);
         startActivityForResult(intent, EDIT_GROUP_REQUEST_CODE);
     }
 
+    /**
+     * Pops up a warning informing the user of the consequences of deleting a group and providing
+     * them with the option to proceed. If the user clicks to proceed (i.e. clicks delete) then the
+     * group will be deleted from the database.
+     *
+     * group should already exist in the database.
+     * @param group
+     */
     private void startDeleteActivity(Group group) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Delete Group?")
                 .setMessage("Are you sure you want to delete " + group.getGroupName() + "?\n" +
-                        "The member will be removed from winner lists, groups and game records, and " +
-                        "their skill ratings will be deleted.\n" +
+                        "The group and all of its associated skill ratings, game records, and scores" +
+                        "will be deleted permanently.\n" +
                         "This operation is irreversible.")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                     @Override
@@ -145,6 +172,13 @@ public class GroupDetailsFragment extends Fragment {
                 .show();
     }
 
+    /**
+     * Deletes the Group, group, from the database, along with its associated skill rating, game
+     * record and score tables.
+     *
+     * group should already exist in the database.
+     * @param group
+     */
     private void deleteGroup(Group group) {
         groupViewModel.deleteGroup(group);
         getActivity().finish();

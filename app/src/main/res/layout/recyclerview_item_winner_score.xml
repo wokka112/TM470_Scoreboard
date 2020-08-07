@@ -5,36 +5,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/winner_score_name_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/winner_score_name_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/winner_score_score_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.875"/>
+
     <TextView
         android:layout_marginTop="8dp"
         android:id="@+id/winner_score_place"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="1st Place"/>
+        tools:text="1st Place"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <TextView
         android:id="@+id/winner_score_name"
         app:layout_constraintTop_toTopOf="@id/winner_score_place"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_width="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/winner_score_name_start"
+        app:layout_constraintRight_toLeftOf="@id/winner_score_name_end"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         tools:text="Robert"
-        />
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <TextView
         android:id="@+id/winner_score_score"
         app:layout_constraintTop_toTopOf="@id/winner_score_place"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintRight_toLeftOf="@id/winner_score_score_end"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="800"/>
-
+        tools:text="800"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

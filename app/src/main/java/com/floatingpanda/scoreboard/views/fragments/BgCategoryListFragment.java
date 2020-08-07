@@ -29,18 +29,16 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * The view fragment showing the list of board game categories in the database, and providing the
+ * means to add, edit or delete categories in the database.
+ */
 public class BgCategoryListFragment extends Fragment implements ActivityAdapterInterface {
 
     private final int ADD_CATEGORY_REQUEST_CODE = 1;
     private final int EDIT_CATEGORY_REQUEST_CODE = 2;
 
     private BgCategoryViewModel bgCategoryViewModel;
-
-    //USED FOR TESTING PURPOSES
-    public BgCategoryViewModel getBgCategoryViewModel() {
-        bgCategoryViewModel = new ViewModelProvider(this).get(BgCategoryViewModel.class);
-        return bgCategoryViewModel;
-    }
 
     public BgCategoryListFragment() {
         // Required empty public constructor
@@ -77,7 +75,6 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         return rootView;
     }
 
-    // Postconditions: - the BgCategory add activity is started.
     /**
      * Starts the BgCategoryAddActivity activity.
      */
@@ -86,12 +83,10 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         startActivityForResult(addBgCategoryIntent, ADD_CATEGORY_REQUEST_CODE);
     }
 
-    // Preconditions: - object is a BgCategory
-    // Postconditions: - BgCategory edit activity is started to edit object in the database.
     /**
      * Starts the BgCategoryEditActivity activity to edit object.
      *
-     * object should be a BgCategory.
+     * object should be a BgCategory, and this BgCategory should exist in the database.
      *
      * Part of the ActivityAdapterInterface.
      * @param object an object of the BgCategory class that exists in the database
@@ -105,21 +100,13 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         startActivityForResult(intent, EDIT_CATEGORY_REQUEST_CODE);
     }
 
-    // Preconditions: - object is a BgCategory.
-    //                - the BgCategory object exists in the database.
-    // Postconditions: - A popup is displayed warning the user of what deleting the bgcategory will result in
-    //                    and offering the user the options to delete the bgcategory or cancel the deletion.
-    //                 - if user hits delete on the delete popup, the BgCategory is removed from the database.
-    //                 - if user hits cancel on the delete popup, popup is dismissed and nothing happens.
     /**
      * Displays a popup informing the user of what deleting a BgCategory results in and warning them
      * that it is irreversible. If the user presses the "Delete" button on the popup, then the
      * BgCategory passed as object will be deleted from the database. If the user presses the
      * "Cancel" button, then the popup will be dismissed and nothing will happen.
      *
-     * object should be a BgCategory.
-     *
-     * object should exist in the database.
+     * object should be a BgCategory, and that BgCategory should already exist in the database.
      *
      * Part of the ActivityAdapterInterface.
      * @param object an object of the BgCategory class that exists in the database

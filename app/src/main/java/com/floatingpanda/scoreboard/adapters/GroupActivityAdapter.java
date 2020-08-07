@@ -3,8 +3,11 @@ package com.floatingpanda.scoreboard.adapters;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.floatingpanda.scoreboard.views.fragments.GroupDetailsFragment;
 import com.floatingpanda.scoreboard.views.fragments.GameRecordListFragment;
 import com.floatingpanda.scoreboard.views.fragments.GroupMemberListFragment;
@@ -34,15 +37,15 @@ public class GroupActivityAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         if (position == 0) {
-            return new GameRecordListFragment(group);
+            return new GameRecordListFragment();
         } else if (position == 1) {
-            return new ScoreWinnerListFragment(group);
+            return new ScoreWinnerListFragment();
         } else if (position == 2) {
-            return new GroupMemberListFragment(group);
+            return new GroupMemberListFragment();
         } else if (position == 3) {
-            return new GroupSkillRatingListFragment(group);
+            return new GroupSkillRatingListFragment();
         } else {
-            return new GroupDetailsFragment(group);
+            return new GroupDetailsFragment();
         }
     }
 

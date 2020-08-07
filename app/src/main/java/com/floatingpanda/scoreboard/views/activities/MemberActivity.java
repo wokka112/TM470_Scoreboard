@@ -109,7 +109,11 @@ public class MemberActivity extends AppCompatActivity {
         String dateString = dateStringCreator.getEnglishMonth3LetterString() + " " + dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getYearString();
         dateCreatedTextView.setText(dateString);
 
-        notesTextView.setText(member.getNotes());
+        String notes = member.getNotes();
+        if (notes.trim().isEmpty()) {
+            notes = getString(R.string.no_notes);
+        }
+        notesTextView.setText(notes);
 
         int noOfGroupsMemberIsPartOf = memberViewModel.getNumberOfGroupsMemberIsPartOf(member.getId());
         groupsTextView.setText(Integer.toString(noOfGroupsMemberIsPartOf));

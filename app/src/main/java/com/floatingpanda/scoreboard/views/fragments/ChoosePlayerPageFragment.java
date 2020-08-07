@@ -27,20 +27,31 @@ import com.floatingpanda.scoreboard.viewmodels.ChoosePlayerSharedViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The view fragments for choosing players to add to teams when creating a game record. This
+ * fragment should usually be called as part of the game record creation process, and should be
+ * accompanied by several other such fragments. When combined, this group of fragments allows the
+ * user to choose the players for each team, and the finishing position of each time.
+ */
 public class ChoosePlayerPageFragment extends Fragment implements SelectedMemberInterface {
 
     private Spinner spinner;
     private TextView teamOutputTextView;
 
+    // This view model is used to share information about the teams and which players are still
+    // available to pick between the group of fragments.
     private ChoosePlayerSharedViewModel choosePlayerSharedViewModel;
 
     private int teamNo;
     private int noOfTeams;
 
-    public ChoosePlayerPageFragment(int teamNo, int noOfTeams){
+    //TODO fix error. App crashes if you rotate screen when on this fragment. Need to supply an
+    // empty constructor and some other way of setting teamNo and noOfTeams.
+    // Could put the noOfTeams in the shared viewModel.
+    // Maybe also keep a running track of the current teamNo in the viewModel?
+    public ChoosePlayerPageFragment(int teamNo){
         super();
         this.teamNo = teamNo;
-        this.noOfTeams = noOfTeams;
     }
 
     @Nullable
@@ -58,6 +69,7 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         choosePlayerSharedViewModel = new ViewModelProvider(requireActivity()).get(ChoosePlayerSharedViewModel.class);
+        noOfTeams = choosePlayerSharedViewModel.getNoOfTeams();
         choosePlayerSharedViewModel.getObservablePotentialPlayers().observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
             public void onChanged(List<Member> potentialPlayers) {
@@ -70,6 +82,7 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
         choosePlayerSharedViewModel.createEmptyTeam(teamNo, initialPosition);
         teamOutputTextView.setText(Integer.toString(teamNo));
 
+        // The spinner is used for selecting which finishing position the team ends in.
         spinner.setAdapter(createPositionSpinnerAdapter());
         spinner.setDropDownWidth(ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -78,7 +91,6 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 int teamPosition = (int) parent.getItemAtPosition(position);
                 choosePlayerSharedViewModel.setTeamPosition(teamNo, teamPosition);
-                Log.w("ChoosePlayersAct.java", "Listener: Team " + teamNo + " position set to " + teamPosition);
             }
 
             @Override
@@ -95,24 +107,63 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
         return rootView;
     }
 
+    /**
+     * Adds the Member, member, to the current fragment's team of players.
+     *
+     * member should be a Member that exists in the database and is a part of the group for which
+     * the game record is being created.
+     *
+     * Part of the SelectedMemberInterface.
+     * @param member
+     */
     @Override
     public void addSelectedMember(Member member) {
         addPlayerToTeam(member);
     }
 
+    /**
+     * Removes the Member, member, from the current fragment's team of players.
+     *
+     * member should be a Member that exists in the database, is a part of the group for which the
+     * game record is being created, and should already be a part of this fragment's team.
+     *
+     * Part of the SelectedMemberInterface.
+     * @param member
+     */
     @Override
     public void removeSelectedMember(Member member) {
         removePlayerFromTeam(member);
     }
 
+    /**
+     * Adds the Member, member, to the current fragment's team of players.
+     *
+     * member should be a Member that exists in the database and is a part of the group for which
+     * the game record is being created.
+     * @param member
+     */
     public void addPlayerToTeam(Member member) {
         choosePlayerSharedViewModel.addPlayerToTeam(teamNo, member);
     }
 
+    /**
+     * Removes the Member, member, from the current fragment's team of players.
+     *
+     * member should be a Member that exists in the database, is a part of the group for which the
+     * game record is being created, and should already be a part of this fragment's team.
+     *
+     * @param member
+     */
     public void removePlayerFromTeam(Member member) {
         choosePlayerSharedViewModel.removePlayerFromTeam(teamNo, member);
     }
 
+    /**
+     * Creates a list of integers representing the finishing positions teams can take in the game
+     * record being created. These positions are equal to the total number of teams that played in
+     * the game, and begin from 1.
+     * @return
+     */
     private ArrayAdapter<Integer> createPositionSpinnerAdapter() {
         List<Integer> positionList = new ArrayList<Integer>();
 
@@ -123,6 +174,4 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
         ArrayAdapter<Integer> positionsAdapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_spinner_item, positionList);
         return positionsAdapter;
     }
-
-
 }

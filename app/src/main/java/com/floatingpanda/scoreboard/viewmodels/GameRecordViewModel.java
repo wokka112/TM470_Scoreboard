@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.floatingpanda.scoreboard.TeamOfPlayers;
 import com.floatingpanda.scoreboard.calculators.Calculator;
@@ -27,11 +28,13 @@ public class GameRecordViewModel extends AndroidViewModel {
     private GameRecordRepository gameRecordRepository;
     private LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> allGameRecordsWithTeamsAndPlayers;
     private LiveData<List<GameRecordWithPlayerTeamsAndPlayers>> groupsGameRecordsWithTeamsAndPlayers;
+    private GameRecord sharedGameRecord;
 
     public GameRecordViewModel(Application application) {
         super(application);
         gameRecordRepository = new GameRecordRepository(application);
         allGameRecordsWithTeamsAndPlayers = gameRecordRepository.getAllGameRecordsWithTeamsAndPlayers();
+        groupsGameRecordsWithTeamsAndPlayers = new MutableLiveData<>();
     }
 
     // Used for testing
@@ -39,6 +42,7 @@ public class GameRecordViewModel extends AndroidViewModel {
         super(application);
         gameRecordRepository = new GameRecordRepository(db);
         allGameRecordsWithTeamsAndPlayers = gameRecordRepository.getAllGameRecordsWithTeamsAndPlayers();
+        groupsGameRecordsWithTeamsAndPlayers = new MutableLiveData<>();
     }
 
     public void initGameRecordWithPlayerTeamsAndPlayers(int groupId) {
@@ -78,5 +82,14 @@ public class GameRecordViewModel extends AndroidViewModel {
 
     public void deleteGameRecord(GameRecord gameRecord) {
         gameRecordRepository.deleteGameRecord(gameRecord);
+    }
+
+    //TODO write tests
+    public void setSharedGameRecord(GameRecord sharedGameRecord) {
+        this.sharedGameRecord = sharedGameRecord;
+    }
+
+    public GameRecord getSharedGameRecord() {
+        return sharedGameRecord;
     }
 }

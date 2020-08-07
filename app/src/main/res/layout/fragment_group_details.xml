@@ -42,11 +42,12 @@
             android:id="@+id/group_fragment_name_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/name_colon_header"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_name_output"
@@ -54,7 +55,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
             app:layout_constraintTop_toTopOf="@id/group_fragment_name_header"
-            tools:text="Ragnarok"/>
+            tools:text="Ragnarok"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_date_created_header"
@@ -63,7 +65,8 @@
             android:layout_marginTop="8dp"
             android:text="@string/date_created_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_name_header"
-            app:layout_constraintTop_toBottomOf="@id/group_fragment_name_header" />
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_name_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_date_created_output"
@@ -71,7 +74,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
             app:layout_constraintTop_toTopOf="@id/group_fragment_date_created_header"
-            tools:text="25 July 2020"/>
+            tools:text="25 July 2020"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_games_played_header"
@@ -80,7 +84,8 @@
             android:layout_marginTop="8dp"
             android:text="@string/games_played_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_date_created_header"
-            app:layout_constraintTop_toBottomOf="@id/group_fragment_date_created_header" />
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_date_created_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_games_played_output"
@@ -89,7 +94,8 @@
             android:layout_marginLeft="8dp"
             app:layout_constraintLeft_toRightOf="@id/group_fragment_games_played_header"
             app:layout_constraintTop_toTopOf="@id/group_fragment_games_played_header"
-            tools:text="7"/>
+            tools:text="7"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_member_count_header"
@@ -98,7 +104,8 @@
             android:layout_marginTop="8dp"
             android:text="@string/members_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_header"
-            app:layout_constraintTop_toBottomOf="@id/group_fragment_games_played_header" />
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_games_played_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_member_count_output"
@@ -106,7 +113,8 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
             app:layout_constraintTop_toTopOf="@id/group_fragment_member_count_header"
-            tools:text="11"/>
+            tools:text="11"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_description_header"
@@ -115,14 +123,19 @@
             android:layout_marginTop="8dp"
             android:text="@string/description_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_member_count_header"
-            app:layout_constraintTop_toBottomOf="@id/group_fragment_member_count_header" />
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_member_count_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_description_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
-            app:layout_constraintTop_toTopOf="@id/group_fragment_description_header" />
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintTop_toTopOf="@id/group_fragment_description_header"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam pulvinar, augue quis pellentesque pulvinar, est velit aliquam ipsum, quis malesuada nunc nibh et purus. Suspendisse consectetur porta odio nec venenatis. Praesent suscipit erat sed fermentum efficitur. Morbi a urna consectetur. "/>
 
         <TextView
             android:id="@+id/group_fragment_notes_header"
@@ -131,14 +144,19 @@
             android:layout_marginTop="8dp"
             android:text="@string/notes_colon_header"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_description_header"
-            app:layout_constraintTop_toBottomOf="@id/group_fragment_description_output" />
+            app:layout_constraintTop_toBottomOf="@id/group_fragment_description_output"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/group_fragment_notes_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="@id/group_fragment_games_played_output"
-            app:layout_constraintTop_toTopOf="@id/group_fragment_notes_header" />
+            app:layout_constraintTop_toTopOf="@id/group_fragment_notes_header"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            style="@style/TextAppearance.MdcTypographyStyles.Body1"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam pulvinar, augue quis pellentesque pulvinar, est velit aliquam ipsum, quis malesuada nunc nibh et purus. Suspendisse consectetur porta odio nec venenatis. Praesent suscipit erat sed fermentum efficitur. Morbi a urna consectetur. "/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

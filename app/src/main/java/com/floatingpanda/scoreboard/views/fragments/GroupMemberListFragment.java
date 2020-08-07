@@ -11,10 +11,12 @@ import android.view.ViewGroup;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.floatingpanda.scoreboard.views.activities.GroupMembersAddActivity;
 import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import com.floatingpanda.scoreboard.R;
@@ -31,16 +33,23 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * A view fragment showing a list of all the members in a specific group, and also providing the
+ * means to remove members from the group and add members to the group.
+ */
 public class GroupMemberListFragment extends Fragment implements DetailAdapterInterface, RemoveGroupMemberInterface {
 
     private final int ADD_GROUP_MEMBERS_REQUEST_CODE = 1;
 
+    //The group view model is used to get the groupId, which is supplied by the calling activity -
+    // GroupActivity - to this and other fragments.
+    private GroupViewModel groupViewModel;
     private GroupMemberViewModel groupMemberViewModel;
-    private Group group;
+    private int groupId;
     private List<Member> groupMembers;
 
-    public GroupMemberListFragment(Group group) {
-        this.group = group;
+    public GroupMemberListFragment() {
+
     }
 
     @Override
@@ -55,8 +64,11 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        groupViewModel = new ViewModelProvider(requireActivity()).get(GroupViewModel.class);
+        groupId = groupViewModel.getSharedGroupId();
+
         groupMemberViewModel = new ViewModelProvider(this).get(GroupMemberViewModel.class);
-        groupMemberViewModel.getGroupMembersByGroupId(group.getId()).observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
+        groupMemberViewModel.getGroupMembersByGroupId(groupId).observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
             public void onChanged(List<Member> members) {
                 setGroupMembers(members);
@@ -74,19 +86,24 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
         return rootView;
     }
 
+    /**
+     * Pops up a warning asking the user if they are sure they want to remove the member from the
+     * group. If they are, then they can click "remove" and remove the member.
+     * @param member
+     */
     @Override
     public void removeGroupMember(Member member) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Remove Group Member?")
                 .setMessage("Are you sure you want to remove " + member.getNickname() + " from the " +
                         "group?")
-                .setPositiveButton("Remove", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        groupMemberViewModel.removeGroupMember(group, member);
+                        groupMemberViewModel.removeGroupMember(groupId, member);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         return;
@@ -96,13 +113,11 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
                 .show();
     }
 
-    // Preconditions: - object is an object of the Member class.
-    //                - the Member object exists in the database.
-    // Postconditions: - The MemberActivity is started to view the details of object.
     /**
-     * Starts the MemberActivity to view object in more detail.
+     * Starts the MemberActivity to view a member in more detail.
      *
-     * object should be an object of the Member class.
+     * object should be an object of the Member class, and the member should already exist in the
+     * database.
      *
      * Part of the DetailAdapterInterface.
      * @param object a Member object
@@ -116,7 +131,11 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
         startActivity(detailsIntent);
     }
 
-    public void startAddGroupMember() {
+    /**
+     * Starts the activity to select and add members from the database that don't yet belong to the
+     * group, to the group.
+     */
+    private void startAddGroupMember() {
         Intent intent = new Intent(getContext(), GroupMembersAddActivity.class);
         intent.putParcelableArrayListExtra("GROUP_MEMBERS", (ArrayList<Member>) groupMembers);
         startActivityForResult(intent, ADD_GROUP_MEMBERS_REQUEST_CODE);
@@ -132,7 +151,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
 
         if(requestCode == ADD_GROUP_MEMBERS_REQUEST_CODE && resultCode == RESULT_OK) {
             List<Member> members = (ArrayList<Member>) data.getExtras().get(GroupMembersAddActivity.EXTRA_REPLY);
-            groupMemberViewModel.addGroupMembers(group, members);
+            groupMemberViewModel.addGroupMembers(groupId, members);
         }
     }
 }

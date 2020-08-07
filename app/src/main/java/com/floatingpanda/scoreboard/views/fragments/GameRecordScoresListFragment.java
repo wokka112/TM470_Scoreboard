@@ -29,9 +29,18 @@ import com.floatingpanda.scoreboard.views.activities.MemberActivity;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * A view fragment which shows a list of scores for a game record. For competitive game records, the
+ * scores are sorted into descending order with positions (1st, 2nd, 3rd, etc.), along with which
+ * team attained them and the members of the team. For cooperative or solitaire games, the players
+ * (or player) are shown alongside whether the game was won or lost and the resulting score they
+ * earned from the game.
+ */
 public class GameRecordScoresListFragment extends Fragment {
 
     private GameRecord gameRecord;
+    //Holds the shared game record that is used by the fragment. This record is set in the calling
+    // activity - GameRecordActivity.
     private GameRecordViewModel gameRecordViewModel;
 
     private TextView boardGameNameTextView, dateTextView, timeTextView, playModeTextView, wonLostTextView, difficultyOutputTextView,
@@ -39,15 +48,14 @@ public class GameRecordScoresListFragment extends Fragment {
     private RecyclerView recyclerView;
     private Button deleteButton;
 
-    public GameRecordScoresListFragment(GameRecord gameRecord) {
-        this.gameRecord = gameRecord;
+    public GameRecordScoresListFragment() {
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_game_record_scores, container, false);
-        gameRecordViewModel = new ViewModelProvider(this).get(GameRecordViewModel.class);
 
         boardGameNameTextView = rootView.findViewById(R.id.activity_game_record_details_board_game_name);
         dateTextView = rootView.findViewById(R.id.activity_game_record_details_date);
@@ -62,12 +70,17 @@ public class GameRecordScoresListFragment extends Fragment {
 
         deleteButton = rootView.findViewById(R.id.activity_game_record_details_delete_button);
 
+        gameRecordViewModel = new ViewModelProvider(requireActivity()).get(GameRecordViewModel.class);
+        gameRecord = gameRecordViewModel.getSharedGameRecord();
+
         setViews(gameRecord);
 
         gameRecordViewModel.getPlayerTeamsWithPlayers(gameRecord.getId()).observe(getViewLifecycleOwner(), new Observer<List<PlayerTeamWithPlayers>>() {
             @Override
             public void onChanged(List<PlayerTeamWithPlayers> playerTeamsWithPlayers) {
-                setupAdapter(playerTeamsWithPlayers, recyclerView);
+                RecyclerView.Adapter adapter = createAdapter(playerTeamsWithPlayers, recyclerView);
+                recyclerView.setAdapter(adapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             }
         });
 
@@ -81,6 +94,14 @@ public class GameRecordScoresListFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     * Pops up a warning informing the user of the repercussions deleting a game record has, namely
+     * the creation of inaccuracy in the skill rating system if the game record is not the last one
+     * to have been made, and provides them with a choice of whether to continue or not. If the user
+     * chooses to delete the game record, it is deleted and the user is returned to the view for the
+     * group from which this game record was taken.
+     * @param gameRecord
+     */
     private void startDeleteActivity(GameRecord gameRecord) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Delete Game Record?")
@@ -143,7 +164,15 @@ public class GameRecordScoresListFragment extends Fragment {
         playerCountOutputTextView.setText(Integer.toString(gameRecord.getNoOfTeams()));
     }
 
-    private void setupAdapter(List<PlayerTeamWithPlayers> playerTeamsWithPlayers, RecyclerView recyclerView) {
+    /**
+     * Returns the correct recyclerview adapter depending on whether the game was played
+     * competitively or not. If it was played competitively, the list of scores is populated using
+     * the competitive score list adapter. If it was played either cooperatively or solitaire, the
+     * list of scores is populated using the cooperative score list adapter.
+     * @param playerTeamsWithPlayers list of player teams with players that played in the game, sorted into descending order based on score
+     * @param recyclerView
+     */
+    private RecyclerView.Adapter createAdapter(List<PlayerTeamWithPlayers> playerTeamsWithPlayers, RecyclerView recyclerView) {
         RecyclerView.Adapter adapter;
 
         if (gameRecord.getPlayModePlayed() == PlayMode.PlayModeEnum.COMPETITIVE) {
@@ -156,12 +185,17 @@ public class GameRecordScoresListFragment extends Fragment {
             adapter = cooperativeAdapter;
         }
 
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        return adapter;
     }
 
-    private String getPlayModeString(PlayMode.PlayModeEnum playModeEnum) {
-        switch (playModeEnum) {
+    /**
+     * Returns the correct string to represent the playmode the game record was played in - Competitive,
+     * Cooperative or Solitaire.
+     * @param playModePlayed playmode enum representing the playmode played
+     * @return
+     */
+    private String getPlayModeString(PlayMode.PlayModeEnum playModePlayed) {
+        switch (playModePlayed) {
             case COMPETITIVE:
                 return getString(R.string.competitive);
             case COOPERATIVE:

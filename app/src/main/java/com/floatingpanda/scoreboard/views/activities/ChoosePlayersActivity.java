@@ -56,6 +56,7 @@ public class ChoosePlayersActivity extends AppCompatActivity {
 
         choosePlayerSharedViewModel = new ViewModelProvider(this).get(ChoosePlayerSharedViewModel.class);
         choosePlayerSharedViewModel.initialisePotentialPlayers(group.getId());
+        choosePlayerSharedViewModel.setNoOfTeams(noOfTeams);
 
         ViewPager2 viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(new ChoosePlayersPagerAdapter(this, noOfTeams));
@@ -63,12 +64,14 @@ public class ChoosePlayersActivity extends AppCompatActivity {
         viewPager.setUserInputEnabled(false);
 
         if (noOfTeams == 1) {
-            nextButton.setText("Finish");
+            nextButton.setText(getString(R.string.finish));
         }
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //If we're on the first item and the user hits the back button we can return to the
+                // calling activity where they can change game record details.
                 if (viewPager.getCurrentItem() == 0) {
                     finish();
                 }
@@ -78,7 +81,7 @@ public class ChoosePlayersActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
 
                 if (viewPager.getCurrentItem() < (noOfTeams - 1)) {
-                    nextButton.setText("Next Team");
+                    nextButton.setText(getString(R.string.next_team));
                 }
             }
         });
@@ -92,21 +95,29 @@ public class ChoosePlayersActivity extends AppCompatActivity {
 
                 choosePlayerSharedViewModel.updateObservablePotentialPlayers();
 
+                //If we are on the last team, then when the next button, which should read 'finish' at this point,
+                // is pressed we move to the confirm game record activity, where the user can view the details,
+                // of the game record and confirm of cancel game record creation.
                 if (viewPager.getCurrentItem() == (noOfTeams - 1)) {
                     if (choosePlayerSharedViewModel.areValidTeams(getApplicationContext(), gameRecord.getPlayModePlayed(), false)) {
                         startConfirmGameRecordActivity();
                     }
                 } else {
+                    //Otherwise we move on a page to choose players for the next team.
                     viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
                 }
 
                 if (viewPager.getCurrentItem() == (noOfTeams - 1)) {
-                    nextButton.setText("Finish");
+                    nextButton.setText(getString(R.string.finish));
                 }
             }
         });
     }
 
+    /**
+     * Starts the confirm game record activity, where the user can see the details they have selected for
+     * the game record and confirm or cancel game record creation.
+     */
     private void startConfirmGameRecordActivity() {
         Intent intent = new Intent(this, ConfirmGameRecordActivity.class);
         intent.putExtra("GAME_RECORD", gameRecord);

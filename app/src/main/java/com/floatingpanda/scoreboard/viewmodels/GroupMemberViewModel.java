@@ -51,6 +51,8 @@ public class GroupMemberViewModel extends AndroidViewModel {
 
     public LiveData<List<Member>> getAllMembers() { return allMembers; }
 
+    //TODO write tests for the groupId variants below.
+
     // Preconditions: - member does not exist in the database.
     // Postconditions: - member is added to the database.
     /**
@@ -68,10 +70,24 @@ public class GroupMemberViewModel extends AndroidViewModel {
         groupRepository.insertGroupMember(groupMember);
     }
 
+    public void addGroupMember(int groupId, Member member) {
+        GroupMember groupMember = new GroupMember(groupId, member.getId());
+        groupRepository.insertGroupMember(groupMember);
+    }
+
     public void addGroupMembers(Group group, List<Member> members) {
         List<GroupMember> groupMembers = new ArrayList<>();
         for(Member member : members) {
             groupMembers.add(new GroupMember(group.getId(), member.getId()));
+        }
+
+        groupRepository.insertGroupMembers(groupMembers);
+    }
+
+    public void addGroupMembers(int groupId, List<Member> members) {
+        List<GroupMember> groupMembers = new ArrayList<>();
+        for(Member member : members) {
+            groupMembers.add(new GroupMember(groupId, member.getId()));
         }
 
         groupRepository.insertGroupMembers(groupMembers);
@@ -93,6 +109,11 @@ public class GroupMemberViewModel extends AndroidViewModel {
      */
     public void removeGroupMember(Group group, Member member) {
         GroupMember groupMember = new GroupMember(group.getId(), member.getId());
+        groupRepository.removeGroupMember(groupMember);
+    }
+
+    public void removeGroupMember(int groupId, Member member) {
+        GroupMember groupMember = new GroupMember(groupId, member.getId());
         groupRepository.removeGroupMember(groupMember);
     }
 }

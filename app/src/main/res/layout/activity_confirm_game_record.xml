@@ -11,10 +11,10 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="16dp"
-        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Medieval"/>
+        tools:text="Medieval"
+        style="@style/TextAppearance.MaterialComponents.Headline5"/>
 
     <TextView
         android:id="@+id/activity_confirm_record_date_textview"
@@ -24,8 +24,8 @@
         android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        tools:text="22/05/20"/>
+        tools:text="22/05/20"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/activity_confirm_record_time_textview"
@@ -35,7 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="17:48"
-        android:textSize="16sp"/>
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/activity_confirm_record_play_mode_textview"
@@ -45,33 +45,45 @@
         android:layout_marginLeft="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Competitive"/>
+        tools:text="Competitive"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <TextView
         android:id="@+id/activity_confirm_record_team_setting_OR_win_lose_textview"
         app:layout_constraintLeft_toRightOf="@id/activity_confirm_record_play_mode_textview"
         app:layout_constraintTop_toTopOf="@id/activity_confirm_record_play_mode_textview"
-        android:layout_marginLeft="32dp"
+        android:layout_marginLeft="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="No Teams"/>
+        tools:text="No Teams"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <TextView
         android:id="@+id/activity_confirm_record_team_count_textview"
-        app:layout_constraintTop_toBottomOf="@id/activity_confirm_record_play_mode_textview"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Players: 8"/>
+        app:layout_constraintTop_toTopOf="@id/activity_confirm_record_play_mode_textview"
+        android:layout_marginLeft="40dp"
+        app:layout_constraintLeft_toRightOf="@id/activity_confirm_record_team_setting_OR_win_lose_textview"
+        android:text="@string/players_colon_header"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+
+    <TextView
+        android:id="@+id/activity_confirm_record_team_count_output"
+        app:layout_constraintTop_toTopOf="@id/activity_confirm_record_team_count_textview"
+        app:layout_constraintLeft_toRightOf="@id/activity_confirm_record_team_count_textview"
+        android:layout_marginLeft="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="8"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_confirm_record_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/activity_confirm_record_team_count_textview"
+        app:layout_constraintTop_toBottomOf="@id/activity_confirm_record_team_count_output"
         app:layout_constraintBottom_toTopOf="@id/activity_confirm_record_confirm_button"
-        app:layout_constraintHeight_percent="100"
         android:layout_margin="8dp"/>
 
     <Button

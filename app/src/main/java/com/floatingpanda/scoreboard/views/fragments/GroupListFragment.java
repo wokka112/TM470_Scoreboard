@@ -26,6 +26,10 @@ import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
+/**
+ * A view fragment showing a list of all the groups in the database. Also provides the means to add,
+ * edit and delete groups in the database.
+ */
 public class GroupListFragment extends Fragment implements DetailAdapterInterface {
 
     private final int ADD_GROUP_REQUEST_CODE = 1;
@@ -67,11 +71,22 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
         return rootView;
     }
 
+    /**
+     * Starts the add activity to add a new group to the database.
+     */
     private void startAddActivity() {
-        Intent addMemberIntent = new Intent(getContext(), GroupAddActivity.class);
-        startActivityForResult(addMemberIntent, ADD_GROUP_REQUEST_CODE);
+        Intent addGroupIntent = new Intent(getContext(), GroupAddActivity.class);
+        startActivityForResult(addGroupIntent, ADD_GROUP_REQUEST_CODE);
     }
 
+    /**
+     * Starts the Group activity to view the details of a specific group, passed as object.
+     *
+     * object should be a Group, and the Group should exist in the database.
+     *
+     * Part of the DetailAdapterInterface.
+     * @param object
+     */
     @Override
     public void viewDetails(Object object) {
         Group group = (Group) object;

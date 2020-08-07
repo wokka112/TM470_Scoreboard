@@ -30,6 +30,8 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
     private MutableLiveData<List<Member>> observablePotentialPlayers;
     private List<Member> potentialPlayers;
     private Map<Integer, TeamOfPlayers> selectedPlayers;
+    private int noOfTeams;
+    private int currentTeamNo;
 
     public ChoosePlayerSharedViewModel(Application application) {
         super(application);
@@ -172,10 +174,21 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
      */
     public void createEmptyTeam(int teamNo, int initialPosition) {
         if (selectedPlayers.get(teamNo) == null) {
-            Log.w("ChoosePlayerShVM.java", "Created team " + teamNo + ", position: " + initialPosition);
             selectedPlayers.put(teamNo, new TeamOfPlayers(teamNo, initialPosition));
         }
     }
+
+    public int getNoOfTeams() {
+        return noOfTeams;
+    }
+
+    public void setNoOfTeams(int noOfTeams) {
+        this.noOfTeams = noOfTeams;
+    }
+
+    public int getCurrentTeamNo() { return currentTeamNo; }
+
+    public void setCurrentTeamNo(int currentTeamNo) { this.currentTeamNo = currentTeamNo; }
 
     //TODO Change validity tests to return enums and then use them to determine toast to show? That way the application context is
     // not being plugged into the viewmodel, and it doesn't need to be aware of the view or what needs to be done in it.

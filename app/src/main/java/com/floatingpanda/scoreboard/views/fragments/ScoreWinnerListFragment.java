@@ -21,18 +21,28 @@ import com.floatingpanda.scoreboard.data.relations.ScoreWithMemberDetails;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.interfaces.DetailAdapterInterface;
 import com.floatingpanda.scoreboard.viewmodels.GroupMonthlyScoreViewModel;
+import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.floatingpanda.scoreboard.views.activities.GroupMonthlyScoreActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A view fragment showing, for a specific group, a list of the months, in descending order, and the
+ * top three scores attained by the group's members for each month. These top three scores are
+ * ranked (1st, 2nd, 3rd) to show how they place relative to one another, and include the nickname
+ * of the group member who got the score.
+ */
 public class ScoreWinnerListFragment extends Fragment implements DetailAdapterInterface {
-    private Group group;
+
+    //The group view model is used to get the groupId, which is supplied by the calling activity -
+    // GroupActivity - to this and other fragments.
+    private GroupViewModel groupViewModel;
     private GroupMonthlyScoreViewModel groupMonthlyScoreViewModel;
 
-    public ScoreWinnerListFragment(Group group) {
-        this.group = group;
+    public ScoreWinnerListFragment() {
+
     }
 
     @Nullable
@@ -48,8 +58,11 @@ public class ScoreWinnerListFragment extends Fragment implements DetailAdapterIn
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        groupViewModel = new ViewModelProvider(requireActivity()).get(GroupViewModel.class);
+        int groupId = groupViewModel.getSharedGroupId();
+
         groupMonthlyScoreViewModel = new ViewModelProvider(this).get(GroupMonthlyScoreViewModel.class);
-        groupMonthlyScoreViewModel.initGroupMonthlyScoresWithScoresAndMemberDetails(group.getId());
+        groupMonthlyScoreViewModel.initGroupMonthlyScoresWithScoresAndMemberDetails(groupId);
 
         groupMonthlyScoreViewModel.getGroupMonthlyScoresWithScoresAndMemberDetails().observe(getViewLifecycleOwner(), new Observer<List<GroupMonthlyScoreWithScoresAndMemberDetails>>() {
             @Override
@@ -61,6 +74,14 @@ public class ScoreWinnerListFragment extends Fragment implements DetailAdapterIn
         return rootView;
     }
 
+    /**
+     * Starts the GroupMonthlyScoreActivity to view a whole month of scores in more detail.
+     *
+     * object must be a GroupMonthlyScore, and the group monthly score must exist in the database.
+     *
+     * Part of the DetailAdapterInterface.
+     * @param object
+     */
     @Override
     public void viewDetails(Object object) {
         GroupMonthlyScoreWithScoresAndMemberDetails groupMonthlyScoreWithScoresAndMemberDetails = (GroupMonthlyScoreWithScoresAndMemberDetails) object;

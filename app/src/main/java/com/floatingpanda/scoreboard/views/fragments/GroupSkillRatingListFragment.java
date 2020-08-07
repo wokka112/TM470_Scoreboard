@@ -10,6 +10,7 @@ import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,16 +21,24 @@ import com.floatingpanda.scoreboard.data.database_views.GroupCategorySkillRating
 import com.floatingpanda.scoreboard.data.entities.BgCategory;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.viewmodels.GroupCategorySkillRatingViewModel;
+import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 
 import java.util.List;
 
+/**
+ * A view fragment showing a list of all the skill ratings for a specific category in a specific
+ * group. The category can be changed using a spinner in the view to browse different ratings for
+ * different categories in the group.
+ */
 public class GroupSkillRatingListFragment extends Fragment {
 
-    private Group group;
+    //The group view model is used to get the groupId, which is supplied by the calling activity -
+    // GroupActivity - to this and other fragments.
+    private GroupViewModel groupViewModel;
     private GroupCategorySkillRatingViewModel groupCategorySkillRatingViewModel;
 
-    public GroupSkillRatingListFragment(Group group) {
-        this.group = group;
+    public GroupSkillRatingListFragment() {
+
     }
 
     @Override
@@ -44,11 +53,15 @@ public class GroupSkillRatingListFragment extends Fragment {
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        groupViewModel = new ViewModelProvider(requireActivity()).get(GroupViewModel.class);
+        int groupId = groupViewModel.getSharedGroupId();
+
         groupCategorySkillRatingViewModel = new ViewModelProvider(this).get(GroupCategorySkillRatingViewModel.class);
 
         groupCategorySkillRatingViewModel.getAllBgCategories().observe(getViewLifecycleOwner(), new Observer<List<BgCategory>>() {
             @Override
             public void onChanged(List<BgCategory> bgCategories) {
+                //TODO make work with R.layout.textview_spinner_item to have a custom style similar to rest of text on the page
                 ArrayAdapter<BgCategory> spinnerAdapter = new ArrayAdapter<BgCategory>(getContext(), android.R.layout.simple_spinner_item, bgCategories);
                 spinner.setAdapter(spinnerAdapter);
 
@@ -56,7 +69,7 @@ public class GroupSkillRatingListFragment extends Fragment {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         BgCategory selectedBgCategory = (BgCategory) parent.getItemAtPosition(position);
-                        groupCategorySkillRatingViewModel.setGroupAndSkillRatingCategory(group.getId(), selectedBgCategory.getId());
+                        groupCategorySkillRatingViewModel.setGroupAndSkillRatingCategory(groupId, selectedBgCategory.getId());
                     }
 
                     @Override

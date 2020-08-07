@@ -18,6 +18,7 @@ import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.CompetitiveCo
 import com.floatingpanda.scoreboard.adapters.recyclerview_adapters.CoopSoliConfirmPlayersListAdapter;
 import com.floatingpanda.scoreboard.data.entities.GameRecord;
 import com.floatingpanda.scoreboard.data.entities.PlayMode;
+import com.floatingpanda.scoreboard.utils.DateStringCreator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,16 @@ import java.util.List;
 import static com.floatingpanda.scoreboard.data.entities.PlayMode.PlayModeEnum.COMPETITIVE;
 
 /**
- * View for confirming game record details when creating a new game record.
+ * View for confirming game record details when creating a new game record. This view details the
+ * settings chosen for the game record - board game, play mode played, teams, etc. - and gives the
+ * user the option to confirm or cancel the game record creation.
  */
 public class ConfirmGameRecordActivity extends AppCompatActivity {
 
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private TextView gameTextView, dateTextView, timeTextView, playModeTextView, teamSettingOrWinLoseTextView,
-            teamCountTextView;
+            teamCountHeaderTextView, teamCountOutputTextView;
     private Button confirmButton, cancelButton;
     private RecyclerView recyclerView;
 
@@ -48,7 +51,8 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
         timeTextView = findViewById(R.id.activity_confirm_record_time_textview);
         playModeTextView = findViewById(R.id.activity_confirm_record_play_mode_textview);
         teamSettingOrWinLoseTextView = findViewById(R.id.activity_confirm_record_team_setting_OR_win_lose_textview);
-        teamCountTextView = findViewById(R.id.activity_confirm_record_team_count_textview);
+        teamCountHeaderTextView = findViewById(R.id.activity_confirm_record_team_count_textview);
+        teamCountOutputTextView = findViewById(R.id.activity_confirm_record_team_count_output);
 
         confirmButton = findViewById(R.id.activity_confirm_record_confirm_button);
         cancelButton = findViewById(R.id.activity_confirm_record_cancel_button);
@@ -58,37 +62,11 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
         GameRecord gameRecord = (GameRecord) getIntent().getExtras().get("GAME_RECORD");
         List<TeamOfPlayers> teamsOfPlayers = (ArrayList) getIntent().getExtras().get("TEAMS_OF_PLAYERS");
 
-        gameTextView.setText(gameRecord.getBoardGameName());
-        dateTextView.setText(gameRecord.getDateTime().toString());
+        setViews(gameRecord);
 
-        PlayMode.PlayModeEnum playModePlayed = gameRecord.getPlayModePlayed();
-        setPlayModePlayedTextView(playModePlayed);
-
-        if(playModePlayed == COMPETITIVE) {
-            if (gameRecord.getTeams()) {
-                teamSettingOrWinLoseTextView.setText("Teams");
-            } else {
-                teamSettingOrWinLoseTextView.setText("No Teams");
-            }
-        }
-
-        if (gameRecord.getTeams()) {
-            teamCountTextView.setText(gameRecord.getNoOfTeams() + " Teams");
-        } else {
-            teamCountTextView.setText(gameRecord.getNoOfTeams() + " Players");
-        }
-
-        if (gameRecord.getPlayModePlayed() == COMPETITIVE) {
-            final CompetitiveConfirmPlayersListAdapter adapter = new CompetitiveConfirmPlayersListAdapter(this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            adapter.setPlayerTeams(teamsOfPlayers);
-        } else {
-            final CoopSoliConfirmPlayersListAdapter adapter = new CoopSoliConfirmPlayersListAdapter(this, gameRecord.getWon());
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            adapter.setPlayerTeams(teamsOfPlayers);
-        }
+        RecyclerView.Adapter adapter = createAdapter(gameRecord, teamsOfPlayers);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,6 +86,59 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
         });
     }
 
+    private void setViews(GameRecord gameRecord) {
+        gameTextView.setText(gameRecord.getBoardGameName());
+
+        DateStringCreator dateStringCreator = new DateStringCreator(gameRecord.getDateTime());
+
+        String dateText = dateStringCreator.getDayOfMonthString() + " " + dateStringCreator.getEnglishMonth3LetterString() + " " + dateStringCreator.getYearString();
+        dateTextView.setText(dateText);
+
+        String timeText = dateStringCreator.getHourOfDayString() + ":" + dateStringCreator.getMinuteString();
+        timeTextView.setText(timeText);
+
+        PlayMode.PlayModeEnum playModePlayed = gameRecord.getPlayModePlayed();
+        setPlayModePlayedTextView(playModePlayed);
+
+        if(playModePlayed == COMPETITIVE) {
+            if (gameRecord.getTeams()) {
+                teamSettingOrWinLoseTextView.setText(getString(R.string.teams));
+            } else {
+                teamSettingOrWinLoseTextView.setText(getString(R.string.no_teams));
+            }
+        }
+
+        if (gameRecord.getTeams()) {
+            teamCountHeaderTextView.setText(getString(R.string.teams_colon_header));
+            teamCountOutputTextView.setText(Integer.toString(gameRecord.getNoOfTeams()));
+        } else {
+            teamCountHeaderTextView.setText(getString(R.string.players_colon_header));
+            teamCountOutputTextView.setText(Integer.toString(gameRecord.getNoOfTeams()));
+        }
+    }
+
+    /**
+     * Returns an adapter for the recyclerview to use to list the game record details. If the
+     * playmode selected is competitive, the competitive confirm players list adapter is returned,
+     * which displays teams in different positions to show who beat who. If the playmode selected is
+     * cooperative or solitaire, the coop soli confirm players list adapter is returned, which
+     * displays whether the game was won or lost and the players who played.
+     * @param gameRecord the game record being created
+     * @param teamsOfPlayers the teams of players who played in said record
+     * @return
+     */
+    private RecyclerView.Adapter createAdapter(GameRecord gameRecord, List<TeamOfPlayers> teamsOfPlayers) {
+        if (gameRecord.getPlayModePlayed() == COMPETITIVE) {
+            final CompetitiveConfirmPlayersListAdapter adapter = new CompetitiveConfirmPlayersListAdapter(this);
+            adapter.setPlayerTeams(teamsOfPlayers);
+            return adapter;
+        } else {
+            final CoopSoliConfirmPlayersListAdapter adapter = new CoopSoliConfirmPlayersListAdapter(this, gameRecord.getWon());
+            adapter.setPlayerTeams(teamsOfPlayers);
+            return adapter;
+        }
+    }
+
     /**
      * Sets the play mode textView to the correct value for the playmode that the game record was
      * played in.
@@ -116,16 +147,16 @@ public class ConfirmGameRecordActivity extends AppCompatActivity {
     private void setPlayModePlayedTextView(PlayMode.PlayModeEnum playModePlayed) {
         switch (playModePlayed) {
             case COMPETITIVE:
-                playModeTextView.setText("Competitive");
+                playModeTextView.setText(getString(R.string.competitive));
                 break;
             case COOPERATIVE:
-                playModeTextView.setText("Cooperative");
+                playModeTextView.setText(getString(R.string.cooperative));
                 break;
             case SOLITAIRE:
-                playModeTextView.setText("Solitaire");
+                playModeTextView.setText(getString(R.string.solitaire));
                 break;
             default:
-                playModeTextView.setText("Error");
+                playModeTextView.setText(getString(R.string.play_mode_error));
         }
     }
 

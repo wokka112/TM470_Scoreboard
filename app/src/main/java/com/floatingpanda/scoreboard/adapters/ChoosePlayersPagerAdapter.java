@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.floatingpanda.scoreboard.views.fragments.ChoosePlayerPageFragment;
@@ -22,7 +23,7 @@ public class ChoosePlayersPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public Fragment createFragment(int position) {
-        return new ChoosePlayerPageFragment(position + 1, numOfTeams);
+        return new ChoosePlayerPageFragment(position + 1);
     }
 
     @Override

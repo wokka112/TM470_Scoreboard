@@ -14,7 +14,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="8dp"
-        tools:text="Medieval"/>
+        tools:text="Medieval"
+        style="@style/TextAppearance.MdcTypographyStyles.Headline6"/>
 
     <TextView
         android:id="@+id/records_date"
@@ -24,7 +25,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/records_time"
         android:layout_marginTop="8dp"
-        tools:text="11 May 2020"/>
+        tools:text="11 May 2020"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/records_time"
@@ -33,7 +35,8 @@
         app:layout_constraintTop_toTopOf="@id/records_date"
         app:layout_constraintLeft_toRightOf="@id/records_date"
         app:layout_constraintRight_toRightOf="parent"
-        tools:text="17:43"/>
+        tools:text="17:43"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/records_play_mode"
@@ -43,7 +46,8 @@
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/records_difficulty_header"
-        tools:text="@string/competitive"/>
+        tools:text="@string/competitive"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
 
     <TextView
         android:id="@+id/records_difficulty_header"
@@ -53,7 +57,8 @@
         app:layout_constraintLeft_toLeftOf="@id/records_won_lost"
         app:layout_constraintRight_toRightOf="@id/records_won_lost"
         android:layout_marginRight="16dp"
-        android:text="@string/difficulty_colon_header"/>
+        android:text="@string/difficulty_colon_header"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
 
     <TextView
         android:id="@+id/records_difficulty_output"
@@ -62,7 +67,8 @@
         app:layout_constraintLeft_toRightOf="@id/records_difficulty_header"
         app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
         android:layout_marginLeft="12dp"
-        tools:text="3"/>
+        tools:text="3"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
 
     <TextView
         android:id="@+id/records_player_count_header"
@@ -71,7 +77,8 @@
         app:layout_constraintLeft_toRightOf="@id/records_difficulty_output"
         app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/players_colon_header"/>
+        android:text="@string/players_colon_header"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
 
     <TextView
         android:id="@+id/records_player_count_output"
@@ -80,7 +87,8 @@
         app:layout_constraintTop_toTopOf="@id/records_difficulty_header"
         app:layout_constraintLeft_toRightOf="@id/records_player_count_header"
         android:layout_marginLeft="12dp"
-        tools:text="8"/>
+        tools:text="8"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
 
     <TextView
         android:id="@+id/records_won_lost"
@@ -91,7 +99,8 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/records_difficulty_header"
         android:layout_marginTop="8dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        style="@style/TextAppearance.MaterialComponents.Body2"/>
 
     <LinearLayout
         android:id="@+id/records_first_wrapper"

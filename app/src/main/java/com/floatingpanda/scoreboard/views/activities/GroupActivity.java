@@ -5,11 +5,14 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.adapters.GroupActivityAdapter;
 import com.floatingpanda.scoreboard.data.entities.Group;
+import com.floatingpanda.scoreboard.viewmodels.GroupViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -21,6 +24,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 public class GroupActivity extends AppCompatActivity {
 
     private Group group;
+    private GroupViewModel groupViewModel;
+    private TextView groupNameTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +34,19 @@ public class GroupActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        //TODO switch to using a viewmodel to get the group as LiveData. As it stands, if group is
-        // edited then the name doesn't change on the banner.
+        groupNameTextView = findViewById(R.id.banner_group_name);
 
         group = (Group) getIntent().getExtras().get("GROUP");
 
-        TextView groupNameTextView = findViewById(R.id.banner_group_name);
-        groupNameTextView.setText(group.getGroupName());
+        groupViewModel = new ViewModelProvider(this).get(GroupViewModel.class);
+        groupViewModel.setSharedGroupId(group.getId());
+        groupViewModel.getLiveDataGroupById(group.getId()).observe(this, new Observer<Group>() {
+            @Override
+            public void onChanged(Group group) {
+                setGroup(group);
+                setViews(group);
+            }
+        });
 
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabLayout tabLayout = findViewById(R.id.tab_layout);
@@ -44,6 +55,14 @@ public class GroupActivity extends AppCompatActivity {
         viewPager2.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> tab.setText(adapter.getTabTitle(position))).attach();
+    }
+
+    private void setGroup(Group group) {
+        this.group = group;
+    }
+
+    private void setViews(Group group) {
+        groupNameTextView.setText(group.getGroupName());
     }
 
     /**

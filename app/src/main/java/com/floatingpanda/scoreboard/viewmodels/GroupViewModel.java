@@ -1,13 +1,11 @@
 package com.floatingpanda.scoreboard.viewmodels;
 
-import android.app.Activity;
 import android.app.Application;
 import android.widget.EditText;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.floatingpanda.scoreboard.utils.AlertDialogHelper;
 import com.floatingpanda.scoreboard.data.AppDatabase;
 import com.floatingpanda.scoreboard.data.entities.Group;
 import com.floatingpanda.scoreboard.repositories.GroupRepository;
@@ -18,6 +16,7 @@ public class GroupViewModel extends AndroidViewModel {
 
     private GroupRepository groupRepository;
     private LiveData<List<Group>> allGroups;
+    private int sharedGroupId;
 
     public GroupViewModel(Application application) {
         super(application);
@@ -88,5 +87,14 @@ public class GroupViewModel extends AndroidViewModel {
         }
 
         return true;
+    }
+
+    //TODO write tests
+    public int getSharedGroupId() {
+        return sharedGroupId;
+    }
+
+    public void setSharedGroupId(int sharedGroupId) {
+        this.sharedGroupId = sharedGroupId;
     }
 }

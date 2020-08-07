@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,21 +33,6 @@ public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAd
     @Override
     public BgCategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.recyclerview_item_bg_category, parent, false);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Button editButton = v.findViewById(R.id.category_edit_button);
-                Button deleteButton = v.findViewById(R.id.category_delete_button);
-                if (editButton.getVisibility() == View.GONE) {
-                    editButton.setVisibility(View.VISIBLE);
-                    deleteButton.setVisibility(View.VISIBLE);
-                }
-                else {
-                    editButton.setVisibility(View.GONE);
-                    deleteButton.setVisibility(View.GONE);
-                }
-            }
-        });
         return new BgCategoryViewHolder(itemView);
     }
 
@@ -80,13 +66,13 @@ public class BgCategoryListAdapter extends RecyclerView.Adapter<BgCategoryListAd
 
     class BgCategoryViewHolder extends RecyclerView.ViewHolder {
         private final TextView bgCategoryItemView;
-        private final Button bgCategoryEditButton, bgCategoryDeleteButton;
+        private final ImageButton bgCategoryEditButton, bgCategoryDeleteButton;
 
         private BgCategoryViewHolder(View itemView) {
             super(itemView);
             bgCategoryItemView = itemView.findViewById(R.id.category_text);
-            bgCategoryEditButton = itemView.findViewById(R.id.category_edit_button);
-            bgCategoryDeleteButton = itemView.findViewById(R.id.category_delete_button);
+            bgCategoryEditButton = itemView.findViewById(R.id.category_edit_img_button);
+            bgCategoryDeleteButton = itemView.findViewById(R.id.category_delete_img_button);
 
             bgCategoryEditButton.setOnClickListener(new View.OnClickListener() {
                 @Override

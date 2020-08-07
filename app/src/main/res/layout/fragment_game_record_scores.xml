@@ -10,11 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Medieval"
-        android:textSize="24sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        style="@style/TextAppearance.MaterialComponents.Headline5"/>
 
     <TextView
         android:id="@+id/activity_game_record_details_date"
@@ -23,9 +23,9 @@
         app:layout_constraintTop_toBottomOf="@id/activity_game_record_details_board_game_name"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/activity_game_record_details_time"
-        android:textSize="18sp"
         tools:text="27 July 2020"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/activity_game_record_details_time"
@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="@id/activity_game_record_details_date"
         app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_date"
         app:layout_constraintRight_toRightOf="parent"
-        android:textSize="18sp"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"
         tools:text="18:43" />
 
     <TextView
@@ -45,7 +45,49 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/activity_game_record_details_difficulty_header"
         android:layout_marginTop="8dp"
-        tools:text="Competitive"/>
+        tools:text="Competitive"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+
+    <TextView
+        android:id="@+id/activity_game_record_details_difficulty_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_playmode"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:text="@string/difficulty_colon_header"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+
+    <TextView
+        android:id="@+id/activity_game_record_details_difficulty_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_difficulty_header"
+        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
+        android:layout_marginLeft="12dp"
+        tools:text="4"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+
+    <TextView
+        android:id="@+id/activity_game_record_details_player_count_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_difficulty_output"
+        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/players_colon_header"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+
+    <TextView
+        android:id="@+id/activity_game_record_details_player_count_output"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
+        app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_player_count_header"
+        android:layout_marginLeft="12dp"
+        tools:text="8"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <TextView
         android:id="@+id/activity_game_record_details_won_lost"
@@ -55,44 +97,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/activity_game_record_details_difficulty_header"
-        android:layout_marginTop="8dp"/>
-
-    <TextView
-        android:id="@+id/activity_game_record_details_difficulty_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_playmode"
-        app:layout_constraintLeft_toLeftOf="@id/activity_game_record_details_won_lost"
-        app:layout_constraintRight_toRightOf="@id/activity_game_record_details_won_lost"
-        android:layout_marginRight="16dp"
-        android:text="@string/difficulty_header"/>
-
-    <TextView
-        android:id="@+id/activity_game_record_details_difficulty_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_difficulty_header"
-        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
-        android:layout_marginLeft="12dp"
-        tools:text="4"/>
-
-    <TextView
-        android:id="@+id/activity_game_record_details_player_count_header"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_difficulty_output"
-        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/players_colon_header"/>
-
-    <TextView
-        android:id="@+id/activity_game_record_details_player_count_output"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/activity_game_record_details_difficulty_header"
-        app:layout_constraintLeft_toRightOf="@id/activity_game_record_details_player_count_header"
-        android:layout_marginLeft="12dp"
-        tools:text="8"/>
+        android:layout_marginTop="8dp"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/activity_game_record_details_recyclerview"

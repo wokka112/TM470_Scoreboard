@@ -106,9 +106,24 @@ public class BoardGameActivity extends AppCompatActivity {
         categoriesTextView.setText(bgWithBgCategoriesAndPlayModes.getBoardGameWithBgCategories().getFullBgCategoriesString());
         playModesTextView.setText(bgWithBgCategoriesAndPlayModes.getPlayModesString());
         teamOptionsTextView.setText(boardGame.getTeamOptionsString());
-        descriptionTextView.setText(boardGame.getDescription());
-        houseRulesTextView.setText(boardGame.getHouseRules());
-        notesTextView.setText(boardGame.getNotes());
+
+        String description = boardGame.getDescription();
+        if (description.trim().isEmpty()) {
+            description = getString(R.string.no_description);
+        }
+        descriptionTextView.setText(description);
+
+        String houseRules = boardGame.getHouseRules();
+        if (houseRules.trim().isEmpty()) {
+            houseRules = getString(R.string.no_house_rules);
+        }
+        houseRulesTextView.setText(houseRules);
+
+        String notes = boardGame.getNotes();
+        if (notes.trim().isEmpty()) {
+            notes = getString(R.string.no_notes);
+        }
+        notesTextView.setText(notes);
     }
 
     /**
@@ -126,13 +141,13 @@ public class BoardGameActivity extends AppCompatActivity {
                 .setMessage("Are you sure you want to delete " + boardGameWithBgCategoriesAndPlayModes.getBoardGame().getBgName() +
                         "?\nThe board game will be removed from game records and will no longer appear as a best or worst " +
                         "board game for members.\nThis operation is irreversible.")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.delete), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteBoardGameWithBgCategoriesAndPlayModes(boardGameWithBgCategoriesAndPlayModes);
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         return;

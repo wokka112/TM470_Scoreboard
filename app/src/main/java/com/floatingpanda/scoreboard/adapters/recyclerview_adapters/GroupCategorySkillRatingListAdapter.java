@@ -22,10 +22,12 @@ import java.util.List;
  */
 public class GroupCategorySkillRatingListAdapter extends RecyclerView.Adapter<GroupCategorySkillRatingListAdapter.GroupCategorySkillRatingViewHolder> {
 
+    private Context context;
     private final LayoutInflater inflater;
     private List<GroupCategorySkillRatingWithMemberDetailsView> groupCategorySkillRatingsWithMemberDetailsViews;
 
     public GroupCategorySkillRatingListAdapter(Context context) {
+        this.context = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -35,16 +37,22 @@ public class GroupCategorySkillRatingListAdapter extends RecyclerView.Adapter<Gr
         return new GroupCategorySkillRatingViewHolder(itemView);
     }
 
+    //TODO fix so "no skill ratings yet" is shown when a category with no skill ratings recorded is selected.
     @Override
     public void onBindViewHolder(GroupCategorySkillRatingViewHolder holder, int position) {
-        if (groupCategorySkillRatingsWithMemberDetailsViews != null) {
+        if (groupCategorySkillRatingsWithMemberDetailsViews != null
+                && !groupCategorySkillRatingsWithMemberDetailsViews.isEmpty()) {
             GroupCategorySkillRatingWithMemberDetailsView current = groupCategorySkillRatingsWithMemberDetailsViews.get(position);
 
             holder.nicknameTextView.setText(current.getNickname());
-            holder.skillRatingTextView.setText(Double.toString(current.getSkillRating()));
+
+            Double skillRating = current.getSkillRating();
+            String skillRatingString = String.format("%.2f", skillRating);
+            holder.skillRatingTextView.setText(skillRatingString);
+
             holder.gamesPlayedTextView.setText(Integer.toString(current.getGamesRated()));
         } else {
-
+            holder.skillRatingTextView.setText(context.getString(R.string.no_skill_ratings));
         }
     }
 

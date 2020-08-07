@@ -36,7 +36,7 @@
             android:text="@string/save"
             app:layout_constraintLeft_toRightOf="@id/bgadd_button_cancel"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_house_rules_edittext" />
+            app:layout_constraintTop_toBottomOf="@id/bgadd_notes_edittext" />
 
         <Button
             android:id="@+id/bgadd_button_cancel"
@@ -115,8 +115,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:hint="@string/notes_hint"
-            app:layout_constraintLeft_toLeftOf="@id/bgadd_description_edittext"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_description_edittext"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_house_rules_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_house_rules_edittext"
             android:inputType="textCapSentences"/>
 
         <EditText
@@ -127,8 +127,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             android:hint="@string/board_game_house_rules_hint"
-            app:layout_constraintLeft_toLeftOf="@id/bgadd_notes_edittext"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_notes_edittext"
+            app:layout_constraintLeft_toLeftOf="@id/bgadd_description_edittext"
+            app:layout_constraintTop_toBottomOf="@id/bgadd_description_edittext"
             android:inputType="textCapSentences"/>
 
         <ImageView

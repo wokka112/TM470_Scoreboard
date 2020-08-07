@@ -2,15 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="88dp"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp">
 
     <ImageView
         android:id="@+id/bg_image"
-        android:layout_width="66dp"
-        android:layout_height="66dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="11dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginLeft="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:src="@drawable/ic_launcher_foreground"/>
@@ -21,28 +22,30 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/bg_image"
         app:layout_constraintLeft_toRightOf="@id/bg_image"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="11dp"
-        tools:text="Dawn of Madness"/>
+        android:layout_marginLeft="20dp"
+        tools:text="Dawn of Madness"
+        style="@style/TextAppearance.MdcTypographyStyles.Headline6"/>
 
     <TextView
         android:id="@+id/bg_difficulty_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="4dp"
         android:text="@string/difficulty_colon_header"
         app:layout_constraintLeft_toRightOf="@id/bg_image"
-        app:layout_constraintTop_toTopOf="@id/bg_image" />
+        app:layout_constraintTop_toBottomOf="@id/bg_name"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 
     <TextView
         android:id="@+id/bg_difficulty_output"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toRightOf="@id/bg_difficulty_header"
         app:layout_constraintTop_toTopOf="@id/bg_difficulty_header"
-        tools:text="4"/>
+        tools:text="4"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 
     <TextView
         android:id="@+id/bg_players_header"
@@ -50,8 +53,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/bg_difficulty_output"
         app:layout_constraintTop_toTopOf="@id/bg_difficulty_output"
-        android:layout_marginLeft="30dp"
-        android:text="@string/players_colon_header"/>
+        android:layout_marginLeft="16dp"
+        android:text="@string/players_colon_header"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 
     <TextView
         android:id="@+id/bg_players_output"
@@ -59,8 +63,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toRightOf="@id/bg_players_header"
         app:layout_constraintTop_toTopOf="@id/bg_players_header"
-        android:layout_marginLeft="30dp"
-        tools:text="3 - 8"/>
+        android:layout_marginLeft="8dp"
+        tools:text="3 - 8"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 
     <TextView
         android:id="@+id/bg_categories_header"
@@ -69,17 +74,20 @@
         android:layout_marginTop="4dp"
         android:text="@string/categories_colon_header"
         app:layout_constraintLeft_toLeftOf="@id/bg_difficulty_header"
-        app:layout_constraintTop_toBottomOf="@id/bg_difficulty_header" />
+        app:layout_constraintTop_toBottomOf="@id/bg_difficulty_header"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 
-    <!--TODO make the text wrap round so it doesn't go offscreen -->
+    <!--TODO make the text turn into ... when it goes offscreen-->
     <TextView
         android:id="@+id/bg_categories_output"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintHorizontal_bias="0"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintLeft_toLeftOf="@id/bg_difficulty_output"
+        app:layout_constraintLeft_toRightOf="@id/bg_categories_header"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@id/bg_categories_header"
-        tools:text="Strategy, Luck, Gambling + 2 more"/>
+        tools:text="Strategy, Gambling, + 2 more"
+        style="@style/TextAppearance.MdcTypographyStyles.Body2"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

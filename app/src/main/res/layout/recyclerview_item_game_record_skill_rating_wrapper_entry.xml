@@ -14,7 +14,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        tools:text="Strategy"/>
+        tools:text="Strategy"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/skill_rating_wrapper_entry_old_rating"
@@ -24,7 +25,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
-        tools:text="1535.32"/>
+        tools:text="1535.32"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/skill_rating_wrapper_entry_rating_change"
@@ -34,7 +36,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
-        tools:text="+15.62"/>
+        tools:text="+15.62"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
     <TextView
         android:id="@+id/skill_rating_wrapper_entry_new_rating"
@@ -44,6 +47,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintHorizontal_bias="0.85"
-        tools:text="1550.94"/>
+        tools:text="1550.94"
+        style="@style/TextAppearance.MdcTypographyStyles.Subtitle1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

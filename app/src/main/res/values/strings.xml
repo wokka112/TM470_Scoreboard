@@ -10,6 +10,8 @@
     <string name="confirm">Confirm</string>
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+    <string name="finish">Finish</string>
+    <string name="remove">Remove</string>
     <string name="reset">Reset</string>
     <string name="save">Save</string>
     <string name="next_team">Next Team</string>
@@ -60,8 +62,8 @@
     <string name="third_place_header">3rd Place</string>
 
     <!-- Strings used for hints mainly in edittexts -->
-    <string name="board_game_category_name_hint">New category name...</string>
-    <string name="board_game_name_hint">New game name...</string>
+    <string name="board_game_category_name_hint">Category Name</string>
+    <string name="board_game_name_hint">Game Name</string>
     <string name="board_game_difficulty_hint">Difficulty (1 - 5)</string>
     <string name="board_game_minimum_players_hint">Minimum players</string>
     <string name="board_game_maximum_players_hint">Maximum players</string>
@@ -69,8 +71,8 @@
     <string name="board_game_play_modes_header_hint">"Play Modes (pick as many as are viable)</string>
     <string name="board_game_team_options_header_hint">Possible Team Options</string>
     <string name="board_game_multi_spinner_hint">Choose categories</string>
-    <string name="group_name_hint">New group name...</string>
-    <string name="member_nickname_hint">New member nickname...</string>
+    <string name="group_name_hint">Group Name</string>
+    <string name="member_nickname_hint">Nickname</string>
     <string name="description_hint">Description (optional)</string>
     <string name="notes_hint">Notes (optional)</string>
 
@@ -139,6 +141,10 @@
     <!-- General strings for use in code -->
     <string name="score_measurement_marker">pts</string>
     <string name="play_mode_error">PLAY MODE ERROR</string>
+    <string name="no_description">No description has been recorded.</string>
+    <string name="no_house_rules">No house rules have been recorded.</string>
     <string name="no_scores_this_month">No scores for this month</string>
+    <string name="no_skill_ratings">No skill ratings for this category yet</string>
+    <string name="no_notes">No notes have been recorded.</string>
 
 </resources>
