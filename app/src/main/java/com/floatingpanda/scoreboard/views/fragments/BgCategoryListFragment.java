@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -39,6 +40,7 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     private final int EDIT_CATEGORY_REQUEST_CODE = 2;
 
     private BgCategoryViewModel bgCategoryViewModel;
+    TextView noBgCategoriesTextView;
 
     public BgCategoryListFragment() {
         // Required empty public constructor
@@ -48,6 +50,9 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noBgCategoriesTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noBgCategoriesTextView.setText(R.string.no_bg_categories);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -61,6 +66,13 @@ public class BgCategoryListFragment extends Fragment implements ActivityAdapterI
         bgCategoryViewModel.getAllBgCategories().observe(getViewLifecycleOwner(), new Observer<List<BgCategory>>() {
             @Override
             public void onChanged(@Nullable final List<BgCategory> bgCategories) {
+                if (bgCategories == null
+                        || bgCategories.isEmpty()) {
+                    noBgCategoriesTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noBgCategoriesTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setBgCategories(bgCategories);
             }
         });

@@ -1,12 +1,14 @@
 package com.floatingpanda.scoreboard.views.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -58,9 +60,19 @@ public class GroupSkillRatingListFragment extends Fragment {
 
         groupCategorySkillRatingViewModel = new ViewModelProvider(this).get(GroupCategorySkillRatingViewModel.class);
 
+        TextView noRatingsTextView = rootView.findViewById(R.id.fragment_skill_rating_no_ratings_textview);
+
         groupCategorySkillRatingViewModel.getAllBgCategories().observe(getViewLifecycleOwner(), new Observer<List<BgCategory>>() {
             @Override
             public void onChanged(List<BgCategory> bgCategories) {
+                if (bgCategories == null
+                        || bgCategories.isEmpty()) {
+                    noRatingsTextView.setText(R.string.no_skill_ratings_reason_no_categories);
+                    noRatingsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noRatingsTextView.setVisibility(View.GONE);
+                }
+
                 //TODO make work with R.layout.textview_spinner_item to have a custom style similar to rest of text on the page
                 ArrayAdapter<BgCategory> spinnerAdapter = new ArrayAdapter<BgCategory>(getContext(), android.R.layout.simple_spinner_item, bgCategories);
                 spinner.setAdapter(spinnerAdapter);
@@ -83,6 +95,13 @@ public class GroupSkillRatingListFragment extends Fragment {
         groupCategorySkillRatingViewModel.getGroupCategorySkillRatingsWithMemberDetails().observe(getViewLifecycleOwner(), new Observer<List<GroupCategorySkillRatingWithMemberDetailsView>>() {
             @Override
             public void onChanged(List<GroupCategorySkillRatingWithMemberDetailsView> groupCategorySkillRatingWithMemberDetailsViews) {
+                if (groupCategorySkillRatingWithMemberDetailsViews == null
+                        || groupCategorySkillRatingWithMemberDetailsViews.isEmpty()) {
+                    noRatingsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noRatingsTextView.setVisibility(View.GONE);
+                }
+
                 recyclerViewAdapter.setGroupCategorySkillRatingsWithMemberDetailsViews(groupCategorySkillRatingWithMemberDetailsViews);
             }
         });

@@ -50,7 +50,7 @@
             android:id="@+id/groupadd_button_save"
             app:layout_constraintLeft_toRightOf="@id/groupadd_button_cancel"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/groupadd_notes_edittext"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_notes_edittext_wrapper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -65,41 +65,68 @@
             android:layout_height="wrap_content"
             android:text="@string/cancel" />
 
-        <EditText
-            android:id="@+id/groupadd_name_edittext"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/groupadd_button_img_browse"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/groupadd_name_edittext_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:layout_marginRight="8dp"
-            android:hint="@string/group_name_hint"
-            android:inputType="textCapWords"/>
+            app:boxBackgroundColor="@android:color/white"
+            app:boxBackgroundMode="outline"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_button_img_browse">
 
-        <EditText
-            android:id="@+id/groupadd_description_edittext"
-            app:layout_constraintLeft_toLeftOf="@id/groupadd_name_edittext"
-            app:layout_constraintTop_toBottomOf="@id/groupadd_name_edittext"
+            <EditText
+                android:id="@+id/groupadd_name_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/group_name_hint"
+                android:inputType="textCapWords"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/groupadd_description_edittext_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="@string/description_hint"
-            android:inputType="textCapSentences"/>
+            app:boxBackgroundColor="@android:color/white"
+            app:boxBackgroundMode="outline"
+            app:layout_constraintLeft_toLeftOf="@id/groupadd_name_edittext_wrapper"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_name_edittext_wrapper">
 
-        <EditText
-            android:id="@+id/groupadd_notes_edittext"
-            app:layout_constraintLeft_toLeftOf="@id/groupadd_description_edittext"
-            app:layout_constraintTop_toBottomOf="@id/groupadd_description_edittext"
+            <EditText
+                android:id="@+id/groupadd_description_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/description_hint"
+                android:inputType="textCapSentences"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/groupadd_notes_edittext_wrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
-            android:hint="@string/notes_hint"
-            android:inputType="textCapSentences"/>
+            app:boxBackgroundColor="@android:color/white"
+            app:boxBackgroundMode="outline"
+            app:layout_constraintLeft_toLeftOf="@id/groupadd_description_edittext_wrapper"
+            app:layout_constraintTop_toBottomOf="@id/groupadd_description_edittext_wrapper">
+
+            <EditText
+                android:id="@+id/groupadd_notes_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/notes_hint"
+                android:inputType="textCapSentences"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
             android:id="@+id/groupadd_banner"

@@ -9,13 +9,14 @@
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxBackgroundMode="outline">
+        app:boxBackgroundMode="outline"
+        app:boxBackgroundColor="@android:color/white">
         <EditText
             android:id="@+id/add_category_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/board_game_category_name_hint"
-            android:textSize="18sp" />
+            android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout

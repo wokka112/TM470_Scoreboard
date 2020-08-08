@@ -103,7 +103,7 @@ public class CoopSoliConfirmPlayersListAdapter extends RecyclerView.Adapter<Coop
             wonLostTextView.setText(context.getString(R.string.lost));
         }
 
-        wonLostTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        wonLostTextView.setTextAppearance(R.style.TextAppearance_MdcTypographyStyles_Headline6);
         wonLostTextView.setGravity(Gravity.CENTER);
         wonLostTextView.setPadding(8, 8, 8, 8);
 
@@ -120,6 +120,7 @@ public class CoopSoliConfirmPlayersListAdapter extends RecyclerView.Adapter<Coop
         playerTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         playerTextView.setText(member.getNickname());
         playerTextView.setPadding(8, 4, 8, 4);
+        playerTextView.setTextAppearance(R.style.TextAppearance_MdcTypographyStyles_Body1);
 
         return playerTextView;
     }

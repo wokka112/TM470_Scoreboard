@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -35,6 +36,7 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
     private final int ADD_MEMBER_REQUEST_CODE = 1;
 
     private MemberViewModel memberViewModel;
+    private TextView noMembersTextView;
 
     public MemberListFragment() {
         // Required empty public constructor
@@ -44,6 +46,9 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noMembersTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noMembersTextView.setText(R.string.no_members);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -57,6 +62,14 @@ public class MemberListFragment extends Fragment implements DetailAdapterInterfa
         memberViewModel.getAllMembers().observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
             public void onChanged(@Nullable final List<Member> members) {
+
+                if(members == null
+                        || members.isEmpty()) {
+                    noMembersTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noMembersTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setMembers(members);
             }
         });

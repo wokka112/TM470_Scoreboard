@@ -3,11 +3,13 @@ package com.floatingpanda.scoreboard.views.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,7 +36,8 @@ public class MemberActivity extends AppCompatActivity {
     private MemberViewModel memberViewModel;
     private Member member;
 
-    private TextView nicknameTextView, dateCreatedTextView, notesTextView, groupsTextView, viewGroupsLink;
+    private TextView nicknameTextView, dateCreatedTextView, notesTextView, groupsTextView;
+    private ImageButton viewGroupsButton;
     private ImageView imageView;
 
     @Override
@@ -49,8 +52,8 @@ public class MemberActivity extends AppCompatActivity {
         dateCreatedTextView = findViewById(R.id.memberact_date_created_output);
         notesTextView = findViewById(R.id.memberact_notes_output);
         groupsTextView = findViewById(R.id.memberact_groups_output);
-        //TODO add button with listener to link to a list of groups member is part of
-        viewGroupsLink = findViewById(R.id.memberact_view_groups);
+        //TODO add listener to link to a list of groups member is part of
+        viewGroupsButton = findViewById(R.id.memberact_view_groups_img_button);
         //TODO implement imgfilepath and functionality for it all
         imageView = findViewById(R.id.memberact_image);
 

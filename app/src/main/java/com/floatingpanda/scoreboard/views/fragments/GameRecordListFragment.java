@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -44,6 +45,7 @@ public class GameRecordListFragment extends Fragment implements DetailAdapterInt
     private Group group;
     private GameRecordViewModel gameRecordViewModel;
     private GroupViewModel groupViewModel;
+    private TextView noGameRecordsTextView;
 
     public GameRecordListFragment() {
 
@@ -53,6 +55,9 @@ public class GameRecordListFragment extends Fragment implements DetailAdapterInt
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noGameRecordsTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noGameRecordsTextView.setText(R.string.no_game_records);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -76,6 +81,14 @@ public class GameRecordListFragment extends Fragment implements DetailAdapterInt
         gameRecordViewModel.getGroupsGameRecordsWithTeamsAndPlayers().observe(getViewLifecycleOwner(), new Observer<List<GameRecordWithPlayerTeamsAndPlayers>>() {
             @Override
             public void onChanged(List<GameRecordWithPlayerTeamsAndPlayers> gameRecordsWithPlayerTeamsAndPlayers) {
+
+                if (gameRecordsWithPlayerTeamsAndPlayers == null
+                        || gameRecordsWithPlayerTeamsAndPlayers.isEmpty()) {
+                    noGameRecordsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noGameRecordsTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setGameRecordsWithPlayerTeamsAndPlayers(gameRecordsWithPlayerTeamsAndPlayers);
             }
         });

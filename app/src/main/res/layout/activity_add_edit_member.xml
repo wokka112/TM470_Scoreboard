@@ -33,55 +33,53 @@
         app:layout_constraintRight_toRightOf="parent"
         android:src="@drawable/ic_photo_camera_black_24dp"/>
 
-    <!--TODO look into adding headers to each edittext? Otherwise when editing it's confusing?-->
-    <TextView
-        android:id="@+id/memberadd_nickname_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_button_browse"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/nickname_colon_header"
-        android:visibility="gone"/>
-
-    <EditText
-        android:id="@+id/memberadd_nickname_edittext"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/memberadd_nickname_edittext_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_button_browse"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="16dp"
-        android:hint="@string/member_nickname_hint"
-        android:inputType="textCapWords"/>
+        android:layout_marginRight="8dp"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_button_browse">
 
-    <TextView
-        android:id="@+id/memberadd_notes_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
-        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_textview"
-        android:layout_marginTop="8dp"/>
+        <EditText
+            android:id="@+id/memberadd_nickname_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/member_nickname_hint"
+            android:inputType="textCapWords"
+            android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <EditText
-        android:id="@+id/memberadd_notes_edittext"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/memberadd_notes_edittext_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext"
-        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_edittext"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:hint="@string/notes_hint"
-        android:inputType="textCapSentences"/>
+        android:layout_marginRight="8dp"
+        app:boxBackgroundColor="@android:color/white"
+        app:boxBackgroundMode="outline"
+        app:layout_constraintLeft_toLeftOf="@id/memberadd_nickname_edittext_wrapper"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_nickname_edittext_wrapper">
+
+        <EditText
+            android:id="@+id/memberadd_notes_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/notes_hint"
+            android:inputType="textCapSentences"
+            android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/memberadd_button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/memberadd_notes_edittext"
+        app:layout_constraintTop_toBottomOf="@id/memberadd_notes_edittext_wrapper"
         android:layout_marginTop="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@id/memberadd_button_cancel"

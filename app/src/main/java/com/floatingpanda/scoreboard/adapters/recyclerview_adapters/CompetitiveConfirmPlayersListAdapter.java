@@ -106,19 +106,15 @@ public class CompetitiveConfirmPlayersListAdapter extends RecyclerView.Adapter<C
         String placeString;
         switch (finishingPlace) {
             case 1:
-                Log.w("GameRecordPlayListAdapt.java", "Creating 1st place.");
                 placeString = context.getString(R.string.first_place_header);
                 break;
             case 2:
-                Log.w("GameRecordPlayListAdapt.java", "Creating 2nd place.");
                 placeString = context.getString(R.string.second_place_header);
                 break;
             case 3:
-                Log.w("GameRecordPlayListAdapt.java", "Creating 3rd place.");
                 placeString = context.getString(R.string.third_place_header);
                 break;
             default:
-                Log.w("GameRecordPlayListAdapt.java", "Creating " + finishingPlace + "th place.");
                 placeString = Integer.toString(finishingPlace) + context.getString(R.string.generic_place_ending);
         }
 
@@ -135,7 +131,7 @@ public class CompetitiveConfirmPlayersListAdapter extends RecyclerView.Adapter<C
         TextView placeTextView = new TextView(context);
         placeTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         placeTextView.setText(placeString);
-        placeTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+        placeTextView.setTextAppearance(R.style.TextAppearance_MdcTypographyStyles_Headline6);
         placeTextView.setGravity(Gravity.CENTER);
         placeTextView.setPadding(8, 8, 8, 8);
 
@@ -145,6 +141,7 @@ public class CompetitiveConfirmPlayersListAdapter extends RecyclerView.Adapter<C
     private TextView createTeamTextView(String teamString) {
         TextView teamTextView = (TextView) inflater.inflate(R.layout.recyclerview_team_header_item, null);
         teamTextView.setText(teamString);
+        teamTextView.setTextAppearance(R.style.TextAppearance_MdcTypographyStyles_Body1);
 
         return teamTextView;
     }
@@ -159,6 +156,7 @@ public class CompetitiveConfirmPlayersListAdapter extends RecyclerView.Adapter<C
         playerTextView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         playerTextView.setText(member.getNickname());
         playerTextView.setPadding(8, 4, 8, 4);
+        playerTextView.setTextAppearance(R.style.TextAppearance_MdcTypographyStyles_Body1);
 
         return playerTextView;
     }

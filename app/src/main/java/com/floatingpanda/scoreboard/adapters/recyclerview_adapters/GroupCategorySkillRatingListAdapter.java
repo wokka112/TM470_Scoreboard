@@ -1,6 +1,7 @@
 package com.floatingpanda.scoreboard.adapters.recyclerview_adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,9 @@ public class GroupCategorySkillRatingListAdapter extends RecyclerView.Adapter<Gr
         return new GroupCategorySkillRatingViewHolder(itemView);
     }
 
-    //TODO fix so "no skill ratings yet" is shown when a category with no skill ratings recorded is selected.
     @Override
     public void onBindViewHolder(GroupCategorySkillRatingViewHolder holder, int position) {
-        if (groupCategorySkillRatingsWithMemberDetailsViews != null
-                && !groupCategorySkillRatingsWithMemberDetailsViews.isEmpty()) {
+        if (groupCategorySkillRatingsWithMemberDetailsViews != null) {
             GroupCategorySkillRatingWithMemberDetailsView current = groupCategorySkillRatingsWithMemberDetailsViews.get(position);
 
             holder.nicknameTextView.setText(current.getNickname());
@@ -52,7 +51,7 @@ public class GroupCategorySkillRatingListAdapter extends RecyclerView.Adapter<Gr
 
             holder.gamesPlayedTextView.setText(Integer.toString(current.getGamesRated()));
         } else {
-            holder.skillRatingTextView.setText(context.getString(R.string.no_skill_ratings));
+
         }
     }
 

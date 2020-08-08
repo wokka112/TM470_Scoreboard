@@ -76,6 +76,23 @@
     <string name="description_hint">Description (optional)</string>
     <string name="notes_hint">Notes (optional)</string>
 
+    <!-- Strings for when none of a specific element exists in the database yet -->
+    <string name="no_bg_categories">No board game categories have been added yet. Tap the button in the bottom right to add one.</string>
+    <string name="no_board_games">No board games have been added yet. Tap the button in the bottom right to add one.</string>
+    <string name="no_description">No description has been recorded.</string>
+    <string name="no_game_records">No game records have been added yet. Tap the button in the bottom right to add one.</string>
+    <string name="no_groups">No groups have been added yet. Tap the button in the bottom right to add one.</string>
+    <string name="no_group_members">No group members have been added yet. Tap the button in the bottom right to add one.</string>
+    <string name="no_house_rules">No house rules have been recorded.</string>
+    <string name="no_scores_this_month">No scores for this month</string>
+    <string name="no_skill_ratings">There are no skill ratings for this category yet. Add a competitive game record for a game
+    of this category to begin calculating and recording skill ratings for said category.</string>
+    <string name="no_skill_ratings_reason_no_categories">There are no categories yet, and hence no skill ratings for categories.
+        Go back out of the group and add a board game category, then you can start rating skill levels.</string>
+    <string name="no_members">No members have been added yet. Tap the button in the bottom right to add one.</string>
+    <string name="no_monthly_scores">No scores have been recorded yet. Add a game record to start recording scores.</string>
+    <string name="no_notes">No notes have been recorded.</string>
+
     <!-- String used as the ending for any place from 4th onwards. This is used in code along with
     a number in the form of a string e.g. 4 + @string/generic_place_ending -->
     <string name="generic_place_ending">th Place</string>
@@ -139,12 +156,7 @@
     <string name="sat">Sat</string>
 
     <!-- General strings for use in code -->
+    <string name="create_new_member">Create new member</string>
     <string name="score_measurement_marker">pts</string>
     <string name="play_mode_error">PLAY MODE ERROR</string>
-    <string name="no_description">No description has been recorded.</string>
-    <string name="no_house_rules">No house rules have been recorded.</string>
-    <string name="no_scores_this_month">No scores for this month</string>
-    <string name="no_skill_ratings">No skill ratings for this category yet</string>
-    <string name="no_notes">No notes have been recorded.</string>
-
 </resources>

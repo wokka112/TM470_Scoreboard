@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -38,6 +39,7 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
     private final int ADD_BOARD_GAME_REQUEST_CODE = 1;
 
     private BoardGameViewModel boardGameViewModel;
+    private TextView noBoardGamesTextView;
 
     public BoardGameListFragment() {
         // Required empty public constructor
@@ -47,6 +49,9 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noBoardGamesTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noBoardGamesTextView.setText(R.string.no_board_games);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -60,6 +65,14 @@ public class BoardGameListFragment extends Fragment implements DetailAdapterInte
         boardGameViewModel.getAllBoardGamesWithBgCategories().observe(getViewLifecycleOwner(), new Observer<List<BoardGameWithBgCategories>>() {
             @Override
             public void onChanged(@Nullable final List<BoardGameWithBgCategories> boardGameWithBgCategories) {
+
+                if (boardGameWithBgCategories == null
+                        || boardGameWithBgCategories.isEmpty()) {
+                    noBoardGamesTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noBoardGamesTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setBoardGamesWithBgCategories(boardGameWithBgCategories);
             }
         });

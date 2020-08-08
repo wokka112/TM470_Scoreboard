@@ -23,7 +23,8 @@
         app:layout_constraintBottom_toBottomOf="@id/dialog_add_button"
         app:layout_constraintLeft_toRightOf="@id/dialog_add_button"
         app:layout_constraintTop_toTopOf="@id/dialog_add_button"
-        tools:text="Create new member" />
+        android:text="@string/create_new_member"
+        style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/dialog_search_bar"

@@ -224,8 +224,8 @@ public class GameRecordListAdapter extends RecyclerView.Adapter<GameRecordListAd
         placeTextView.setText(placeString);
 
         if (!teams) {
-            teamTextView.setVisibility(View.GONE);
-            teamOutputTextView.setVisibility(View.GONE);
+            teamTextView.setVisibility(View.INVISIBLE);
+            teamOutputTextView.setVisibility(View.INVISIBLE);
         } else {
             teamTextView.setText(context.getString(R.string.team));
             teamTextView.setVisibility(View.VISIBLE);

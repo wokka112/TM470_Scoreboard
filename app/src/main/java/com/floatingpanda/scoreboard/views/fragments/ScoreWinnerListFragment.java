@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ public class ScoreWinnerListFragment extends Fragment implements DetailAdapterIn
     // GroupActivity - to this and other fragments.
     private GroupViewModel groupViewModel;
     private GroupMonthlyScoreViewModel groupMonthlyScoreViewModel;
+    private TextView noMonthlyScoresTextView;
 
     public ScoreWinnerListFragment() {
 
@@ -49,6 +51,9 @@ public class ScoreWinnerListFragment extends Fragment implements DetailAdapterIn
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noMonthlyScoresTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noMonthlyScoresTextView.setText(R.string.no_monthly_scores);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -67,6 +72,13 @@ public class ScoreWinnerListFragment extends Fragment implements DetailAdapterIn
         groupMonthlyScoreViewModel.getGroupMonthlyScoresWithScoresAndMemberDetails().observe(getViewLifecycleOwner(), new Observer<List<GroupMonthlyScoreWithScoresAndMemberDetails>>() {
             @Override
             public void onChanged(List<GroupMonthlyScoreWithScoresAndMemberDetails> groupMonthlyScoresWithScoresAndMemberDetails) {
+                if (groupMonthlyScoresWithScoresAndMemberDetails == null
+                        || groupMonthlyScoresWithScoresAndMemberDetails.isEmpty()) {
+                    noMonthlyScoresTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noMonthlyScoresTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setGroupMonthlyScoresWithScoresAndMemberDetails(groupMonthlyScoresWithScoresAndMemberDetails);
             }
         });

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -47,6 +48,7 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
     private GroupMemberViewModel groupMemberViewModel;
     private int groupId;
     private List<Member> groupMembers;
+    private TextView noGroupMembersTextView;
 
     public GroupMemberListFragment() {
 
@@ -56,6 +58,9 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noGroupMembersTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noGroupMembersTextView.setText(R.string.no_group_members);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -72,6 +77,14 @@ public class GroupMemberListFragment extends Fragment implements DetailAdapterIn
             @Override
             public void onChanged(List<Member> members) {
                 setGroupMembers(members);
+
+                if (members == null
+                        || members.isEmpty()) {
+                    noGroupMembersTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noGroupMembersTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setGroupMembers(members);
             }
         });

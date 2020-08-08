@@ -545,11 +545,15 @@ public class GameRecordAddActivity extends AppCompatActivity {
     private void enableTeamsRadioGroup() {
         teamsRadioGroup.setClickable(true);
         teamsRadioGroup.setAlpha(1.0f);
+        enableNoTeamsRadioButton();
+        enableTeamsRadioButton();
     }
 
     private void disableTeamsRadioGroup() {
         teamsRadioGroup.setClickable(false);
         teamsRadioGroup.setAlpha(0.5f);
+        disableNoTeamsRadioButton();
+        disableTeamsRadioButton();
     }
 
     /**

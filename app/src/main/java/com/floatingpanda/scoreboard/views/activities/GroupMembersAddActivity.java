@@ -46,7 +46,6 @@ public class GroupMembersAddActivity extends AppCompatActivity implements Select
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         Button cancelButton, saveButton;
-        TextView buttonTextView = findViewById(R.id.dialog_button_textview);
         ImageButton addMemberButton = findViewById(R.id.dialog_add_button);
         cancelButton = findViewById(R.id.add_group_members_button_cancel);
         saveButton = findViewById(R.id.add_group_members_button_save);
@@ -56,8 +55,6 @@ public class GroupMembersAddActivity extends AppCompatActivity implements Select
         final AddGroupMembersListAdapter adapter = new AddGroupMembersListAdapter(this, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        buttonTextView.setText("Create new member");
 
         groupMemberAddViewModel = new ViewModelProvider(this).get(GroupMemberAddViewModel.class);
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -35,6 +36,7 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
     private final int ADD_GROUP_REQUEST_CODE = 1;
 
     private GroupViewModel groupViewModel;
+    private TextView noGroupsTextView;
 
     public GroupListFragment() {
         // Required empty public constructor
@@ -44,6 +46,9 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.recyclerview_layout_with_fab, container, false);
+
+        noGroupsTextView = rootView.findViewById(R.id.no_element_exists_textview);
+        noGroupsTextView.setText(R.string.no_groups);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recyclerview);
         FloatingActionButton fab = rootView.findViewById(R.id.fab);
@@ -57,6 +62,13 @@ public class GroupListFragment extends Fragment implements DetailAdapterInterfac
         groupViewModel.getAllGroups().observe(getViewLifecycleOwner(), new Observer<List<Group>>() {
             @Override
             public void onChanged(@Nullable final List<Group> groups) {
+                if (groups == null
+                        || groups.isEmpty()) {
+                    noGroupsTextView.setVisibility(View.VISIBLE);
+                } else {
+                    noGroupsTextView.setVisibility(View.GONE);
+                }
+
                 adapter.setGroups(groups);
             }
         });
