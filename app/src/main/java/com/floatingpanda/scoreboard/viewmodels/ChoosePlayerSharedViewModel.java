@@ -201,7 +201,7 @@ public class ChoosePlayerSharedViewModel extends AndroidViewModel {
 
         if(teamOfPlayers.getMembers().isEmpty()) {
             if (!testing) {
-                Toast.makeText(applicationContext, "You need to have at least 1 player per team.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(applicationContext, "You need to have at least 1 player on the team.", Toast.LENGTH_SHORT).show();
             }
             return false;
         }

@@ -45,13 +45,14 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
     private int teamNo;
     private int noOfTeams;
 
-    //TODO fix error. App crashes if you rotate screen when on this fragment. Need to supply an
-    // empty constructor and some other way of setting teamNo and noOfTeams.
-    // Could put the noOfTeams in the shared viewModel.
-    // Maybe also keep a running track of the current teamNo in the viewModel?
-    public ChoosePlayerPageFragment(int teamNo){
+    public ChoosePlayerPageFragment(){
         super();
-        this.teamNo = teamNo;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        teamNo = getArguments().getInt("TEAM_NO");
     }
 
     @Nullable
@@ -70,6 +71,7 @@ public class ChoosePlayerPageFragment extends Fragment implements SelectedMember
 
         choosePlayerSharedViewModel = new ViewModelProvider(requireActivity()).get(ChoosePlayerSharedViewModel.class);
         noOfTeams = choosePlayerSharedViewModel.getNoOfTeams();
+
         choosePlayerSharedViewModel.getObservablePotentialPlayers().observe(getViewLifecycleOwner(), new Observer<List<Member>>() {
             @Override
             public void onChanged(List<Member> potentialPlayers) {

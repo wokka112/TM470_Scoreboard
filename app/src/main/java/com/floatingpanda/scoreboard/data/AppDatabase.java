@@ -55,7 +55,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class,
         GroupMember.class, Member.class, PlayMode.class, GameRecord.class, Player.class,
         PlayerTeam.class, GroupMonthlyScore.class, Score.class, GroupCategorySkillRating.class,
-        PlayerSkillRatingChange.class}, version = 39, exportSchema = false,
+        PlayerSkillRatingChange.class}, version = 40, exportSchema = false,
         views = {GroupCategorySkillRatingWithMemberDetailsView.class})
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -208,13 +208,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 BgCategory gambling = new BgCategory("Gambling");
                 boardGameCategoryDao.insert(gambling);
                 gambling = boardGameCategoryDao.findNonLiveDataByName(gambling.getCategoryName());
-
-                BgCategory test;
-
-                for (int i = 1; i < 101; i++) {
-                    test = new BgCategory("Test" + i);
-                    boardGameCategoryDao.insert(test);
-                }
 
                 // BOARD GAME, PLAY MODES AND ASSIGNED CATEGORIES ENTRIES //
                 // BOARD GAMES //
