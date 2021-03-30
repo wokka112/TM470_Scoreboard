@@ -1,3 +1,24 @@
+/*
+ScoreBoard
+
+Copyright © 2020 Adam Poole
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject
+to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial
+portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
+LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 package com.floatingpanda.scoreboard.data;
 
 import android.content.Context;
@@ -91,7 +112,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class, "scoreboard_database")
                             .fallbackToDestructiveMigration()
                             //.allowMainThreadQueries() // Use for testing purposes
-                            .addCallback(sRoomDatabaseCallback)
+                            //.addCallback(sRoomDatabaseCallback)
                             .openHelperFactory(factory)
                             .build();
                 }
@@ -104,7 +125,7 @@ public abstract class AppDatabase extends RoomDatabase {
         return databaseWriteExecutor;
     }
 
-    //TODO comment out once done testing
+    /**
     private static Callback sRoomDatabaseCallback = new Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
@@ -891,7 +912,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 String strategyCategoryName = strategy.getCategoryName();
 
-                /*
                 PlayerSkillRatingChange playerSkillRatingChange = new PlayerSkillRatingChange(player1Id, strategyCategoryName, 1550.00, 20.34);
                 playerSkillRatingChangeDao.insert(playerSkillRatingChange);
 
@@ -912,8 +932,6 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 playerSkillRatingChange = new PlayerSkillRatingChange(player7Id, strategyCategoryName, 1472.64, -10.30);
                 playerSkillRatingChangeDao.insert(playerSkillRatingChange);
-
-                 */
 
                 List<PlayerSkillRatingChange> strategySkillRatingChanges = new ArrayList<>();
 
@@ -942,5 +960,5 @@ public abstract class AppDatabase extends RoomDatabase {
                 playerSkillRatingChangeDao.insertAll(luckSkillRatingChanges.toArray(new PlayerSkillRatingChange[luckSkillRatingChanges.size()]));
             });
         }
-    };
+    };*/
 }
