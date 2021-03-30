@@ -9,7 +9,9 @@ project and, while the application works and provides the desired outcomes, ther
 ## Getting Started
 
 Clone the repository: https://github.com/wokka112/TM470_Scoreboard.
-Use any IDE of your choice to start viewing and editing files. Android Studio is a free IDE for Android development produced by Google.
+
+Use any IDE of your choice to start viewing and editing files. 
+Android Studio is an easy to use free IDE for Android development produced by Google that you can use.
 
 ### Prerequisites
 
@@ -18,10 +20,12 @@ None.
 ## Deployment
 
 Currently the best way to deploy the app to an Android device is to connect the device to a computer and Run the application via an IDE or
-command line on said device. This will install the application. Before doing this make sure to go into the source code, go to the AppDatabase 
-class located in the source files at app/src/main/java/com/floatingpanda/scoreboard/data and comment out the lines 107 - 943. These lines 
-are test data that fill the app with example groups, members and games played. If you don't comment this out, the app will start with a set 
-of random groups, members and games.
+command line on said device. This will install the application. 
+
+There is some example data available in the AppDatabase class located in the source files at
+app/src/main/java/com/floatingpanda/scoreboard/data. The example data is commented out on lines 128 - 943. These lines are example data
+that fill the application with groups, members, games and some statistics. If you want to use this example data to see how the app can
+be used uncomment line 115 and lines 128 - 943 before installing the application.
 
 ## Contributing
 
