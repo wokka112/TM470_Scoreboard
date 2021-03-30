@@ -29,7 +29,7 @@ be used uncomment line 115 and lines 128 - 943 before installing the application
 
 ## Contributing
 
-No contributions are currently accepted for this project. Feel free to clone it and do as you like under the MIT license though.
+No contributions are currently accepted for this project. Feel free to clone it and do as you like in your own project with it under the MIT license though.
 
 ## Authors
 
