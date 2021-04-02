@@ -42,3 +42,8 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * [Rankade](https://rankade.com/) gave a lot of inspiration. I also highly recommend checking them out for the more competitive as they provide a much more accurate skill rating system.
+
+
+# Attribution
+
+This readme was created with a readme template from [Billie Thompson](https://gist.github.com/PurpleBooth). The readme template is available at https://gist.github.com/PurpleBooth/109311bb0361f32d87a2.
