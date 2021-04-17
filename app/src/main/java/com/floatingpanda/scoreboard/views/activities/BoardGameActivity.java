@@ -54,7 +54,6 @@ public class BoardGameActivity extends AppCompatActivity {
 
     private TextView nameTextView, difficultyTextView, playerCountTextView, categoriesTextView, playModesTextView, teamOptionsTextView,
             descriptionTextView, houseRulesTextView, notesTextView;
-    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class BoardGameActivity extends AppCompatActivity {
         descriptionTextView = findViewById(R.id.bgact_description_output);
         houseRulesTextView = findViewById(R.id.bgact_house_rules_output);
         notesTextView = findViewById(R.id.bgact_notes_output);
-        imageView = findViewById(R.id.bgact_image);
 
         Button editButton, deleteButton;
         boardGame = (BoardGame) getIntent().getExtras().get("BOARDGAME");

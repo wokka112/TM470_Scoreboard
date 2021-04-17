@@ -48,7 +48,7 @@ public class GroupEditActivity extends AppCompatActivity {
     private Group group;
 
     private EditText groupNameEditText, descriptionEditText, notesEditText;
-    private ImageButton imgBrowseButton, imgCameraButton, bannerBrowseButton, bannerCameraButton;
+    private ImageButton imgBrowseButton, imgCameraButton;
     private Button cancelButton, saveButton;
 
     @Override
@@ -69,8 +69,6 @@ public class GroupEditActivity extends AppCompatActivity {
 
         imgBrowseButton = findViewById(R.id.groupadd_button_img_browse);
         imgCameraButton = findViewById(R.id.groupadd_button_img_camera);
-        bannerBrowseButton = findViewById(R.id.groupadd_button_banner_browse);
-        bannerCameraButton = findViewById(R.id.groupadd_button_banner_camera);
         cancelButton = findViewById(R.id.groupadd_button_cancel);
         saveButton = findViewById(R.id.groupadd_button_save);
 
@@ -86,22 +84,6 @@ public class GroupEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(GroupEditActivity.this, "Image camera pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        bannerBrowseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(GroupEditActivity.this, "Banner browse pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        bannerCameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(GroupEditActivity.this, "Banner camera pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -126,7 +108,6 @@ public class GroupEditActivity extends AppCompatActivity {
                 group.setNotes(notesEditText.getText().toString());
                 //TODO implement image taking/picking and banner taking/picking and filepath saving functionality
                 group.setImgFilePath("TBA");
-                group.setBannerFilePath("TBA");
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, group);

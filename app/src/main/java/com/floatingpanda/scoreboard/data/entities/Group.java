@@ -65,23 +65,23 @@ public class Group implements Parcelable {
     @ColumnInfo(name = "date_created")
     private Date dateCreated;
 
-    @Nullable
-    @ColumnInfo(name = "banner_file_path")
-    private String bannerFilePath;
-
     @Ignore
-    public Group(int id, String groupName, String notes, String description, String imgFilePath, String bannerFilePath, Date dateCreated) {
+    public Group(int id, String groupName, String notes, String description, String imgFilePath, Date dateCreated) {
         this.id = id;
         this.groupName = groupName;
         this.notes = notes;
         this.description = description;
         this.imgFilePath = imgFilePath;
-        this.bannerFilePath = bannerFilePath;
         this.dateCreated = dateCreated;
     }
 
-    public Group(String groupName, String notes, String description, String imgFilePath, String bannerFilePath) {
-        this(0, groupName, notes, description, imgFilePath, bannerFilePath, new Date());
+    public Group(String groupName, String notes, String description, String imgFilePath) {
+        this(0, groupName, notes, description, imgFilePath, new Date());
+    }
+
+    @Ignore
+    public Group(String groupName, String notes, String description) {
+        this(0, groupName, notes, description, null, new Date());
     }
 
     @Ignore
@@ -91,7 +91,6 @@ public class Group implements Parcelable {
         this.notes = group.getNotes();
         this.description = group.getDescription();
         this.imgFilePath = group.getImgFilePath();
-        this.bannerFilePath = group.getBannerFilePath();
         this.dateCreated = group.getDateCreated();
     }
 
@@ -102,7 +101,6 @@ public class Group implements Parcelable {
         this.notes = source.readString();
         this.description = source.readString();
         this.imgFilePath = source.readString();
-        this.bannerFilePath = source.readString();
         this.dateCreated = new Date(source.readLong());
     }
 
@@ -116,8 +114,7 @@ public class Group implements Parcelable {
     public void setDescription(String description) { this.description = description; }
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
-    public String getBannerFilePath() { return this.bannerFilePath; }
-    public void setBannerFilePath(String bannerFilePath) { this.bannerFilePath = bannerFilePath; }
+    public void setImgFilePathToDefault() { this.imgFilePath = null; }
     public Date getDateCreated() { return this.dateCreated; }
     public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 
@@ -144,7 +141,6 @@ public class Group implements Parcelable {
         dest.writeString(notes);
         dest.writeString(description);
         dest.writeString(imgFilePath);
-        dest.writeString(bannerFilePath);
         dest.writeLong(dateCreated.getTime());
     }
 

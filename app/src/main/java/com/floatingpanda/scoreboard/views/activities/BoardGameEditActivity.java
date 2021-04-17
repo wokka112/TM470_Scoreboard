@@ -110,7 +110,6 @@ public class BoardGameEditActivity extends AppCompatActivity {
 
         setViews(boardGameWithBgCategoriesAndPlayModes);
 
-        final ImageButton browseButton, cameraButton;
         final Button saveButton, cancelButton;
 
         boardGameAddEditViewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
@@ -122,26 +121,8 @@ public class BoardGameEditActivity extends AppCompatActivity {
             }
         });
 
-        browseButton = findViewById(R.id.bgadd_button_browse);
-        cameraButton = findViewById(R.id.bgadd_button_camera);
         saveButton = findViewById(R.id.bgadd_button_save);
         cancelButton = findViewById(R.id.bgadd_button_cancel);
-
-        browseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BoardGameEditActivity.this, "Browse pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BoardGameEditActivity.this, "Camera pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,20 +154,19 @@ public class BoardGameEditActivity extends AppCompatActivity {
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 String houseRules = houseRulesEditText.getText().toString();
-                String imgFilePath = "TBA";
                 List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
 
                 BoardGame boardGame = new BoardGame(bgId, bgName, difficulty, minPlayers, maxPlayers, teamOption, description,
-                        houseRules, notes, imgFilePath);
+                        houseRules, notes);
 
                 BoardGameWithBgCategories boardGameWithBgCategories = new BoardGameWithBgCategories(boardGame, bgCategories);
 
-                BoardGameWithBgCategoriesAndPlayModes editedboardGameWithBgCategoriesAndPlayModes =
+                BoardGameWithBgCategoriesAndPlayModes editedBoardGameWithBgCategoriesAndPlayModes =
                         BoardGameWithBgCategoriesAndPlayModes.createUsingPlayModeEnumList(boardGameWithBgCategories, playModeEnums);
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY_ORIGINAL, boardGameWithBgCategoriesAndPlayModes);
-                replyIntent.putExtra(EXTRA_REPLY_EDITED, editedboardGameWithBgCategoriesAndPlayModes);
+                replyIntent.putExtra(EXTRA_REPLY_EDITED, editedBoardGameWithBgCategoriesAndPlayModes);
                 setResult(RESULT_OK, replyIntent);
                 finish();
             }

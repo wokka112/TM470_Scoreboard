@@ -80,6 +80,16 @@ public class Member implements Parcelable {
     }
 
     @Ignore
+    public Member(@NonNull String nickname, String notes) {
+        this(0, nickname, notes, null, new Date());
+    }
+
+    @Ignore
+    public Member(@NonNull String nickname, String notes, Date dateCreated) {
+        this(0, nickname, notes, null, dateCreated);
+    }
+
+    @Ignore
     public Member(Member member) {
         this.id = member.getId();
         this.nickname = member.getNickname();
@@ -105,6 +115,7 @@ public class Member implements Parcelable {
     public void setNotes(String notes) { this.notes = notes; }
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
+    public void setImgFilePathToDefault() { this.imgFilePath = null; }
     public Date getDateCreated() { return this.dateCreated; }
     public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 

@@ -47,7 +47,7 @@ public class GroupAddActivity extends AppCompatActivity {
     private GroupViewModel groupViewModel;
 
     private EditText groupNameEditText, descriptionEditText, notesEditText;
-    private ImageButton imgBrowseButton, imgCameraButton, bannerBrowseButton, bannerCameraButton;
+    private ImageButton imgBrowseButton, imgCameraButton;
     private Button cancelButton, saveButton;
 
     @Override
@@ -65,8 +65,6 @@ public class GroupAddActivity extends AppCompatActivity {
 
         imgBrowseButton = findViewById(R.id.groupadd_button_img_browse);
         imgCameraButton = findViewById(R.id.groupadd_button_img_camera);
-        bannerBrowseButton = findViewById(R.id.groupadd_button_banner_browse);
-        bannerCameraButton = findViewById(R.id.groupadd_button_banner_camera);
         cancelButton = findViewById(R.id.groupadd_button_cancel);
         saveButton = findViewById(R.id.groupadd_button_save);
 
@@ -82,22 +80,6 @@ public class GroupAddActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(GroupAddActivity.this, "Image camera pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        bannerBrowseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(GroupAddActivity.this, "Banner browse pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        bannerCameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(GroupAddActivity.this, "Banner camera pressed",
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -119,11 +101,16 @@ public class GroupAddActivity extends AppCompatActivity {
                 String groupName = groupNameEditText.getText().toString();
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
-                //TODO implement image taking/picking and banner taking/picking and filepath saving functionality
+                //TODO implement image taking/picking and filepath saving functionality
                 String imgFilePath = "TBA";
-                String bannerFilePath = "TBA";
 
-                Group group = new Group(groupName, description, notes, imgFilePath, bannerFilePath);
+                Group group = null;
+
+                if (imgFilePath == null || imgFilePath.isEmpty()) {
+                    group = new Group(groupName, description, notes);
+                } else {
+                    group = new Group(groupName, description, notes, imgFilePath);
+                }
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, group);

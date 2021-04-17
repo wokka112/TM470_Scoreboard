@@ -29,14 +29,6 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/bgact_edit_button" />
 
-        <ImageView
-            android:id="@+id/bgact_image"
-            style="@style/DetailImgStyle"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_launcher_foreground"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bgact_name"/>
-
         <TextView
             android:id="@+id/bgact_name"
             android:layout_width="wrap_content"
@@ -52,20 +44,20 @@
             android:id="@+id/bgact_difficulty_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="16dp"
             android:text="@string/difficulty_colon_header"
-            app:layout_constraintLeft_toRightOf="@id/bgact_image"
-            app:layout_constraintTop_toTopOf="@id/bgact_image"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bgact_name"
             style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView
             android:id="@+id/bgact_difficulty_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintLeft_toRightOf="@id/bgact_difficulty_header"
+            app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
             app:layout_constraintTop_toTopOf="@id/bgact_difficulty_header"
+            app:layout_constraintRight_toRightOf="parent"
             style="@style/TextAppearance.MdcTypographyStyles.Body1"
             tools:text="5"/>
 
@@ -81,12 +73,12 @@
 
         <TextView
             android:id="@+id/bgact_players_output"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="@id/bgact_players_header"
+            app:layout_constraintLeft_toLeftOf="@id/bgact_team_options_output"
             app:layout_constraintTop_toTopOf="@id/bgact_players_header"
+            app:layout_constraintRight_toRightOf="parent"
             style="@style/TextAppearance.MdcTypographyStyles.Body1"
-            android:layout_marginLeft="8dp"
             tools:text="3 - 8"/>
 
         <TextView
@@ -95,8 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="@string/categories_colon_header"
-            app:layout_constraintLeft_toLeftOf="@id/bgact_image"
-            app:layout_constraintTop_toBottomOf="@id/bgact_image"
+            app:layout_constraintLeft_toLeftOf="@id/bgact_players_header"
+            app:layout_constraintTop_toBottomOf="@id/bgact_players_header"
             style="@style/TextAppearance.MdcTypographyStyles.Body1"/>
 
         <TextView

@@ -9,31 +9,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.2">
-
-        <ImageView
-            android:id="@+id/banner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_launcher_background"
-            android:scaleType="fitXY"/>
+        android:layout_weight="0.1"
+        android:background="@color/colorPrimaryLight">
 
         <TextView
             android:id="@+id/banner_group_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/banner"
+            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="4dp"
-            style="@style/TextAppearance.MaterialComponents.Headline6"
-            tools:text="Group Test"/>
-    </RelativeLayout>
+            style="@style/TextAppearance.MaterialComponents.Headline5"
+            tools:text="Group Name"/>
 
+    </RelativeLayout>
 
     <include
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
+        android:layout_weight="0.9"
         layout="@layout/activity_main"/>
 
 </LinearLayout>

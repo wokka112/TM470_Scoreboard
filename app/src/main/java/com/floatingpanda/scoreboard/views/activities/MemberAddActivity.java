@@ -99,10 +99,16 @@ public class MemberAddActivity extends AppCompatActivity {
                 String nickname = nicknameEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 //TODO implement image taking/picking and filepath saving functionality
-                String imgFilePath = "TBA";
+                String imgFilePath = null;
 
-                Member member = new Member(nickname, notes, imgFilePath);
+                Member member = null;
 
+                if (imgFilePath == null || imgFilePath.isEmpty()) {
+                    member = new Member(nickname, notes);
+                } else {
+                    member = new Member(nickname, notes, imgFilePath);
+                }
+                
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, member);
                 setResult(RESULT_OK, replyIntent);

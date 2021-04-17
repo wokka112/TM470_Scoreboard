@@ -22,10 +22,13 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.floatingpanda.scoreboard.adapters.recyclerview_adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,12 +67,36 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
     public void onBindViewHolder(GroupMemberListAdapter.GroupMemberViewHolder holder, int position) {
         if (groupMembers != null) {
             Member current = groupMembers.get(position);
+
+            //TODO remove when done implementing img picking/taking functionality
+            Log.w("MemberListAdapt1", "Current Member: " + current.getNickname() + " File Path: " +
+                    current.getImgFilePath());
+            // Set member nickname
             holder.nicknameItemView.setText(current.getNickname());
+
+            // Try to create drawable from stored image file path
+            Drawable drawable = Drawable.createFromPath(current.getImgFilePath());
+
+            //TODO remove when done implementing img picking/taking functionality
+            Log.w("MemberListAdapt2", "Current Member: " + current.getNickname() + " Drawable is null: " +
+                    (drawable == null));
+            // If drawable cannot be created (because image does not exist at path or path is not set)
+            if (drawable == null) {
+                // Display default member image
+                holder.imageView.setImageResource(R.drawable.default_member_icon_hd);
+            } //Otherwise
+            else {
+                // Display the drawable image stored at file path
+                holder.imageView.setImageDrawable(drawable);
+            }
+
+            // Set the remove group member button to visible
             holder.removeButton.setVisibility(View.VISIBLE);
 
             holder.removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    // When remove button is clicked remove the member from the list of group members
                     int position = holder.getAdapterPosition();
                     Member member = groupMembers.get(position);
                     removeGroupMemberListener.removeGroupMember(member);
@@ -77,6 +104,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
             });
         } else {
             holder.nicknameItemView.setText("No nickname");
+            holder.imageView.setImageResource(R.drawable.default_member_icon_hd);
         }
     }
 
@@ -100,11 +128,13 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     class GroupMemberViewHolder extends RecyclerView.ViewHolder {
         private final TextView nicknameItemView;
+        private final ImageView imageView;
         private final ImageButton removeButton;
 
         private GroupMemberViewHolder(View itemView) {
             super(itemView);
             nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
+            imageView = itemView.findViewById(R.id.rmember_image);
             removeButton = itemView.findViewById(R.id.rmember_group_member_remove_button);
 
             itemView.setOnClickListener(new View.OnClickListener() {

@@ -104,7 +104,13 @@ public class MemberEditActivity extends AppCompatActivity {
                 member.setNickname(nicknameEditText.getText().toString());
                 member.setNotes(notesEditText.getText().toString());
                 //TODO implement image taking/picking and filepath saving functionality
-                member.setImgFilePath("TBA");
+                String imgFilePath = null;
+
+                if (imgFilePath == null || imgFilePath.isEmpty()) {
+                    member.setImgFilePathToDefault();
+                } else {
+                    member.setImgFilePath(imgFilePath);
+                }
 
                 Intent replyIntent = new Intent();
                 replyIntent.putExtra(EXTRA_REPLY, member);

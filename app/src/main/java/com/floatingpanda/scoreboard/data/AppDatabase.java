@@ -22,7 +22,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.floatingpanda.scoreboard.data;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -76,7 +75,7 @@ import java.util.concurrent.Executors;
 @Database(entities = {AssignedCategory.class, BgCategory.class, BoardGame.class, Group.class,
         GroupMember.class, Member.class, PlayMode.class, GameRecord.class, Player.class,
         PlayerTeam.class, GroupMonthlyScore.class, Score.class, GroupCategorySkillRating.class,
-        PlayerSkillRatingChange.class}, version = 40, exportSchema = false,
+        PlayerSkillRatingChange.class}, version = 41, exportSchema = false,
         views = {GroupCategorySkillRatingWithMemberDetailsView.class})
 @TypeConverters({DateTypeConverter.class, PlayModeTypeConverter.class, TeamOptionTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
@@ -112,7 +111,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class, "scoreboard_database")
                             .fallbackToDestructiveMigration()
                             //.allowMainThreadQueries() // Use for testing purposes
-                            //.addCallback(sRoomDatabaseCallback)
+                            .addCallback(sRoomDatabaseCallback)
                             .openHelperFactory(factory)
                             .build();
                 }
@@ -126,6 +125,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     /**
+     **/
     private static Callback sRoomDatabaseCallback = new Callback() {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
@@ -158,19 +158,19 @@ public abstract class AppDatabase extends RoomDatabase {
                 GroupDao groupDao = INSTANCE.groupDao();
                 groupDao.deleteAll();
 
-                Group group = new Group("Ragnarok", "", "", "TBA", "TBA");
+                Group group = new Group("Ragnarok", "", "");
                 groupDao.insert(group);
-                group = new Group("The Monday Knights", "", "", "TBA", "TBA");
+                group = new Group("The Monday Knights", "", "");
                 groupDao.insert(group);
-                group = new Group("The Hospitallers", "", "", "TBA", "TBA");
+                group = new Group("The Hospitallers", "", "");
                 groupDao.insert(group);
-                group = new Group("The Templars", "", "", "TBA", "TBA");
+                group = new Group("The Templars", "", "");
                 groupDao.insert(group);
-                group = new Group("The Crusaders", "", "", "TBA", "TBA");
+                group = new Group("The Crusaders", "", "");
                 groupDao.insert(group);
-                group = new Group("The Saracens", "", "", "TBA", "TBA");
+                group = new Group("The Saracens", "", "");
                 groupDao.insert(group);
-                group = new Group("The Turks", "", "", "TBA", "TBA");
+                group = new Group("The Turks", "", "");
                 groupDao.insert(group);
 
                 // GROUP MEMBER ENTRIES //
@@ -236,27 +236,27 @@ public abstract class AppDatabase extends RoomDatabase {
 
                 BoardGame.TeamOption teamOption = BoardGame.TeamOption.TEAMS_ONLY;
                 BoardGame bg = new BoardGame("Medieval", 4, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A");
+                        "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
                 BoardGame bg1 = new BoardGame("Monopoly", 2, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A");
+                        "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.TEAMS_AND_SOLOS_ALLOWED;
                 BoardGame bg2 = new BoardGame("Go", 5, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A");
+                        "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
                 BoardGame bg3 = new BoardGame("Game of Life", 1, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A");
+                        "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.TEAMS_AND_SOLOS_ALLOWED;
                 BoardGame bg4 = new BoardGame("Dawn of Madness", 4, 1, 8, teamOption,
-                        "N/A", "N/A", "N/A", "N/A");
+                        "N/A", "N/A", "N/A");
 
                 teamOption = BoardGame.TeamOption.NO_TEAMS;
                 BoardGame bg5 = new BoardGame("No Category Bg", 3, 1, 8, teamOption,
-                         "N/A", "N/A", "N/A", "N/A");
+                         "N/A", "N/A", "N/A");
 
                 List<AssignedCategory> acs = new ArrayList<>();
 
@@ -277,8 +277,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 acs.add(new AssignedCategory(bg.getId(), luck.getId()));
                 acDao.insertAll(acs.toArray(new AssignedCategory[acs.size()]));
 
-                Log.w("Database.java", "Inserted bg");
-
                 playModes.add(PlayMode.PlayModeEnum.COOPERATIVE);
 
                 bgDao.insert(bg1);
@@ -292,8 +290,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 acs.add(new AssignedCategory(bg1.getId(), gambling.getId()));
                 acDao.insert(acs.get(0));
 
-                Log.w("Database.java", "Inserted bg1");
-
                 bgDao.insert(bg2);
                 bg2 = bgDao.findNonLiveDataByName(bg2.getBgName());
 
@@ -303,7 +299,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 playModeDao.insert(playMode);
 
                 acs.add(new AssignedCategory(bg2.getId(), gambling.getId()));
-                Log.w("Database.java", "Inserted bg2");
 
                 playModes.add(PlayMode.PlayModeEnum.SOLITAIRE);
 
@@ -318,7 +313,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 playModeDao.insert(playMode);
 
                 acs.add(new AssignedCategory(bg3.getId(), strategy.getId()));
-                Log.w("Database.java", "Inserted bg3");
 
                 bgDao.insert(bg4);
                 bg4 = bgDao.findNonLiveDataByName(bg4.getBgName());
@@ -331,7 +325,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 playModeDao.insert(playMode);
 
                 acs.add(new AssignedCategory(bg4.getId(), luck.getId()));
-                Log.w("Database.java", "Inserted bg4");
 
                 acDao.insertAll(acs.toArray(new AssignedCategory[acs.size()]));
 
@@ -344,8 +337,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 playModeDao.insert(playMode);
                 playMode = new PlayMode(bg5.getId(), playModes.get(2));
                 playModeDao.insert(playMode);
-
-                Log.w("Database.java", "Inserted bg5");
 
                 // GAME RECORD ENTRIES //
                 GameRecordDao gameRecordDao = INSTANCE.gameRecordDao();
@@ -960,5 +951,6 @@ public abstract class AppDatabase extends RoomDatabase {
                 playerSkillRatingChangeDao.insertAll(luckSkillRatingChanges.toArray(new PlayerSkillRatingChange[luckSkillRatingChanges.size()]));
             });
         }
-    };*/
+    };
+    /**/
 }

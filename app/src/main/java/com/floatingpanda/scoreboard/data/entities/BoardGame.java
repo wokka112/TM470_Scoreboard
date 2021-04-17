@@ -72,12 +72,9 @@ public class BoardGame implements Parcelable {
     @Nullable
     private String notes;
 
-    @Nullable
-    private String imgFilePath;
-
     @Ignore
     public BoardGame(int id, String bgName, int difficulty, int minPlayers, int maxPlayers, BoardGame.TeamOption teamOptions,
-                     String description, String houseRules, String notes, String imgFilePath) {
+                     String description, String houseRules, String notes) {
         this.id = id;
         this.bgName = bgName;
         this.difficulty = difficulty;
@@ -87,24 +84,22 @@ public class BoardGame implements Parcelable {
         this.description = description;
         this.houseRules = houseRules;
         this.notes = notes;
-        this.imgFilePath = imgFilePath;
     }
 
     public BoardGame(String bgName, int difficulty, int minPlayers, int maxPlayers, BoardGame.TeamOption teamOptions,
-                     String description, String houseRules, String notes, String imgFilePath) {
-        this(0, bgName, difficulty, minPlayers, maxPlayers, teamOptions, description, houseRules, notes, imgFilePath);
+                     String description, String houseRules, String notes) {
+        this(0, bgName, difficulty, minPlayers, maxPlayers, teamOptions, description, houseRules, notes);
     }
 
     @Ignore
     public BoardGame(String bgName, int difficulty, BoardGame.TeamOption teamOptions) {
-        this(bgName, difficulty, 1, 8, teamOptions, "", "", "", "TBA");
+        this(bgName, difficulty, 1, 8, teamOptions, "", "", "");
     }
 
     @Ignore
     public BoardGame(BoardGame boardGame) {
         this(boardGame.getId(), boardGame.getBgName(), boardGame.getDifficulty(), boardGame.getMinPlayers(), boardGame.getMaxPlayers(),
-                boardGame.getTeamOptions(), boardGame.getDescription(), boardGame.getHouseRules(), boardGame.getNotes(),
-                boardGame.getImgFilePath());
+                boardGame.getTeamOptions(), boardGame.getDescription(), boardGame.getHouseRules(), boardGame.getNotes());
     }
 
     @Ignore
@@ -118,7 +113,6 @@ public class BoardGame implements Parcelable {
         this.description = source.readString();
         this.houseRules = source.readString();
         this.notes = source.readString();
-        this.imgFilePath = source.readString();
     }
 
     public int getId() { return this.id; }
@@ -172,9 +166,6 @@ public class BoardGame implements Parcelable {
 
     public String getNotes() { return this.notes; }
     public void setNotes(String notes) { this.notes = notes; }
-
-    public String getImgFilePath() { return this.imgFilePath; }
-    public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
 
     /**
      * Returns a String representing the team options for the game based on the BoardGame's
@@ -239,7 +230,6 @@ public class BoardGame implements Parcelable {
         dest.writeString(description);
         dest.writeString(houseRules);
         dest.writeString(notes);
-        dest.writeString(imgFilePath);
     }
 
     public static final Creator<BoardGame> CREATOR = new Creator<BoardGame>() {

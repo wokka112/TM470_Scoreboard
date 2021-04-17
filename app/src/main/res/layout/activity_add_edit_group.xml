@@ -9,25 +9,6 @@
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/groupadd_button_banner_browse"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/groupadd_button_banner_camera"
-            app:layout_constraintTop_toBottomOf="@id/groupadd_banner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_folder_open_black_24dp" />
-
-        <ImageButton
-            android:id="@+id/groupadd_button_banner_camera"
-            app:layout_constraintLeft_toRightOf="@id/groupadd_button_banner_browse"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/groupadd_button_banner_browse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_photo_camera_black_24dp" />
-
-        <ImageButton
             android:id="@+id/groupadd_button_img_browse"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@id/groupadd_button_img_camera"
@@ -129,32 +110,14 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
-            android:id="@+id/groupadd_banner"
-            app:layout_constraintBottom_toTopOf="@id/groupadd_banner_guideline"
-            app:layout_constraintHeight_percent="100"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_launcher_background" />
-
-        <ImageView
             android:id="@+id/groupadd_img"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/groupadd_button_banner_browse"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:src="@drawable/ic_launcher_foreground" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/groupadd_banner_guideline"
-            app:layout_constraintGuide_percent="0.20"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

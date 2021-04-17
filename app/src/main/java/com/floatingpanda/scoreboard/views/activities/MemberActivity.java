@@ -24,6 +24,7 @@ package com.floatingpanda.scoreboard.views.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,8 +74,6 @@ public class MemberActivity extends AppCompatActivity {
         dateCreatedTextView = findViewById(R.id.memberact_date_created_output);
         notesTextView = findViewById(R.id.memberact_notes_output);
         groupsTextView = findViewById(R.id.memberact_groups_output);
-        //TODO add listener to link to a list of groups member is part of
-        viewGroupsButton = findViewById(R.id.memberact_view_groups_img_button);
         //TODO implement imgfilepath and functionality for it all
         imageView = findViewById(R.id.memberact_image);
 
@@ -142,7 +141,25 @@ public class MemberActivity extends AppCompatActivity {
         int noOfGroupsMemberIsPartOf = memberViewModel.getNumberOfGroupsMemberIsPartOf(member.getId());
         groupsTextView.setText(Integer.toString(noOfGroupsMemberIsPartOf));
 
-        imageView.setImageResource(R.drawable.ic_launcher_foreground);
+        //TODO remove when done implementing img picking/taking functionality
+        Log.w("MemberAct1", "Current Member: " + member.getNickname() + " File Path: " +
+                member.getImgFilePath());
+
+        // Try to create drawable from stored image file path
+        Drawable drawable = Drawable.createFromPath(member.getImgFilePath());
+
+        //TODO remove when done implementing img picking/taking functionality
+        Log.w("MemberAct2", "Current Member: " + member.getNickname() + " Drawable is null: " +
+                (drawable == null));
+        // If drawable cannot be created (because image does not exist at path or path is not set)
+        if (drawable == null) {
+            // Display default member image
+            imageView.setImageResource(R.drawable.default_member_icon_hd);
+        } //Otherwise
+        else {
+            // Display the drawable image stored at file path
+            imageView.setImageDrawable(drawable);
+        }
     }
 
     /**

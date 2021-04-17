@@ -11,7 +11,7 @@
         style="@style/ListImgStyle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_launcher_foreground"/>
+        android:src="@drawable/default_group_icon_hd"/>
 
     <TextView
         android:id="@+id/group_name_output"

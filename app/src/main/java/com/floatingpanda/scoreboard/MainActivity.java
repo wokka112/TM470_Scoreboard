@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.floatingpanda.scoreboard.adapters.MainActivityAdapter;
 import com.google.android.material.tabs.TabLayout;

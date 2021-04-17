@@ -23,14 +23,18 @@
 
     <style name="ListImgStyle">
         <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
     </style>
 
     <style name="DetailImgStyle">
-        <item name="android:layout_marginLeft">20dp</item>
-        <item name="android:layout_width">72dp</item>
-        <item name="android:layout_height">72dp</item>
+        <item name="android:layout_width">200dp</item>
+        <item name="android:layout_height">200dp</item>
+    </style>
+
+    <style name="DetailImgStyleSmall">
+        <item name="android:layout_width">140dp</item>
+        <item name="android:layout_height">140dp</item>
     </style>
 
     <!-- Open Sans Font Styles -->

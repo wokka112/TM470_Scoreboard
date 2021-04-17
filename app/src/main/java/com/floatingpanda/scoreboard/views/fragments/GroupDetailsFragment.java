@@ -24,12 +24,14 @@ package com.floatingpanda.scoreboard.views.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -60,8 +62,10 @@ public class GroupDetailsFragment extends Fragment {
     private Group group;
     private GroupViewModel groupViewModel;
 
-    TextView nameTextView, dateCreatedTextView, gamesPlayedTextView, membersCountTextView, descriptionTextView,
+    private TextView nameTextView, dateCreatedTextView, gamesPlayedTextView, membersCountTextView, descriptionTextView,
             notesTextView;
+
+    private ImageView imageView;
 
     public GroupDetailsFragment() {
 
@@ -78,6 +82,7 @@ public class GroupDetailsFragment extends Fragment {
         membersCountTextView = rootView.findViewById(R.id.group_fragment_member_count_output);
         descriptionTextView = rootView.findViewById(R.id.group_fragment_description_output);
         notesTextView = rootView.findViewById(R.id.group_fragment_notes_output);
+        imageView = rootView.findViewById(R.id.group_fragment_image);
 
         groupViewModel = new ViewModelProvider(requireActivity()).get(GroupViewModel.class);
         int groupId = groupViewModel.getSharedGroupId();
@@ -148,6 +153,26 @@ public class GroupDetailsFragment extends Fragment {
             notes = getContext().getString(R.string.no_notes);
         }
         notesTextView.setText(notes);
+
+        //TODO remove when done implementing img picking/taking functionality
+        Log.w("GroupDetFrag1", "Current group: " + group.getGroupName() + " File Path: " +
+                group.getImgFilePath());
+
+        // Try to create drawable from stored image file path
+        Drawable drawable = Drawable.createFromPath(group.getImgFilePath());
+
+        //TODO remove when done implementing img picking/taking functionality
+        Log.w("GroupDetFrag2", "Current group: " + group.getGroupName() + " Drawable is null: " +
+                (drawable == null));
+        // If drawable cannot be created (because image does not exist at path or is not set)
+        if (drawable == null) {
+            // Display default group image
+            imageView.setImageResource(R.drawable.default_group_icon_hd);
+        } //Otherwise
+        else {
+            // Display the drawable image stored at file path
+            imageView.setImageDrawable(drawable);
+        }
     }
 
     /**

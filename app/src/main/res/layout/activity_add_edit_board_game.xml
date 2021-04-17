@@ -9,25 +9,6 @@
         android:layout_height="wrap_content"
         android:paddingBottom="8dp">
 
-        <ImageButton
-            android:id="@+id/bgadd_button_browse"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:src="@drawable/ic_folder_open_black_24dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/bgadd_button_camera"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_img" />
-
-        <ImageButton
-            android:id="@+id/bgadd_button_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_photo_camera_black_24dp"
-            app:layout_constraintLeft_toRightOf="@id/bgadd_button_browse"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/bgadd_button_browse" />
-
         <Button
             android:id="@+id/bgadd_button_save"
             android:layout_width="wrap_content"
@@ -52,12 +33,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="8dp"
             app:boxBackgroundColor="@android:color/white"
             app:boxBackgroundMode="outline"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bgadd_button_browse">
+            app:layout_constraintTop_toTopOf="parent">
 
             <EditText
                 android:id="@+id/bgadd_name_edittext"
@@ -194,16 +175,6 @@
                 android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/bgadd_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/ic_launcher_foreground"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <LinearLayout
             android:id="@+id/bgadd_play_modes_container"
             android:layout_width="match_parent"
@@ -242,7 +213,6 @@
 
         </LinearLayout>
 
-        <!--TODO need to rethink logic behind teams allowed here.-->
         <RadioGroup
             android:id="@+id/bgadd_team_options_radiogroup"
             android:layout_width="match_parent"

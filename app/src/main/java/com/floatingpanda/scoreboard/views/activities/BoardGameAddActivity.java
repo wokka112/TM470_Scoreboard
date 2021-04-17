@@ -98,7 +98,6 @@ public class BoardGameAddActivity extends AppCompatActivity {
         multiSpinner = findViewById(R.id.bgadd_multi_spinner);
         multiSpinner.setAllText("Choose categories");
 
-        final ImageButton browseButton, cameraButton;
         final Button saveButton, cancelButton;
 
         boardGameAddEditViewModel.getAllBgCategories().observe(this, new Observer<List<BgCategory>>() {
@@ -109,26 +108,8 @@ public class BoardGameAddActivity extends AppCompatActivity {
             }
         });
 
-        browseButton = findViewById(R.id.bgadd_button_browse);
-        cameraButton = findViewById(R.id.bgadd_button_camera);
         saveButton = findViewById(R.id.bgadd_button_save);
         cancelButton = findViewById(R.id.bgadd_button_cancel);
-
-        browseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BoardGameAddActivity.this, "Browse pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        cameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BoardGameAddActivity.this, "Camera pressed",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,10 +139,9 @@ public class BoardGameAddActivity extends AppCompatActivity {
                 String description = descriptionEditText.getText().toString();
                 String notes = notesEditText.getText().toString();
                 String houseRules = houseRulesEditText.getText().toString();
-                String imgFilePath = "TBA";
 
                 BoardGame boardGame = new BoardGame(bgName, difficulty, minPlayers, maxPlayers, teamOption,
-                        description, notes, houseRules, imgFilePath);
+                        description, notes, houseRules);
 
                 List<BgCategory> bgCategories = boardGameAddEditViewModel.getSelectedBgCategories();
                 BoardGameWithBgCategories bgWithBgCategories = new BoardGameWithBgCategories(boardGame, bgCategories);

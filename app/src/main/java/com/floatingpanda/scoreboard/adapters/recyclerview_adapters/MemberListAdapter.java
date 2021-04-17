@@ -22,9 +22,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.floatingpanda.scoreboard.adapters.recyclerview_adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,9 +62,32 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
     public void onBindViewHolder(MemberViewHolder holder, int position) {
         if (members != null) {
             Member current = members.get(position);
+
+            //TODO remove when done implementing img picking/taking functionality
+            Log.w("MemberListAdapt1", "Current Member: " + current.getNickname() + " File Path: " +
+                    current.getImgFilePath());
+            // Set member nickname
             holder.nicknameItemView.setText(current.getNickname());
+
+            // Try to create drawable from stored image file path
+            Drawable drawable = Drawable.createFromPath(current.getImgFilePath());
+
+            //TODO remove when done implementing img picking/taking functionality
+            Log.w("MemberListAdapt2", "Current Member: " + current.getNickname() + " Drawable is null: " +
+                    (drawable == null));
+            // If drawable cannot be created (because image does not exist at path or path is not set)
+            if (drawable == null) {
+                // Display default member image
+                holder.imageView.setImageResource(R.drawable.default_member_icon_hd);
+            } //Otherwise
+            else {
+                // Display the drawable image stored at file path
+                holder.imageView.setImageDrawable(drawable);
+            }
+
         } else {
             holder.nicknameItemView.setText("No nickname");
+            holder.imageView.setImageResource(R.drawable.default_member_icon_hd);
         }
     }
 
@@ -85,10 +111,12 @@ public class MemberListAdapter extends RecyclerView.Adapter<MemberListAdapter.Me
 
     class MemberViewHolder extends RecyclerView.ViewHolder {
         private final TextView nicknameItemView;
+        private final ImageView imageView;
 
         private MemberViewHolder(View itemView) {
             super(itemView);
             nicknameItemView = itemView.findViewById(R.id.rmember_name_output);
+            imageView = itemView.findViewById(R.id.rmember_image);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -22,9 +22,12 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 package com.floatingpanda.scoreboard.adapters.recyclerview_adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,7 +62,28 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
     public void onBindViewHolder(GroupViewHolder holder, int position) {
         if (groups != null) {
             Group current = groups.get(position);
+
+            //TODO remove when done implementing img picking/taking functionality
+            Log.w("GroupListAdapt1", "Current group: " + current.getGroupName() + " File Path: " +
+                    current.getImgFilePath());
+            // Set group name
             holder.groupNameItemView.setText(current.getGroupName());
+
+            // Try to create drawable from stored image file path
+            Drawable drawable = Drawable.createFromPath(current.getImgFilePath());
+
+            //TODO remove when done implementing img picking/taking functionality
+            Log.w("GroupListAdapt2", "Current group: " + current.getGroupName() + " Drawable is null: " +
+                    (drawable == null));
+            // If drawable cannot be created (because image does not exist at path or is not set)
+            if (drawable == null) {
+                // Display default group image
+                holder.groupImageView.setImageResource(R.drawable.default_group_icon_hd);
+            } //Otherwise
+            else {
+                // Display the drawable image stored at file path
+                holder.groupImageView.setImageDrawable(drawable);
+            }
         } else {
             holder.groupNameItemView.setText("No name");
         }
@@ -84,10 +108,12 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Grou
     }
 
     class GroupViewHolder extends RecyclerView.ViewHolder {
+        private final ImageView groupImageView;
         private final TextView groupNameItemView;
 
         private GroupViewHolder(View itemView) {
             super(itemView);
+            groupImageView = itemView.findViewById(R.id.group_image);
             groupNameItemView = itemView.findViewById(R.id.group_name_output);
 
             itemView.setOnClickListener(new View.OnClickListener() {
