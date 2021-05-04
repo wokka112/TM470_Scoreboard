@@ -6,8 +6,7 @@
 
     <ImageView
         android:id="@+id/memberadd_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/DetailImgStyle"
         android:src="@drawable/ic_launcher_foreground"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
