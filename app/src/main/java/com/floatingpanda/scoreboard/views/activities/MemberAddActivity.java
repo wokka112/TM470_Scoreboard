@@ -172,6 +172,20 @@ public class MemberAddActivity extends AppCompatActivity {
         this.sendBroadcast(mediaScanIntent);
     }
 
+    private void setMemberImg() {
+        File file = new File(currentImgFilePath);
+        Uri uri = Uri.fromFile(file);
+        Bitmap bitmap;
+        try {
+            bitmap = PictureFormatter.handleSamplingAndRotationBitmap(getApplicationContext(), uri);
+            memberImageView.setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            Log.e("MemberAddAct", "Image file not found: " + e);
+        } catch (IOException e) {
+            Log.e("MemberAddAct", "IO Exception when finding image file: " + e);
+        }
+    }
+
     /**
      * Sets the back arrow in the taskbar to go back to the previous activity.
      * @param item
@@ -197,18 +211,7 @@ public class MemberAddActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             // Add new picture to gallery
             galleryAddPic();
-
-            File file = new File(currentImgFilePath);
-            Uri uri = Uri.fromFile(file);
-            Bitmap bitmap;
-            try {
-                bitmap = PictureFormatter.handleSamplingAndRotationBitmap(getApplicationContext(), uri);
-                memberImageView.setImageBitmap(bitmap);
-            } catch (FileNotFoundException e) {
-                Log.e("MemberAddAct", "Image file not found: " + e);
-            } catch (IOException e) {
-                Log.e("MemberAddAct", "IO Exception when finding image file: " + e);
-            }
+            setMemberImg();
         }
     }
 }
