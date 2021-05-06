@@ -42,7 +42,7 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * [Rankade](https://rankade.com/) gave a lot of inspiration. I also highly recommend checking them out for the more competitive as they provide a much more accurate skill rating system.
-
+* [FilePicker](https://github.com/jaiselrahman/FilePicker) by [Jaisel Rahman](https://github.com/jaiselrahman) is used for image browsing and picking in the app.
 
 # Attribution
 
