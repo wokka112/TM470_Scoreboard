@@ -34,7 +34,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,11 +44,15 @@ import com.floatingpanda.scoreboard.R;
 import com.floatingpanda.scoreboard.data.entities.Member;
 import com.floatingpanda.scoreboard.utils.PictureFormatter;
 import com.floatingpanda.scoreboard.viewmodels.MemberViewModel;
+import com.jaiselrahman.filepicker.activity.FilePickerActivity;
+import com.jaiselrahman.filepicker.config.Configurations;
+import com.jaiselrahman.filepicker.model.MediaFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -57,6 +60,7 @@ import java.util.Date;
  */
 public class MemberEditActivity extends AppCompatActivity {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
+    public static final int REQUEST_PICK_IMAGE = 2;
     public static final String EXTRA_REPLY = "com.floatingpanda.scoreboard.REPLY";
 
     private String currentImgFilePath;
@@ -94,8 +98,7 @@ public class MemberEditActivity extends AppCompatActivity {
         browseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MemberEditActivity.this, "Browse pressed",
-                        Toast.LENGTH_SHORT).show();
+                browsePictures();
             }
         });
 
@@ -125,7 +128,7 @@ public class MemberEditActivity extends AppCompatActivity {
                 String imgFilePath = currentImgFilePath;
 
                 if (imgFilePath == null || imgFilePath.isEmpty()) {
-                    member.setImgFilePathToDefault();
+                    member.setImgFilePathToNull();
                 } else {
                     member.setImgFilePath(imgFilePath);
                 }
@@ -142,6 +145,17 @@ public class MemberEditActivity extends AppCompatActivity {
         nicknameEditText.setText(member.getNickname());
         notesEditText.setText(member.getNotes());
         setMemberImg();
+    }
+
+    private void browsePictures() {
+        Intent browsePictureIntent = new Intent(this, FilePickerActivity.class);
+        browsePictureIntent.putExtra(FilePickerActivity.CONFIGS, new Configurations.Builder()
+                .setCheckPermission(true)
+                .setShowImages(true)
+                .setShowVideos(false)
+                .setSingleChoiceMode(true)
+                .build());
+        startActivityForResult(browsePictureIntent, REQUEST_PICK_IMAGE);
     }
 
     private void takePicture() {
@@ -181,6 +195,11 @@ public class MemberEditActivity extends AppCompatActivity {
     }
 
     private void setMemberImg() {
+        if (currentImgFilePath == null || currentImgFilePath.isEmpty()) {
+            memberImageView.setImageResource(R.drawable.default_member_icon_hd);
+            return;
+        }
+
         File file = new File(currentImgFilePath);
         Uri uri = Uri.fromFile(file);
         Bitmap bitmap;
@@ -188,9 +207,9 @@ public class MemberEditActivity extends AppCompatActivity {
             bitmap = PictureFormatter.handleSamplingAndRotationBitmap(getApplicationContext(), uri);
             memberImageView.setImageBitmap(bitmap);
         } catch (FileNotFoundException e) {
-            Log.e("MemberAddAct", "Image file not found: " + e);
+            Log.e("MemberEditAct", "Image file not found: " + e);
         } catch (IOException e) {
-            Log.e("MemberAddAct", "IO Exception when finding image file: " + e);
+            Log.e("MemberEditAct", "IO Exception when finding image file: " + e);
         }
     }
 
@@ -220,6 +239,21 @@ public class MemberEditActivity extends AppCompatActivity {
             // Add new picture to gallery
             galleryAddPic();
             setMemberImg();
+        } else if (requestCode == REQUEST_PICK_IMAGE && resultCode == RESULT_OK) {
+            ArrayList<MediaFile> files = new ArrayList<>();
+
+            try {
+                files = data.getParcelableArrayListExtra(FilePickerActivity.MEDIA_FILES);
+            } catch (NullPointerException e) {
+                Log.e("MemberEditActivity.java", "Getting media files returned null pointer.");
+            }
+
+            if (files == null || files.isEmpty()) {
+                Log.w("MemberEditActivity.java", "Files were null or empty");
+            } else {
+                currentImgFilePath = files.get(0).getPath();
+                setMemberImg();
+            }
         }
     }
 }

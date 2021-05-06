@@ -116,7 +116,7 @@
             app:layout_constraintTop_toTopOf="parent"
             style="@style/DetailImgStyle"
             android:layout_marginTop="12dp"
-            android:src="@drawable/ic_launcher_foreground" />
+            android:src="@drawable/default_group_icon_hd" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

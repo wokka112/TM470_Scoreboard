@@ -95,7 +95,7 @@ public class GroupDetailsFragment extends Fragment {
             }
         });
 
-        final Button editButton, deleteButton, resetButton;
+        final Button editButton, deleteButton;
 
         editButton = rootView.findViewById(R.id.group_fragment_edit_button);
         editButton.setOnClickListener(new View.OnClickListener() {

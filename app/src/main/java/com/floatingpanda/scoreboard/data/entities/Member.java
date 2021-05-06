@@ -115,7 +115,7 @@ public class Member implements Parcelable {
     public void setNotes(String notes) { this.notes = notes; }
     public String getImgFilePath() { return this.imgFilePath; }
     public void setImgFilePath(String imgFilePath) { this.imgFilePath = imgFilePath; }
-    public void setImgFilePathToDefault() { this.imgFilePath = null; }
+    public void setImgFilePathToNull() { this.imgFilePath = null; }
     public Date getDateCreated() { return this.dateCreated; }
     public void setDateCreated(Date dateCreated) { this.dateCreated = dateCreated; }
 
