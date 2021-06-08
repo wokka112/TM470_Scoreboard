@@ -59,7 +59,7 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
 
     @Override
     public GroupMemberListAdapter.GroupMemberViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.recyclerview_item_member, parent, false);
+        View itemView = inflater.inflate(R.layout.recyclerview_item_group_member, parent, false);
         return new GroupMemberListAdapter.GroupMemberViewHolder(itemView);
     }
 
@@ -68,18 +68,12 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
         if (groupMembers != null) {
             Member current = groupMembers.get(position);
 
-            //TODO remove when done implementing img picking/taking functionality
-            Log.w("MemberListAdapt1", "Current Member: " + current.getNickname() + " File Path: " +
-                    current.getImgFilePath());
             // Set member nickname
             holder.nicknameItemView.setText(current.getNickname());
 
             // Try to create drawable from stored image file path
             Drawable drawable = Drawable.createFromPath(current.getImgFilePath());
 
-            //TODO remove when done implementing img picking/taking functionality
-            Log.w("MemberListAdapt2", "Current Member: " + current.getNickname() + " Drawable is null: " +
-                    (drawable == null));
             // If drawable cannot be created (because image does not exist at path or path is not set)
             if (drawable == null) {
                 // Display default member image
@@ -89,9 +83,6 @@ public class GroupMemberListAdapter extends RecyclerView.Adapter<GroupMemberList
                 // Display the drawable image stored at file path
                 holder.imageView.setImageDrawable(drawable);
             }
-
-            // Set the remove group member button to visible
-            holder.removeButton.setVisibility(View.VISIBLE);
 
             holder.removeButton.setOnClickListener(new View.OnClickListener() {
                 @Override
